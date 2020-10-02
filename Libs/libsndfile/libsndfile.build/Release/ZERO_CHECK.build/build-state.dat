@@ -1,28 +1,0 @@
-TZERO_CHECK
-v5
-r1
-cCheck dependencies
-cPhaseScriptExecution "CMake Rules" /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/libsndfile.build/Release/ZERO_CHECK.build/Script-96FC310C4FAE419180EE3C4D.sh
-
-N/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/libsndfile.build/Release/ZERO_CHECK.build/Script-96FC310C4FAE419180EE3C4D.sh
-c000000005C0EBCAE00000000000000EF
-t1544469678
-s239
-
-CCheck dependencies
-r0
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies79576b177adfc041^da747c177adfc041^---0#1#0#--18"Check dependencies36"8CC875D3-656D-45A7-8A85-847299A7CFA1-
-
-CPhaseScriptExecution "CMake Rules" /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/libsndfile.build/Release/ZERO_CHECK.build/Script-96FC310C4FAE419180EE3C4D.sh
-s566162478.873854
-e566162479.134902
-r1
-xPhaseScriptExecution
-xCMake Rules
-x/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/libsndfile.build/Release/ZERO_CHECK.build/Script-96FC310C4FAE419180EE3C4D.sh
-oecho ""
-o
-omake -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeScripts/ReRunCMake.make
-omake[1]: `/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/cmake.check_cache' is up to date.
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection37"Run custom shell script 'CMake Rules'0a6a72177adfc041^284591177adfc041^-251"echo ""make -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeScripts/ReRunCMake.makemake[1]: `/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/cmake.check_cache' is up to date.3(21%IDEActivityLogMessage2@8"echo ""-566162479#0#8#-0#-----2@112"make -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeScripts/ReRunCMake.make-566162479#9#112#-0#-----2@130"make[1]: `/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/cmake.check_cache' is up to date.-566162479#121#130#-0#-----0#0#0#--361"PhaseScriptExecution "CMake Rules" libsndfile.build/Release/ZERO_CHECK.build/Script-96FC310C4FAE419180EE3C4D.sh    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/libsndfile.build/Release/ZERO_CHECK.build/Script-96FC310C4FAE419180EE3C4D.sh36"7B85499A-CF09-4468-97AA-78BF8AF7CC0F-
-
