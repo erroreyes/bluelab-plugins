@@ -1,3 +1,6 @@
 [submodule "iPlug2"]
 	path = iPlug2
 	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2
+[submodule "BL-Plugins"]
+	path = BL-Plugins
+	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/BL-Plugins
