@@ -31,3 +31,6 @@
 [submodule "BuildSystem"]
 	path = BuildSystem
 	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/BuildSystem
+[submodule "TestSystem-mac"]
+	path = TestSystem-mac
+	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/TestSystem-mac
