@@ -1,0 +1,922 @@
+The system is: Darwin - 13.0.0 - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: ;-O3;-std=gnu99;-Wall;-Wextra;-O3;-std=gnu99;-Wall;-Wextra;-O3;-std=gnu99;-Wall;-Wextra;-O3;-std=gnu99;-Wall;-Wextra;-O3;-std=gnu99;-Wall;-Wextra;-O3;-std=gnu99;-Wall;-Wextra
+Id flags:  
+
+The output was:
+0
+=== BUILD NATIVE TARGET CompilerIdC OF PROJECT CompilerIdC WITH THE DEFAULT CONFIGURATION (Debug) ===
+Check dependencies
+
+CompileC ./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o CMakeCCompilerId.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -fvisibility=hidden -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/CompilerIdC.hmap -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/DerivedSources -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o
+
+Ld ./CompilerIdC normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CompilerIdC.LinkFileList -mmacosx-version-min=10.8 -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC
+
+PhaseScriptExecution "Run Script" ./CompilerIdC.build/Debug/CompilerIdC.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+GCC_VERSION=com.apple.compilers.llvm.clang.1_0
+
+
+** BUILD SUCCEEDED **
+
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC"
+
+The C compiler identification is AppleClang, found in "/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CompilerIdC"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+=== BUILD NATIVE TARGET CompilerIdCXX OF PROJECT CompilerIdCXX WITH THE DEFAULT CONFIGURATION (Debug) ===
+Check dependencies
+
+CompileC ./CompilerIdCXX.build/Debug/CompilerIdCXX.build/Objects-normal/i386/CMakeCXXCompilerId.o CMakeCXXCompilerId.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -fvisibility=hidden -fvisibility-inlines-hidden -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/CompilerIdCXX.hmap -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/DerivedSources -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/Objects-normal/i386/CMakeCXXCompilerId.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/Objects-normal/i386/CMakeCXXCompilerId.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/CMakeCXXCompilerId.cpp -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/Objects-normal/i386/CMakeCXXCompilerId.o
+
+Ld ./CompilerIdCXX normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/Objects-normal/i386/CompilerIdCXX.LinkFileList -mmacosx-version-min=10.8 -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX
+
+PhaseScriptExecution "Run Script" ./CompilerIdCXX.build/Debug/CompilerIdCXX.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/./CompilerIdCXX.build/Debug/CompilerIdCXX.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+GCC_VERSION=com.apple.compilers.llvm.clang.1_0
+
+
+** BUILD SUCCEEDED **
+
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX"
+
+The CXX compiler identification is AppleClang, found in "/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdCXX/CompilerIdCXX"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_bde3b" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_bde3b OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/testCCompiler.o testCCompiler.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/testCCompiler.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/testCCompiler.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/testCCompiler.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/testCCompiler.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/testCCompiler.o testCCompiler.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/testCCompiler.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/testCCompiler.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/testCCompiler.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/testCCompiler.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/cmTC_bde3b normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/cmTC_bde3b.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/cmTC_bde3b
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/cmTC_bde3b normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/cmTC_bde3b.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/cmTC_bde3b
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+CreateUniversalBinary Debug/cmTC_bde3b normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/x86_64/cmTC_bde3b /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Objects-normal/i386/cmTC_bde3b -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_bde3b
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Script-BB63B415957D46D79E23580B.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_bde3b.build/Script-BB63B415957D46D79E23580B.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_bde3b.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_bde3b.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_f8c24" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_f8c24 OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24 normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24.LinkFileList -mmacosx-version-min=10.8 -v -Wl,-v -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24
+Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)
+Target: i386-apple-darwin13.0.0
+Thread model: posix
+ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24 -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24.LinkFileList -v -search_paths_first -headerpad_max_install_names -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+@(#)PROGRAM:ld  PROJECT:ld64-136
+configured to support archs: armv6 armv7 armv7s i386 x86_64
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+Library search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib
+Framework search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/cmTC_f8c24 normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/cmTC_f8c24.LinkFileList -mmacosx-version-min=10.8 -v -Wl,-v -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/cmTC_f8c24
+Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)
+Target: x86_64-apple-darwin13.0.0
+Thread model: posix
+ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/cmTC_f8c24 -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/cmTC_f8c24.LinkFileList -v -search_paths_first -headerpad_max_install_names -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+@(#)PROGRAM:ld  PROJECT:ld64-136
+configured to support archs: armv6 armv7 armv7s i386 x86_64
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+Library search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib
+Framework search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/
+
+CreateUniversalBinary Debug/cmTC_f8c24 normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/cmTC_f8c24 /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24 -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_f8c24
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Script-31E2F782EF204D158C667C81.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Script-31E2F782EF204D158C667C81.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_f8c24.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_f8c24.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_f8c24" "-configuration" "Debug"]
+  ignore line: [=== BUILD NATIVE TARGET cmTC_f8c24 OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===]
+  ignore line: [Check dependencies]
+  ignore line: []
+  ignore line: [CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler]
+  ignore line: [    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: [    setenv LANG en_US.US-ASCII]
+  ignore line: [    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/x86_64/CMakeCCompilerABI.o]
+  ignore line: []
+  ignore line: [CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler]
+  ignore line: [    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: [    setenv LANG en_US.US-ASCII]
+  ignore line: [    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCCompilerABI.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/CMakeCCompilerABI.o]
+  ignore line: []
+  ignore line: [Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24 normal i386]
+  ignore line: [    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: [    setenv MACOSX_DEPLOYMENT_TARGET 10.8]
+  ignore line: [    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24.LinkFileList -mmacosx-version-min=10.8 -v -Wl,-v -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24]
+  ignore line: [Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)]
+  ignore line: [Target: i386-apple-darwin13.0.0]
+  ignore line: [Thread model: posix]
+  reduced line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24 -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24.LinkFileList -v -search_paths_first -headerpad_max_install_names -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug]
+            to: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24 -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24.LinkFileList -v -search_paths_first -headerpad_max_install_names -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a ]
+  link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24 -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24.LinkFileList -v -search_paths_first -headerpad_max_install_names -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a ]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [i386] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.8.0] ==> ignore
+    arg [-syslibroot] ==> ignore
+    arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk] ==> ignore
+    arg [-o] ==> ignore
+    arg [/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24] ==> ignore
+    arg [-filelist] ==> ignore
+    arg [/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_f8c24.build/Objects-normal/i386/cmTC_f8c24.LinkFileList] ==> ignore
+    arg [-v] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-lSystem] ==> lib [System]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib]
+  Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/]
+  remove lib [System]
+  remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a]
+  remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib]
+  collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks]
+  implicit libs: []
+  implicit dirs: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib]
+  implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks]
+
+
+
+
+Detecting C [-std=c11] compiler features compiled with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_857bf" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_857bf OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/feature_tests.o ../feature_tests.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=c11 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/feature_tests.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/feature_tests.o ../feature_tests.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=c11 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/feature_tests.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/cmTC_857bf normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/cmTC_857bf.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/cmTC_857bf
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/cmTC_857bf normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/cmTC_857bf.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/cmTC_857bf
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+CreateUniversalBinary Debug/cmTC_857bf normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/x86_64/cmTC_857bf /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Objects-normal/i386/cmTC_857bf -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_857bf
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Script-D3BAADB134B54DB181F6CC38.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_857bf.build/Script-D3BAADB134B54DB181F6CC38.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_857bf.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_857bf.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c99] compiler features compiled with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_e62c0" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_e62c0 OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/feature_tests.o ../feature_tests.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=c99 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/feature_tests.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/feature_tests.o ../feature_tests.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=c99 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/feature_tests.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/cmTC_e62c0 normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/cmTC_e62c0.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/cmTC_e62c0
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/cmTC_e62c0 normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/cmTC_e62c0.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/cmTC_e62c0
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+CreateUniversalBinary Debug/cmTC_e62c0 normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/x86_64/cmTC_e62c0 /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Objects-normal/i386/cmTC_e62c0 -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_e62c0
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Script-1F5D4952B6D9496D85938B50.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e62c0.build/Script-1F5D4952B6D9496D85938B50.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_e62c0.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_e62c0.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c90] compiler features compiled with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_e9b0b" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_e9b0b OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/feature_tests.o ../feature_tests.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=c90 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/feature_tests.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/feature_tests.o ../feature_tests.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=gnu99 -Wall -Wextra -std=c90 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/feature_tests.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/cmTC_e9b0b normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/cmTC_e9b0b.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/cmTC_e9b0b
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/cmTC_e9b0b normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/cmTC_e9b0b.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/cmTC_e9b0b
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+CreateUniversalBinary Debug/cmTC_e9b0b normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/x86_64/cmTC_e9b0b /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Objects-normal/i386/cmTC_e9b0b -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_e9b0b
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Script-41E170909B094A00814D3908.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_e9b0b.build/Script-41E170909B094A00814D3908.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_e9b0b.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_e9b0b.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:0c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:0c_variadic_macros
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:0c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:0c_variadic_macros
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_0766c" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_0766c OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/testCXXCompiler.o testCXXCompiler.cxx normal x86_64 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/testCXXCompiler.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/testCXXCompiler.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/testCXXCompiler.cxx -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/testCXXCompiler.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/testCXXCompiler.o testCXXCompiler.cxx normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/testCXXCompiler.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/testCXXCompiler.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/testCXXCompiler.cxx -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/testCXXCompiler.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/cmTC_0766c normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/cmTC_0766c.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/cmTC_0766c
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/cmTC_0766c normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/cmTC_0766c.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/cmTC_0766c
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+CreateUniversalBinary Debug/cmTC_0766c normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/x86_64/cmTC_0766c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Objects-normal/i386/cmTC_0766c -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_0766c
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Script-25258E3BD5364B8A8BE8B5EC.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_0766c.build/Script-25258E3BD5364B8A8BE8B5EC.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_0766c.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_0766c.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_15f26" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_15f26 OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp normal x86_64 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26 normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26.LinkFileList -mmacosx-version-min=10.8 -v -Wl,-v -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26
+Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)
+Target: i386-apple-darwin13.0.0
+Thread model: posix
+ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26 -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26.LinkFileList -v -search_paths_first -headerpad_max_install_names -lstdc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+@(#)PROGRAM:ld  PROJECT:ld64-136
+configured to support archs: armv6 armv7 armv7s i386 x86_64
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+Library search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib
+Framework search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/cmTC_15f26 normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/cmTC_15f26.LinkFileList -mmacosx-version-min=10.8 -v -Wl,-v -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/cmTC_15f26
+Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)
+Target: x86_64-apple-darwin13.0.0
+Thread model: posix
+ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/cmTC_15f26 -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/cmTC_15f26.LinkFileList -v -search_paths_first -headerpad_max_install_names -lstdc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+@(#)PROGRAM:ld  PROJECT:ld64-136
+configured to support archs: armv6 armv7 armv7s i386 x86_64
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+Library search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib
+Framework search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/
+
+CreateUniversalBinary Debug/cmTC_15f26 normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/cmTC_15f26 /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26 -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_15f26
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Script-3F7EE1FC85AA4AEEA50703E3.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Script-3F7EE1FC85AA4AEEA50703E3.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_15f26.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_15f26.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_15f26" "-configuration" "Debug"]
+  ignore line: [=== BUILD NATIVE TARGET cmTC_15f26 OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===]
+  ignore line: [Check dependencies]
+  ignore line: []
+  ignore line: [CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler]
+  ignore line: [    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: [    setenv LANG en_US.US-ASCII]
+  ignore line: [    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/CMakeCXXCompilerABI.o]
+  ignore line: []
+  ignore line: [CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.o ../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp normal x86_64 c++ com.apple.compilers.llvm.clang.1_0.compiler]
+  ignore line: [    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: [    setenv LANG en_US.US-ASCII]
+  ignore line: [    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../../../../../../../../../Applications/CMake.app/Contents/share/cmake-3.8/Modules/CMakeCXXCompilerABI.cpp -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/x86_64/CMakeCXXCompilerABI.o]
+  ignore line: []
+  ignore line: [Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26 normal i386]
+  ignore line: [    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp]
+  ignore line: [    setenv MACOSX_DEPLOYMENT_TARGET 10.8]
+  ignore line: [    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26.LinkFileList -mmacosx-version-min=10.8 -v -Wl,-v -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26]
+  ignore line: [Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)]
+  ignore line: [Target: i386-apple-darwin13.0.0]
+  ignore line: [Thread model: posix]
+  reduced line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26 -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26.LinkFileList -v -search_paths_first -headerpad_max_install_names -lstdc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug]
+            to: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26 -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26.LinkFileList -v -search_paths_first -headerpad_max_install_names -lstdc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a ]
+  link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch i386 -macosx_version_min 10.8.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26 -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26.LinkFileList -v -search_paths_first -headerpad_max_install_names -lstdc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a ]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [i386] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.8.0] ==> ignore
+    arg [-syslibroot] ==> ignore
+    arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk] ==> ignore
+    arg [-o] ==> ignore
+    arg [/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26] ==> ignore
+    arg [-filelist] ==> ignore
+    arg [/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_15f26.build/Objects-normal/i386/cmTC_15f26.LinkFileList] ==> ignore
+    arg [-v] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lSystem] ==> lib [System]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib]
+  Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/]
+  remove lib [System]
+  remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.eprintf.a]
+  remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib]
+  collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks]
+  implicit libs: [stdc++]
+  implicit dirs: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib]
+  implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks]
+
+
+
+
+Detecting CXX [-std=c++11] compiler features compiled with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_20ae6" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_20ae6 OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/feature_tests.o ../feature_tests.cxx normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=c++11 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.cxx -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/feature_tests.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/feature_tests.o ../feature_tests.cxx normal x86_64 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=c++11 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.cxx -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/feature_tests.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/cmTC_20ae6 normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/cmTC_20ae6.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/cmTC_20ae6
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/cmTC_20ae6 normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/cmTC_20ae6.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/cmTC_20ae6
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+CreateUniversalBinary Debug/cmTC_20ae6 normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/x86_64/cmTC_20ae6 /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Objects-normal/i386/cmTC_20ae6 -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_20ae6
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Script-1E735676460F4243B4661E8D.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_20ae6.build/Script-1E735676460F4243B4661E8D.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_20ae6.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_20ae6.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:1cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:1cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+
+
+Detecting CXX [-std=c++98] compiler features compiled with the following output:
+Change Dir: /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/xcodebuild" "-project" "CMAKE_TRY_COMPILE.xcodeproj" "build" "-target" "cmTC_1c19a" "-configuration" "Debug"
+=== BUILD NATIVE TARGET cmTC_1c19a OF PROJECT CMAKE_TRY_COMPILE WITH CONFIGURATION Debug ===
+Check dependencies
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/feature_tests.o ../feature_tests.cxx normal x86_64 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch x86_64 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/DerivedSources/x86_64 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=c++98 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.cxx -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/feature_tests.o
+
+CompileC CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/feature_tests.o ../feature_tests.cxx normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv LANG en_US.US-ASCII
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions "-DCMAKE_INTDIR=\"Debug\"" -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.8 -g -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/DerivedSources -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -std=c++98 -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/feature_tests.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/feature_tests.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/../feature_tests.cxx -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/feature_tests.o
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/cmTC_1c19a normal x86_64
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/cmTC_1c19a.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/cmTC_1c19a
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+Ld CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/cmTC_1c19a normal i386
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    setenv MACOSX_DEPLOYMENT_TARGET 10.8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/cmTC_1c19a.LinkFileList -mmacosx-version-min=10.8 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/cmTC_1c19a
+ld: warning: directory not found for option '-L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+ld: warning: directory not found for option '-F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug'
+
+CreateUniversalBinary Debug/cmTC_1c19a normal "x86_64 i386"
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    lipo -create /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/x86_64/cmTC_1c19a /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Objects-normal/i386/cmTC_1c19a -output /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/Debug/cmTC_1c19a
+
+PhaseScriptExecution "CMake PostBuild Rules" CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Script-9A5B692C40FC4DA190E03687.sh
+    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp
+    /bin/sh -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMAKE_TRY_COMPILE.build/Debug/cmTC_1c19a.build/Script-9A5B692C40FC4DA190E03687.sh
+echo "Depend check for xcode"
+Depend check for xcode
+cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp && make -C /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp -f /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/CMakeTmp/CMakeScripts/XCODE_DEPEND_HELPER.make PostBuild.cmTC_1c19a.Debug
+make[1]: Nothing to be done for `PostBuild.cmTC_1c19a.Debug'.
+
+
+** BUILD SUCCEEDED **
+
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:0cxx_alias_templates
+    Feature record: CXX_FEATURE:0cxx_alignas
+    Feature record: CXX_FEATURE:0cxx_alignof
+    Feature record: CXX_FEATURE:0cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:0cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:0cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:0cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:0cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:0cxx_default_function_template_args
+    Feature record: CXX_FEATURE:0cxx_defaulted_functions
+    Feature record: CXX_FEATURE:0cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:0cxx_delegating_constructors
+    Feature record: CXX_FEATURE:0cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:0cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:0cxx_explicit_conversions
+    Feature record: CXX_FEATURE:0cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:0cxx_extern_templates
+    Feature record: CXX_FEATURE:0cxx_final
+    Feature record: CXX_FEATURE:0cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:0cxx_inline_namespaces
+    Feature record: CXX_FEATURE:0cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:0cxx_local_type_template_args
+    Feature record: CXX_FEATURE:0cxx_long_long_type
+    Feature record: CXX_FEATURE:0cxx_noexcept
+    Feature record: CXX_FEATURE:0cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:0cxx_nullptr
+    Feature record: CXX_FEATURE:0cxx_override
+    Feature record: CXX_FEATURE:0cxx_range_for
+    Feature record: CXX_FEATURE:0cxx_raw_string_literals
+    Feature record: CXX_FEATURE:0cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:0cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:0cxx_rvalue_references
+    Feature record: CXX_FEATURE:0cxx_sizeof_member
+    Feature record: CXX_FEATURE:0cxx_static_assert
+    Feature record: CXX_FEATURE:0cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:0cxx_trailing_return_types
+    Feature record: CXX_FEATURE:0cxx_unicode_literals
+    Feature record: CXX_FEATURE:0cxx_uniform_initialization
+    Feature record: CXX_FEATURE:0cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:0cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:0cxx_variadic_macros
+    Feature record: CXX_FEATURE:0cxx_variadic_templates
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:0cxx_alias_templates
+    Feature record: CXX_FEATURE:0cxx_alignas
+    Feature record: CXX_FEATURE:0cxx_alignof
+    Feature record: CXX_FEATURE:0cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:0cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:0cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:0cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:0cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:0cxx_default_function_template_args
+    Feature record: CXX_FEATURE:0cxx_defaulted_functions
+    Feature record: CXX_FEATURE:0cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:0cxx_delegating_constructors
+    Feature record: CXX_FEATURE:0cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:0cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:0cxx_explicit_conversions
+    Feature record: CXX_FEATURE:0cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:0cxx_extern_templates
+    Feature record: CXX_FEATURE:0cxx_final
+    Feature record: CXX_FEATURE:0cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:0cxx_inline_namespaces
+    Feature record: CXX_FEATURE:0cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:0cxx_local_type_template_args
+    Feature record: CXX_FEATURE:0cxx_long_long_type
+    Feature record: CXX_FEATURE:0cxx_noexcept
+    Feature record: CXX_FEATURE:0cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:0cxx_nullptr
+    Feature record: CXX_FEATURE:0cxx_override
+    Feature record: CXX_FEATURE:0cxx_range_for
+    Feature record: CXX_FEATURE:0cxx_raw_string_literals
+    Feature record: CXX_FEATURE:0cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:0cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:0cxx_rvalue_references
+    Feature record: CXX_FEATURE:0cxx_sizeof_member
+    Feature record: CXX_FEATURE:0cxx_static_assert
+    Feature record: CXX_FEATURE:0cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:0cxx_trailing_return_types
+    Feature record: CXX_FEATURE:0cxx_unicode_literals
+    Feature record: CXX_FEATURE:0cxx_uniform_initialization
+    Feature record: CXX_FEATURE:0cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:0cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:0cxx_variadic_macros
+    Feature record: CXX_FEATURE:0cxx_variadic_templates

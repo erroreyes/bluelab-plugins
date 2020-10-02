@@ -1,0 +1,318 @@
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Set to 1 if the compile is GNU GCC. */
+#define COMPILER_IS_GCC @COMPILER_IS_GCC@
+
+/* Target processor clips on negative float to int conversion. */
+#define CPU_CLIPS_NEGATIVE @CPU_CLIPS_NEGATIVE@
+
+/* Target processor clips on positive float to int conversion. */
+#define CPU_CLIPS_POSITIVE @CPU_CLIPS_POSITIVE@
+
+/* Target processor is big endian. */
+#define CPU_IS_BIG_ENDIAN @CPU_IS_BIG_ENDIAN@
+
+/* Target processor is little endian. */
+#define CPU_IS_LITTLE_ENDIAN @CPU_IS_LITTLE_ENDIAN@
+
+/* Set to 1 to enable experimental code. */
+#define ENABLE_EXPERIMENTAL_CODE @ENABLE_EXPERIMENTAL_CODE@
+
+/* Define to 1 if you have the <alsa/asoundlib.h> header file. */
+#define HAVE_ALSA_ASOUNDLIB_H @HAVE_ALSA_ASOUNDLIB_H@
+
+/* Define to 1 if you have the <byteswap.h> header file. */
+#define HAVE_BYTESWAP_H @HAVE_BYTESWAP_H@
+
+/* Define to 1 if you have the `calloc' function. */
+#define HAVE_CALLOC @HAVE_CALLOC@
+
+/* Define to 1 if you have the `ceil' function. */
+#define HAVE_CEIL @HAVE_CEIL@
+
+/* Set to 1 if S_IRGRP is defined. */
+#define HAVE_DECL_S_IRGRP @HAVE_DECL_S_IRGRP@
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#define HAVE_DLFCN_H @HAVE_DLFCN_H@
+
+/* Define to 1 if you have the <endian.h> header file. */
+#define HAVE_ENDIAN_H @HAVE_ENDIAN_H@
+
+/* Will be set to 1 if flac, ogg and vorbis are available. */
+#define HAVE_EXTERNAL_XIPH_LIBS @HAVE_EXTERNAL_XIPH_LIBS@
+
+/* Define to 1 if you have the `floor' function. */
+#define HAVE_FLOOR @HAVE_FLOOR@
+
+/* Define to 1 if you have the `fmod' function. */
+#define HAVE_FMOD @HAVE_FMOD@
+
+/* Define to 1 if you have the `free' function. */
+#define HAVE_FREE @HAVE_FREE@
+
+/* Define to 1 if you have the `fstat' function. */
+#define HAVE_FSTAT @HAVE_FSTAT@
+
+/* Define to 1 if you have the `fstat64' function. */
+#define HAVE_FSTAT64 @HAVE_FSTAT64@
+
+/* Define to 1 if you have the `fsync' function. */
+#define HAVE_FSYNC @HAVE_FSYNC@
+
+/* Define to 1 if you have the `ftruncate' function. */
+#define HAVE_FTRUNCATE @HAVE_FTRUNCATE@
+
+/* Define to 1 if you have the `getpagesize' function. */
+#define HAVE_GETPAGESIZE @HAVE_GETPAGESIZE@
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#define HAVE_GETTIMEOFDAY @HAVE_GETTIMEOFDAY@
+
+/* Define to 1 if you have the `gmtime' function. */
+#define HAVE_GMTIME @HAVE_GMTIME@
+
+/* Define to 1 if you have the `gmtime_r' function. */
+#define HAVE_GMTIME_R @HAVE_GMTIME_R@
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#define HAVE_INTTYPES_H @HAVE_INTTYPES_H@
+
+/* Define to 1 if you have the `m' library (-lm). */
+#define HAVE_LIBM @HAVE_LIBM@
+
+/* Define to 1 if you have the <locale.h> header file. */
+#define HAVE_LOCALE_H @HAVE_LOCALE_H@
+
+/* Define to 1 if you have the `localtime' function. */
+#define HAVE_LOCALTIME @HAVE_LOCALTIME@
+
+/* Define to 1 if you have the `localtime_r' function. */
+#define HAVE_LOCALTIME_R @HAVE_LOCALTIME_R@
+
+/* Define if you have C99's lrint function. */
+#define HAVE_LRINT @HAVE_LRINT@
+
+/* Define if you have C99's lrintf function. */
+#define HAVE_LRINTF @HAVE_LRINTF@
+
+/* Define to 1 if you have the `lround' function. */
+#define HAVE_LROUND @HAVE_LROUND@
+
+/* Define to 1 if you have the `lseek' function. */
+#define HAVE_LSEEK @HAVE_LSEEK@
+
+/* Define to 1 if you have the `lseek64' function. */
+#define HAVE_LSEEK64 @HAVE_LSEEK64@
+
+/* Define to 1 if you have the `malloc' function. */
+#define HAVE_MALLOC @HAVE_MALLOC@
+
+/* Define to 1 if you have the <memory.h> header file. */
+#define HAVE_MEMORY_H @HAVE_MEMORY_H@
+
+/* Define to 1 if you have the `mmap' function. */
+#define HAVE_MMAP @HAVE_MMAP@
+
+/* Define to 1 if you have the `open' function. */
+#define HAVE_OPEN @HAVE_OPEN@
+
+/* Define to 1 if you have the `pipe' function. */
+#define HAVE_PIPE @HAVE_PIPE@
+
+/* Define to 1 if you have the `read' function. */
+#define HAVE_READ @HAVE_READ@
+
+/* Define to 1 if you have the `realloc' function. */
+#define HAVE_REALLOC @HAVE_REALLOC@
+
+/* Define to 1 if you have the `setlocale' function. */
+#define HAVE_SETLOCALE @HAVE_SETLOCALE@
+
+/* Set to 1 if <sndio.h> is available. */
+#define HAVE_SNDIO_H @HAVE_SNDIO_H@
+
+/* Define to 1 if you have the `snprintf' function. */
+#define HAVE_SNPRINTF @HAVE_SNPRINTF@
+
+/* Set to 1 if you have libsqlite3. */
+#define HAVE_SQLITE3 @HAVE_SQLITE3@
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#define HAVE_STDINT_H @HAVE_STDINT_H@
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#define HAVE_STDLIB_H @HAVE_STDLIB_H@
+
+/* Define to 1 if you have the <strings.h> header file. */
+#define HAVE_STRINGS_H @HAVE_STRINGS_H@
+
+/* Define to 1 if you have the <string.h> header file. */
+#define HAVE_STRING_H @HAVE_STRING_H@
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#define HAVE_SYS_STAT_H @HAVE_SYS_STAT_H@
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#define HAVE_SYS_TIME_H @HAVE_SYS_TIME_H@
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#define HAVE_SYS_TYPES_H @HAVE_SYS_TYPES_H@
+
+/* Define to 1 if you have <sys/wait.h> that is POSIX.1 compatible. */
+#define HAVE_SYS_WAIT_H @HAVE_SYS_WAIT_H@
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#define HAVE_UNISTD_H @HAVE_UNISTD_H@
+
+/* Define to 1 or 0, depending whether the compiler supports simple visibility
+   declarations. */
+#define HAVE_VISIBILITY @HAVE_VISIBILITY@
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#define HAVE_VSNPRINTF @HAVE_VSNPRINTF@
+
+/* Define to 1 if you have the `waitpid' function. */
+#define HAVE_WAITPID @HAVE_WAITPID@
+
+/* Define to 1 if you have the `write' function. */
+#define HAVE_WRITE @HAVE_WRITE@
+
+/* The host triplet of the compiled binary. */
+#define HOST_TRIPLET @HOST_TRIPLET@
+
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#define LT_OBJDIR @LT_OBJDIR@
+
+/* Set to 1 if compiling for OpenBSD */
+#define OS_IS_OPENBSD @OS_IS_OPENBSD@
+
+/* Set to 1 if compiling for Win32 */
+#define OS_IS_WIN32 @OS_IS_WIN32@
+
+/* Name of package */
+#define PACKAGE @PACKAGE@
+
+/* Define to the address where bug reports for this package should be sent. */
+#define PACKAGE_BUGREPORT @PACKAGE_BUGREPORT@
+
+/* Define to the full name of this package. */
+#define PACKAGE_NAME @PACKAGE_NAME@
+
+/* Define to the full name and version of this package. */
+#define PACKAGE_STRING @PACKAGE_STRING@
+
+/* Define to the one symbol short name of this package. */
+#define PACKAGE_TARNAME @PACKAGE_TARNAME@
+
+/* Define to the home page for this package. */
+#define PACKAGE_URL @PACKAGE_URL@
+
+/* Define to the version of this package. */
+#define PACKAGE_VERSION @PACKAGE_VERSION@
+
+/* Set to maximum allowed value of sf_count_t type. */
+#define SF_COUNT_MAX @SF_COUNT_MAX@
+
+/* The size of `double', as computed by sizeof. */
+#define SIZEOF_DOUBLE @SIZEOF_DOUBLE@
+
+/* The size of `float', as computed by sizeof. */
+#define SIZEOF_FLOAT @SIZEOF_FLOAT@
+
+/* The size of `int', as computed by sizeof. */
+#define SIZEOF_INT @SIZEOF_INT@
+
+/* The size of `int64_t', as computed by sizeof. */
+#define SIZEOF_INT64_T @SIZEOF_INT64_T@
+
+/* The size of `long', as computed by sizeof. */
+#define SIZEOF_LONG @SIZEOF_LONG@
+
+/* The size of `long long', as computed by sizeof. */
+#define SIZEOF_LONG_LONG @SIZEOF_LONG_LONG@
+
+/* The size of `off_t', as computed by sizeof. */
+#define SIZEOF_OFF_T @SIZEOF_OFF_T@
+
+/* Set to sizeof (long) if unknown. */
+#define SIZEOF_SF_COUNT_T @SIZEOF_SF_COUNT_T@
+
+/* The size of `short', as computed by sizeof. */
+#define SIZEOF_SHORT @SIZEOF_SHORT@
+
+/* The size of `size_t', as computed by sizeof. */
+#define SIZEOF_SIZE_T @SIZEOF_SIZE_T@
+
+/* The size of `void*', as computed by sizeof. */
+#define SIZEOF_VOIDP @SIZEOF_VOIDP@
+
+/* The size of `wchar_t', as computed by sizeof. */
+#define SIZEOF_WCHAR_T @SIZEOF_WCHAR_T@
+
+/* Define to 1 if you have the ANSI C header files. */
+#define STDC_HEADERS @STDC_HEADERS@
+
+/* Set to long if unknown. */
+#define TYPEOF_SF_COUNT_T @TYPEOF_SF_COUNT_T@
+
+/* Enable extensions on AIX 3, Interix.  */
+#ifndef _ALL_SOURCE
+# define _ALL_SOURCE @_ALL_SOURCE@
+#endif
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE @_GNU_SOURCE@
+#endif
+/* Enable threading extensions on Solaris.  */
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# define _POSIX_PTHREAD_SEMANTICS @_POSIX_PTHREAD_SEMANTICS@
+#endif
+/* Enable extensions on HP NonStop.  */
+#ifndef _TANDEM_SOURCE
+# define _TANDEM_SOURCE @_TANDEM_SOURCE@
+#endif
+/* Enable general extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# define __EXTENSIONS__ @__EXTENSIONS__@
+#endif
+
+
+/* Set to 1 to use the native windows API */
+#define USE_WINDOWS_API @USE_WINDOWS_API@
+
+/* Version number of package */
+#define VERSION @VERSION@
+
+/* Set to 1 if windows DLL is being built. */
+#define WIN32_TARGET_DLL @WIN32_TARGET_DLL@
+
+/* Target processor is big endian. */
+#define WORDS_BIGENDIAN @WORDS_BIGENDIAN@
+
+/* Enable large inode numbers on Mac OS X 10.5.  */
+#ifndef _DARWIN_USE_64_BIT_INODE
+# define _DARWIN_USE_64_BIT_INODE 1
+#endif
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+
+
+/* Define for large files, on AIX-style hosts. */
+#define _LARGE_FILES @_LARGE_FILES@
+
+/* Define to 1 if on MINIX. */
+#define _MINIX @_MINIX@
+
+/* Define to 2 if the system does not provide POSIX.1 features except with
+   this defined. */
+#define _POSIX_1_SOURCE @_POSIX_1_SOURCE@
+
+/* Define to 1 if you need to in order for `stat' and other things to work. */
+#define _POSIX_SOURCE @_POSIX_SOURCE@
+
+/* Set to 1 to use C99 printf/snprintf in MinGW. */
+#define __USE_MINGW_ANSI_STDIO @__USE_MINGW_ANSI_STDIO@
+
+/* Define to `int' if <sys/types.h> does not define. */
+#define ssize_t @ssize_t@

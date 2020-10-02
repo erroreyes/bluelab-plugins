@@ -1,0 +1,72 @@
+TCompilerIdC
+v5
+r1
+cCheck dependencies
+cCompileC ./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+cLd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC normal i386
+cPhaseScriptExecution "Run Script" /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+c000000005130312F00000000000000AA
+t1362112815
+s170
+
+N/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC
+t2
+s0
+
+N/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o
+t2
+s0
+
+N/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CompilerIdC.LinkFileList
+c000000005B1053A400000000000000BB
+t1527796644
+s187
+
+N/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+c000000005B1053A4000000000000002A
+t1527796644
+s42
+
+N/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.c
+c000000005B1053A300000000000042BE
+t1527796643
+s17086
+
+CCheck dependencies
+r0
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies6ea61c924560c041^b07329924560c041^---0#1#0#--18"Check dependencies36"9D656C85-97B6-4ABA-99AA-DB1C98B28F50-
+
+CCompileC ./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler
+s549489444.327401
+e549489444.542283
+r1
+xCompileC
+x./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o
+x/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.c
+xnormal
+xi386
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection130"Compile /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.cb9fe29924560c041^f96845924560c041^---0#0#0#-19%DVTDocumentLocation2@138"file://localhost/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.c0000000000000000^2909"CompileC ./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o CMakeCCompilerId.c normal i386 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch i386 -fmessage-length=0 -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.8 -g -fvisibility=hidden -Wno-sign-conversion -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/CompilerIdC.hmap -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/DerivedSources/i386 -I/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/DerivedSources -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC -MMD -MT dependencies -MF /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.d --serialize-diagnostics /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.dia -c /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/CMakeCCompilerId.c -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CMakeCCompilerId.o36"CF31148D-80CE-4B90-B93C-015F5F141A39-
+
+CLd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC normal i386
+s549489444.542513
+e549489444.643166
+r1
+xLd
+x/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC
+xnormal
+xi386
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection122"Link /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC9e7b45924560c041^ce5252924560c041^---0#0#0#--960"Ld ./CompilerIdC normal i386    cd /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC    setenv MACOSX_DEPLOYMENT_TARGET 10.8    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC -F/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC -filelist /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Objects-normal/i386/CompilerIdC.LinkFileList -mmacosx-version-min=10.8 -o /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC36"9F15459F-461B-41A6-A2D1-49A6B00B66C7-
+
+CPhaseScriptExecution "Run Script" /Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+s549489444.643426
+e549489444.662483
+r1
+xPhaseScriptExecution
+xRun Script
+x/Users/applematuer/Documents/Dev/plugin-development/Libs/libsndfile-1.0.28/CMakeFiles/3.8.0/CompilerIdC/./CompilerIdC.build/Debug/CompilerIdC.build/Script-2C8FEB8E15DC1A1A00E56A5D.sh
+oGCC_VERSION=com.apple.compilers.llvm.clang.1_0
+
