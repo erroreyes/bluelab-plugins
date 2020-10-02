@@ -1,1 +1,5 @@
 .DS_Store
+*~
+*bl-darknet/*backup*
+*bl-darknet/*training*
+*bl-darknet/*dbg-data*
