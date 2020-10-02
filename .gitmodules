@@ -28,3 +28,6 @@
 [submodule "Libs/sndfilter"]
 	path = Libs/sndfilter
 	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/sndfilter
+[submodule "BuildSystem"]
+	path = BuildSystem
+	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/BuildSystem
