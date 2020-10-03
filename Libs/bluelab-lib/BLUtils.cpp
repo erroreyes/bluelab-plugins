@@ -1609,6 +1609,18 @@ template void BLUtils::FillAllZero(double *ioBuf, int size);
 
 template <typename FLOAT_TYPE>
 void
+BLUtils::FillAllZero(vector<WDL_TypedBuf<FLOAT_TYPE> > *samples)
+{
+    for (int i = 0; i < samples->size(); i++)
+    {
+        FillAllZero(&(*samples)[i]);
+    }
+}
+template void BLUtils::FillAllZero(vector<WDL_TypedBuf<float> > *samples);
+template void BLUtils::FillAllZero(vector<WDL_TypedBuf<double> > *samples);
+
+template <typename FLOAT_TYPE>
+void
 BLUtils::FillAllValue(WDL_TypedBuf<FLOAT_TYPE> *ioBuf, FLOAT_TYPE val)
 {
     int bufferSize = ioBuf->GetSize();
