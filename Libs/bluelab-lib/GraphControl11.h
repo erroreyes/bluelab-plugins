@@ -146,14 +146,18 @@ public:
     
     virtual ~GraphCustomControl() {}
     
-    virtual void OnMouseDown(int x, int y, IMouseMod* pMod) {}
-    virtual void OnMouseUp(int x, int y, IMouseMod* pMod) {}
-    virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod) {}
-    virtual bool OnMouseDblClick(int x, int y, IMouseMod* pMod) { return false; }
-    virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, BL_GUI_FLOAT d) {};
-    virtual bool OnKeyDown(int x, int y, int key, IMouseMod* pMod) { return false; }
+    virtual void OnMouseDown(float x, float y, const IMouseMod &mod) {}
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod) {}
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod) {}
+    virtual /*bool*/void OnMouseDblClick(float x, float y,
+                                         const IMouseMod &mod) {}; //{ return false; }
+    virtual void OnMouseWheel(float x, float y,
+                              const IMouseMod &mod, BL_GUI_FLOAT d) {};
+    virtual bool OnKeyDown(float x, float y, int key,
+                           const IMouseMod &mod) { return false; }
     
-    virtual void OnMouseOver(int x, int y, IMouseMod* pMod) {}
+    virtual void OnMouseOver(float x, float y, const IMouseMod &mod) {}
     virtual void OnMouseOut() {}
     
     virtual void OnGUIIdle() {}
@@ -419,14 +423,14 @@ public:
     // Custom control
     void AddCustomControl(GraphCustomControl *customControl);
     
-    void OnMouseDown(int x, int y, IMouseMod* pMod);
-    void OnMouseUp(int x, int y, IMouseMod* pMod);
-    void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
-    bool OnMouseDblClick(int x, int y, IMouseMod* pMod);
-    void OnMouseWheel(int x, int y, IMouseMod* pMod, BL_GUI_FLOAT d);
-    bool OnKeyDown(int x, int y, int key, IMouseMod* pMod);
+    void OnMouseDown(float x, float y, const IMouseMod &mod) override;
+    void OnMouseUp(float x, float y, const IMouseMod &mod) override;
+    void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod) override;
+    void/*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
+    void OnMouseWheel(float x, float y, const IMouseMod &mod, BL_GUI_FLOAT d) override;
+    bool OnKeyDown(float x, float y, int key, const IMouseMod &mod) /*override*/;
     
-    void OnMouseOver(int x, int y, IMouseMod* pMod);
+    void OnMouseOver(float x, float y, const IMouseMod &mod) override;
     void OnMouseOut() override;
     
     void DBG_PrintCoords(int x, int y);

@@ -180,7 +180,7 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 }
 
 void
-BLUpmixGraphDrawer::OnMouseDown(int x, int y, IMouseMod* pMod)
+BLUpmixGraphDrawer::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     // Invert
     y = mHeight - y;
@@ -199,7 +199,7 @@ BLUpmixGraphDrawer::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-BLUpmixGraphDrawer::OnMouseUp(int x, int y, IMouseMod* pMod)
+BLUpmixGraphDrawer::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     mSourceIsSelected = false;
     
@@ -207,7 +207,7 @@ BLUpmixGraphDrawer::OnMouseUp(int x, int y, IMouseMod* pMod)
 }
 
 void
-BLUpmixGraphDrawer::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+BLUpmixGraphDrawer::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod)
 {
     // Protools intercepts alt+mouse down, and does not send mouse down
     //
@@ -223,7 +223,7 @@ BLUpmixGraphDrawer::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     {
         if (!mSourceIsSelected)
         {
-            OnMouseDown(x, y, pMod);
+            OnMouseDown(x, y, mod);
         }
     }
     
@@ -234,7 +234,7 @@ BLUpmixGraphDrawer::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     if (!mSourceIsSelected)
         return;
     
-    if (!pMod->A)
+    if (!mod.A)
     {
         // Invert
         y = mHeight - y;

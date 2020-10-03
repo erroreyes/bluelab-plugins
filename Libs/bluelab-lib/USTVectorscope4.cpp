@@ -124,34 +124,35 @@ USTVectorscope4::~USTVectorscope4()
 }
 
 void
-USTVectorscope4::OnMouseDown(int x, int y, IMouseMod* pMod)
+USTVectorscope4::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     if (mMode == UPMIX)
     {
         // Upmix graph drawer also manage control
-        mUpmixDrawer->OnMouseDown(x, y, pMod);
+        mUpmixDrawer->OnMouseDown(x, y, mod);
     }
 }
 
 void
-USTVectorscope4::OnMouseUp(int x, int y, IMouseMod* pMod)
+USTVectorscope4::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     if (mMode == UPMIX)
     {
         // Upmix graph drawer also manage control
-        mUpmixDrawer->OnMouseUp(x, y, pMod);
+        mUpmixDrawer->OnMouseUp(x, y, mod);
         
         return;
     }
 }
 
 void
-USTVectorscope4::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+USTVectorscope4::OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod)
 {
     if (mMode == UPMIX)
     {
         // Upmix graph drawer also manage control
-        mUpmixDrawer->OnMouseDrag(x, y, dX, dY, pMod);
+        mUpmixDrawer->OnMouseDrag(x, y, dX, dY, mod);
         
         return;
     }
@@ -165,12 +166,12 @@ USTVectorscope4::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     BL_GUI_FLOAT dpan = 0.0;
     BL_GUI_FLOAT dwidth = 0.0;
     
-    if (!pMod->A)
+    if (!mod.A)
         dpan = ((BL_GUI_FLOAT)dX)*COEFF;
     else
         dwidth = -((BL_GUI_FLOAT)dY)*COEFF;
     
-    if (pMod->S)
+    if (mod.S)
     {
         dpan *= FINE_COEFF;
         dwidth *= FINE_COEFF;

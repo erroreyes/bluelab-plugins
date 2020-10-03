@@ -70,13 +70,17 @@ public:
     virtual void Clear();
     
     // Control
-    virtual void OnMouseDown(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseUp(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
-    virtual bool OnMouseDblClick(int x, int y, IMouseMod* pMod);
-    virtual bool OnKeyDown(int x, int y, int key, IMouseMod* pMod);
+    virtual void OnMouseDown(float x, float y,
+                             const IMouseMod &mod);
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod);
+    virtual /*bool*/ void OnMouseDblClick(float x, float y,
+                                 const IMouseMod &mod);
+    virtual bool OnKeyDown(float x, float y, int key, const IMouseMod &mod);
     
-    virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, BL_FLOAT d);
+    virtual void OnMouseWheel(float x, float y,
+                              const IMouseMod &mod, BL_FLOAT d);
     
     virtual void OnGUIIdle();
     

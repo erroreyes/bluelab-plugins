@@ -71,12 +71,12 @@ PanogramCustomControl::SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDi
 }
 
 void
-PanogramCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
+PanogramCustomControl::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     mPrevMouseDown = true;
     mPrevMouseY = y;
     
-    if (pMod->Cmd)
+    if (mod.Cmd)
         // Command pressed (or Control on Windows)
     {
         // We are dragging the spectrogram,
@@ -100,7 +100,7 @@ PanogramCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-PanogramCustomControl::OnMouseUp(int x, int y, IMouseMod* pMod)
+PanogramCustomControl::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     // FIX: click on the resize button, to a bigger size, then the
     // mouse up is detected inside the graph, without previous mouse down
@@ -109,7 +109,7 @@ PanogramCustomControl::OnMouseUp(int x, int y, IMouseMod* pMod)
         return;
     mPrevMouseDown = false;
     
-    if (pMod->Cmd)
+    if (mod.Cmd)
         // Command pressed (or control on Windows)
     {
         // We are dragging the spectrogram,
@@ -140,7 +140,7 @@ PanogramCustomControl::OnMouseUp(int x, int y, IMouseMod* pMod)
 }
 
 void
-PanogramCustomControl::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+PanogramCustomControl::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod)
 {
     bool beginDrag = !mPrevMouseDrag;
     

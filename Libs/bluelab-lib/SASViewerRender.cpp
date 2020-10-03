@@ -173,7 +173,7 @@ SASViewerRender::SetLineMode(LinesRender2::Mode mode)
 }
 
 void
-SASViewerRender::OnMouseDown(int x, int y, IMouseMod* pMod)
+SASViewerRender::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     mMouseIsDown = true;
     
@@ -184,7 +184,7 @@ SASViewerRender::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-SASViewerRender::OnMouseUp(int x, int y, IMouseMod* pMod)
+SASViewerRender::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     if (!mMouseIsDown)
         return;
@@ -193,9 +193,10 @@ SASViewerRender::OnMouseUp(int x, int y, IMouseMod* pMod)
 }
 
 void
-SASViewerRender::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+SASViewerRender::OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod)
 {
-    if (pMod->A)
+    if (mod.A)
         // Alt-drag => zoom
     {
         if (!mPrevMouseDrag)
@@ -215,7 +216,7 @@ SASViewerRender::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
         dY *= -1.0;
         dY *= DRAG_WHEEL_COEFF;
         
-        OnMouseWheel(mPrevDrag[0], mPrevDrag[1], pMod, dY);
+        OnMouseWheel(mPrevDrag[0], mPrevDrag[1], mod, dY);
         
         return;
     }
@@ -260,8 +261,8 @@ SASViewerRender::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     mPlug->SetCameraAngles(mCamAngle0, mCamAngle1);
 }
 
-bool
-SASViewerRender::OnMouseDblClick(int x, int y, IMouseMod* pMod)
+void //bool
+SASViewerRender::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     // Reset the view
     mCamAngle0 = 0.0;
@@ -288,11 +289,12 @@ SASViewerRender::OnMouseDblClick(int x, int y, IMouseMod* pMod)
     BL_FLOAT fov = mLinesRenderWaves->GetCameraFov();
     mPlug->SetCameraFov(fov);
     
-    return true;
+    //return true;
 }
 
 void
-SASViewerRender::OnMouseWheel(int x, int y, IMouseMod* pMod, BL_FLOAT d)
+SASViewerRender::OnMouseWheel(float x, float y,
+                              const IMouseMod &mod, BL_FLOAT d)
 {
 #define WHEEL_ZOOM_STEP 0.025
     

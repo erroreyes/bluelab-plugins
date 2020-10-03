@@ -243,7 +243,7 @@ StereoVizVolRender2::AddCurveValuesWeight(const WDL_TypedBuf<BL_FLOAT> &xValues,
 }
 
 void
-StereoVizVolRender2::OnMouseDown(int x, int y, IMouseMod* pMod)
+StereoVizVolRender2::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     mMouseIsDown = true;
     
@@ -254,14 +254,14 @@ StereoVizVolRender2::OnMouseDown(int x, int y, IMouseMod* pMod)
     mSelectionActive = false;
     mVolRender->DisableSelection();
     
-    if (pMod->S)
+    if (mod.S)
         mIsSelecting = true;
     else
         mIsSelecting = false;
 }
 
 void
-StereoVizVolRender2::OnMouseUp(int x, int y, IMouseMod* pMod)
+StereoVizVolRender2::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     mMouseIsDown = false;
     
@@ -273,9 +273,10 @@ StereoVizVolRender2::OnMouseUp(int x, int y, IMouseMod* pMod)
 }
 
 void
-StereoVizVolRender2::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+StereoVizVolRender2::OnMouseDrag(float x, float y, float dX, float dY,
+                                 const IMouseMod &mod)
 {
-    if ((pMod->S) && mIsSelecting)
+    if ((mod.S) && mIsSelecting)
         // Grow Selection
     {
         mSelection[0] = mPrevDrag[0];
@@ -335,8 +336,8 @@ StereoVizVolRender2::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     mGraph->SetDataChanged();
 }
 
-bool
-StereoVizVolRender2::OnMouseDblClick(int x, int y, IMouseMod* pMod)
+void //bool
+StereoVizVolRender2::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     // Reset the view
     mAngle0 = 0.0;
@@ -347,7 +348,7 @@ StereoVizVolRender2::OnMouseDblClick(int x, int y, IMouseMod* pMod)
     //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
     
-    return true;
+    //return true;
 }
 
 void

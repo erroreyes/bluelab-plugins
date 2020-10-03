@@ -28,9 +28,10 @@ public:
     
     void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
     
-    virtual void OnMouseDown(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseUp(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
+    virtual void OnMouseDown(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod);
     
     void GetSelection(BL_FLOAT selection[4]);
     void SetSelection(BL_FLOAT x0, BL_FLOAT y0,

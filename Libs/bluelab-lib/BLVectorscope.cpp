@@ -171,34 +171,34 @@ BLVectorscope::SetMode(Mode mode)
 }
 
 void
-BLVectorscope::OnMouseDown(int x, int y, IMouseMod* pMod)
+BLVectorscope::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     if (mMode == UPMIX)
     {
         // Upmix graph drawer also manage control
-        mUpmixDrawer->OnMouseDown(x, y, pMod);
+        mUpmixDrawer->OnMouseDown(x, y, mod);
     }
 }
 
 void
-BLVectorscope::OnMouseUp(int x, int y, IMouseMod* pMod)
+BLVectorscope::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     if (mMode == UPMIX)
     {
         // Upmix graph drawer also manage control
-        mUpmixDrawer->OnMouseUp(x, y, pMod);
+        mUpmixDrawer->OnMouseUp(x, y, mod);
         
         return;
     }
 }
 
 void
-BLVectorscope::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+BLVectorscope::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod)
 {
     if (mMode == UPMIX)
     {
         // Upmix graph drawer also manage control
-        mUpmixDrawer->OnMouseDrag(x, y, dX, dY, pMod);
+        mUpmixDrawer->OnMouseDrag(x, y, dX, dY, mod);
         
         return;
     }
@@ -212,12 +212,12 @@ BLVectorscope::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     BL_FLOAT dpan = 0.0;
     BL_FLOAT dwidth = 0.0;
     
-    if (!pMod->A)
+    if (!mod.A)
         dpan = ((BL_FLOAT)dX)*COEFF;
     else
         dwidth = -((BL_FLOAT)dY)*COEFF;
     
-    if (pMod->S)
+    if (mod.S)
     {
         dpan *= FINE_COEFF;
         dwidth *= FINE_COEFF;

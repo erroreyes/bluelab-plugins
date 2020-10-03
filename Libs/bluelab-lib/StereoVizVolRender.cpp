@@ -243,7 +243,7 @@ StereoVizVolRender::AddCurveValuesWeight(const WDL_TypedBuf<BL_FLOAT> &xValues,
 }
 
 void
-StereoVizVolRender::OnMouseDown(int x, int y, IMouseMod* pMod)
+StereoVizVolRender::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     mMouseIsDown = true;
     
@@ -252,13 +252,14 @@ StereoVizVolRender::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-StereoVizVolRender::OnMouseUp(int x, int y, IMouseMod* pMod)
+StereoVizVolRender::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     mMouseIsDown = false;
 }
 
 void
-StereoVizVolRender::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+StereoVizVolRender::OnMouseDrag(float x, float y, float dX, float dY,
+                                const IMouseMod &mod)
 {
     int dragX = x - mPrevDrag[0];
     int dragY = y - mPrevDrag[1];

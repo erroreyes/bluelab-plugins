@@ -416,7 +416,7 @@ SMVVolRender3::Clear()
 }
 
 void
-SMVVolRender3::OnMouseDown(int x, int y, IMouseMod* pMod)
+SMVVolRender3::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     if (mIsSteppingOrientation)
         // Don't manage the mouse if we are currently playing a camera animation
@@ -440,7 +440,7 @@ SMVVolRender3::OnMouseDown(int x, int y, IMouseMod* pMod)
     // We can select borders even if shift is not pressed anymore
     SelectBorders(x, y);
     
-    if (mPrevCmdPressed)//(pMod->S)
+    if (mPrevCmdPressed)//(mod.S)
         mIsSelecting = true;
     else
     {
@@ -457,7 +457,7 @@ SMVVolRender3::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-SMVVolRender3::OnMouseUp(int x, int y, IMouseMod* pMod)
+SMVVolRender3::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     if (mIsSteppingOrientation)
         // Don't manage the mouse if we are currently playing a camera animation
@@ -478,7 +478,7 @@ SMVVolRender3::OnMouseUp(int x, int y, IMouseMod* pMod)
         // Pure mouse up
     {
 #if FIX_SELECTION_MESS
-        if (pMod->Cmd)
+        if (mod.Cmd)
         {
 #endif
         if (!mPrevMouseInsideSelect && !BorderSelected())
@@ -501,7 +501,8 @@ SMVVolRender3::OnMouseUp(int x, int y, IMouseMod* pMod)
 }
 
 void
-SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+SMVVolRender3::OnMouseDrag(float x, float y, float dX, float dY,
+                           const IMouseMod &mod)
 {
     if (mIsSteppingOrientation)
         // Don't manage the mouse if we are currently playing a camera animation
@@ -509,7 +510,7 @@ SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     
     mPrevMouseDrag = true;
     
-    if (pMod->A)
+    if (mod.A)
         // Alt-drag => zoom
     {
 #define DRAG_WHEEL_COEFF 0.2
@@ -517,7 +518,7 @@ SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
         dY *= -1.0;
         dY *= DRAG_WHEEL_COEFF;
         
-        OnMouseWheel(mPrevDrag[0], mPrevDrag[1], pMod, dY);
+        OnMouseWheel(mPrevDrag[0], mPrevDrag[1], mod, dY);
         
         return;
     }
@@ -582,7 +583,7 @@ SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
         }
     }
     
-    if (pMod->C || pMod->S)
+    if (mod.C || mod.S)
         // Control or shift => Move the selection volume
     {
         if (IsVolumeSelectionEnabled())
@@ -600,7 +601,7 @@ SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
             
             RC_FLOAT trans[3] = { 0.0, 0.0, 0.0 };
             
-            if (pMod->C && !pMod->S)
+            if (mod.C && !mod.S)
                 // Ctrl only => move X
             {
                 trans[0] = drag;
@@ -609,7 +610,7 @@ SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
                     trans[0] = -trans[0];
             }
             
-            if (pMod->C && pMod->S)
+            if (mod.C && mod.S)
                 // Ctrl + shift => move Y
             {
                 trans[1] = -drag;
@@ -618,7 +619,7 @@ SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
                     trans[1] = -trans[1];
             }
             
-            if (!pMod->C && pMod->S)
+            if (!mod.C && mod.S)
                 // Shift only => move Z
             {
                 trans[2] = drag;
@@ -671,16 +672,16 @@ SMVVolRender3::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     mGraph->SetDataChanged();
 }
 
-bool
-SMVVolRender3::OnMouseDblClick(int x, int y, IMouseMod* pMod)
+void //bool
+SMVVolRender3::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     if (mIsSteppingOrientation)
         // Don't manage the mouse if we are currently playing a camera animation
-        return true;
+        return; // true;
     
     if (InsideSelection(x, y))
         // Do not reset the camera view if BL_FLOAT-click inside selection
-        return true;
+        return; // true;
     
     // Reset the view
     mAngle0 = DEFAULT_ANGLE_0; //0.0;
@@ -696,23 +697,24 @@ SMVVolRender3::OnMouseDblClick(int x, int y, IMouseMod* pMod)
     //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
     
-    return true;
+    //return true;
 }
 
 bool
-SMVVolRender3::OnKeyDown(int x, int y, int key, IMouseMod* pMod)
+SMVVolRender3::OnKeyDown(float x, float y, int key,
+                         const IMouseMod &mod)
 {    
     bool cmdPressed = false;
     bool cmdReleased = false;
     
     // Detect "cmd" pressed or released
-    if (pMod->Cmd && !mPrevCmdPressed)
+    if (mod.Cmd && !mPrevCmdPressed)
     {
         cmdPressed = true;
         mPrevCmdPressed = true;
     }
     
-    if (!pMod->Cmd && mPrevCmdPressed)
+    if (!mod.Cmd && mPrevCmdPressed)
     {
         cmdReleased = true;
         mPrevCmdPressed = false;
@@ -763,7 +765,8 @@ SMVVolRender3::OnKeyDown(int x, int y, int key, IMouseMod* pMod)
 }
 
 void
-SMVVolRender3::OnMouseWheel(int x, int y, IMouseMod* pMod, BL_FLOAT d)
+SMVVolRender3::OnMouseWheel(float x, float y,
+                            const IMouseMod &mod, BL_FLOAT d)
 {
 #define WHEEL_ZOOM_STEP 0.025
     

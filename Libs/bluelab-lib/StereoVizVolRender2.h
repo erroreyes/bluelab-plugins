@@ -32,10 +32,11 @@ public:
                                       const WDL_TypedBuf<BL_FLOAT> &colorWeights);
     
     // Control
-    virtual void OnMouseDown(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseUp(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
-    virtual bool OnMouseDblClick(int x, int y, IMouseMod* pMod);
+    virtual void OnMouseDown(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod);
+    virtual void /*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod);
     
     // Quality parameters
     virtual void SetQualityXY(BL_FLOAT quality);

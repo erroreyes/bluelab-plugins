@@ -362,7 +362,7 @@ USTUpmixGraphDrawer::SourceCenterToPanDepth(const BL_FLOAT center[2],
 }
 
 void
-USTUpmixGraphDrawer::OnMouseDown(int x, int y, IMouseMod* pMod)
+USTUpmixGraphDrawer::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     // Invert
     y = mHeight - y;
@@ -379,18 +379,19 @@ USTUpmixGraphDrawer::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-USTUpmixGraphDrawer::OnMouseUp(int x, int y, IMouseMod* pMod)
+USTUpmixGraphDrawer::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     mSourceIsSelected = false;
 }
 
 void
-USTUpmixGraphDrawer::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+USTUpmixGraphDrawer::OnMouseDrag(float x, float y, float dX, float dY,
+                                 const IMouseMod &mod)
 {
     if (!mSourceIsSelected)
         return;
 
-    if (!pMod->A)
+    if (!mod.A)
     {
         // Invert
         y = mHeight - y;

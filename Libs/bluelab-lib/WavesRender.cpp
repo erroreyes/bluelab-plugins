@@ -136,7 +136,7 @@ WavesRender::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
 }
 
 void
-WavesRender::OnMouseDown(int x, int y, IMouseMod* pMod)
+WavesRender::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     mMouseIsDown = true;
     
@@ -147,7 +147,7 @@ WavesRender::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-WavesRender::OnMouseUp(int x, int y, IMouseMod* pMod)
+WavesRender::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     if (!mMouseIsDown)
         return;
@@ -156,9 +156,10 @@ WavesRender::OnMouseUp(int x, int y, IMouseMod* pMod)
 }
 
 void
-WavesRender::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+WavesRender::OnMouseDrag(float x, float y, float dX, float dY,
+                         const IMouseMod &mod)
 {
-    if (pMod->A)
+    if (mod.A)
         // Alt-drag => zoom
     {
         if (!mPrevMouseDrag)
@@ -178,7 +179,7 @@ WavesRender::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
         dY *= -1.0;
         dY *= DRAG_WHEEL_COEFF;
         
-        OnMouseWheel(mPrevDrag[0], mPrevDrag[1], pMod, dY);
+        OnMouseWheel(mPrevDrag[0], mPrevDrag[1], mod, dY);
         
         return;
     }
@@ -218,8 +219,8 @@ WavesRender::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     mPlug->SetCameraAngles(mCamAngle0, mCamAngle1);
 }
 
-bool
-WavesRender::OnMouseDblClick(int x, int y, IMouseMod* pMod)
+void //bool
+WavesRender::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     // Reset the view
     mCamAngle0 = 0.0;
@@ -238,11 +239,12 @@ WavesRender::OnMouseDblClick(int x, int y, IMouseMod* pMod)
     BL_FLOAT fov = mLinesRender->GetCameraFov();
     mPlug->SetCameraFov(fov);
     
-    return true;
+    // return true;
 }
 
 void
-WavesRender::OnMouseWheel(int x, int y, IMouseMod* pMod, BL_FLOAT d)
+WavesRender::OnMouseWheel(float x, float y,
+                          const IMouseMod &mod, BL_FLOAT d)
 {
 #define WHEEL_ZOOM_STEP 0.025
     
@@ -258,7 +260,7 @@ WavesRender::OnMouseWheel(int x, int y, IMouseMod* pMod, BL_FLOAT d)
 }
 
 bool
-WavesRender::OnKeyDown(int x, int y, int key, IMouseMod* pMod)
+WavesRender::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
 {
 // #bl-iplug2
 #if 0

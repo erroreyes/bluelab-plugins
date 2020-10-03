@@ -22,9 +22,9 @@ DUETCustomControl::Reset()
 }
 
 void
-DUETCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
+DUETCustomControl::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
-    if (pMod->Cmd)
+    if (mod.Cmd)
         // Command pressed (or Control on Windows)
     {
         // disable pick cursor
@@ -37,15 +37,15 @@ DUETCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-DUETCustomControl::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+DUETCustomControl::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod)
 {
     mPlug->SetPickCursor(x, y);
 }
 
 bool
-DUETCustomControl::OnKeyDown(int x, int y, int key, IMouseMod* pMod)
+DUETCustomControl::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
 {
-    if (pMod->A)
+    if (mod.A)
         mPlug->SetInvertPickSelection(true);
     else
         mPlug->SetInvertPickSelection(false);

@@ -52,13 +52,15 @@ public:
     virtual void AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns);
     
     // Control
-    virtual void OnMouseDown(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseUp(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
-    virtual bool OnMouseDblClick(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, BL_FLOAT d);
+    virtual void OnMouseDown(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod);
+    virtual void /*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseWheel(float x, float y,
+                              const IMouseMod &mod, BL_FLOAT d);
     
-    virtual bool OnKeyDown(int x, int y, int key, IMouseMod* pMod);
+    virtual bool OnKeyDown(float x, float y, int key, const IMouseMod &mod);
     
     // Parameters
     virtual void SetMode(LinesRender2::Mode mode);

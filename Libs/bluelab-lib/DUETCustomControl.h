@@ -25,10 +25,10 @@ public:
     
     void Reset();
     
-    void OnMouseDown(int x, int y, IMouseMod* pMod);
-    void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
+    void OnMouseDown(float x, float y, const IMouseMod &mod);
+    void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod);
     
-    bool OnKeyDown(int x, int y, int key, IMouseMod* pMod);
+    bool OnKeyDown(float x, float y, int key, const IMouseMod &mod);
     
 protected:
     DUETPlugInterface *mPlug;

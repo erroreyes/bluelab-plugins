@@ -1293,9 +1293,9 @@ GraphControl11::AddCustomControl(GraphCustomControl *customControl)
 }
 
 void
-GraphControl11::OnMouseDown(int x, int y, IMouseMod* pMod)
+GraphControl11::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
-    IControl::OnMouseDown(x, y, pMod);
+    IControl::OnMouseDown(x, y, mod);
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1305,14 +1305,14 @@ GraphControl11::OnMouseDown(int x, int y, IMouseMod* pMod)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        control->OnMouseDown(x, y, pMod);
+        control->OnMouseDown(x, y, mod);
     }
 }
 
 void
-GraphControl11::OnMouseUp(int x, int y, IMouseMod* pMod)
+GraphControl11::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
-    IControl::OnMouseUp(x, y, pMod);
+    IControl::OnMouseUp(x, y, mod);
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1322,14 +1322,14 @@ GraphControl11::OnMouseUp(int x, int y, IMouseMod* pMod)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        control->OnMouseUp(x, y, pMod);
+        control->OnMouseUp(x, y, mod);
     }
 }
 
 void
-GraphControl11::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+GraphControl11::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod)
 {
-    IControl::OnMouseDrag(x, y, dX, dY, pMod);
+    IControl::OnMouseDrag(x, y, dX, dY, mod);
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1339,18 +1339,18 @@ GraphControl11::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        control->OnMouseDrag(x, y, dX, dY, pMod);
+        control->OnMouseDrag(x, y, dX, dY, mod);
     }
 }
 
-bool
-GraphControl11::OnMouseDblClick(int x, int y, IMouseMod* pMod)
+void/*bool*/
+GraphControl11::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     // #bl-iplug2
 #if 0
-    bool dblClickDone = IControl::OnMouseDblClick(x, y, pMod);
+    bool dblClickDone = IControl::OnMouseDblClick(x, y, mod);
     if (!dblClickDone)
-        return false;
+        return; // false;
 #endif
     
 #if CUSTOM_CONTROL_FIX
@@ -1361,16 +1361,16 @@ GraphControl11::OnMouseDblClick(int x, int y, IMouseMod* pMod)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        control->OnMouseDblClick(x, y, pMod);
+        control->OnMouseDblClick(x, y, mod);
     }
     
-    return true;
+    //return true;
 }
 
 void
-GraphControl11::OnMouseWheel(int x, int y, IMouseMod* pMod, BL_GUI_FLOAT d)
+GraphControl11::OnMouseWheel(float x, float y, const IMouseMod &mod, BL_GUI_FLOAT d)
 {
-    IControl::OnMouseWheel(x, y, pMod, d);
+    IControl::OnMouseWheel(x, y, mod, d);
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1380,15 +1380,15 @@ GraphControl11::OnMouseWheel(int x, int y, IMouseMod* pMod, BL_GUI_FLOAT d)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        control->OnMouseWheel(x, y, pMod, d);
+        control->OnMouseWheel(x, y, mod, d);
     }
 }
 
 bool
-GraphControl11::OnKeyDown(int x, int y, int key, IMouseMod* pMod)
+GraphControl11::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
 {
     // #bl-iplug2
-    //IControl::OnKeyDown(x, y, key, pMod);
+    //IControl::OnKeyDown(x, y, key, mod);
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1399,16 +1399,16 @@ GraphControl11::OnKeyDown(int x, int y, int key, IMouseMod* pMod)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        res = control->OnKeyDown(x, y, key, pMod);
+        res = control->OnKeyDown(x, y, key, mod);
     }
     
     return res;
 }
 
 void
-GraphControl11::OnMouseOver(int x, int y, IMouseMod* pMod)
+GraphControl11::OnMouseOver(float x, float y, const IMouseMod &mod)
 {
-    IControl::OnMouseOver(x, y, pMod);
+    IControl::OnMouseOver(x, y, mod);
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1418,7 +1418,7 @@ GraphControl11::OnMouseOver(int x, int y, IMouseMod* pMod)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        control->OnMouseOver(x, y, pMod);
+        control->OnMouseOver(x, y, mod);
     }
 }
 
