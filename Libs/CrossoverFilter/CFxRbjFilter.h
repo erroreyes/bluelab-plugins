@@ -43,6 +43,12 @@ public:
 		ou1=ou2=in1=in2=0.0f;	
 	};
 
+    void reset()
+    {
+        // reset in/out history
+        ou1=ou2=in1=in2=0.0f;
+    }
+    
 	SAMPLE_TYPE filter(SAMPLE_TYPE in0)
 	{
         FIX_FLT_DENORMAL(in0)
@@ -273,7 +279,30 @@ class CFxRbjFilter2X
 public:
     CFxRbjFilter2X()
     {
-        set_coeffs();
+        for (int k = 0; k < 2; k++)
+        {
+            b0a0[k] = 0.0f;
+            b1a0[k] = 0.0f;
+            b2a0[k] = 0.0f;
+            a1a0[k] = 0.0f;
+            a2a0[k] = 0.0f;
+            
+            ou1[k] = 0.0f;
+            ou2[k] = 0.0f;
+            in1[k] = 0.0f;
+            in2[k] = 0.0f;
+        }
+    }
+    
+    void reset()
+    {
+        for (int k = 0; k < 2; k++)
+        {
+            ou1[k] = 0.0f;
+            ou2[k] = 0.0f;
+            in1[k] = 0.0f;
+            in2[k] = 0.0f;
+        }
     }
     
     SAMPLE_TYPE filter(SAMPLE_TYPE in0)
@@ -391,10 +420,10 @@ protected:
             a1a0[k] = mFilter.a1a0;
             a2a0[k] = mFilter.a2a0;
             
-            ou1[k] = mFilter.ou1;
+            /*ou1[k] = mFilter.ou1;
             ou2[k] = mFilter.ou2;
             in1[k] = mFilter.in1;
-            in2[k] = mFilter.in2;
+            in2[k] = mFilter.in2;*/
         }
     }
     
