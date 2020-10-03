@@ -34,3 +34,6 @@
 [submodule "TestSystem-mac"]
 	path = TestSystem-mac
 	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/TestSystem-mac
+[submodule "flac"]
+	path = flac
+	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/flac/flac
