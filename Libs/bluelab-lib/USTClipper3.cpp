@@ -238,7 +238,8 @@ USTClipper3::USTClipper3(GraphControl11 *graph, BL_FLOAT sampleRate)
     mIsEnabled = true;
     mSampleRate = sampleRate;
     
-    mClipperDisplay = new USTClipperDisplay4(graph, sampleRate);
+    mClipperDisplay = new USTClipperDisplay4(sampleRate);
+    mClipperDisplay->SetGraph(graph);
     
     for (int i = 0; i < 2; i++)
         mClipObjs[i] = new ClipperOverObj3(OVERSAMPLING, sampleRate);

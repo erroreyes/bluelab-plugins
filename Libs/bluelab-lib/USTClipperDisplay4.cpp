@@ -47,26 +47,38 @@
 #define GAMMA_ZOOM 0 //1
 
 
-USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampleRate)
+USTClipperDisplay4::USTClipperDisplay4(BL_GUI_FLOAT sampleRate)
 {
     mSampleRate = sampleRate;
     
     mZoom = 1.0;
     mCurrentClipValue = 0.0;
     
-    mGraph = graph;
+    //mGraph = graph;
     
 #if SWEEP_UPDATE
     mSweepPos = 0;
     mSweepPosClip = 0;
 #endif
     
+    mGraph = NULL;
+    
+    Reset(sampleRate);
+}
+
+USTClipperDisplay4::~USTClipperDisplay4() {}
+
+void
+USTClipperDisplay4::SetGraph(GraphControl11 *graph)
+{
+    mGraph = graph;
+    
     if (mGraph != NULL)
     {
         mGraph->SetBounds(0.0, 0.0, 1.0, 1.0);
         //mGraph->SetClearColor(255, 0, 255, 255); // DEBUG
         mGraph->SetClearColor(0, 0, 0, 255);
-    
+        
         // Orizontal axis
         //mGraph->SetCurveColor(AXIS_CURVE, 232, 110, 36);
         
@@ -89,11 +101,11 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         
         // Waveform curves
         //
-    
+        
 #define FILL_ORIGIN_Y_OFFSET 0.001
-
+        
         // Waveform up
-    
+        
         //mGraph->SetCurveDescription(WAVEFORM_UP_CURVE, "input", descrColor);
 #if (!ORANGE_COLOR_SCHEME && !BLUE_COLOR_SCHEME)
         mGraph->SetCurveColor(WAVEFORM_UP_CURVE, 128, 128, 255);
@@ -109,7 +121,7 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         
         mGraph->SetCurveColor(WAVEFORM_CLIP_UP_CURVE, 252, 228, 205);
 #endif
-
+        
 #if BLUE_COLOR_SCHEME
         // Blue
         //mGraph->SetCurveColor(WAVEFORM_UP_CURVE, 170, 202, 209);
@@ -122,13 +134,13 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         mGraph->SetCurveColor(WAVEFORM_CLIP_UP_CURVE, 113, 130, 182);
         mGraph->SetCurveColor(WAVEFORM_CLIP_DOWN_CURVE, 113, 130, 182);
 #endif
-
+        
         mGraph->SetCurveAlpha(WAVEFORM_UP_CURVE, 1.0);
         mGraph->SetCurveLineWidth(WAVEFORM_UP_CURVE, -1.0); // Disable draw line over fill
         mGraph->SetCurveFill(WAVEFORM_UP_CURVE, true, 0.5 - FILL_ORIGIN_Y_OFFSET);
         mGraph->SetCurveFillAlpha(WAVEFORM_UP_CURVE, 1.0);
         mGraph->SetCurveYScale(WAVEFORM_UP_CURVE, false, -2.0, 2.0);
-    
+        
         // Waveform down
         
         //mGraph->SetCurveColor(WAVEFORM_DOWN_CURVE, 252, 79, 36);
@@ -155,7 +167,7 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         mGraph->SetCurveYScale(WAVEFORM_CLIP_DOWN_CURVE, false, -2.0, 2.0);
         
         // Clip Lo
-    
+        
         //mGraph->SetCurveDescription(GRAPH_THRESHOLD_CURVE,
         //                            "threshold", descrColor);
         
@@ -168,7 +180,7 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         mGraph->SetCurveColor(CLIP_LO_CURVE, 232, 110, 36);
         mGraph->SetCurveColor(CLIP_HI_CURVE, 232, 110, 36);
 #endif
-
+        
 #if BLUE_COLOR_SCHEME
         //mGraph->SetCurveColor(CLIP_LO_CURVE, 113, 130, 182);
         
@@ -180,7 +192,7 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         //mGraph->SetCurveColor(CLIP_LO_CURVE, 234, 101, 0);
         //mGraph->SetCurveColor(CLIP_HI_CURVE, 234, 101, 0);
 #endif
-
+        
         
         mGraph->SetCurveAlpha(CLIP_LO_CURVE, 1.0);
         mGraph->SetCurveLineWidth(CLIP_LO_CURVE, 2.0);
@@ -194,12 +206,12 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         
         mGraph->SetCurveYScale(CLIP_LO_CURVE, false, 0.0, 1.0);
         mGraph->SetCurveSingleValueH(CLIP_LO_CURVE, true);
-    
+        
         mGraph->SetCurveYScale(CLIP_LO_CURVE, false, -2.0, 2.0);
         mGraph->SetCurveSingleValueH(CLIP_LO_CURVE, (BL_GUI_FLOAT)-1.0);
-    
+        
         // Clip Hi
-    
+        
         //mGraph->SetCurveDescription(GRAPH_THRESHOLD_CURVE,
         //                            "threshold", descrColor);
         
@@ -226,11 +238,7 @@ USTClipperDisplay4::USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampl
         mGraph->SetCurveSingleValueV(SWEEP_BAR_CURVE, true);
         //mGraph->SetCurveXScale(SWEEP_BAR_CURVE, false);
     }
-    
-    Reset(sampleRate);
 }
-
-USTClipperDisplay4::~USTClipperDisplay4() {}
 
 void
 USTClipperDisplay4::Reset(BL_GUI_FLOAT sampleRate)
@@ -391,8 +399,11 @@ USTClipperDisplay4::AddClippedSamples(const WDL_TypedBuf<BL_FLOAT> &samplesIn)
 void
 USTClipperDisplay4::SetDirty()
 {
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -410,8 +421,11 @@ USTClipperDisplay4::SetZoom(BL_GUI_FLOAT zoom)
     
     SetClipValueZoom();
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -475,8 +489,11 @@ USTClipperDisplay4::SetClipValueZoom()
         clipValue = -clipValue;
 #endif
     
-    mGraph->SetCurveSingleValueH(CLIP_LO_CURVE, clipValue /*- 2.0*/);
-    mGraph->SetCurveSingleValueH(CLIP_HI_CURVE, /*2.0*/ - clipValue);
+    if (mGraph != NULL)
+    {
+        mGraph->SetCurveSingleValueH(CLIP_LO_CURVE, clipValue /*- 2.0*/);
+        mGraph->SetCurveSingleValueH(CLIP_HI_CURVE, /*2.0*/ - clipValue);
+    }
 }
 
 long
@@ -502,6 +519,9 @@ USTClipperDisplay4::DecimateSamplesOneLine(const WDL_TypedBuf<BL_GUI_FLOAT> &buf
 void
 USTClipperDisplay4::UpdateSweepBar()
 {
-    BL_GUI_FLOAT pos = ((BL_GUI_FLOAT)mSweepPos)/GRAPH_NUM_POINTS;
-    mGraph->SetCurveSingleValueV(SWEEP_BAR_CURVE, pos);
+    if (mGraph != NULL)
+    {
+        BL_GUI_FLOAT pos = ((BL_GUI_FLOAT)mSweepPos)/GRAPH_NUM_POINTS;
+        mGraph->SetCurveSingleValueV(SWEEP_BAR_CURVE, pos);
+    }
 }

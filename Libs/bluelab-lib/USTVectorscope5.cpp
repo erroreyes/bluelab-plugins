@@ -306,7 +306,6 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
     mGraphs[POLAR_SAMPLE_MODE_ID] = graph0;
     mGraphs[LISSAJOUS_MODE_ID] = graph1;
     mGraphs[FIREWORKS_MODE_ID] = graph2;
-    //
     mGraphs[UPMIX_MODE_ID] = graph3;
     
     //
@@ -588,6 +587,15 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
         
         mGraphs[UPMIX_MODE_ID]->SetDisablePointOffsetHack(true);
     }
+}
+
+void
+USTVectorscope5::SetGraphsNull()
+{
+    mGraphs[POLAR_SAMPLE_MODE_ID] = NULL;
+    mGraphs[LISSAJOUS_MODE_ID] = NULL;
+    mGraphs[FIREWORKS_MODE_ID] = NULL;
+    mGraphs[UPMIX_MODE_ID] = NULL;
 }
 
 void

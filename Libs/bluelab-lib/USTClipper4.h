@@ -25,9 +25,11 @@ class DelayObj4;
 class USTClipper4
 {
 public:
-    USTClipper4(GraphControl11 *graph, BL_FLOAT sampleRate);
+    USTClipper4(BL_FLOAT sampleRate);
     
     virtual ~USTClipper4();
+    
+    void SetGraph(GraphControl11 *graph);
     
     //void Reset(BL_FLOAT sampleRate);
     

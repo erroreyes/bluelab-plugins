@@ -268,12 +268,12 @@ ClipperOverObj4::SetClipValue(BL_FLOAT clipValue)
 #endif
 
 
-USTClipper4::USTClipper4(GraphControl11 *graph, BL_FLOAT sampleRate)
+USTClipper4::USTClipper4(BL_FLOAT sampleRate)
 {
     mIsEnabled = true;
     mSampleRate = sampleRate;
     
-    mClipperDisplay = new USTClipperDisplay4(graph, sampleRate);
+    mClipperDisplay = new USTClipperDisplay4(sampleRate);
     
     for (int i = 0; i < 2; i++)
         mClipObjs[i] = new ClipperOverObj4(OVERSAMPLING, sampleRate);
@@ -294,6 +294,13 @@ USTClipper4::~USTClipper4()
     
     for (int i = 0; i < 2; i++)
         delete mClipObjs[i];
+}
+
+void
+USTClipper4::SetGraph(GraphControl11 *graph)
+{
+    if (mClipperDisplay != NULL)
+        mClipperDisplay->SetGraph(graph);
 }
 
 /*void

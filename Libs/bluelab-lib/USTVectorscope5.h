@@ -70,6 +70,8 @@ public:
                    GraphControl11 *graph2,
                    GraphControl11 *graph3);
 
+    void SetGraphsNull();
+    
     void AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples);
 
     //

@@ -26,9 +26,11 @@ class GraphControl11;
 class USTClipperDisplay4
 {
 public:
-    USTClipperDisplay4(GraphControl11 *graph, BL_GUI_FLOAT sampleRate);
+    USTClipperDisplay4(BL_GUI_FLOAT sampleRate);
     
     virtual ~USTClipperDisplay4();
+    
+    void SetGraph(GraphControl11 *graph);
     
     void Reset(BL_GUI_FLOAT sampleRate);
     
