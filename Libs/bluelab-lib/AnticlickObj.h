@@ -1,13 +1,13 @@
 //
-//  SecureRestarter.h
+//  AnticlickObj.h
 //  Denoiser
 //
 //  Created by Apple m'a Tuer on 06/05/17.
 //
 //
 
-#ifndef __Denoiser__SecureRestarter__
-#define __Denoiser__SecureRestarter__
+#ifndef __Denoiser__AnticlickObj__
+#define __Denoiser__AnticlickObj__
 
 #include <vector>
 using namespace std;
@@ -22,26 +22,35 @@ using namespace std;
 // So we need to make a smooth transition by hand,
 // each time we restart the play.
 // We use an half Hanning on inputs for that, as Logic does (when it doesn't bug).
-class SecureRestarter
+class AnticlickObj
 {
 public:
-    SecureRestarter();
+    enum Direction
+    {
+        OFF_TO_ON,
+        ON_TO_OFF
+    };
     
-    virtual ~SecureRestarter();
+    AnticlickObj();
     
-    void Reset();
+    virtual ~AnticlickObj();
     
-    void Process(BL_FLOAT *buf0, BL_FLOAT *buf1, int nFrames);
-
-    void Process(WDL_TypedBuf<BL_FLOAT> *buf0, WDL_TypedBuf<BL_FLOAT> *buf1);
+    void Reset(Direction dir);
     
-    void Process(vector<WDL_TypedBuf<BL_FLOAT> > &bufs);
+    bool MustProcessOnSignal();
+    
+    void SetOffSignal(const vector<WDL_TypedBuf<BL_FLOAT> > &bufs);
+    void SetOnSignal(const vector<WDL_TypedBuf<BL_FLOAT> > &bufs);
+    
+    void Process(vector<WDL_TypedBuf<BL_FLOAT> > *bufs);
     
 protected:
-    bool mFirstTime;
+    vector<WDL_TypedBuf<BL_FLOAT> > mOnSignal;
+    vector<WDL_TypedBuf<BL_FLOAT> > mOffSignal;
     
-    int mPrevNFrames;
-    WDL_TypedBuf<BL_FLOAT> mHanning;
+    bool mNeedProcess;
+    
+    Direction mDirection;
 };
 
-#endif /* defined(__Denoiser__SecureRestarter__) */
+#endif /* defined(__Denoiser__AnticlickObj__) */

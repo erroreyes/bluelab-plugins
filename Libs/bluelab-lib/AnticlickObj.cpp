@@ -77,7 +77,8 @@ AnticlickObj::Process(vector<WDL_TypedBuf<BL_FLOAT> > *bufs)
                 if (mDirection == ON_TO_OFF)
                     t = 1.0 - t;
                 
-                //BL_FLOAT val = buf.Get()[k];
+                BL_FLOAT val = buf.Get()[k]; // For debugging
+                
                 BL_FLOAT onVal = onBuf.Get()[k];
                 BL_FLOAT offVal = offBuf.Get()[k];
                 

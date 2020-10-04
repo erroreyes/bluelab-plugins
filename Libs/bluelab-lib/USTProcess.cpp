@@ -15,6 +15,8 @@
 
 #include <FftProcessObj16.h>
 
+#include <ParamSmoother.h>
+
 #include "USTProcess.h"
 
 // Stereo Widen
@@ -709,6 +711,38 @@ template void USTProcess::Balance(vector<WDL_TypedBuf<float> * > *ioSamples,
 template void USTProcess::Balance(vector<WDL_TypedBuf<double> * > *ioSamples,
                                   double balance);
 
+template <typename FLOAT_TYPE>
+void
+USTProcess::Balance(vector<WDL_TypedBuf<FLOAT_TYPE> * > *ioSamples,
+                    ParamSmoother *balanceSmoother)
+{
+    for (int i = 0; i < (*ioSamples)[0]->GetSize(); i++)
+    {
+        balanceSmoother->Update();
+        FLOAT_TYPE balance = balanceSmoother->GetCurrentValue();
+        
+        FLOAT_TYPE p = M_PI*(balance + 1.0)/4.0;
+        FLOAT_TYPE gl = std::cos(p);
+        FLOAT_TYPE gr = std::sin(p);
+        
+        // Coefficients to have no gain when center, and +3dB for extreme pan pos
+        gl *= std::sqrt((FLOAT_TYPE)2.0);
+        gr *= std::sqrt((FLOAT_TYPE)2.0);
+        
+        FLOAT_TYPE l = (*ioSamples)[0]->Get()[i];
+        FLOAT_TYPE r = (*ioSamples)[1]->Get()[i];
+        
+        l *= gl;
+        r *= gr;
+        
+        (*ioSamples)[0]->Get()[i] = l;
+        (*ioSamples)[1]->Get()[i] = r;
+    }
+}
+template void USTProcess::Balance(vector<WDL_TypedBuf<float> * > *ioSamples,
+                                  ParamSmoother *balanceSmoother);
+template void USTProcess::Balance(vector<WDL_TypedBuf<double> * > *ioSamples,
+                                  ParamSmoother *balanceSmoother);
 
 // TODO: remove this
 #if 1

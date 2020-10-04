@@ -19,6 +19,7 @@ using namespace std;
 //class USTWidthAdjuster4; // old
 class USTWidthAdjuster5;
 class DelayObj4;
+class ParamSmoother;
 
 class USTProcess
 {
@@ -86,6 +87,10 @@ public:
     template <typename FLOAT_TYPE>
     static void Balance(vector<WDL_TypedBuf<FLOAT_TYPE> * > *ioSamples,
                         FLOAT_TYPE balance);
+    
+    template <typename FLOAT_TYPE>
+    static void Balance(vector<WDL_TypedBuf<FLOAT_TYPE> * > *ioSamples,
+                        ParamSmoother *balanceSmoother);
     
     // Balance with pan low 0dB
     template <typename FLOAT_TYPE>

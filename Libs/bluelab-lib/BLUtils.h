@@ -457,6 +457,9 @@ public:
     static void FillAllZero(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuf);
 
     template <typename FLOAT_TYPE>
+    static void FillAllZero(vector<WDL_TypedBuf<FLOAT_TYPE> > *samples);
+    
+    template <typename FLOAT_TYPE>
     static void FillAllValue(WDL_TypedBuf<FLOAT_TYPE> *ioBuf, FLOAT_TYPE value);
     
     //static void FillAllValue(WDL_TypedBuf<float> *ioBuf, float value);
