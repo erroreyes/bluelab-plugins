@@ -57,6 +57,43 @@ GUIHelper11::GUIHelper11(Style style)
         mVumeterNeedleColor = IColor(255, 237, 120, 31);
         mVumeterNeedleDepth = 2.0; //4.0;
     }
+    
+    if (style == STYLE_BLUELAB)
+    {
+        mCreateTitles = true;
+        
+        mTitleTextSize = 13.0;
+        mTitleTextOffsetX = 0.0;
+        mTitleTextOffsetY = -18.0;
+        mTitleTextColor = IColor(255, 110, 110, 110);
+        
+        mValueCaptionOffset = 0.0;
+        mValueTextSize = 14.0;
+        mValueTextOffsetX = -1.0;
+        mValueTextOffsetY = 1.0;
+        mValueTextColor = IColor(255, 240, 240, 255);
+        mValueTextFGColor = mValueTextColor;
+        mValueTextBGColor = IColor(0, 0, 0, 0);
+        
+        mVersionTextSize = 12.0;
+        //mVersionTextOffset = 3.0;
+        mVersionTextOffsetX = 100.0;
+        mVersionTextOffsetY = 3.0;
+        mVersionTextColor = IColor(255, 110 , 110, 110);
+        
+        mVumeterColor = IColor(255, 131 , 152, 214);
+        mVumeterNeedleColor = IColor(255, 237, 120, 31);
+        mVumeterNeedleDepth = 2.0; //4.0;
+        
+        mLogoOffsetX = 0.0;
+        mLogoOffsetY = -1.0;
+        
+        mPlugNameOffsetX = 5.0;
+        mPlugNameOffsetX = 6.0;
+        
+        mTrialOffsetX = 0.0;
+        mTrialOffsetY = 7.0;
+    }
 }
 
 GUIHelper11::~GUIHelper11() {}
@@ -323,6 +360,68 @@ GUIHelper11::CreateVersion(Plugin *plug, IGraphics *graphics,
     ITextControl *textControl = new ITextControl(rect, versionStr0, versionText);
     
     graphics->AttachControl(textControl);
+}
+
+// Static logo
+void
+GUIHelper11::CreateLogo(Plugin *plug, IGraphics *graphics,
+                        const char *logoFname, Position pos)
+{
+    IBitmap bmp = graphics->LoadBitmap(logoFname, 1);
+    
+    float x = 0.0;
+    float y = 0.0;
+    
+    if (pos == TOP)
+    {
+        // Upper right corner
+        x = graphics->Width() - bmp.W();
+        y = 0;
+    }
+    
+    if (pos == BOTTOM)
+    {
+        // Lower right corner
+        x = graphics->Width() - bmp.W();
+        y = graphics->Height() - bmp.H();
+    }
+    
+    IBitmapControl *control = new IBitmapControl(x + mLogoOffsetX,
+                                                 y + mLogoOffsetY, bmp);
+    control->SetInteractionDisabled(true);
+    
+    graphics->AttachControl(control);
+}
+
+void
+GUIHelper11::CreatePlugName(Plugin *plug, IGraphics *graphics,
+                            const char *plugNameFname, Position pos)
+{
+    IBitmap bmp = graphics->LoadBitmap(plugNameFname, 1);
+    
+    float x = 0;
+    float y = 0;
+    
+    if (pos == TOP)
+    {
+        // Upper left corner
+        x = mPlugNameOffsetX;
+        y = mPlugNameOffsetY;
+    }
+    
+    if (pos == BOTTOM)
+    {
+        // Lower left corner
+        x = mPlugNameOffsetX;
+        y = graphics->Height() - bmp.H() - mPlugNameOffsetY;
+        
+        y -= mTrialOffsetY;
+    }
+    
+    IBitmapControl *control = new IBitmapControl(x, y, bmp);
+    control->SetInteractionDisabled(true);
+    
+    graphics->AttachControl(control);
 }
 
 void

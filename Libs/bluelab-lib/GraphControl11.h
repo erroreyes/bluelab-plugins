@@ -427,7 +427,7 @@ public:
     void OnMouseUp(float x, float y, const IMouseMod &mod) override;
     void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod) override;
     void/*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
-    void OnMouseWheel(float x, float y, const IMouseMod &mod, BL_GUI_FLOAT d) override;
+    void OnMouseWheel(float x, float y, const IMouseMod &mod, float d) override;
     bool OnKeyDown(float x, float y, int key, const IMouseMod &mod) /*override*/;
     
     void OnMouseOver(float x, float y, const IMouseMod &mod) override;

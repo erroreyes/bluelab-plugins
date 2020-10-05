@@ -30,6 +30,7 @@ class GUIHelper11
 public:
     enum Style
     {
+        STYLE_BLUELAB,
         STYLE_UST
     };
     
@@ -100,6 +101,13 @@ public:
     void CreateVersion(Plugin *plug, IGraphics *graphics,
                        const char *versionStr, Position pos);
     
+    void CreateLogo(Plugin *plug, IGraphics *graphics,
+                    const char *logoFname, Position pos);
+    
+    void CreatePlugName(Plugin *plug, IGraphics *graphics,
+                        const char *plugNameFname, Position pos);
+
+    
     // NOTE: not sure it is still useful
     static void UpdateText(Plugin *plug, int paramIdx);
     
@@ -146,6 +154,15 @@ protected:
     IColor mVumeterColor;
     IColor mVumeterNeedleColor;
     float mVumeterNeedleDepth;
+    
+    float mLogoOffsetX;
+    float mLogoOffsetY;
+    
+    float mPlugNameOffsetX;
+    float mPlugNameOffsetY;
+    
+    float mTrialOffsetX;
+    float mTrialOffsetY;
 };
 
 #endif /* GUIHelper11_hpp */

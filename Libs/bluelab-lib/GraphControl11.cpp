@@ -1368,7 +1368,7 @@ GraphControl11::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 }
 
 void
-GraphControl11::OnMouseWheel(float x, float y, const IMouseMod &mod, BL_GUI_FLOAT d)
+GraphControl11::OnMouseWheel(float x, float y, const IMouseMod &mod, float d)
 {
     IControl::OnMouseWheel(x, y, mod, d);
     
