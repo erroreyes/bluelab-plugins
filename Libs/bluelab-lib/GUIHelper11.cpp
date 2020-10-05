@@ -12,6 +12,7 @@
 #include <BLUtils.h>
 
 #include <IBitmapControlAnim.h>
+#include <IHelpButtonControl.h>
 
 #include "GUIHelper11.h"
 
@@ -98,6 +99,9 @@ GUIHelper11::GUIHelper11(Style style)
         
         mTrialOffsetX = 0.0;
         mTrialOffsetY = 7.0;
+        
+        mHelpButtonOffsetX = -44.0;
+        mHelpButtonOffsetY = -4.0;
     }
 }
 
@@ -437,6 +441,70 @@ GUIHelper11::CreateLogoAnim(Plugin *plug, IGraphics *graphics,
     
     graphics->AttachControl(control);
 }
+
+void
+GUIHelper11::CreateHelpButton(Plugin *plug, IGraphics *graphics,
+                              const char *bmpFname,
+                              const char *manualFileName,
+                              Position pos)
+{
+    IBitmap bitmap = graphics->LoadBitmap(bmpFname, 1);
+    
+    float x = 0.0;
+    float y = 0.0;
+    
+    //if (pos == TOP) // TODO
+    
+    if (pos == BOTTOM)
+    {
+        // Lower right corner
+        x = graphics->Width() - bitmap.W() + mHelpButtonOffsetX;
+        y = graphics->Height() - bitmap.H() + mHelpButtonOffsetY;
+    }
+    
+    char fullFileName[1024];
+    
+#ifndef WIN32 // Mac
+    WDL_String wdlResDir;
+    BLUtils::GetFullPlugResourcesPath(*plug, &wdlResDir);
+    const char *resDir = wdlResDir.Get();
+    
+    sprintf(fullFileName, "%s/%s", resDir, manualFileName);
+#else
+    // On windows, we must load the resource from dll, save it to the temp file
+    // before re-opning it
+    IGraphicsWin *graphWin = (IGraphicsWin *)graphics;
+    void *resBuf;
+    long resSize;
+    bool res = graphWin->LoadWindowsResource(manResId, "PDF",
+                                             &resBuf, &resSize);
+    if (!res)
+        return NULL;
+    
+    TCHAR tempPathBuffer[MAX_PATH];
+    GetTempPath(MAX_PATH, tempPathBuffer);
+    
+    // Remove the "manual" directory from the path
+    fileName = Utils::GetFileName(fileName);
+    
+    sprintf(fullFileName, "%s%s", tempPathBuffer, fileName);
+    
+    FILE *file = fopen(fullFileName, "wb");
+    fwrite(resBuf, 1, resSize, file);
+    fclose(file);
+#endif
+    
+    IBitmapControl *control = new IHelpButtonControl(x, y, bitmap,
+                                                     kNoValIdx,
+                                                     fullFileName);
+    
+#if GUI_OBJECTS_SORTING
+    mBackObjects.push_back(control);
+#else
+    graphics->AttachControl(control);
+#endif
+}
+
 
 void
 GUIHelper11::CreatePlugName(Plugin *plug, IGraphics *graphics,

@@ -121,6 +121,12 @@ public:
                         const char *plugNameFname, Position pos);
 
     
+    void CreateHelpButton(Plugin *plug, IGraphics *graphics,
+                          const char *bmpFname,
+                          const char *manualFileName,
+                          Position pos);
+
+    
     // NOTE: not sure it is still useful
     static void UpdateText(Plugin *plug, int paramIdx);
     
@@ -182,6 +188,9 @@ protected:
     
     float mTrialOffsetX;
     float mTrialOffsetY;
+    
+    float mHelpButtonOffsetX;
+    float mHelpButtonOffsetY;
 };
 
 #endif /* GUIHelper11_hpp */
