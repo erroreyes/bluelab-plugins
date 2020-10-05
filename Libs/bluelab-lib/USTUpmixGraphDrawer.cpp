@@ -11,7 +11,7 @@
 // #bl-iplug2
 //#include "nanovg.h"
 
-#include <UST.h>
+#include <USTPluginInterface.h>
 
 #include "USTUpmixGraphDrawer.h"
 
@@ -44,7 +44,7 @@
 #define MALIK_CIRCLE 1
 
 
-USTUpmixGraphDrawer::USTUpmixGraphDrawer(UST *plug, GraphControl11 *graph)
+USTUpmixGraphDrawer::USTUpmixGraphDrawer(USTPluginInterface *plug, GraphControl11 *graph)
 {
     mGain = 0.0;
     mPan = 0.0;

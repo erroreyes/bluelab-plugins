@@ -20,7 +20,7 @@
 
 #include <BLUtils.h>
 
-#include <UST.h>
+#include <USTPluginInterface.h>
 
 #include "USTVectorscope5.h"
 
@@ -121,7 +121,7 @@
 #define OPTIM_ANIM_VECTORSCOPE 0 //1
 
 
-USTVectorscope5::USTVectorscope5(UST *plug, BL_FLOAT sampleRate)
+USTVectorscope5::USTVectorscope5(USTPluginInterface *plug, BL_FLOAT sampleRate)
 {
     mPlug = plug;
     

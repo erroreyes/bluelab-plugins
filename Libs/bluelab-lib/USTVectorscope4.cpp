@@ -20,7 +20,8 @@
 
 #include <BLUtils.h>
 
-#include <UST.h>
+//#include <UST.h>
+#include <USTPluginInterface.h>
 
 #include "USTVectorscope4.h"
 
@@ -104,7 +105,7 @@
 #define SQR2_INV 0.70710678118655
 
 
-USTVectorscope4::USTVectorscope4(UST *plug, BL_FLOAT sampleRate)
+USTVectorscope4::USTVectorscope4(USTPluginInterface *plug, BL_FLOAT sampleRate)
 {
     mPlug = plug;
     

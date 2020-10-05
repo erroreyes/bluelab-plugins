@@ -11,13 +11,12 @@
 
 #include <GraphControl11.h>
 
-class UST;
-
+class USTPluginInterface;
 class USTUpmixGraphDrawer : public GraphCustomDrawer,
                             public GraphCustomControl
 {
 public:
-    USTUpmixGraphDrawer(UST *plug, GraphControl11 *graph);
+    USTUpmixGraphDrawer(USTPluginInterface *plug, GraphControl11 *graph);
     
     virtual ~USTUpmixGraphDrawer();
     
@@ -59,7 +58,7 @@ protected:
     
     bool mSourceIsSelected;
     
-    UST *mPlug;
+    USTPluginInterface *mPlug;
     GraphControl11 *mGraph;
 };
 

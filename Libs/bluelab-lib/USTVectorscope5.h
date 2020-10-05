@@ -28,7 +28,7 @@ class USTCircleGraphDrawer;
 class USTLissajousGraphDrawer;
 class USTFireworks;
 class USTUpmixGraphDrawer;
-class UST;
+class USTPluginInterface;
 
 // USTVectorscope2: several modes
 // USTVectorscope3: polar level object
@@ -47,7 +47,7 @@ public:
       UPMIX
     };
     
-    USTVectorscope5(UST *plug, BL_FLOAT sampleRate);
+    USTVectorscope5(USTPluginInterface *plug, BL_FLOAT sampleRate);
     
     virtual ~USTVectorscope5();
 
@@ -93,7 +93,7 @@ protected:
                        bool pointOverlay,
                        bool linesPolarFlag);
 
-    UST *mPlug;
+    USTPluginInterface *mPlug;
     
     GraphControl11 *mGraphs[VECTORSCOPE_NUM_GRAPHS];
     
