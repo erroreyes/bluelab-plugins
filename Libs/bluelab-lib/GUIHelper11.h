@@ -42,6 +42,12 @@ public:
         LOWER_RIGHT
     };
     
+    enum Size
+    {
+        SIZE_DEFAULT,
+        SIZE_BIG
+    };
+    
     GUIHelper11(Style style);
     
     virtual ~GUIHelper11();
@@ -50,6 +56,7 @@ public:
                               float x, float y,
                               const char *bitmapFname, int nStates,
                               int paramIdx, const char *title = NULL,
+                              Size titleSize = SIZE_DEFAULT,
                               ICaptionControl **caption = NULL);
     
 #ifdef IGRAPHICS_NANOVG
@@ -118,7 +125,8 @@ public:
     static void UpdateText(Plugin *plug, int paramIdx);
     
 protected:
-    void CreateTitle(IGraphics *graphics, float x, float y, const char *title);
+    void CreateTitle(IGraphics *graphics, float x, float y,
+                     const char *title, Size size);
     
     ITextControl *CreateText(IGraphics *graphics, float x, float y,
                              const char *textStr, const IText &text,
@@ -143,6 +151,10 @@ protected:
     float mTitleTextOffsetX;
     float mTitleTextOffsetY;
     IColor mTitleTextColor;
+    
+    float mTitleTextSizeBig;
+    float mTitleTextOffsetXBig;
+    float mTitleTextOffsetYBig;
     
     float mValueCaptionOffset;
     float mValueTextSize;

@@ -16,14 +16,12 @@
 #include "GUIHelper11.h"
 
 // Text
-//#define TITLE_TEXT_FONT "Tahoma"
-#define TITLE_TEXT_FONT "font"
-//#define TITLE_TEXT_FONT NULL
-
-#define VALUE_TEXT_FONT "font"
-
-// Version text
-#define VERSION_TEXT_FONT "font"
+//#define TITLE_TEXT_FONT "font-bold"
+//#define VALUE_TEXT_FONT "font-bold"
+//#define VERSION_TEXT_FONT "font-bold"
+#define TITLE_TEXT_FONT "font-regular"
+#define VALUE_TEXT_FONT "font-regular"
+#define VERSION_TEXT_FONT "font-regular"
 
 #define TEXTFIELD_BITMAP "textfield.png"
 
@@ -64,15 +62,19 @@ GUIHelper11::GUIHelper11(Style style)
     {
         mCreateTitles = true;
         
-        mTitleTextSize = 13.0;
+        mTitleTextSize = 16.0; //20.0; //13.0;
         mTitleTextOffsetX = 0.0;
-        mTitleTextOffsetY = -18.0;
+        mTitleTextOffsetY = -23.0;
         mTitleTextColor = IColor(255, 110, 110, 110);
         
+        mTitleTextSizeBig = 20.0;
+        mTitleTextOffsetXBig = 0.0;
+        mTitleTextOffsetYBig = -32.0; //-23.0;
+        
         mValueCaptionOffset = 0.0;
-        mValueTextSize = 14.0;
+        mValueTextSize = 16.0; //14.0;
         mValueTextOffsetX = -1.0;
-        mValueTextOffsetY = 1.0;
+        mValueTextOffsetY = 14.0; //13.0;
         mValueTextColor = IColor(255, 240, 240, 255);
         mValueTextFGColor = mValueTextColor;
         mValueTextBGColor = IColor(0, 0, 0, 0);
@@ -92,7 +94,7 @@ GUIHelper11::GUIHelper11(Style style)
         mAnimLogoSpeed = 0.5;
         
         mPlugNameOffsetX = 5.0;
-        mPlugNameOffsetX = 6.0;
+        mPlugNameOffsetY = 6.0;
         
         mTrialOffsetX = 0.0;
         mTrialOffsetY = 7.0;
@@ -106,6 +108,7 @@ GUIHelper11::CreateKnob(IGraphics *graphics,
                         float x, float y,
                         const char *bitmapFname, int nStates,
                         int paramIdx, const char *title,
+                        Size titleSize,
                         ICaptionControl **caption)
 {
     IBitmap bitmap = graphics->LoadBitmap(bitmapFname, nStates);
@@ -117,13 +120,13 @@ GUIHelper11::CreateKnob(IGraphics *graphics,
         // Title
         if ((title != NULL) && (strlen(title) > 0))
         {
-            CreateTitle(graphics, x + bitmap.W()/2, y, title);
+            CreateTitle(graphics, x + bitmap.W()/2, y, title, titleSize);
         }
     }
     
     ICaptionControl *caption0 =
                 CreateValue(graphics,
-                            x - bitmap.W()/2, y + bitmap.H()/bitmap.N(),
+                            x + bitmap.W()/2, y + bitmap.H()/bitmap.N(),
                             paramIdx);
     if (caption != NULL)
         *caption = caption0;
@@ -335,7 +338,6 @@ GUIHelper11::CreateVersion(Plugin *plug, IGraphics *graphics,
         textAlign = EAlign::Near;
     }
     
-    
     if (pos == LOWER_RIGHT)
     {
         int strWidth = (int)(strlen(versionStr0)*mVersionTextSize);
@@ -348,15 +350,19 @@ GUIHelper11::CreateVersion(Plugin *plug, IGraphics *graphics,
         textAlign = EAlign::Near;
     }
     
+    IText versionText(mVersionTextSize,
+                      mVersionTextColor, VERSION_TEXT_FONT, textAlign);
+    
     if (pos == BOTTOM)
     {
-        x = graphics->Width()/2;
+        float textWidth = GetTextWidth(graphics, versionText, versionStr0);
+        
+        x = graphics->Width()/2 - textWidth/2.0;
+        
         y = graphics->Height() - mVersionTextSize - mVersionTextOffsetY;
         
-        textAlign = EAlign::Center;
+        //textAlign = EAlign::Center;
     }
-    
-    IText versionText(mVersionTextSize, mVersionTextColor, VERSION_TEXT_FONT, textAlign);
     
     float textWidth = GetTextWidth(graphics, versionText, versionStr0);
     
@@ -472,16 +478,28 @@ GUIHelper11::UpdateText(Plugin *plug, int paramIdx)
 }
 
 void
-GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y, const char *title)
+GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y,
+                         const char *title, Size size)
 {
-    IText text(mTitleTextSize, mTitleTextColor, TITLE_TEXT_FONT, EAlign::Center);
+    float titleSize = mTitleTextSize;
+    float textOffsetX = mTitleTextOffsetX;
+    float textOffsetY = mTitleTextOffsetY;
+    
+    if (size == SIZE_BIG)
+    {
+        titleSize = mTitleTextSizeBig;
+        textOffsetX = mTitleTextOffsetXBig;
+        textOffsetY = mTitleTextOffsetYBig;
+    }
+    
+    IText text(titleSize, mTitleTextColor, TITLE_TEXT_FONT, EAlign::Center);
     float width = GetTextWidth(graphics, text, title);
     
     x -= width/2.0;
     
     ITextControl *control = CreateText(graphics, x, y,
                                        title, text,
-                                       mTitleTextOffsetX, mTitleTextOffsetY);
+                                       textOffsetX, textOffsetY);
     
     control->SetInteractionDisabled(true);
     
@@ -529,16 +547,16 @@ GUIHelper11::CreateValue(IGraphics *graphics, float x, float y,
                  &width, &height);
 
     // Value
-    IRECT bounds(x + mValueTextOffsetX,
+    IRECT bounds(x - width/2.0 + mValueTextOffsetX,
                  y + mValueTextOffsetY,
-                 x + width + mValueTextOffsetX,
+                 x + width/2.0 + mValueTextOffsetX,
                  y + height + mValueTextOffsetY);
     
     IText text(mValueTextSize, mValueTextColor, VALUE_TEXT_FONT,
                EAlign::Center, EVAlign::Middle, 0.0,
                mValueTextBGColor, mValueTextFGColor);
     ICaptionControl *caption = new ICaptionControl(bounds, paramIdx, text,
-                                                    mValueTextBGColor);
+                                                   mValueTextBGColor);
     caption->DisablePrompt(false); // Here is the magic !
     graphics->AttachControl(caption);
     
