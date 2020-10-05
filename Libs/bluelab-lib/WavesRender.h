@@ -9,6 +9,8 @@
 #ifndef __BL_Waves__WavesRender__
 #define __BL_Waves__WavesRender__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 #include <deque>
 using namespace std;
@@ -127,5 +129,7 @@ protected:
     bool mORXXMode;
     int mORXXKeyGuessStep;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_Waves__WavesRender__) */

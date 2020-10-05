@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 #include "GraphControl11.h"
 #include "GraphCurve4.h"
@@ -251,3 +253,5 @@ GraphCurve4::SetWeightTargetColor(int color[4])
     SET_COLOR_FROM_INT(mWeightTargetColor,
                        color[0], color[1], color[2], color[3]);
 }
+
+#endif // IGRAPHICS_NANOVG

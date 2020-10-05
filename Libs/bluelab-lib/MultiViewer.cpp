@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // Hack
 #define USE_GRAPH_OGL 1
 
@@ -208,3 +210,5 @@ MultiViewer::UpdateFrequencyScale()
         free(AXIS_DATA[i][1]);
     }
 }
+
+#endif // IGRAPHICS_NANOVG

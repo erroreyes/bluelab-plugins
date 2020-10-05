@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -116,4 +118,5 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
     }
 }
 
+#endif // IGRAPHICS_NANOVG
 

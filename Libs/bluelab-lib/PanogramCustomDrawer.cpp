@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -323,3 +325,5 @@ PanogramCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
         nvgStroke(vg);
     }
 }
+
+#endif // IGRAPHICS_NANOVG

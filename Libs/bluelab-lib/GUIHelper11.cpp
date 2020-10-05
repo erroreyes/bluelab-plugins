@@ -11,6 +11,8 @@
 #include <GraphControl11.h>
 #include <BLUtils.h>
 
+#include <IBitmapControlAnim.h>
+
 #include "GUIHelper11.h"
 
 // Text
@@ -87,6 +89,7 @@ GUIHelper11::GUIHelper11(Style style)
         
         mLogoOffsetX = 0.0;
         mLogoOffsetY = -1.0;
+        mAnimLogoSpeed = 0.5;
         
         mPlugNameOffsetX = 5.0;
         mPlugNameOffsetX = 6.0;
@@ -128,6 +131,7 @@ GUIHelper11::CreateKnob(IGraphics *graphics,
     return knob;
 }
 
+#ifdef IGRAPHICS_NANOVG
 GraphControl11 *
 GUIHelper11::CreateGraph(Plugin *plug, IGraphics *graphics,
                          float x, float y,
@@ -161,6 +165,7 @@ GUIHelper11::CreateGraph(Plugin *plug, IGraphics *graphics,
     
     return graph;
 }
+#endif // IGRAPHICS_NANOVG
 
 IBSwitchControl *
 GUIHelper11::CreateSwitchButton(IGraphics *graphics,
@@ -388,6 +393,40 @@ GUIHelper11::CreateLogo(Plugin *plug, IGraphics *graphics,
     
     IBitmapControl *control = new IBitmapControl(x + mLogoOffsetX,
                                                  y + mLogoOffsetY, bmp);
+    control->SetInteractionDisabled(true);
+    
+    graphics->AttachControl(control);
+}
+
+// Static logo
+void
+GUIHelper11::CreateLogoAnim(Plugin *plug, IGraphics *graphics,
+                            const char *logoFname, int nStates, Position pos)
+{
+    IBitmap bmp = graphics->LoadBitmap(logoFname, nStates);
+    
+    float x = 0.0;
+    float y = 0.0;
+    
+    if (pos == TOP)
+    {
+        // Upper right corner
+        x = graphics->Width() - bmp.W();
+        y = 0;
+    }
+    
+    if (pos == BOTTOM)
+    {
+        // Lower right corner
+        x = graphics->Width() - bmp.W();
+        y = graphics->Height() - bmp.H()/bmp.N();
+    }
+    
+    IBitmapControlAnim *control = new IBitmapControlAnim(x + mLogoOffsetX,
+                                                         y + mLogoOffsetY,
+                                                         bmp, kNoValIdx,
+                                                         mAnimLogoSpeed,
+                                                         true, true);
     control->SetInteractionDisabled(true);
     
     graphics->AttachControl(control);

@@ -9,6 +9,8 @@
 // #bl-iplug2
 //#include "nanovg.h"
 
+#ifdef IGRAPHICS_NANOVG
+
 #include "PanogramGraphDrawer.h"
 
 
@@ -50,3 +52,5 @@ PanogramGraphDrawer::PostDraw(NVGcontext *vg, int width, int height)
         nvgStroke(vg);
     }
 }
+
+#endif // IGRAPHICS_NANOVG

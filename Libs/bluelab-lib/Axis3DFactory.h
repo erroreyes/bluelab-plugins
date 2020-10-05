@@ -9,6 +9,8 @@
 #ifndef __BL_SoundMetaViewer__Axis3DFactory__
 #define __BL_SoundMetaViewer__Axis3DFactory__
 
+#ifdef IGRAPHICS_NANOVG
+
 class Axis3D;
 
 class Axis3DFactory
@@ -56,5 +58,7 @@ protected:
 private:
     Axis3DFactory();
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_SoundMetaViewer__Axis3DFactory__) */

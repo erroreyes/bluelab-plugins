@@ -30,7 +30,7 @@ using namespace std;
 // 4 models, 1 model by quality
 #define NUM_MODELS 1 //4
 
-using namespace iplug::igraphics;
+using namespace iplug;
 
 //MaskPredictor
 //
@@ -66,7 +66,7 @@ public:
     RebalanceMaskPredictorComp5(int bufferSize,
                                BL_FLOAT overlapping, BL_FLOAT oversampling,
                                BL_FLOAT sampleRate,
-                               IGraphics *graphics);
+                               const IPluginBase &plug);
     
     virtual ~RebalanceMaskPredictorComp5();
     

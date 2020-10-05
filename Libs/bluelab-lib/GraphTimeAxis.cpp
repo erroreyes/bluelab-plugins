@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 #include "GraphTimeAxis.h"
@@ -175,3 +177,5 @@ GraphTimeAxis::ComputeTimeDuration(int numBuffers, int bufferSize,
     
     return timeDuration;
 }
+
+#endif

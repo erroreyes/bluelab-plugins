@@ -6,6 +6,8 @@
 //
 //
 
+#if IGRAPHICS_NANOVG
+
 #include <MultiViewer.h>
 #include <BLReverb.H>
 
@@ -101,3 +103,5 @@ BLReverbViewer::Update()
     
     delete revClone;
 }
+
+#endif // IGRAPHICS_NANOVG

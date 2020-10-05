@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 
 #include "RCKdTree.h"
@@ -440,3 +442,5 @@ RCKdTree::SplitMiddle(const RC_FLOAT bbox[2][2],
         }
     }
 }
+
+#endif //IGRAPHICS_NANOVG

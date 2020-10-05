@@ -9,6 +9,8 @@
 #ifndef __UST__BLUpmixGraphDrawer__
 #define __UST__BLUpmixGraphDrawer__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 class BLVectorscopePlug;
@@ -70,5 +72,7 @@ protected:
     bool mTitleSet;
     char mTitleText[256];
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__BLUpmixGraphDrawer__) */

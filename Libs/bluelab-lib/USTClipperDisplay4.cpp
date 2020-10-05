@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 #include <BLUtils.h>
@@ -525,3 +527,5 @@ USTClipperDisplay4::UpdateSweepBar()
         mGraph->SetCurveSingleValueV(SWEEP_BAR_CURVE, pos);
     }
 }
+
+#endif // IGRAPHICS_NANOVG

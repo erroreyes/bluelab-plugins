@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 
 #include <Axis3D.h>
@@ -368,3 +370,4 @@ Axis3DFactory2::FreqToMelNorm(BL_FLOAT freq, int bufferSize, BL_FLOAT sampleRate
     return result;
 }
 
+#endif // IGRAPHICS_NANOVG

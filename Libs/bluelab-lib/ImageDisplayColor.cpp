@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // Opengl
 //#include <GL/glew.h>
 
@@ -270,3 +272,5 @@ ImageDisplayColor::SetAlpha(BL_FLOAT alpha)
 {
     mImageAlpha = alpha;
 }
+
+#endif // IGRAPHICS_NANOVG

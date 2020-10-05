@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // Warning: Niko hack in NanoVg to support FBO even on GL2
 //#define NANOVG_GL2_IMPLEMENTATION
 
@@ -330,3 +332,5 @@ Axis3D::DrawText(NVGcontext *vg, BL_FLOAT x, BL_FLOAT y, BL_FLOAT fontSize,
     
     nvgRestore(vg);
 }
+
+#endif // IGRAPHICS_NANOVG

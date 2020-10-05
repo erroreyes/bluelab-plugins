@@ -9,6 +9,8 @@
 #ifndef __BL_SoundMetaViewer__RCKdTreeVisitor__
 #define __BL_SoundMetaViewer__RCKdTreeVisitor__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <RCKdTree.h>
 
 class RCKdTreeVisitor : public RCKdTree::Visitor
@@ -27,5 +29,7 @@ public:
 protected:
     RC_FLOAT mMaxSize;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_SoundMetaViewer__RCKdTreeVisitor__) */

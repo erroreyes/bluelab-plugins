@@ -9,6 +9,8 @@
 #ifndef __BL_TransientShaper__FifoDecimator2__
 #define __BL_TransientShaper__FifoDecimator2__
 
+#include <BLTypes.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 
 // Keep many values, and decimate when GetValues()

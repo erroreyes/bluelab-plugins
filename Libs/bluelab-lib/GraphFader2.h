@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__GraphFader2__
 #define __BL_StereoWidth__GraphFader2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <deque>
 using namespace std;
 
@@ -75,5 +77,7 @@ protected:
     
     bool mPointsAsLines;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__GraphFader2__) */

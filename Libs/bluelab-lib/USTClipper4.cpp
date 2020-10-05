@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <USTClipperDisplay4.h>
 #include <BLUtils.h>
 #include <BLDebug.h>
@@ -532,3 +534,5 @@ USTClipper4::DBG_TestClippingKnee(BL_FLOAT clipValue)
     
     BLDebug::DumpData("clip.txt", buf);
 }
+
+#endif // IGRAPHICS_NANOVG

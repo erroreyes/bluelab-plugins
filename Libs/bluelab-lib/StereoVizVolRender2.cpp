@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -481,3 +483,5 @@ StereoVizVolRender2::DistToDbScale(const WDL_TypedBuf<BL_FLOAT> &xValues,
         yValues.Get()[i] = posY;
     }
 }
+
+#endif // IGRAPHICS_NANOVG

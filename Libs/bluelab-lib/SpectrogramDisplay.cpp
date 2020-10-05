@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // Opengl
 //#include <GL/glew.h>
 
@@ -681,3 +683,5 @@ SpectrogramDisplay::SetDrawBGSpectrogram(bool flag)
 {
     mDrawBGSpectrogram = flag;
 }
+
+#endif // IGRAPHICS_NANOVG

@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 #include <DebugGraph.h>
 
@@ -1503,3 +1505,5 @@ SASViewerProcess::MixFrames(SASFrame2 *result,
     
     result->SetNormWarping(resultWarping);
 }
+
+#endif // IGRAPHICS_NANOVG

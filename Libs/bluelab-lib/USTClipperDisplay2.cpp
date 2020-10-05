@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 #include <FifoDecimator2.h>
 #include <BLUtils.h>
@@ -201,3 +203,5 @@ USTClipperDisplay2::AddClippedSamples(const WDL_TypedBuf<BL_FLOAT> &samples)
         mGraph->SetCurveValues3(WAVEFORM_CLIP_DOWN_CURVE, &decimValuesDown);
     }
 }
+
+#endif // IGRAPHICS_NANOVG

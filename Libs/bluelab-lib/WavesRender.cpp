@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -670,3 +672,5 @@ WavesRender::UpdateAmpsAxis(bool dBScale)
             mAmpsAxis->UpdateLabels(labelsDBScale, normPosDBScale, NUM_AXIS_DATA_DBSCALE, p0, p1);
     }
 }
+
+#endif // IGRAPHICS_NANOVG

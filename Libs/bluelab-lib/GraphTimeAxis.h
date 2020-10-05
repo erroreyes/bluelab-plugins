@@ -9,6 +9,8 @@
 #ifndef __BL_InfrasonicViewer__GraphTimeAxis__
 #define __BL_InfrasonicViewer__GraphTimeAxis__
 
+#ifdef IGRAPHICS_NANOVG
+
 class GraphControl11;
 
 class GraphTimeAxis
@@ -38,5 +40,7 @@ protected:
     
     int mNumLabels;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_InfrasonicViewer__GraphTimeAxis__) */

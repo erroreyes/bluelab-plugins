@@ -9,6 +9,8 @@
 #ifndef __BL_Waves__LineRender2__
 #define __BL_Waves__LineRender2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 #include <deque>
 using namespace std;
@@ -308,5 +310,7 @@ protected:
     long mCount0;
 #endif
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__RayCaster__) */

@@ -9,6 +9,8 @@
 #ifndef __UST__USTClipper2__
 #define __UST__USTClipper2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -42,5 +44,7 @@ protected:
     
     ClipperOverObj2 *mClipObjs[2];
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__USTClipper2__) */

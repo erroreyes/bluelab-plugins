@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram3.h>
 #include <Window.h>
 #include <BLUtils.h>
@@ -811,3 +813,6 @@ BatFftObj5::ProcessCross(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     
     mLineCount++;
 }
+
+#endif // IGRAPHICS_NANOVG
+

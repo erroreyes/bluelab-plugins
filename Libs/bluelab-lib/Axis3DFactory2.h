@@ -9,6 +9,8 @@
 #ifndef __BL_SoundMetaViewer__Axis3DFactory2__
 #define __BL_SoundMetaViewer__Axis3DFactory2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLTypes.h>
 
 // Axis3DFactory2: from Axis3DFactory
@@ -55,5 +57,7 @@ protected:
     int mBufferSize;
     BL_FLOAT mSampleRate;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_SoundMetaViewer__Axis3DFactory2__) */

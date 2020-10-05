@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__USTCircleGraphDrawer__
 #define __BL_StereoWidth__USTCircleGraphDrawer__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 // From StereoWidthGraphDrawer2
@@ -21,5 +23,7 @@ public:
     
     virtual void PreDraw(NVGcontext *vg, int width, int height);
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__USTCircleGraphDrawer__) */

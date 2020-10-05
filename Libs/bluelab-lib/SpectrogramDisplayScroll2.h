@@ -9,6 +9,8 @@
 #ifndef __BL_Chroma__SpectrogramDisplayScroll2__
 #define __BL_Chroma__SpectrogramDisplayScroll2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <deque>
 using namespace std;
 
@@ -134,5 +136,7 @@ protected:
     
     bool mIsPlaying;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_Chroma__SpectrogramDisplayScroll2__) */

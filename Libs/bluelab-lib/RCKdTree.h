@@ -9,6 +9,8 @@
 #ifndef __BL_StereoViz__RCKdTree__
 #define __BL_StereoViz__RCKdTree__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -96,5 +98,7 @@ protected:
     
     int mLevel;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoViz__QuadTree__) */

@@ -9,11 +9,12 @@
 #ifndef __BL_StereoViz__QuadTree__
 #define __BL_StereoViz__QuadTree__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
 #include <SparseVolRender.h>
-
 
 //
 
@@ -70,5 +71,7 @@ protected:
     
     int mLevel;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoViz__QuadTree__) */

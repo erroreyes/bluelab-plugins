@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 //#include <Panogram.h>
 #include <SpectrogramDisplayScroll.h>
 
@@ -325,4 +327,6 @@ PanogramCustomControl::SetSelectionActive(bool flag)
 {
     mSelectionActive = flag;
 }
+
+#endif // IGRAPHICS_NANOVG
 

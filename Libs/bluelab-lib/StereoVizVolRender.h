@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__StereoVizVolRender__
 #define __BL_StereoWidth__StereoVizVolRender__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 #include <deque>
 using namespace std;
@@ -50,5 +52,7 @@ protected:
     
     long int mAddNum;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__StereoVizVolRender__) */

@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 
 #include "QuadTree.h"
@@ -350,3 +352,4 @@ QuadTree::IsLeaf()
     return true;
 }
 
+#endif // IGRAPHICS_NANOVG

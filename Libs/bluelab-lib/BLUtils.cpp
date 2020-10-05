@@ -37,7 +37,11 @@ extern "C" {
 #include "IPlug_include_in_plug_hdr.h"
 //#include "../../WDL/IPlug/Containers.h"
 
+#include <IPlugPaths.h>
+
 #include "BLUtils.h"
+
+using namespace iplug;
 
 #define TWO_PI 6.28318530717959
 
@@ -11601,4 +11605,29 @@ BLUtils::GetTimeMillis()
     long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
     
     return ms;
+}
+
+bool
+BLUtils::GetFullPlugResourcesPath(const IPluginBase &plug, WDL_String *resPath)
+{
+#define DUMMY_RES_FILE "dummy.txt"
+    
+    EResourceLocation resourceFound =
+        LocateResource(DUMMY_RES_FILE,
+                       "txt",
+                       *resPath,
+                       plug.GetBundleID(),
+                       NULL, //GetWinModuleHandle(),
+                       SHARED_RESOURCES_SUBPATH);// defined in plugin config.h
+    
+    if (resourceFound == EResourceLocation::kNotFound)
+    {
+        return false;
+    }
+    
+    // Crop "/dummy.txt" from the path.
+    if (resPath->GetLength() >= strlen(DUMMY_RES_FILE) + 1)
+        resPath->SetLen(resPath->GetLength() - (strlen(DUMMY_RES_FILE) + 1));
+    
+    return true;
 }

@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__StereoWidthGraphDrawer2__
 #define __BL_StereoWidth__StereoWidthGraphDrawer2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 class StereoWidthGraphDrawer2 : public GraphCustomDrawer
@@ -20,5 +22,7 @@ public:
     
     virtual void PostDraw(NVGcontext *vg, int width, int height);
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__StereoWidthGraphDrawer2__) */

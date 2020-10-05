@@ -9,6 +9,8 @@
 #ifndef __BL_Reverb__SamplesToSpectrogram__
 #define __BL_Reverb__SamplesToSpectrogram__
 
+#include <BLTypes.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 
 class BLSpectrogram3;

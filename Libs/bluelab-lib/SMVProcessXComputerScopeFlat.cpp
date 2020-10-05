@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <SMVProcessXComputerScope.h>
 
 #include <BLUtils.h>
@@ -99,3 +101,5 @@ SMVProcessXComputerScopeFlat::CreateAxis()
     
     return axis;
 }
+
+#endif // IGRAPHICS_NANOVG

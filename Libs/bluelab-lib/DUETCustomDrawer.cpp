@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -85,3 +87,5 @@ DUETCustomDrawer::SetPickCursor(BL_FLOAT x, BL_FLOAT y)
     mPickCursorX = x;
     mPickCursorY = y;
 }
+
+#endif // IGRAPHICS_NANOVG

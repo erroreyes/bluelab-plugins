@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 
 #include <Axis3DFactory2.h>
@@ -77,3 +79,5 @@ SMVProcessXComputerFreq::CreateAxis()
     
     return axis;
 }
+
+#endif // IGRAPHICS_NANOVG

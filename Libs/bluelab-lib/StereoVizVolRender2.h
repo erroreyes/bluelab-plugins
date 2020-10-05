@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__StereoVizVolRender2__
 #define __BL_StereoWidth__StereoVizVolRender2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 #include <deque>
 using namespace std;
@@ -86,5 +88,7 @@ protected:
     //int mNumPointsSlice;
     int mSpeed;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__StereoVizVolRender2__) */

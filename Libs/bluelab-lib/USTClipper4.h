@@ -9,6 +9,8 @@
 #ifndef __UST__USTClipper4__
 #define __UST__USTClipper4__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -68,5 +70,7 @@ protected:
     
     DelayObj4 *mInputDelay;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__USTClipper4__) */

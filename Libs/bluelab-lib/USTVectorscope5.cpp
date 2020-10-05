@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <math.h>
 
 #include <GraphControl11.h>
@@ -860,3 +862,5 @@ USTVectorscope5::SetCurveStyle(GraphControl11 *graph,
             
     graph->SetCurveFillAlpha(curveNum, curveFillAlpha);
 }
+
+#endif // IGRAPHICS_NANOVG

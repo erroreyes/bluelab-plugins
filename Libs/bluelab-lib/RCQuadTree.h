@@ -9,6 +9,8 @@
 #ifndef __BL_StereoViz__RCQuadTree__
 #define __BL_StereoViz__RCQuadTree__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -81,5 +83,7 @@ protected:
     // To set or get flags (used by visitors)
     int mFlags;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoViz__QuadTree__) */

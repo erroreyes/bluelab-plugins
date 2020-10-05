@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <USTClipperDisplay4.h>
 #include <BLUtils.h>
 
@@ -353,3 +355,5 @@ USTClipper3::ComputeClipping(BL_FLOAT inSample, BL_FLOAT *outSample, BL_FLOAT cl
     if (inSample < -clipValue)
         *outSample = -clipValue;
 }
+
+#endif // IGRAPHICS_NANOVG

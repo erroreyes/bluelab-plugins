@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 #include <PolarViz.h>
 #include <SourcePos.h>
@@ -1261,3 +1263,5 @@ SMVProcess4::InitTimeAxis()
     // Set the time value from previous
     mTimeAxis->Update(mPrevTime);
 }
+
+#endif // IGRAPHICS_NANOVG

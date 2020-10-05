@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
@@ -2338,3 +2340,5 @@ SparseVolRender::PointsToPixelsSplat(const vector<Point> &points,
     }
 }
 #endif
+
+#endif // IGRAPHICS_NANOVG

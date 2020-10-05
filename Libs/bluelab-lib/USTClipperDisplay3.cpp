@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 #include <SamplesPyramid2.h>
 #include <BLUtils.h>
@@ -462,3 +464,5 @@ USTClipperDisplay3::GetPyramidSize()
     
     return numSamples;
 }
+
+#endif // IGRAPHICS_NANOVG

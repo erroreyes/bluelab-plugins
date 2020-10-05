@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 
 #include <Axis3DFactory2.h>
@@ -341,3 +343,5 @@ SMVProcessXComputerLissajousEXP::ComputeLissajousFft(const WDL_TypedBuf<BL_FLOAT
         lissajousSamples[1].Get()[i] = y;
     }
 }
+
+#endif // IGRAPHICS_NANOVG

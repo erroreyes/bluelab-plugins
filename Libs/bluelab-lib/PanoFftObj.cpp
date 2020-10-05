@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram3.h>
 #include <Window.h>
 #include <BLUtils.h>
@@ -199,3 +201,5 @@ PanoFftObj::MagnsToPanoLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
     
     *panoLine = smoothLine;
 }
+
+#endif // IGRAPHICS_NANOVG

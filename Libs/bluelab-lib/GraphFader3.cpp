@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <cmath>
 
 #include "GraphControl11.h"
@@ -237,3 +239,5 @@ GraphFader3::AddCurveValuesWeight(const WDL_TypedBuf<BL_FLOAT> &xValues,
     mGraph->SetCurveColorWeight(curveNum, colorWeights);
 #endif
 }
+
+#endif // IGRAPHICS_NANOVG

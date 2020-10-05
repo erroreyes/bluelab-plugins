@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram3.h>
 #include <Window.h>
 #include <BLUtils.h>
@@ -350,3 +352,5 @@ ChromaFftObj::ComputeC0Freq()
     
     return C0;
 }
+
+#endif // IGRAPHICS_NANOVG

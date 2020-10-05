@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <math.h>
 
 #include <Axis3D.h>
@@ -201,3 +203,5 @@ TimeAxis3D::ComputeTimeDuration(int numBuffers, int bufferSize,
     
     return timeDuration;
 }
+
+#endif // IGRAPHICS_NANOVG

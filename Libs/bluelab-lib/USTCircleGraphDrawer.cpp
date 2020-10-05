@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -200,4 +202,5 @@ USTCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 #endif
 }
 
+#endif // IGRAPHICS_NANOVG
 

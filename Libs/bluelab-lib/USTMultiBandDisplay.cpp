@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 #include <FilterFreqResp.h>
@@ -301,3 +303,5 @@ USTMultiBandDisplay::Update(int filterNum)
     //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
+
+#endif // IGRAPHICS_NANOVG

@@ -9,6 +9,8 @@
 #ifndef __BL_Panogram__PanogramCustomControl__
 #define __BL_Panogram__PanogramCustomControl__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 #include <PanogramPlugInterface.h>
@@ -69,5 +71,7 @@ protected:
     // is inside the graph at the end (without previous mouse down inside)
     bool mPrevMouseDown;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_Panogram__PanogramCustomControl__) */

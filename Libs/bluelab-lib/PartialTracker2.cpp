@@ -17,6 +17,8 @@ using namespace std;
 #include <BLUtils.h>
 #include <BLDebug.h>
 
+#include <CMASmoother.h>
+
 #include "PartialTracker2.h"
 
 #define EPS 1e-15

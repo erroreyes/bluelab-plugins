@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include "RCKdTreeVisitor.h"
 
 // Flag
@@ -113,3 +115,5 @@ RCKdTreeVisitor::TagBoundaries(RCQuadTree *root)
     }
 }
 #endif
+
+#endif // IGRAPHICS_NANOVG

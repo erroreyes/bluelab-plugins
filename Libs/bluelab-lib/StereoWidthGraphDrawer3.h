@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__StereoWidthGraphDrawer3__
 #define __BL_StereoWidth__StereoWidthGraphDrawer3__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 // From StereoWidthGraphDrawer2
@@ -29,5 +31,7 @@ protected:
     bool mTitleSet;
     char mTitleText[256];
 };
+
+#endif
 
 #endif /* defined(__BL_StereoWidth__StereoWidthGraphDrawer3__) */

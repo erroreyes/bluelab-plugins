@@ -15,6 +15,8 @@
 
 #include <WavetableSynth.h>
 
+#include <FftProcessObj16.h>
+
 // Do not speed up...
 #include <SinLUT.h>
 

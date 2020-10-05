@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <cmath>
 
 // #bl-iplug2
@@ -425,3 +427,5 @@ USTUpmixGraphDrawer::OnMouseDrag(float x, float y, float dX, float dY,
     //#endif
     mGraph->SetDataChanged();
 }
+
+#endif // IGRAPHICS_NANOVG

@@ -9,6 +9,8 @@
 #ifndef __UST__USTClipper3__
 #define __UST__USTClipper3__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -50,5 +52,7 @@ protected:
     bool mIsEnabled;
     BL_FLOAT mSampleRate;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__USTClipper3__) */

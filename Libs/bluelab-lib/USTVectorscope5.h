@@ -9,6 +9,8 @@
 #ifndef __UST__USTVectorscope5__
 #define __UST__USTVectorscope5__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -120,5 +122,7 @@ private:
     WDL_TypedBuf<BL_GUI_FLOAT> mTmpPolarSamples[2];
     WDL_TypedBuf<BL_GUI_FLOAT> mTmpPolarSamplesResult[2];
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__USTVectorscope5__) */

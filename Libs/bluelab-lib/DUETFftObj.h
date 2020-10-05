@@ -9,6 +9,8 @@
 #ifndef __BL_DUET__DUETFftObj__
 #define __BL_DUET__DUETFftObj__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include "FftProcessObj16.h"
 
 // From BatFftObj5 (directly)
@@ -100,5 +102,7 @@ protected:
     
     bool mUseSoftMasksComp;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_BL_DUET__BL_DUETFftObj__) */

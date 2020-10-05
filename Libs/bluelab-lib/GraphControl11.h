@@ -9,6 +9,8 @@
 #ifndef GraphControl11_h
 #define GraphControl11_h
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <string>
 #include <vector>
 using namespace std;
@@ -693,5 +695,7 @@ private:
     int mDebugCount;
 #endif
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif

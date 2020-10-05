@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <math.h>
 
 #include <stdio.h>
@@ -4322,3 +4324,5 @@ GraphControl11::IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
     
     return true;
 }
+
+#endif // IGRAPHICS_NANOVG

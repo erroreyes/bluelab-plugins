@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__SMVVolRender3__
 #define __BL_StereoWidth__SMVVolRender3__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 #include <deque>
 using namespace std;
@@ -221,5 +223,7 @@ protected:
     // Plug
     SoundMetaViewerPluginInterface *mPlug;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__SMVVolRender3__) */

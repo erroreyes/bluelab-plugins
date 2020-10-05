@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 
 #include "RCQuadTree.h"
@@ -272,3 +274,5 @@ RCQuadTree::GetLeaves(RCQuadTree *root)
 {
     return root->mLeaves;
 }
+
+#endif // IGRAPHICS_NANOVG

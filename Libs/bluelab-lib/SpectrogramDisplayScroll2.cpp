@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // Opengl
 //#include <GL/glew.h>
 
@@ -640,3 +642,5 @@ SpectrogramDisplayScroll2::ComputeScrollOffsetPixels(int width)
     
     return offsetPixels;
 }
+
+#endif //IGRAPHICS_NANOVG

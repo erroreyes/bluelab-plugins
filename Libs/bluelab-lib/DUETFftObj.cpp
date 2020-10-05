@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram3.h>
 
 #include <BLUtils.h>
@@ -325,3 +327,5 @@ DUETFftObj::Process()
     int height = mSeparator->GetHistogramHeight();
     mImageDisplay->SetImage(width, height, histogram);
 }
+
+#endif // IGRAPHICS_NANOVG

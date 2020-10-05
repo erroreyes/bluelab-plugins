@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <algorithm>
 using namespace std;
 
@@ -782,3 +784,5 @@ LinesRender::ProjectPoint(BL_FLOAT projP[3], const BL_FLOAT p[3], int width, int
     projP[1] = y;
     projP[2] = z;
 }
+
+#endif // IGRAPHICS_NANOVG

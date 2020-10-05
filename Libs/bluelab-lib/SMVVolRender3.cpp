@@ -9,6 +9,8 @@
 // #bl-iplug2
 //#include "nanovg.h"
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <RayCaster2.h>
 
 #include <BLUtils.h>
@@ -1279,3 +1281,5 @@ SMVVolRender3::AdaptQualityT(BL_FLOAT speed)
     
     SetQualityT(qualityT);
 }
+
+#endif // IGRAPHICS_NANOVG

@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <Axis3DFactory2.h>
 
 #include "SMVProcessXComputerScope.h"
@@ -144,3 +146,5 @@ SMVProcessXComputerScope::CreateAxis()
     
     return axis;
 }
+
+#endif // IGRAPHICS_NANOVG

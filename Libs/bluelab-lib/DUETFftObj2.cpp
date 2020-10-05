@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram3.h>
 
 #include <BLUtils.h>
@@ -419,3 +421,5 @@ DUETFftObj2::Process()
     
     mMustReprocess = false;
 }
+
+#endif // IGRAPHICS_NANOVG

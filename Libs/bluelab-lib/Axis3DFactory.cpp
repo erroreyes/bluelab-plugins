@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <IPlugUtilities.h>
 
 #include <BLUtils.h>
@@ -379,3 +381,5 @@ Axis3DFactory::Axis3DFactory()
     mBufferSize = 2048;
     mSampleRate = 44100.0;
 }
+
+#endif // IGRAPHICS_NANOVG

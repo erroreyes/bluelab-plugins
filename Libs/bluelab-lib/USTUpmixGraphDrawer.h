@@ -9,6 +9,8 @@
 #ifndef __UST__USTUpmixGraphDrawer__
 #define __UST__USTUpmixGraphDrawer__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 class USTPluginInterface;
@@ -61,5 +63,7 @@ protected:
     USTPluginInterface *mPlug;
     GraphControl11 *mGraph;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__USTUpmixGraphDrawer__) */

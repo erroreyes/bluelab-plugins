@@ -9,6 +9,8 @@
 #ifndef __UST__BLVectorscope__
 #define __UST__BLVectorscope__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -119,5 +121,7 @@ protected:
     
     WDL_TypedBuf<BL_FLOAT> mSamples[2];
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__BLVectorscope__) */

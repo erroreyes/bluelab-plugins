@@ -9,6 +9,8 @@
 #ifndef __BL_Pano__PanoGraphDrawer__
 #define __BL_Pano__PanoGraphDrawer__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 
 class PanoGraphDrawer : public GraphCustomDrawer
@@ -21,5 +23,7 @@ public:
     // Draw after everything
     void PostDraw(NVGcontext *vg, int width, int height);
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_Pano__PanoGraphDrawer__) */

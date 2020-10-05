@@ -1468,6 +1468,8 @@ public:
     
     static long int GetTimeMillis();
     
+    static bool GetFullPlugResourcesPath(const IPluginBase &plug, WDL_String *resPath);
+    
 protected:
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE BinaryImageMatchAux(const vector<WDL_TypedBuf<FLOAT_TYPE> > &image0,

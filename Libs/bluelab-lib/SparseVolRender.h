@@ -9,6 +9,8 @@
 #ifndef __BL_StereoWidth__SparseVolRender__
 #define __BL_StereoWidth__SparseVolRender__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 #include <deque>
 using namespace std;
@@ -251,5 +253,7 @@ protected:
     long mCount;
 #endif
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_StereoWidth__SparseVolRender__) */

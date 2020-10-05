@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include "DUETCustomControl.h"
 
 DUETCustomControl::DUETCustomControl(DUETPlugInterface *plug)
@@ -52,3 +54,5 @@ DUETCustomControl::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
     
     return true;
 }
+
+#endif // IGRAPHICS_NANOVG

@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <algorithm>
 using namespace std;
 
@@ -5274,3 +5276,5 @@ RayCaster2::SetPointIds(vector<Point> *points)
         p.mId = i;
     }
 }
+
+#endif // IGRAPHICS_NANOVG

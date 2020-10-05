@@ -9,6 +9,8 @@
 #ifndef __BL_SASViewer__SASViewerRender__
 #define __BL_SASViewer__SASViewerRender__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 #include <deque>
 using namespace std;
@@ -102,5 +104,7 @@ protected:
     //
     unsigned long long int mAddNum;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_SASViewer__SASViewerRender__) */

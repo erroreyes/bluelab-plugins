@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLUtils.h>
 #include <DebugGraph.h>
 
@@ -74,3 +76,5 @@ WavesProcess::SetWavesRender(WavesRender *wavesRender)
 {
     mWavesRender = wavesRender;
 }
+
+#endif // IGRAPHICS_NANOVG

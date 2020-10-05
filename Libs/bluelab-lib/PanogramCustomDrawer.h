@@ -9,6 +9,8 @@
 #ifndef __BL_Panogram__PanogramCustomDrawer__
 #define __BL_Panogram__PanogramCustomDrawer__
 
+#ifdef IGRAPHICS_NANOVG
+
 class Panogram;
 
 class PanogramCustomDrawer : public GraphCustomDrawer
@@ -77,5 +79,7 @@ protected:
     
     BL_FLOAT mBounds[4];
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_Panogram__PanogramCustomDrawer__) */

@@ -54,7 +54,7 @@ RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize,
                                                          BL_FLOAT overlapping,
                                                          BL_FLOAT oversampling,
                                                          BL_FLOAT sampleRate,
-                                                         IGraphics *graphics)
+                                                         const IPluginBase &plug)
 {
     mBufferSize = bufferSize;
     mOverlapping = overlapping;
@@ -92,7 +92,12 @@ RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize,
     //graphics->GetResourceDir(&resPath);
     //const char *resourcePath = resPath.Get();
     
-    const char *resourcePath = graphics->GetSharedResourcesSubPath();
+    //const char *resourcePath = graphics->GetSharedResourcesSubPath();
+    
+    WDL_String resPath;
+    BLUtils::GetFullPlugResourcesPath(plug, &resPath);
+    
+    const char *resourcePath = resPath.Get();
     
     //CreateModel(MODEL_4X, resourcePath, &mModels[0]);
     //CreateModel(MODEL_8X, resourcePath, &mModels[1]);

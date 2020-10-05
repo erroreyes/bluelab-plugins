@@ -9,6 +9,8 @@
 #ifndef __PitchShift__FreqAdjustObj__
 #define __PitchShift__FreqAdjustObj__
 
+#include <BLTypes.h>
+
 #include "IControl.h"
 
 // See: http://blogs.zynaptiq.com/bernsee/pitch-shifting-using-the-ft/

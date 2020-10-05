@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -68,4 +70,5 @@ StereoWidthGraphDrawer2::PostDraw(NVGcontext *vg, int width, int height)
                              NVG_ALIGN_CENTER, NVG_ALIGN_MIDDLE/*NVG_ALIGN_BOTTOM*/);
 }
 
+#endif
 

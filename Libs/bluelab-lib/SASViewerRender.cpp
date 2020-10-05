@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -533,3 +535,5 @@ SASViewerRender::FreqToMelNorm(BL_FLOAT freq)
     
     return result;
 }
+
+#endif // IGRAPHICS_NANOVG

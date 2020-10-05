@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <algorithm>
 using namespace std;
 
@@ -1524,3 +1526,5 @@ LinesRender2::OptimStraightLineZ(vector<vector<Point> > *points)
         }
     }
 }
+
+#endif // IGRAPHICS_NANOVG

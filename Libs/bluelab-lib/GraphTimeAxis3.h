@@ -9,6 +9,8 @@
 #ifndef __BL_InfrasonicViewer__GraphTimeAxis3__
 #define __BL_InfrasonicViewer__GraphTimeAxis3__
 
+#ifdef IGRAPHICS_NANOVG
+
 class GraphControl11;
 
 // From GraphTimeAxis
@@ -48,5 +50,7 @@ protected:
     
     BL_FLOAT mCurrentTime;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_InfrasonicViewer__GraphTimeAxis3__) */

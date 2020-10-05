@@ -52,12 +52,14 @@ public:
                               int paramIdx, const char *title = NULL,
                               ICaptionControl **caption = NULL);
     
+#ifdef IGRAPHICS_NANOVG
     GraphControl11 *CreateGraph(Plugin *plug, IGraphics *graphics,
                                 float x, float y,
                                 const char *bitmapFname, int paramIdx,
                                 int numCurves, int numPoints,
                                 const char *overlayFname = NULL);
-
+#endif // IGRAPHICS_NANOVG
+    
     IBSwitchControl *CreateSwitchButton(IGraphics *graphics,
                                         float x, float y,
                                         const char *bitmapFname, int nStates,
@@ -103,6 +105,10 @@ public:
     
     void CreateLogo(Plugin *plug, IGraphics *graphics,
                     const char *logoFname, Position pos);
+    
+    void CreateLogoAnim(Plugin *plug, IGraphics *graphics,
+                        const char *logoFname,
+                        int nStates, Position pos);
     
     void CreatePlugName(Plugin *plug, IGraphics *graphics,
                         const char *plugNameFname, Position pos);
@@ -157,6 +163,7 @@ protected:
     
     float mLogoOffsetX;
     float mLogoOffsetY;
+    float mAnimLogoSpeed;
     
     float mPlugNameOffsetX;
     float mPlugNameOffsetY;

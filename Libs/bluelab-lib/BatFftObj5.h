@@ -9,6 +9,8 @@
 #ifndef __BL_Pano__BatFftObj5__
 #define __BL_Pano__BatFftObj5__
 
+#if IGRAPHICS_NANOVG
+
 #include "FftProcessObj16.h"
 
 // From ChromaFftObj
@@ -130,5 +132,7 @@ protected:
     // Debug
     ImageDisplay *mImageDisplay;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_BL_Pano__BL_BatFftObj5__) */

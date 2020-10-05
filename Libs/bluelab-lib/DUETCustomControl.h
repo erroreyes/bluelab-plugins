@@ -9,6 +9,8 @@
 #ifndef __BL_Panogram__DUETCustomControl__
 #define __BL_Panogram__DUETCustomControl__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl11.h>
 #include <DUETPlugInterface.h>
 
@@ -33,5 +35,7 @@ public:
 protected:
     DUETPlugInterface *mPlug;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_Panogram__DUETCustomControl__) */

@@ -12,6 +12,8 @@ using namespace std;
 #include <SASViewerProcess.h>
 #include <FreqAdjustObj3.h>
 
+#include <CMASmoother.h>
+
 #include <BLUtils.h>
 #include <BLDebug.h>
 

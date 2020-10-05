@@ -9,6 +9,8 @@
 #ifndef __UST__USTVectorscope4__
 #define __UST__USTVectorscope4__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -108,5 +110,7 @@ protected:
     
     USTFireworks *mFireworks;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__UST__USTVectorscope4__) */

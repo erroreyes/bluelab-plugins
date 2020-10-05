@@ -9,6 +9,8 @@
 #ifndef __BL_Panogram__DUETCustomDrawer__
 #define __BL_Panogram__DUETCustomDrawer__
 
+#ifdef IGRAPHICS_NANOVG
+
 class DUETCustomDrawer : public GraphCustomDrawer
 {
 public:
@@ -33,5 +35,7 @@ protected:
     BL_FLOAT mPickCursorX;
     BL_FLOAT mPickCursorY;
 };
+
+#endif // IGRAPHICS_NANOVG
 
 #endif /* defined(__BL_Panogram__DUETCustomDrawer__) */

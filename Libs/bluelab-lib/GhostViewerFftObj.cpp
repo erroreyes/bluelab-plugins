@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram3.h>
 #include <BLUtils.h>
 
@@ -174,3 +176,5 @@ GhostViewerFftObj::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         mSpectrogram->AddLine(magns, phases);
 #endif
 }
+
+#endif // IGRAPHICS_NANOVG

@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram3.h>
 #include <BLUtils.h>
 
@@ -235,3 +237,5 @@ GhostViewerFftObjSubSonic::ComputeLastBin(BL_FLOAT freq)
     
     return binNumPow2;
 }
+
+#endif // IGRAPHICS_NANOVG

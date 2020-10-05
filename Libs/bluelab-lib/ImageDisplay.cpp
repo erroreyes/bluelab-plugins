@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // Opengl
 //#include <GL/glew.h>
 
@@ -598,3 +600,4 @@ ImageDisplay::SetColorMap(int colorMapNum)
     mColorMap->Generate();
 }
 
+#endif // IGRAPHICS_NANOVG

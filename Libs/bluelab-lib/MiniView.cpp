@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 // #bl-iplug2
 //#include "nanovg.h"
 
@@ -141,3 +143,5 @@ MiniView::GetDrag(int dragX, int width)
     
     return res;
 }
+
+#endif // IGRAPHICS_NANOVG
