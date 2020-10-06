@@ -10,7 +10,7 @@
 #define __Denoiser__BLDebug__
 
 // May be useful tu uncomment if BLDebug is included in WDL src files
-//#define SA_API 1
+//#define APP_API 1
 
 #include <vector>
 using namespace std;

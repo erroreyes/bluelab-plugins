@@ -1985,7 +1985,7 @@ BLUtils::GetPlugIOBuffers(Plugin *plug, double **inputs, double **outputs,
     in[1] = ((numInChannels - numInScChannels >  1) &&
 	     isInConnected[1]) ? inputs[1] : NULL;
     
-#ifndef SA_API
+#ifndef APP_API
     // scin
     scIn[0] = ((numInScChannels > 0) && isInConnected[numInChannels - numInScChannels]) ?
                 inputs[numInChannels - numInScChannels] : NULL;
@@ -2188,7 +2188,7 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
 
     // When in application mode, must deactivate sidechains
     // BUG: otherwise it crashes if we try to get sidechains
-#ifndef SA_API
+#ifndef APP_API
     // scin
 #if !FIX_NUMEROUS_SC_CHANNELS
     if ((numInScChannels > 0) && isInConnected[numInChannels - numInScChannels])
