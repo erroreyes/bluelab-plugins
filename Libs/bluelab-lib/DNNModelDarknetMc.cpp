@@ -31,7 +31,8 @@ DNNModelDarknetMc::DNNModelDarknetMc()
 
 DNNModelDarknetMc::~DNNModelDarknetMc()
 {
-    free_network(mNet);
+    if (mNet != NULL)
+        free_network(mNet);
 }
 
 bool

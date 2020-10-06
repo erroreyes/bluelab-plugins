@@ -259,6 +259,9 @@ void
 RebalanceMaskPredictorComp5::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
                                              const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer)
 {
+    // TEST DEBUG
+    //return;
+    
     if (ioFftSamples->size() < 1)
         return;
     

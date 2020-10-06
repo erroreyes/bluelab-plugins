@@ -95,10 +95,6 @@ USTPolarLevel::ComputePoints(WDL_TypedBuf<BL_FLOAT> samplesIn[2],
     
     ProcessLevels(&levels);
     
-    // TEST DEBUG: no smooth
-    //mPrevPolarsLevels = levels;
-    //mPrevPolarLevelsMax = levels;
-    
     // Normal
     WDL_TypedBuf<BL_FLOAT> levels0 = levels;
     
@@ -128,9 +124,6 @@ USTPolarLevel::ComputePoints(WDL_TypedBuf<BL_FLOAT> samplesIn[2],
     
     // Normal
     USTProcess::ComputePolarLevelPoints(levels0, points);
-    
-    // TEST DEBUG
-    //BLUtils::FillAllZero(&levels1);
     
     // Max
     USTProcess::ComputePolarLevelPoints(levels1, maxPoints);

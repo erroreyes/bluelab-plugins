@@ -174,7 +174,7 @@ RebalanceProcessFftObjComp2::SetMode(RebalanceMode mode)
 void
 RebalanceProcessFftObjComp2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                                              const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
-{    
+{
     // Mix
     WDL_TypedBuf<WDL_FFT_COMPLEX> mixBuffer = *ioBuffer;
     BLUtils::TakeHalf(&mixBuffer);

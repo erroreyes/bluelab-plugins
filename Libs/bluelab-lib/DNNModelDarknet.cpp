@@ -75,7 +75,8 @@ DNNModelDarknet::LoadWin(IGraphics *pGraphics, int rcId)
 		return false;
     
     TODO
-    
+    Use the IPlug2 new method for loading windows resources
+        
 	return true;
 #endif
 
