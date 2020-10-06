@@ -106,7 +106,7 @@ RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize,
     
     CreateModel(MODEL_NAME, resourcePath, &mModels[0]);
 #else // WIN32
-    //mModels[0] = new DNNModelDarknet();
+    //mModels[0q] = new DNNModelDarknet();
     //mModels[1] = new DNNModelDarknet();
     //mModels[2] = new DNNModelDarknet();
     //mModels[3] = new DNNModelDarknet();

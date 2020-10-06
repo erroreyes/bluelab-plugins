@@ -152,7 +152,9 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
     PPMFile::SavePPM("data.ppm", input0.Get(), 256, 32, 1, 255);
 #endif
     
-    srand(2222222); // ?
+     // ?
+    srand(2222222);
+    // Prediction
     float *pred = network_predict(mNet, X.Get());
     
     masks->resize(NUM_STEMS);
