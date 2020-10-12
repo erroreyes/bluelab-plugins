@@ -143,7 +143,8 @@ protected:
     //
     
     // Sensivity
-    void ApplySensitivity(BL_FLOAT masks[4]);
+    void ApplySensitivityHard(BL_FLOAT masks[4]);
+    void ApplySensitivitySoft(BL_FLOAT masks[4]);
     void ApplySensitivity(WDL_TypedBuf<BL_FLOAT> masks[4]);
     
     //

@@ -13,6 +13,7 @@ extern "C" {
 }
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 #include <PPMFile.h>
 
@@ -23,6 +24,8 @@ extern "C" {
 
 #define NUM_STEMS 4
 
+// Output is not normalized at all, it has negative values, and values > 1.
+#define FIX_OUTPUT_NORM 1
 
 DNNModelDarknetMc::DNNModelDarknetMc()
 {
@@ -157,6 +160,11 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
     // Prediction
     float *pred = network_predict(mNet, X.Get());
     
+#if FIX_OUTPUT_NORM
+    // Exactly like the process done in darknet, to multiply masks
+    BLUtils::Normalize(pred, input0.GetSize()*NUM_STEMS);
+#endif
+    
     masks->resize(NUM_STEMS);
     for (int i = 0; i < NUM_STEMS; i++)
     {
@@ -172,6 +180,13 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
         (*masks)[maskIndex].Get()[i % input0.GetSize()] = val;
     }
 
+#if 0// DEBUG
+    BLDebug::DumpData("pred-mask0.txt", (*masks)[0]);
+    BLDebug::DumpData("pred-mask1.txt", (*masks)[1]);
+    BLDebug::DumpData("pred-mask2.txt", (*masks)[2]);
+    BLDebug::DumpData("pred-mask3.txt", (*masks)[3]);
+#endif
+    
     //
     for (int i = 0; i < NUM_STEMS; i++)
     {

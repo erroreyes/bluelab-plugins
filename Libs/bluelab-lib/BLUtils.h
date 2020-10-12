@@ -1364,6 +1364,9 @@ public:
     static void Normalize(WDL_TypedBuf<FLOAT_TYPE> *values);
     
     template <typename FLOAT_TYPE>
+    static void Normalize(FLOAT_TYPE *values, int numValues);
+    
+    template <typename FLOAT_TYPE>
     static void Normalize(WDL_TypedBuf<FLOAT_TYPE> *values,
                           FLOAT_TYPE minimum, FLOAT_TYPE maximum);
 

@@ -135,6 +135,9 @@ BLUtils::ampToDB(BL_FLOAT amp, BL_FLOAT minDB)
 
 #define TRY_FIX_SIDE_CHAIN_AU 1
 
+#define EPS 1e-15
+#define INF 1e15
+
 bool _useSimd = false;
 
 void
@@ -1162,9 +1165,6 @@ template <typename FLOAT_TYPE>
 FLOAT_TYPE
 BLUtils::NormalizedYTodB(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
 {
-#define EPS 1e-16
-#define INF 1e16
-    
     //if (y < EPS)
     //y = -INF;
     
@@ -10605,6 +10605,35 @@ BLUtils::Normalize(WDL_TypedBuf<FLOAT_TYPE> *values)
 }
 template void BLUtils::Normalize(WDL_TypedBuf<float> *values);
 template void BLUtils::Normalize(WDL_TypedBuf<double> *values);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::Normalize(FLOAT_TYPE *values, int numValues)
+{
+#define EPS 1e-15
+    
+    FLOAT_TYPE min_val = INF;
+    FLOAT_TYPE max_val = -INF;
+    
+    int i;
+    for (i = 0; i < numValues; i++)
+    {
+        if (values[i] < min_val)
+            min_val = values[i];
+        if (values[i] > max_val)
+            max_val = values[i];
+    }
+    
+    if (max_val - min_val > EPS)
+    {
+        for (i = 0; i < numValues; i++)
+        {
+            values[i] = (values[i] - min_val)/(max_val - min_val);
+        }
+    }
+}
+template void BLUtils::Normalize(float *values, int numValues);
+template void BLUtils::Normalize(double *values, int numValues);
 
 template <typename FLOAT_TYPE>
 void

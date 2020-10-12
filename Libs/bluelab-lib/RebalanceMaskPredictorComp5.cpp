@@ -12,6 +12,8 @@ using namespace std;
 #include <BLUtils.h>
 #include <PPMFile.h>
 
+#include <BLDebug.h>
+
 #include "RebalanceMaskPredictorComp5.h"
 
 // Darknet
@@ -49,6 +51,8 @@ using namespace std;
 
 // 0 for Leonardo Pepino method
 #define USE_MEL 0
+
+#define SOFT_SENSITIVITY 1 //0
 
 RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize,
                                                          BL_FLOAT overlapping,
@@ -813,28 +817,55 @@ RebalanceMaskPredictorComp5::UpdateCurrentMasksScroll()
 void
 RebalanceMaskPredictorComp5::ApplySensitivity(WDL_TypedBuf<BL_FLOAT> masks[4])
 {
+#if 0 // DEBUG
+    BLDebug::DumpData("mask0-in.txt", masks[0]);
+    BLDebug::DumpData("mask1-in.txt", masks[1]);
+    BLDebug::DumpData("mask2-in.txt", masks[2]);
+    BLDebug::DumpData("mask3-in.txt", masks[3]);
+#endif
+    
     for (int i = 0; i < masks[0].GetSize(); i++)
     {
         BL_FLOAT vals[4];
         for (int j = 0; j < 4; j++)
             vals[j] = masks[j].Get()[i];
         
-        ApplySensitivity(vals);
+#if !SOFT_SENSITIVITY
+        ApplySensitivityHard(vals);
+#else
+        ApplySensitivitySoft(vals);
+#endif
         
         for (int j = 0; j < 4; j++)
             masks[j].Get()[i] = vals[j];
     }
+    
+#if 0
+    BLDebug::DumpData("mask0-out.txt", masks[0]);
+    BLDebug::DumpData("mask1-out.txt", masks[1]);
+    BLDebug::DumpData("mask2-out.txt", masks[2]);
+    BLDebug::DumpData("mask3-out.txt", masks[3]);
+#endif
 }
 
 void
-RebalanceMaskPredictorComp5::ApplySensitivity(BL_FLOAT masks[4])
+RebalanceMaskPredictorComp5::ApplySensitivityHard(BL_FLOAT masks[4])
 {
     for (int i = 0; i < 4; i++)
     {
-        if (masks[i] < mSensitivities[i])
+        if (masks[i] < (1.0 - mSensitivities[i]))
         {
             masks[i] = 0.0;
         }
+    }
+}
+
+void
+RebalanceMaskPredictorComp5::ApplySensitivitySoft(BL_FLOAT masks[4])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        masks[i] *= mSensitivities[i];
     }
 }
 
@@ -906,7 +937,7 @@ RebalanceMaskPredictorComp5::ApplyMasksContrast(WDL_TypedBuf<BL_FLOAT> masks[4])
         // See: https://www.researchgate.net/figure/Gamma-curves-where-X-represents-the-normalized-pixel-intensity_fig1_280851965
         for (int k = 0; k < 4; k++)
         {
-	  mc[k].mValue = std::pow(mc[k].mValue, gamma);
+            mc[k].mValue = std::pow(mc[k].mValue, gamma);
         }
         
         // Un-normalize
