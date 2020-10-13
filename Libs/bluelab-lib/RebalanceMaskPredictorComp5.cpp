@@ -29,9 +29,9 @@ using namespace std;
 #define FIX_UPSAMPLE_MEL 1
 
 // Keep to 0 for the moment, will set it to 1 if we re-train the model (and re-generate the data)
-#define FIX_MEL_DOWNSAMPLING 0
+#define FIX_MEL_DOWNSAMPLING 1 //0
 // NOTE: the change is very small with or without (checked with bass mask)
-#define FIX_MEL_UPSAMPLING 0 //1
+#define FIX_MEL_UPSAMPLING 1 //0 //1
 
 // With 100, the slope is very steep
 // (but the sound seems similar to 10).
@@ -50,7 +50,7 @@ using namespace std;
 #define OPTIM_UPSAMPLE 1
 
 // 0 for Leonardo Pepino method
-#define USE_MEL 0
+#define USE_MEL 1 //0
 
 #define SOFT_SENSITIVITY 1 //0
 

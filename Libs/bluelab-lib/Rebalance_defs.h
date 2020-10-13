@@ -48,7 +48,8 @@
 //
 // e.g 4 will make buffers of 256
 //
-#define RESAMPLE_FACTOR 1 //4
+// 1 for Pepino, 4 for Mel
+#define RESAMPLE_FACTOR 4 //1 //4
 
 #define NUM_INPUT_COLS 32 //20
 #define NUM_OUTPUT_COLS 32 //20
