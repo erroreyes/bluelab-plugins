@@ -81,6 +81,8 @@ __COLOR__[3] = ((float)__A__)/255.0;
 
 #define UTILS_VALUE_UNDEFINED -1e16
 
+#define BL_EPS 1e-15
+
 
 inline double
 bl_round(double x)

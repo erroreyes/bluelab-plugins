@@ -31,7 +31,7 @@ class FilterRBJNX;
 //
 // OversampProcessObj3: from OversampProcessObj2
 // - use Oversampler4 (for fix click)
-// - finally, adapted the code from OversampProcessObj (which loks better than OversampProcessObj2)
+// - finally, adapted the code from OversampProcessObj (which looks better than OversampProcessObj2)
 
 // NOTE: a problem was detected during UST Clipper (with Oversampler4)
 // When using on a pure sine wave, clipper gain 18dB
