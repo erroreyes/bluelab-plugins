@@ -904,8 +904,6 @@ RebalanceMaskPredictorComp5::NormalizeMasks(WDL_TypedBuf<BL_FLOAT> masks[4])
 void
 RebalanceMaskPredictorComp5::ApplyMasksContrast(WDL_TypedBuf<BL_FLOAT> masks[4])
 {
-#define EPS 1e-15
-    
     vector<MaskContrastStruct> mc;
     mc.resize(4);
     
@@ -927,7 +925,7 @@ RebalanceMaskPredictorComp5::ApplyMasksContrast(WDL_TypedBuf<BL_FLOAT> masks[4])
         BL_FLOAT minValue = mc[0].mValue;
         BL_FLOAT maxValue = mc[3].mValue;
         
-        if (std::fabs(maxValue - minValue) < EPS)
+        if (std::fabs(maxValue - minValue) < BL_EPS)
             continue;
         
         for (int k = 0; k < 4; k++)

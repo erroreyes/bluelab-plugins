@@ -10,17 +10,15 @@
 using namespace std;
 
 #include <BLUtils.h>
-#include <PPMFile.h>
-
 #include <BLDebug.h>
-
-#include "RebalanceMaskPredictorComp6.h"
 
 // Darknet
 #include <DNNModelDarknetMc.h>
-
 #include <RebalanceMaskStack2.h>
 
+#include <MelScale.h>
+
+#include "RebalanceMaskPredictorComp6.h"
 
 // See Rebalance
 #define EPS 1e-10
@@ -151,6 +149,7 @@ RebalanceMaskPredictorComp6::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
     //
+    ProcessInputMagns(&magns);
     
     // mMixCols is filled with zeros at the origin
     mMixCols.push_back(magns);
@@ -616,4 +615,32 @@ RebalanceMaskPredictorComp6::InitMixCols()
         
         mMixCols.push_back(col);
     }
+}
+
+void
+RebalanceMaskPredictorComp6::ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns)
+{
+    BLDebug::DumpData("hz0.txt", *ioMagns);
+    
+    WDL_TypedBuf<BL_FLOAT> melMagns = *ioMagns;
+    MelScale::HzToMel(&melMagns, *ioMagns, mSampleRate);
+    BLDebug::DumpData("mel0.txt", melMagns);
+    
+    // TEST
+    int numMelBins = ioMagns->GetSize();
+    WDL_TypedBuf<BL_FLOAT> melMagnsMfcc = *ioMagns;
+    MelScale::HzToMelMfcc(&melMagnsMfcc, *ioMagns, mSampleRate, numMelBins);
+    BLDebug::DumpData("mel1.txt", melMagnsMfcc);
+    
+    // TEST
+    WDL_TypedBuf<BL_FLOAT> hzMagns0;
+    MelScale::MelToHz(&hzMagns0, melMagns, mSampleRate);
+    BLDebug::DumpData("hz1.txt", hzMagns0);
+    
+    // TEST
+    WDL_TypedBuf<BL_FLOAT> hzMagns1;
+    MelScale::MelToHz(&hzMagns1, melMagnsMfcc, mSampleRate);
+    BLDebug::DumpData("hz2.txt", hzMagns1);
+    
+    *ioMagns = melMagns;
 }

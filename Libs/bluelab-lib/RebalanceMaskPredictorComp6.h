@@ -124,6 +124,8 @@ protected:
     
     void InitMixCols();
 
+    void ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns);
+    
     //
     int mBufferSize;
     BL_FLOAT mOverlapping;
