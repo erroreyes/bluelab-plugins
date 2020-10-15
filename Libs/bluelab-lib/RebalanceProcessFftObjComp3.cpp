@@ -7,11 +7,9 @@
 //
 
 #include <RebalanceMaskPredictorComp6.h>
-
-#include <DbgSpectrogram.h>
-
-#include <BLUtils.h>
 #include <SoftMaskingNComp.h>
+#include <BLUtils.h>
+#include <BLDebug.h>
 
 #include "RebalanceProcessFftObjComp3.h"
 
@@ -169,6 +167,9 @@ RebalanceProcessFftObjComp3::ComputeMix(WDL_TypedBuf<WDL_FFT_COMPLEX> *dataResul
     BLUtils::ResizeFillZeros(dataResult, dataMix.GetSize());
     
     if (mMaskPred == NULL)
+        return;
+    
+    if (!mMaskPred->IsMaskAvailable())
         return;
     
     WDL_TypedBuf<BL_FLOAT> masks0[NUM_STEM_SOURCES];

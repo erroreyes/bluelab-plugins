@@ -176,6 +176,15 @@ RebalanceMaskPredictorComp6::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX
         mMasks[i] = masks[i];
 }
 
+bool
+RebalanceMaskPredictorComp6::IsMaskAvailable()
+{
+    if (mMasks[0].GetSize() == 0)
+        return false;
+    
+    return true;
+}
+
 void
 RebalanceMaskPredictorComp6::GetMask(int index, WDL_TypedBuf<BL_FLOAT> *mask)
 {
@@ -357,7 +366,7 @@ RebalanceMaskPredictorComp6::ComputeMasks(WDL_TypedBuf<BL_FLOAT> masks[NUM_STEM_
     {
         vector<WDL_TypedBuf<BL_FLOAT> > masks0v;
         mModel->Predict(mixBufHisto, &masks0v);
-    
+        
         for (int i = 0; i < NUM_STEM_SOURCES; i++)
             masks0[i] = masks0v[i];
     }

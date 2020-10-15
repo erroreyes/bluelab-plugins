@@ -67,10 +67,10 @@ public:
     void Process(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers);
     
 protected:
-    // Return true if the result data is in ioResampBuffer
+    // Return true if the result data is stored in ioResampBuffer
     //
-    // In the other case, ioBuffer has been directly modified
-    // and we ignore ioResampBuffer after this call.
+    // Return false ioBuffer has been directly modified
+    // and we don't ned to upsample ioResampBuffer after this call.
     virtual bool ProcessSamplesBuffers(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers,
                                        vector<WDL_TypedBuf<BL_FLOAT> > *ioResampBuffers) = 0;
     

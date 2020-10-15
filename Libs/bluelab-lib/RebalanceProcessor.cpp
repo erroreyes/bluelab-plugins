@@ -11,6 +11,7 @@
 #include <RebalanceMaskPredictorComp6.h>
 #include <RebalanceProcessFftObjComp3.h>
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 #include "RebalanceProcessor.h"
 
@@ -59,11 +60,11 @@ RebalanceProcessor::~RebalanceProcessor()
 void
 RebalanceProcessor::InitDetect(const IPluginBase &plug)
 {
-    mMaskPred = new RebalanceMaskPredictorComp6(mBufferSize, mOverlapping,
+    mMaskPred = new RebalanceMaskPredictorComp6(mTargetBufferSize, mOverlapping,
                                                 mTargetSampleRate,
                                                 mNumSpectroCols,
                                                 plug);
-    mMaskPred->SetPredictModuloNum(0);
+    mMaskPred->SetPredictModuloNum(REBALANCE_PREDICT_MODULO_NUM);
     
     if (mTargetFftObj == NULL)
     {
@@ -284,12 +285,16 @@ RebalanceProcessor::ProcessSamplesBuffers(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuf
         
         // Here, we apply the detected mask (after having scaled it)
         vector<WDL_TypedBuf<BL_FLOAT> > scIn1;
+        
         vector<WDL_TypedBuf<BL_FLOAT> > outResult;
+        outResult = *ioBuffers;
+        BLUtils::FillAllZero(&outResult);
+        
         mNativeFftObj->Process(*ioBuffers, scIn1, &outResult);
         
         *ioBuffers = outResult;
         
-        return true;
+        return false;
     }
     
     return false;

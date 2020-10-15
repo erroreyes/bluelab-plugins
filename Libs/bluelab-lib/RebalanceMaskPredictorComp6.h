@@ -64,6 +64,7 @@ public:
                          const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer);
     
     // Get the masks
+    bool IsMaskAvailable();
     void GetMask(int index, WDL_TypedBuf<BL_FLOAT> *mask);
     
     //
