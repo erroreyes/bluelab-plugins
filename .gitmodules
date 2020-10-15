@@ -37,6 +37,3 @@
 [submodule "flac"]
 	path = flac
 	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/flac/flac
-[submodule "libmfcc"]
-	path = libmfcc
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/libmfcc
