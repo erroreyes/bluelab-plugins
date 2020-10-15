@@ -54,8 +54,8 @@ public:
     
     bool HasEnoughData();
     
-    void GetData(WDL_TypedBuf<double> mixCols[NUM_INPUT_COLS],
-                 WDL_TypedBuf<double> sourceCols[NUM_INPUT_COLS]);
+    void GetData(WDL_TypedBuf<double> mixCols[REBALANCE_NUM_SPECTRO_COLS],
+                 WDL_TypedBuf<double> sourceCols[REBALANCE_NUM_SPECTRO_COLS]);
     
 protected:
     deque<WDL_TypedBuf<double> > mMixCols;

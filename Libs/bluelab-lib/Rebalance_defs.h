@@ -9,23 +9,6 @@
 //
 //
 
-//#ifndef BL_Rebalance_Rebalance_defs_h
-//#define BL_Rebalance_Rebalance_defs_h
-
-#define PROFILE_RNN 0 //1
-
-// FIX: result is not good for 88200Hz for example
-// So resample input data to 44100, process, then resample to
-// current sample rate
-//
-// And better perfs for 88100Hz !
-// 44100: 75% CPU
-// 88200 (old): 120% CPU
-// 88200 (new): 78% CPU
-//
-#define FORCE_SAMPLE_RATE 1 //0 //1
-#define SAMPLE_RATE 44100.0
-
 // Soft masks
 #define USE_SOFTMASK_CHECKBOX 0 //1
 #define SOFT_MASK_HISTO_SIZE 8
@@ -44,22 +27,8 @@
 // GOOD: must be kepts to 1 too
 #define FIX_ADJUST_OUT_RESAMPLING 1
 
-// Resample buffers and masks
-//
-// e.g 4 will make buffers of 256
-//
-// 1 for Pepino, 4 for Mel
-#define RESAMPLE_FACTOR 4 //1 //4
-
-#define NUM_INPUT_COLS 32 //20
-#define NUM_OUTPUT_COLS 32 //20
-
 // Listen to what the network is listening
 #define DEBUG_LISTEN_BUFFER 0
-
-// Same config as in article Simpson & Roma
-#define BUFFER_SIZE 2048
-#define OVERSAMPLING 4
 
 #define FREQ_RES 1
 
@@ -85,6 +54,14 @@
 #define MODEL_NAME "rebalance"
 
 #define USE_DEBUG_RADIO_BUTTONS 0 //1
+
+#define NUM_STEM_SOURCES 4
+
+#define REBALANCE_TARGET_SAMPLE_RATE 11025.0
+#define REBALANCE_BUFFER_SIZE 2048
+#define REBALANCE_TARGET_BUFFER_SIZE 512
+#define REBALANCE_OVERLAPPING 4
+#define REBALANCE_NUM_SPECTRO_COLS 32
 
 enum RebalanceMode
 {

@@ -191,6 +191,9 @@ public:
     template <typename FLOAT_TYPE>
     static void StereoToMono(vector<WDL_TypedBuf<FLOAT_TYPE> > *samplesVec);
     
+    static void StereoToMono(WDL_TypedBuf<WDL_FFT_COMPLEX> *monoResult,
+                             const vector< WDL_TypedBuf<WDL_FFT_COMPLEX> > &in0);
+    
     template <typename FLOAT_TYPE>
     static void Mix(FLOAT_TYPE *output, FLOAT_TYPE *buf0, FLOAT_TYPE *buf1, int nFrames, FLOAT_TYPE mix);
     

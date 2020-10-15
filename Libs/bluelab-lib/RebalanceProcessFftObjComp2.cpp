@@ -431,7 +431,7 @@ RebalanceProcessFftObjComp2::ResetSamplesHistory()
 {
     mSamplesHistory.clear();
     
-    for (int i = 0; i < NUM_INPUT_COLS; i++)
+    for (int i = 0; i < REBALANCE_NUM_SPECTRO_COLS; i++)
     {
         WDL_TypedBuf<WDL_FFT_COMPLEX> samples;
         BLUtils::ResizeFillZeros(&samples, mBufferSize/2);
@@ -445,7 +445,7 @@ RebalanceProcessFftObjComp2::ResetMixColsComp()
 {
     mMixColsComp.clear();
     
-    for (int i = 0; i < NUM_INPUT_COLS; i++)
+    for (int i = 0; i < REBALANCE_NUM_SPECTRO_COLS; i++)
     {
         WDL_TypedBuf<WDL_FFT_COMPLEX> col;
         BLUtils::ResizeFillZeros(&col, mBufferSize/2);

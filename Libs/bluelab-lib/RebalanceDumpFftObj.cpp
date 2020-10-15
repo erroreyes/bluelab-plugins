@@ -43,13 +43,13 @@ RebalanceDumpFftObj::RebalanceDumpFftObj(int bufferSize)
 : ProcessObj(bufferSize)
 {
     // Fill with zeros at the beginning
-    mMixCols.resize(NUM_INPUT_COLS);
+    mMixCols.resize(REBALANCE_NUM_SPECTRO_COLS);
     for (int i = 0; i < mMixCols.size(); i++)
     {
         BLUtils::ResizeFillZeros(&mMixCols[i], BUFFER_SIZE/2);
     }
     
-    mSourceCols.resize(NUM_INPUT_COLS);
+    mSourceCols.resize(REBALANCE_NUM_SPECTRO_COLS);
     for (int i = 0; i < mSourceCols.size(); i++)
     {
         BLUtils::ResizeFillZeros(&mSourceCols[i], BUFFER_SIZE/2);
@@ -121,22 +121,22 @@ RebalanceDumpFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 bool
 RebalanceDumpFftObj::HasEnoughData()
 {
-    bool hasEnoughData = (mMixCols.size() >= NUM_INPUT_COLS);
+    bool hasEnoughData = (mMixCols.size() >= REBALANCE_NUM_SPECTRO_COLS);
     
     return hasEnoughData;
 }
 
 void
-RebalanceDumpFftObj::GetData(WDL_TypedBuf<double> mixCols[NUM_INPUT_COLS],
-                             WDL_TypedBuf<double> sourceCols[NUM_INPUT_COLS])
+RebalanceDumpFftObj::GetData(WDL_TypedBuf<double> mixCols[REBALANCE_NUM_SPECTRO_COLS],
+                             WDL_TypedBuf<double> sourceCols[REBALANCE_NUM_SPECTRO_COLS])
 {
-    for (int i = 0; i < NUM_INPUT_COLS; i++)
+    for (int i = 0; i < REBALANCE_NUM_SPECTRO_COLS; i++)
     {
         mixCols[i] = mMixCols[i];
         sourceCols[i] = mSourceCols[i];
     }
     
-    for (int i = 0; i < NUM_INPUT_COLS; i++)
+    for (int i = 0; i < REBALANCE_NUM_SPECTRO_COLS; i++)
     {
         mMixCols.pop_front();
         mSourceCols.pop_front();

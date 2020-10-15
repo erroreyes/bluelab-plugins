@@ -9,6 +9,11 @@
 #ifndef __Saturate__ResampProcessObj__
 #define __Saturate__ResampProcessObj__
 
+#include <vector>
+using namespace std;
+
+#include <BLTypes.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 
 // WDL
@@ -55,46 +60,44 @@ public:
     
     virtual ~ResampProcessObj();
     
-    // Must be called at least once
-    void Reset(BL_FLOAT sampleRate);
-    
     void Reset(BL_FLOAT sampleRate, int blockSize);
     
     int GetLatency();
     
-    void Process(WDL_TypedBuf<BL_FLOAT> *ioBuffer);
+    void Process(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers);
     
 protected:
     // Return true if the result data is in ioResampBuffer
+    //
     // In the other case, ioBuffer has been directly modified
     // and we ignore ioResampBuffer after this call.
-    virtual bool ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                                      WDL_TypedBuf<BL_FLOAT> *ioResampBuffer) = 0;
+    virtual bool ProcessSamplesBuffers(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers,
+                                       vector<WDL_TypedBuf<BL_FLOAT> > *ioResampBuffers) = 0;
     
-    void InitFilter(BL_FLOAT sampleRate);
+    void InitFilters(BL_FLOAT sampleRate);
     
     //
-    OVERSAMPLER_CLASS *mForwardResampler;
-    OVERSAMPLER_CLASS *mBackwardResampler;
+    OVERSAMPLER_CLASS *mForwardResamplers[2];
+    OVERSAMPLER_CLASS *mBackwardResamplers[2];
     
 #if USE_RBJ_FILTER
-    FilterRBJNX *mFilter;
+    FilterRBJNX *mFilters[2];
 #endif
     
 #if USE_IIR_FILTER
-    FilterIIRLow12dBNX *mFilter;
+    FilterIIRLow12dBNX *mFilters[2];
 #endif
     
 #if USE_BUTTERWORTH_FILTER
-    FilterButterworthLPFNX *mFilter;
+    FilterButterworthLPFNX *mFilters[2];
 #endif
     
 #if USE_SINC_CONVO_FILTER
-    FilterSincConvoLPF *mFilter;
+    FilterSincConvoLPF *mFilters[2];
 #endif
     
 #if USE_FFT_LOW_PASS_FILTER
-    FftLowPassFilter *mFilter;
+    FftLowPassFilter *mFilters[2];
 #endif
     
     BL_FLOAT mSampleRate;

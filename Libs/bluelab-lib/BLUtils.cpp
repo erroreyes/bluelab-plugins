@@ -1813,6 +1813,28 @@ BLUtils::StereoToMono(vector<WDL_TypedBuf<FLOAT_TYPE> > *samplesVec)
 template void BLUtils::StereoToMono(vector<WDL_TypedBuf<float> > *samplesVec);
 template void BLUtils::StereoToMono(vector<WDL_TypedBuf<double> > *samplesVec);
 
+void
+BLUtils::StereoToMono(WDL_TypedBuf<WDL_FFT_COMPLEX> *monoResult,
+                      const vector< WDL_TypedBuf<WDL_FFT_COMPLEX> > &in0)
+{
+    if (in0.empty())
+        return;
+    
+    if (in0.size() == 1)
+    {
+        *monoResult = in0[0];
+        
+        return;
+    }
+    
+    monoResult->Resize(in0[0].GetSize());
+    for (int i = 0; i < in0[0].GetSize(); i++)
+    {
+        monoResult->Get()[i].re = 0.5*(in0[0].Get()[i].re + in0[1].Get()[i].re);
+        monoResult->Get()[i].im = 0.5*(in0[0].Get()[i].im + in0[1].Get()[i].im);
+    }
+}
+
 // Compute the similarity between two normalized curves
 template <typename FLOAT_TYPE>
 FLOAT_TYPE

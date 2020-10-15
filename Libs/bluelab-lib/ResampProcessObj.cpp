@@ -24,24 +24,49 @@
 
 #define NYQUIST_FILTER_ORDER 1
 
-//#define SINC_FILTER_SIZE 64 // ORIGIN, less steep
-#define SINC_FILTER_SIZE 256 // GOOD, steepness like Sir Clipper
+#define SINC_FILTER_SIZE 64 // ORIGIN, less steep
+//#define SINC_FILTER_SIZE 256 // GOOD, steepness like Sir Clipper
 
 
 ResampProcessObj::ResampProcessObj(BL_FLOAT targetSampleRate,
                                    BL_FLOAT sampleRate,
                                    bool filterNyquist)
 {
-    mFilter = NULL;
-    
     mSampleRate = sampleRate;
     mTargetSampleRate = targetSampleRate;
     
-    if (filterNyquist)
+    for (int i = 0; i < 2; i++)
     {
-        InitFilter(sampleRate);
+        mFilters[i] = NULL;
+    
+        if (filterNyquist)
+        {
+#if USE_RBJ_FILTER
+            mFilters[i] = new FilterRBJNX(NYQUIST_FILTER_ORDER,
+                                          FILTER_TYPE_LOWPASS);
+#endif
+        
+#if USE_IIR_FILTER
+            mFilters[i] = new FilterIIRLow12dBNX(NYQUIST_FILTER_ORDER);
+#endif
+        
+#if USE_BUTTERWORTH_FILTER
+            mFilters[i] = new FilterButterworthLPFNX(NYQUIST_FILTER_ORDER);
+#endif
+        
+#if USE_SINC_CONVO_FILTER
+            mFilters[i] = new FilterSincConvoLPF();
+#endif
+        
+#if USE_FFT_LOW_PASS_FILTER
+            mFilters[i] = new FilterFftLowPass();
+#endif
+        }
     }
     
+    InitFilters(sampleRate);
+    
+    //
     int dummyBlockSize = 1024;
     
     BL_FLOAT oversampling = mTargetSampleRate/sampleRate;
@@ -50,20 +75,32 @@ ResampProcessObj::ResampProcessObj(BL_FLOAT targetSampleRate,
     
     bool upsampleForward = (mTargetSampleRate > sampleRate);
     
-    mForwardResampler = new OVERSAMPLER_CLASS(oversampling, upsampleForward);
-    mForwardResampler->Reset(sampleRate, dummyBlockSize);
+    for (int i = 0; i < 2; i++)
+    {
+        mForwardResamplers[i] = new OVERSAMPLER_CLASS(oversampling, upsampleForward);
+        mForwardResamplers[i]->Reset(sampleRate, dummyBlockSize);
     
-    mBackwardResampler = new OVERSAMPLER_CLASS(oversampling, !upsampleForward);
-    mBackwardResampler->Reset(targetSampleRate, dummyBlockSize);
+        mBackwardResamplers[i] = new OVERSAMPLER_CLASS(oversampling, !upsampleForward);
+        mBackwardResamplers[i]->Reset(targetSampleRate, dummyBlockSize);
+    }
 }
 
 ResampProcessObj::~ResampProcessObj()
 {
-    delete mForwardResampler;
-    delete mBackwardResampler;
+    for (int i = 0; i < 2; i++)
+    {
+        if (mForwardResamplers[i] != NULL)
+            delete mForwardResamplers[i];
+        
+        if (mBackwardResamplers[i] != NULL)
+            delete mBackwardResamplers[i];
+    }
     
-    if (mFilter != NULL)
-        delete mFilter;
+    for (int i = 0; i < 2; i++)
+    {
+        if (mFilters[i] != NULL)
+            delete mFilters[i];
+    }
 }
 
 void
@@ -71,18 +108,21 @@ ResampProcessObj::Reset(BL_FLOAT sampleRate, int blockSize)
 {
     mSampleRate = sampleRate;
     
-    mForwardResampler->Reset(sampleRate, blockSize);
-    mBackwardResampler->Reset(mTargetSampleRate, blockSize);
-    
-    if (mFilter != NULL)
+    for (int i = 0; i < 2; i++)
     {
-        InitFilter(sampleRate);
+        mForwardResamplers[i]->Reset(sampleRate, blockSize);
+        mBackwardResamplers[i]->Reset(mTargetSampleRate, blockSize);
     }
     
+    InitFilters(sampleRate);
+    
 #if USE_SINC_CONVO_FILTER
-    if (mFilter != NULL)
+    for (int i = 0; i < 2; i++)
     {
-        mFilter->Reset(sampleRate, blockSize);
+        if (mFilters[i] != NULL)
+        {
+            mFilters[i]->Reset(sampleRate, blockSize);
+        }
     }
 #endif
 }
@@ -92,58 +132,62 @@ ResampProcessObj::GetLatency()
 {
     int latency = 0;
     
-    latency += mForwardResampler->GetLatency();
-    latency += mBackwardResampler->GetLatency();
+    latency += mForwardResamplers[0]->GetLatency();
+    latency += mBackwardResamplers[0]->GetLatency();
     
 #if USE_SINC_CONVO_FILTER
-    latency += mFilter->GetLatency();
+    latency += mFilters[0]->GetLatency();
 #endif
 
 #if USE_FFT_LOW_PASS_FILTER
-    latency += mFilter->GetLatency();
+    latency += mFilters[0]->GetLatency();
 #endif
 
     return latency;
 }
 
 void
-ResampProcessObj::Process(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
+ResampProcessObj::Process(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers)
 {
     if (std::fabs(mSampleRate - mTargetSampleRate) < BL_EPS)
     // Nothing to do
     {
-        
-        ProcessSamplesBuffer(ioBuffer, NULL);
+        ProcessSamplesBuffers(ioBuffers, NULL);
         
         return;
     }
     
-    WDL_TypedBuf<BL_FLOAT> resampBuffer = *ioBuffer;
+    vector<WDL_TypedBuf<BL_FLOAT> > resampBuffers = *ioBuffers;
+    for (int i = 0; i < ioBuffers->size(); i++)
+    {
+        // Upsample
+        mForwardResamplers[i]->Resample(&resampBuffers[i]);
+    }
     
-    // Upsample
-    mForwardResampler->Resample(&resampBuffer);
-    
-    bool resultIsResampBuffer = ProcessSamplesBuffer(ioBuffer, &resampBuffer);
+    bool resultIsResampBuffer = ProcessSamplesBuffers(ioBuffers, &resampBuffers);
     
     if (resultIsResampBuffer)
     {
-        // Filter Nyquist ?
-        if (mFilter != NULL)
+        for (int i = 0; i < ioBuffers->size(); i++)
         {
-            WDL_TypedBuf<BL_FLOAT> filtBuffer;
-            mFilter->Process(&filtBuffer, resampBuffer);
+            // Filter Nyquist ?
+            if (mFilters[i] != NULL)
+            {
+                WDL_TypedBuf<BL_FLOAT> filtBuffer;
+                mFilters[i]->Process(&filtBuffer, resampBuffers[i]);
         
-            resampBuffer = filtBuffer;
+                resampBuffers[i] = filtBuffer;
+            }
+    
+            mBackwardResamplers[i]->Resample(&resampBuffers[i]);
         }
-    
-        mBackwardResampler->Resample(&resampBuffer);
-    
-        *ioBuffer = resampBuffer;
+        
+        *ioBuffers = resampBuffers;
     }
 }
 
 void
-ResampProcessObj::InitFilter(BL_FLOAT sampleRate)
+ResampProcessObj::InitFilters(BL_FLOAT sampleRate)
 {
     // Default: upsample first
     // We will use the filters when downsampling
@@ -157,29 +201,30 @@ ResampProcessObj::InitFilter(BL_FLOAT sampleRate)
         nyquistFreq = mTargetSampleRate*NYQUIST_COEFF;
     }
     
+    for (int i = 0; i < 2; i++)
+    {
+        if (mFilters[i] == NULL)
+            break;
+        
 #if USE_RBJ_FILTER
-    mFilter = new FilterRBJNX(NYQUIST_FILTER_ORDER,
-                              FILTER_TYPE_LOWPASS,
-                              filterSampleRate, nyquistFreq);
+        mFilters[i]->SetSampleRate(filterSampleRate)
+        mFilters[i]->SetCutoffFrequency(nyquistFreq);
 #endif
     
 #if USE_IIR_FILTER
-    mFilter = new FilterIIRLow12dBNX(NYQUIST_FILTER_ORDER);
-    mFilter->Init(nyquistFreq, filterSampleRate);
+        mFilters[i]->Init(nyquistFreq, filterSampleRate);
 #endif
     
 #if USE_BUTTERWORTH_FILTER
-    mFilter = new FilterButterworthLPFNX(NYQUIST_FILTER_ORDER);
-    mFilter->Init(nyquistFreq, filterSampleRate);
+        mFilters[i]->Init(nyquistFreq, filterSampleRate);
 #endif
     
 #if USE_SINC_CONVO_FILTER
-    mFilter = new FilterSincConvoLPF();
-    mFilter->Init(nyquistFreq, filterSampleRate, SINC_FILTER_SIZE);
+        mFilters[i]->Init(nyquistFreq, filterSampleRate, SINC_FILTER_SIZE);
 #endif
     
 #if USE_FFT_LOW_PASS_FILTER
-    mFilter = new FilterFftLowPass();
-    mFilter->Init(nyquistFreq, filterSampleRate);
+        mFilters[i]->Init(nyquistFreq, filterSampleRate);
 #endif
+    }
 }

@@ -45,7 +45,7 @@ using namespace std;
 #define USE_MASK_STACK 1
 #define USE_MASK_STACK_METHOD2 1
 //#define MASK_STACK_DEPTH NUM_INPUT_COLS
-#define MASK_STACK_DEPTH NUM_INPUT_COLS/2
+#define MASK_STACK_DEPTH REBALANCE_NUM_SPECTRO_COLS/2
 
 #define OPTIM_UPSAMPLE 1
 
@@ -53,6 +53,8 @@ using namespace std;
 #define USE_MEL 1 //0
 
 #define SOFT_SENSITIVITY 1 //0
+
+#define RESAMPLE_FACTOR 4
 
 RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize,
                                                          BL_FLOAT overlapping,
@@ -498,13 +500,13 @@ RebalanceMaskPredictorComp5::GetHistoryIndex()
 {
     if (!mDontPredictEveryStep)
     {
-        int colNum = NUM_OUTPUT_COLS/2;
+        int colNum = REBALANCE_NUM_SPECTRO_COLS/2;
         return colNum;
     }
     else
     {
         // Limit the latency
-        int colNum = NUM_OUTPUT_COLS - mPredictModulo;
+        int colNum = REBALANCE_NUM_SPECTRO_COLS - mPredictModulo;
     
         // Do not take the border line...
         //int colNum = NUM_OUTPUT_COLS - mPredictModulo - mPredictModulo/2;
@@ -520,7 +522,7 @@ RebalanceMaskPredictorComp5::GetLatency()
 {
     int histoIndex = GetHistoryIndex();
     
-    int numBuffers = NUM_OUTPUT_COLS - histoIndex;
+    int numBuffers = REBALANCE_NUM_SPECTRO_COLS - histoIndex;
     
     // GOOD!
     numBuffers = numBuffers - 1;
@@ -795,7 +797,7 @@ void
 RebalanceMaskPredictorComp5::UpdateCurrentMasksScroll()
 {
     int numFreqs = BUFFER_SIZE/(2*RESAMPLE_FACTOR);
-    int numCols = NUM_OUTPUT_COLS;
+    int numCols = REBALANCE_NUM_SPECTRO_COLS;
     
     for (int i = 0; i < mCurrentMasks.size(); i++)
     {
@@ -959,7 +961,7 @@ RebalanceMaskPredictorComp5::InitMixCols()
 {
     mMixCols.clear();
     
-    for (int i = 0; i < NUM_INPUT_COLS; i++)
+    for (int i = 0; i < REBALANCE_NUM_SPECTRO_COLS; i++)
     {
         WDL_TypedBuf<BL_FLOAT> col;
         BLUtils::ResizeFillZeros(&col, mBufferSize/(2*RESAMPLE_FACTOR));
