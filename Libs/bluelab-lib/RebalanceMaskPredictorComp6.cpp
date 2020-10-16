@@ -627,10 +627,15 @@ RebalanceMaskPredictorComp6::ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns)
     BLDebug::DumpData("mel0.txt", melMagns);
     
     // TEST
-    int numMelBins = ioMagns->GetSize();
+    /*int numMelBins = ioMagns->GetSize();
     WDL_TypedBuf<BL_FLOAT> melMagnsMfcc = *ioMagns;
     MelScale::HzToMelMfcc(&melMagnsMfcc, *ioMagns, mSampleRate, numMelBins);
-    BLDebug::DumpData("mel1.txt", melMagnsMfcc);
+    BLDebug::DumpData("mel1.txt", melMagnsMfcc);*/
+    
+    int numMelBins = ioMagns->GetSize();
+    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
+    MelScale::HzToMelFilter(&melMagnsFilters, *ioMagns, mSampleRate, numMelBins);
+    BLDebug::DumpData("mel1.txt", melMagnsFilters);
     
     // TEST
     WDL_TypedBuf<BL_FLOAT> hzMagns0;
@@ -639,7 +644,7 @@ RebalanceMaskPredictorComp6::ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns)
     
     // TEST
     WDL_TypedBuf<BL_FLOAT> hzMagns1;
-    MelScale::MelToHz(&hzMagns1, melMagnsMfcc, mSampleRate);
+    MelScale::MelToHz(&hzMagns1, melMagnsFilters, mSampleRate);
     BLDebug::DumpData("hz2.txt", hzMagns1);
     
     *ioMagns = melMagns;

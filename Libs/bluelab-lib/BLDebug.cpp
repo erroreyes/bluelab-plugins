@@ -182,6 +182,19 @@ template void BLDebug::AppendValue(const char *filename, float value);
 template void BLDebug::AppendValue(const char *filename, double value);
 
 void
+BLDebug::AppendNewline(const char *filename)
+{
+    char fullFilename[MAX_PATH];
+    sprintf(fullFilename, BASE_FILE"%s", filename);
+    
+    FILE *file = fopen(fullFilename, "a+");
+    
+    fprintf(file, "\n");
+    
+    fclose(file);
+}
+
+void
 BLDebug::DumpShortData(const char *filename, const short *data, int size)
 {
     char fullFilename[MAX_PATH];

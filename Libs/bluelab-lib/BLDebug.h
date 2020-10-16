@@ -55,6 +55,8 @@ public:
     template <typename FLOAT_TYPE>
     static void AppendValue(const char *filename, FLOAT_TYPE value);
     
+    static void AppendNewline(const char *filename);
+    
     static void DumpShortData(const char *filename, const short *data, int size);
   
     static void AppendShortData(const char *filename, const short data);

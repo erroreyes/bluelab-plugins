@@ -28,9 +28,14 @@ public:
                         BL_FLOAT sampleRate);
     
     // Use real Hz to Mel conversion, using filters
-    static void HzToMelMfcc(WDL_TypedBuf<BL_FLOAT> *result,
-                            const WDL_TypedBuf<BL_FLOAT> &magns,
-                            BL_FLOAT sampleRate, int numMelBins);
+    //static void HzToMelMfcc(WDL_TypedBuf<BL_FLOAT> *result,
+    //                        const WDL_TypedBuf<BL_FLOAT> &magns,
+    //                        BL_FLOAT sampleRate, int numMelBins);
+    
+    // Use real Hz to Mel conversion, using filters
+    static void HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
+                              const WDL_TypedBuf<BL_FLOAT> &magns,
+                              BL_FLOAT sampleRate, int numFilters);
 };
 
 #endif /* MelScale_hpp */

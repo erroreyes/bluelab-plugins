@@ -12,7 +12,12 @@ extern "C" {
 #include <libmfcc.h>
 }
 
+extern "C" {
+#include <fast-dct-lee.h>
+}
+
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 #include "MelScale.h"
 
@@ -129,6 +134,7 @@ MelScale::MelToHz(WDL_TypedBuf<BL_FLOAT> *resultMagns,
     }
 }
 
+#if 0
 void
 MelScale::HzToMelMfcc(WDL_TypedBuf<BL_FLOAT> *result,
                       const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -137,7 +143,7 @@ MelScale::HzToMelMfcc(WDL_TypedBuf<BL_FLOAT> *result,
     result->Resize(numMelBins);
     BLUtils::FillAllZero(result);
     
-    int numFilters = 64; //30; //256; //60; //30; //numMelBins;
+    int numFilters = numMelBins; //64; //30; //256; //60; //30; //numMelBins;
     int numCoeffs = numMelBins;
     
     BL_FLOAT *spectrum = magns.Get();
@@ -154,11 +160,144 @@ MelScale::HzToMelMfcc(WDL_TypedBuf<BL_FLOAT> *result,
     BL_FLOAT *spectrum = fftMagns.Get();
     int spectralDataArraySize = fftMagns.GetSize();*/
     
+    WDL_TypedBuf<double> tmpDebugData;
+    tmpDebugData.Resize(magns.GetSize());
+    
     for (int coeff = 0; coeff < numCoeffs; coeff++)
     {
-        BL_FLOAT res = GetCoefficient(spectrum, (int)sampleRate,
-                                      numFilters, spectralDataArraySize, coeff);
+        BL_FLOAT res = BLGetCoefficient(spectrum, (int)sampleRate,
+                                        numFilters, spectralDataArraySize, coeff,
+                                        tmpDebugData.Get());
         
         result->Get()[coeff] = res;
+        
+        if (coeff == 0)
+            BLDebug::DumpData("filters.txt", tmpDebugData);
+        else
+        {
+            BLDebug::AppendNewline("filters.txt");
+            BLDebug::AppendData("filters.txt", tmpDebugData);
+        }
     }
+    
+#if 0
+    // Now, to have mel from mfcc, we need to do idct(log(mfcc))
+    // (or dct(log(mfcc), not sure...)
+    //
+    // See: https://stackoverflow.com/questions/53925401/difference-between-mel-spectrogram-and-an-mfcc/54326385#54326385
+    for (int i = 0; i < result->GetSize(); i++)
+    {
+        BL_FLOAT val = result->Get()[i];
+        val = log(val + 1.0);
+        result->Get()[i] = val;
+    }
+    
+    FastDctLee_inverseTransform(result->Get(), result->GetSize());
+#endif
+}
+#endif
+
+// See: https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html
+void
+MelScale::HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
+                        const WDL_TypedBuf<BL_FLOAT> &magns,
+                        BL_FLOAT sampleRate, int numFilters)
+{
+    // Create filters
+    //
+    BL_FLOAT lowFreqMel = 0.0;
+    BL_FLOAT highFreqMel = HzToMel(sampleRate*0.5);
+    
+    // Compute equally spaced mel values
+    WDL_TypedBuf<BL_FLOAT> melPoints;
+    melPoints.Resize(numFilters + 2);
+    for (int i = 0; i < melPoints.GetSize(); i++)
+    {
+        // Compute mel value
+        BL_FLOAT t = ((BL_FLOAT)i)/(melPoints.GetSize() - 1);
+        BL_FLOAT val = lowFreqMel + t*(highFreqMel - lowFreqMel);
+        
+        melPoints.Get()[i] = val;
+    }
+    
+    BLDebug::DumpData("mel-points.txt", melPoints);
+    
+    // Compute mel points
+    WDL_TypedBuf<BL_FLOAT> hzPoints;
+    hzPoints.Resize(melPoints.GetSize());
+    for (int i = 0; i < hzPoints.GetSize(); i++)
+    {
+        // Compute hz value
+        BL_FLOAT val = melPoints.Get()[i];
+        
+        val = MelToHz(val);
+        
+        hzPoints.Get()[i] = val;
+    }
+    
+    BLDebug::DumpData("hz-points.txt", hzPoints);
+    
+    // Compute bin points
+    WDL_TypedBuf<BL_FLOAT> bin;
+    bin.Resize(hzPoints.GetSize());
+    
+    //BL_FLOAT hzPerBinInv = (magns.GetSize()*2.0 - 1)/sampleRate;
+    BL_FLOAT hzPerBinInv = (magns.GetSize() + 1)/(sampleRate*0.5);
+    
+    for (int i = 0; i < bin.GetSize(); i++)
+    {
+        // Compute hz value
+        BL_FLOAT val = hzPoints.Get()[i];
+        
+        val = val*hzPerBinInv;
+        val = std::floor(val);
+        
+        bin.Get()[i] = val;
+    }
+    
+    BLDebug::DumpData("bin-points.txt", bin);
+    
+    // Apply filters
+    //
+    result->Resize(numFilters);
+    BLUtils::FillAllZero(result);
+    
+    for (int m = 1; m < numFilters + 1; m++)
+    {
+        WDL_TypedBuf<double> dbgFilterBank;
+        dbgFilterBank.Resize(numFilters);
+        BLUtils::FillAllZero(&dbgFilterBank);
+        
+        int f_m_minus = int(bin.Get()[m - 1]); // left
+        int f_m = int(bin.Get()[m]);           // center
+        int f_m_plus = int(bin.Get()[m + 1]);  // right
+        
+        for (int k = f_m_minus; k < f_m; k++)
+        {
+            BL_FLOAT t = (k - bin.Get()[m - 1])/(bin.Get()[m] - bin.Get()[m - 1]);
+            result->Get()[m - 1] += t*magns.Get()[k];
+            
+            dbgFilterBank.Get()[k] = t;
+        }
+        
+        for (int k = f_m; k </*=*/ f_m_plus; k++)
+        {
+            BL_FLOAT t = (bin.Get()[m + 1] - k)/(bin.Get()[m + 1] - bin.Get()[m]);
+            result->Get()[m - 1] += t*magns.Get()[k];
+            
+            dbgFilterBank.Get()[k] = t;
+        }
+        
+        if (m == 1)
+        {
+            BLDebug::DumpData("filters.txt", dbgFilterBank);
+        }
+        else
+        {
+            BLDebug::AppendNewline("filters.txt");
+            BLDebug::AppendData("filters.txt", dbgFilterBank);
+        }
+    }
+    
+    // TODO: manage attenuation (triangles area must always have the same area
 }
