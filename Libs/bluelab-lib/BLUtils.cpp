@@ -135,7 +135,6 @@ BLUtils::ampToDB(BL_FLOAT amp, BL_FLOAT minDB)
 
 #define TRY_FIX_SIDE_CHAIN_AU 1
 
-#define EPS 1e-15
 #define INF 1e15
 
 bool _useSimd = false;
@@ -1165,10 +1164,7 @@ template <typename FLOAT_TYPE>
 FLOAT_TYPE
 BLUtils::NormalizedYTodB(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
 {
-    //if (y < EPS)
-    //y = -INF;
-    
-    if (std::fabs(y) < EPS)
+    if (std::fabs(y) < BL_EPS)
         y = mindB;
     else
         y = BLUtils::AmpToDB(y);
@@ -1407,7 +1403,6 @@ template <typename FLOAT_TYPE>
 bool
 BLUtils::IsAllZero(const FLOAT_TYPE *buffer, int nFrames)
 {
-#define EPS 1e-16
     if (buffer == NULL)
         return true;
 
@@ -1421,7 +1416,7 @@ BLUtils::IsAllZero(const FLOAT_TYPE *buffer, int nFrames)
             simdpp::float64<SIMD_PACK_SIZE> a = simdpp::abs(v0);
             
             FLOAT_TYPE r = simdpp::reduce_max(a);
-            if (r > EPS)
+            if (r > BL_EPS)
                 return false;
             
             buffer += SIMD_PACK_SIZE;
@@ -1435,7 +1430,7 @@ BLUtils::IsAllZero(const FLOAT_TYPE *buffer, int nFrames)
     for (int i = 0; i < nFrames; i++)
     {
         FLOAT_TYPE val = std::fabs(buffer[i]);
-        if (val > EPS)
+        if (val > BL_EPS)
             return false;
     }
             
@@ -1448,16 +1443,15 @@ bool
 BLUtils::IsAllZeroComp(const WDL_TypedBuf<WDL_FFT_COMPLEX> &buffer)
 {
 #if !USE_SIMD_OPTIM
-#define EPS 1e-16
     int bufferSize = buffer.GetSize();
     WDL_FFT_COMPLEX *bufferData = buffer.Get();
     
     for (int i = 0; i < bufferSize; i++)
     {
-        if (std::fabs(bufferData[i].re) > EPS)
+        if (std::fabs(bufferData[i].re) > BL_EPS)
             return false;
         
-        if (std::fabs(bufferData[i].im) > EPS)
+        if (std::fabs(bufferData[i].im) > BL_EPS)
             return false;
     }
     
@@ -1475,9 +1469,9 @@ BLUtils::IsAllZeroComp(const WDL_FFT_COMPLEX *buffer, int bufLen)
 {
     for (int i = 0; i < bufLen; i++)
     {
-        if (std::fabs(buffer[i].re) > EPS)
+        if (std::fabs(buffer[i].re) > BL_EPS)
             return false;
-        if (std::fabs(buffer[i].im) > EPS)
+        if (std::fabs(buffer[i].im) > BL_EPS)
             return false;
     }
     
@@ -2551,8 +2545,6 @@ BLUtils::PlugComputeLatency(Plugin *plug,
                           int nativeBufferSize, int nativeLatency,
                           BL_FLOAT sampleRate)
 {
-#define EPS 1e-8
-    
 #define NATIVE_SAMPLE_RATE 44100.0
     
     // How many blocks for filling BUFFER_SIZE ?
@@ -2582,7 +2574,7 @@ BLUtils::PlugUpdateLatency(Plugin *plug,
                          int nativeBufferSize, int nativeLatency,
                          BL_FLOAT sampleRate)
 {
-    if (std::fabs((BL_FLOAT)(sampleRate - NATIVE_SAMPLE_RATE)) < EPS)
+    if (std::fabs((BL_FLOAT)(sampleRate - NATIVE_SAMPLE_RATE)) < BL_EPS)
         // We are in the native state, no need to tweek latency
     {
         plug->SetLatency(nativeLatency);
@@ -4383,7 +4375,7 @@ BLUtils::AmpToDBClip(FLOAT_TYPE sampleVal, FLOAT_TYPE eps, FLOAT_TYPE minDB)
 {
     FLOAT_TYPE result = minDB;
     FLOAT_TYPE absSample = std::fabs(sampleVal);
-    if (absSample > EPS)
+    if (absSample > BL_EPS)
     {
         result = BLUtils::AmpToDB(absSample);
     }
@@ -5213,8 +5205,6 @@ bool
 BLUtils::IsEqual(const WDL_TypedBuf<FLOAT_TYPE> &values0,
                const WDL_TypedBuf<FLOAT_TYPE> &values1)
 {
-#define EPS 1e-15
-    
     if (values0.GetSize() != values1.GetSize())
         return false;
     
@@ -5236,7 +5226,7 @@ BLUtils::IsEqual(const WDL_TypedBuf<FLOAT_TYPE> &values0,
             
             FLOAT_TYPE maxVal = simdpp::reduce_max(a);
             
-            if (maxVal > EPS)
+            if (maxVal > BL_EPS)
                 return false;
             
             values0Data += SIMD_PACK_SIZE;
@@ -5252,7 +5242,7 @@ BLUtils::IsEqual(const WDL_TypedBuf<FLOAT_TYPE> &values0,
         FLOAT_TYPE val0 = values0Data[i];
         FLOAT_TYPE val1 = values1Data[i];
         
-        if (std::fabs(val0 - val1) > EPS)
+        if (std::fabs(val0 - val1) > BL_EPS)
             return false;
     }
     
@@ -5267,8 +5257,6 @@ template <typename FLOAT_TYPE>
 void
 BLUtils::ReplaceValue(WDL_TypedBuf<FLOAT_TYPE> *values, FLOAT_TYPE srcValue, FLOAT_TYPE dstValue)
 {
-#define EPS 1e-15
-    
     int valuesSize = values->GetSize();
     FLOAT_TYPE *valuesData = values->Get();
     
@@ -5276,7 +5264,7 @@ BLUtils::ReplaceValue(WDL_TypedBuf<FLOAT_TYPE> *values, FLOAT_TYPE srcValue, FLO
     {
         FLOAT_TYPE val = valuesData[i];
         
-        if (std::fabs(val - srcValue) < EPS)
+        if (std::fabs(val - srcValue) < BL_EPS)
             val = dstValue;
         
         valuesData[i] = val;
@@ -5769,8 +5757,7 @@ BLUtils::SecondOrderEqSolve(FLOAT_TYPE a, FLOAT_TYPE b, FLOAT_TYPE c, FLOAT_TYPE
         return 2;
     }
     
-#define EPS 1e-15
-    if (std::fabs(delta) < EPS)
+    if (std::fabs(delta) < BL_EPS)
     {
         res[0] = -b/(2.0*a);
         
@@ -5981,7 +5968,7 @@ BLUtils::FindValueIndex(FLOAT_TYPE val, const WDL_TypedBuf<FLOAT_TYPE> &values, 
                 FLOAT_TYPE val0 = valuesData[idx0];
                 FLOAT_TYPE val1 = valuesData[idx1];
                 
-                if (std::fabs(val1 - val0) > EPS)
+                if (std::fabs(val1 - val0) > BL_EPS)
                     *outT = (val - val0)/(val1 - val0);
             }
             
@@ -6039,7 +6026,7 @@ BLUtils::FindValueIndex(FLOAT_TYPE val, const WDL_TypedBuf<FLOAT_TYPE> &values, 
                 FLOAT_TYPE val0 = valuesData[idx0];
                 FLOAT_TYPE val1 = valuesData[idx1];
                 
-                if (std::fabs(val1 - val0) > EPS)
+                if (std::fabs(val1 - val0) > BL_EPS)
                     *outT = (val - val0)/(val1 - val0);
             }
             
@@ -6920,8 +6907,7 @@ BLUtils::ComputeEnvelopeSmooth2(const WDL_TypedBuf<FLOAT_TYPE> &samples,
     FLOAT_TYPE maxSamples = BLUtils::ComputeMax(samples.Get(), samples.GetSize());
     FLOAT_TYPE maxEnvelope = BLUtils::ComputeMax(envelope->Get(), envelope->GetSize());
     
-#define EPS 1e-15
-    if (maxEnvelope > EPS)
+    if (maxEnvelope > BL_EPS)
     {
         FLOAT_TYPE coeff = maxSamples/maxEnvelope;
         BLUtils::MultValues(envelope, coeff);
@@ -7259,8 +7245,6 @@ BLUtils::FreqsToLogNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
                       const WDL_TypedBuf<FLOAT_TYPE> &magns,
                       FLOAT_TYPE hzPerBin)
 {
-#define EPS 1e-15
-    
     BLUtils::ResizeFillZeros(resultMagns, magns.GetSize());
     
     FLOAT_TYPE maxFreq = hzPerBin*(magns.GetSize() - 1);
@@ -7277,7 +7261,7 @@ BLUtils::FreqsToLogNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
         FLOAT_TYPE logVal = i*maxLog/resultMagnsSize;
         FLOAT_TYPE freq = std::pow((FLOAT_TYPE)10.0, logVal);
         
-        if (maxFreq < EPS)
+        if (maxFreq < BL_EPS)
             return;
         
         FLOAT_TYPE id0 = (freq/maxFreq) * resultMagnsSize;
@@ -7367,8 +7351,6 @@ BLUtils::FreqsToDbNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
                      FLOAT_TYPE hzPerBin,
                      FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
 {
-#define EPS 1e-15
-    
     BLUtils::ResizeFillZeros(resultMagns, magns.GetSize());
     
     //FLOAT_TYPE maxFreq = hzPerBin*(magns.GetSize() - 1);
@@ -7387,7 +7369,7 @@ BLUtils::FreqsToDbNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
         FLOAT_TYPE dbVal = ((FLOAT_TYPE)i)/resultMagnsSize;
         FLOAT_TYPE freq = BLUtils::NormalizedXTodBInv(dbVal, minValue, maxValue);
         
-        if (maxFreq < EPS)
+        if (maxFreq < BL_EPS)
             return;
         
         FLOAT_TYPE id0 = (freq/maxFreq) * resultMagnsSize;
@@ -8321,8 +8303,6 @@ BLUtils::CorrectEnvelope(WDL_TypedBuf<FLOAT_TYPE> *samples,
                        const WDL_TypedBuf<FLOAT_TYPE> &envelope0,
                        const WDL_TypedBuf<FLOAT_TYPE> &envelope1)
 {
-#define EPS 1e-15
-    
     int samplesSize = samples->GetSize();
     FLOAT_TYPE *samplesData = samples->Get();
     FLOAT_TYPE *envelope0Data = envelope0.Get();
@@ -8337,7 +8317,7 @@ BLUtils::CorrectEnvelope(WDL_TypedBuf<FLOAT_TYPE> *samples,
         
         FLOAT_TYPE coeff = 0.0; //
         
-        if ((env0 > EPS) && (env1 > EPS))
+        if ((env0 > BL_EPS) && (env1 > BL_EPS))
             coeff = env0/env1;
         
         sample *= coeff;
@@ -8799,8 +8779,6 @@ BLUtils::FreqsToMelNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
                       FLOAT_TYPE hzPerBin,
                       FLOAT_TYPE zeroValue)
 {
-#define EPS 1e-15
-    
     //BLUtils::ResizeFillZeros(resultMagns, magns.GetSize());
     
     // For dB
@@ -8828,7 +8806,7 @@ BLUtils::FreqsToMelNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
         
         FLOAT_TYPE freq = MelToFreq(mel);
         
-        if (maxFreq < EPS)
+        if (maxFreq < BL_EPS)
             return;
         
         // Optim
@@ -8860,8 +8838,6 @@ BLUtils::FreqsToMelNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
                       FLOAT_TYPE hzPerBin,
                       FLOAT_TYPE zeroValue)
 {
-#define EPS 1e-15
-    
     //BLUtils::ResizeFillZeros(resultMagns, magns.GetSize());
     
     // For dB
@@ -8886,7 +8862,7 @@ BLUtils::FreqsToMelNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
         
         FLOAT_TYPE freq = MelToFreq(mel);
         
-        if (maxFreq < EPS)
+        if (maxFreq < BL_EPS)
             return;
         
         FLOAT_TYPE id0 = freq*idCoeff;
@@ -9076,8 +9052,6 @@ BLUtils::FreqsToMelNorm2(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
                        FLOAT_TYPE hzPerBin,
                        FLOAT_TYPE zeroValue)
 {
-#define EPS 1e-15
-    
     // For dB
     resultMagns->Resize(magns.GetSize());
     BLUtils::FillAllValue(resultMagns, zeroValue);
@@ -9085,7 +9059,7 @@ BLUtils::FreqsToMelNorm2(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
     FLOAT_TYPE maxFreq = hzPerBin*(magns.GetSize() - 1);
     FLOAT_TYPE maxMel = FreqToMel(maxFreq);
     
-    if (maxFreq < EPS)
+    if (maxFreq < BL_EPS)
         return;
     
     // Optim
@@ -9144,7 +9118,7 @@ BLUtils::FreqsToMelNorm2(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
             
             FLOAT_TYPE freq = MelToFreq(mel);
             
-            if (maxFreq < EPS)
+            if (maxFreq < BL_EPS)
                 return;
             
             FLOAT_TYPE i0 = freq*idCoeff;
@@ -9431,7 +9405,7 @@ BLUtils::SmoothDataWin(WDL_TypedBuf<FLOAT_TYPE> *result,
             sumCoeff += coeff;
         }
         
-        if (sumCoeff > EPS)
+        if (sumCoeff > BL_EPS)
         {
             sumVal /= sumCoeff;
         }
@@ -10632,8 +10606,6 @@ template <typename FLOAT_TYPE>
 void
 BLUtils::Normalize(FLOAT_TYPE *values, int numValues)
 {
-#define EPS 1e-15
-    
     FLOAT_TYPE min_val = INF;
     FLOAT_TYPE max_val = -INF;
     
@@ -10646,7 +10618,7 @@ BLUtils::Normalize(FLOAT_TYPE *values, int numValues)
             max_val = values[i];
     }
     
-    if (max_val - min_val > EPS)
+    if (max_val - min_val > BL_EPS)
     {
         for (i = 0; i < numValues; i++)
         {
@@ -10734,7 +10706,7 @@ BLUtils::Normalize(deque<WDL_TypedBuf<FLOAT_TYPE> > *values)
         {
             FLOAT_TYPE val = (*values)[i].Get()[j];
             
-            if (maxValue - minValue > EPS)
+            if (maxValue - minValue > BL_EPS)
                 val = (val - minValue)/(maxValue - minValue);
             
             (*values)[i].Get()[j] = val;
@@ -10778,12 +10750,10 @@ template <typename FLOAT_TYPE>
 void
 BLUtils::Normalize(WDL_TypedBuf<FLOAT_TYPE> *values, FLOAT_TYPE *minVal, FLOAT_TYPE *maxVal)
 {
-#define EPS 1e-15
-    
     *minVal = BLUtils::ComputeMin(*values);
     *maxVal = BLUtils::ComputeMax(*values);
     
-    if (std::fabs(*maxVal - *minVal) > EPS)
+    if (std::fabs(*maxVal - *minVal) > BL_EPS)
     {
         for (int i = 0; i < values->GetSize(); i++)
         {
@@ -10802,9 +10772,7 @@ template <typename FLOAT_TYPE>
 void
 BLUtils::DeNormalize(WDL_TypedBuf<FLOAT_TYPE> *values, FLOAT_TYPE minVal, FLOAT_TYPE maxVal)
 {
-#define EPS 1e-15
-    
-    if (std::fabs(maxVal - minVal) > EPS)
+    if (std::fabs(maxVal - minVal) > BL_EPS)
     {
         for (int i = 0; i < values->GetSize(); i++)
         {
@@ -10823,11 +10791,9 @@ template <typename FLOAT_TYPE>
 void
 BLUtils::NormalizeFilter(WDL_TypedBuf<FLOAT_TYPE> *values)
 {
-#define EPS 1e-15
-    
     FLOAT_TYPE sum = BLUtils::ComputeSum(*values);
     
-    if (std::fabs(sum) < EPS)
+    if (std::fabs(sum) < BL_EPS)
         return;
     
     FLOAT_TYPE sumInv = 1.0/sum;
@@ -11365,8 +11331,6 @@ BLUtils::LagrangeInterp4(FLOAT_TYPE x,
                        FLOAT_TYPE p0[2], FLOAT_TYPE p1[2],
                        FLOAT_TYPE p2[2], FLOAT_TYPE p3[2])
 {
-#define EPS 1e-15
-    
     FLOAT_TYPE pts[4][2] = { { p0[0], p0[1] },
                          { p1[0], p1[1] },
                          { p2[0], p2[1] },
@@ -11382,7 +11346,7 @@ BLUtils::LagrangeInterp4(FLOAT_TYPE x,
                 FLOAT_TYPE xxm = x - pts[m][0];
                 FLOAT_TYPE xjxm = pts[j][0] - pts[m][0];
                 
-                //if (std::fabs(xjxm) > EPS)
+                //if (std::fabs(xjxm) > BL_EPS)
                 //{
                 l[j] *= xxm/xjxm;
                 //}
