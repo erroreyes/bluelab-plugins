@@ -463,6 +463,7 @@ MelScale::CreateFilterBankMelToHz(FilterBank *filterBank, int dataSize,
     }
 }
 
+#if 0 // Origin
 void
 MelScale::ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
                           const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -480,17 +481,52 @@ MelScale::ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
             const FilterBank::Filter &filter = filterBank.mFilters[m];
             
             // Check roughtly the bounds
-            if ((i + 1 < std::floor(filter.mBounds[0])) ||
+            //if ((i + 1 < std::floor(filter.mBounds[0])) ||
+            if (((i + 1) < filter.mBounds[0]) ||
                 (i > filter.mBounds[1]))
                 // Not inside the current filter
                 continue;
             
             // Apply the filter value
             BL_FLOAT tarea = filter.mData.Get()[i];
-            result->Get()[m ] += tarea*magns.Get()[i];
+            result->Get()[m] += tarea*magns.Get()[i];
         }
     }
 }
+#endif
+
+#if 1 // Optimized
+// FIX: this optimization goes faster, but also fixes a bug!
+// Dump vocal, Energetic Upbeat => the top frequencies looks strange,
+// like some drums frequencies repeated.
+void
+MelScale::ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
+                          const WDL_TypedBuf<BL_FLOAT> &magns,
+                          const FilterBank &filterBank)
+{
+    result->Resize(filterBank.mNumFilters);
+    BLUtils::FillAllZero(result);
+    
+    // For each filter
+    for (int m = 0; m < filterBank.mNumFilters; m++)
+    {
+        const FilterBank::Filter &filter = filterBank.mFilters[m];
+
+        // For each destination value
+        for (int i = filter.mBounds[0] - 1; i < filter.mBounds[1] + 1; i++)
+        {
+            if (i < 0)
+                continue;
+            if (i >= magns.GetSize())
+                continue;
+            
+            // Apply the filter value
+            BL_FLOAT tarea = filter.mData.Get()[i];
+            result->Get()[m] += tarea*magns.Get()[i];
+        }
+    }
+}
+#endif
 
 void
 MelScale::MelToMFCC(WDL_TypedBuf<BL_FLOAT> *result,

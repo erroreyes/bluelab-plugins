@@ -37,6 +37,9 @@ using namespace std;
 
 #define SOFT_SENSITIVITY 1 //0
 
+// When set to 0, use quick method
+#define USE_MEL_FILTER_METHOD 1
+
 RebalanceMaskPredictorComp6::RebalanceMaskPredictorComp6(int bufferSize,
                                                          BL_FLOAT overlapping,
                                                          BL_FLOAT sampleRate,
@@ -634,11 +637,19 @@ RebalanceMaskPredictorComp6::InitMixCols()
 void
 RebalanceMaskPredictorComp6::DownsampleHzToMel(WDL_TypedBuf<BL_FLOAT> *ioMagns)
 {
+#if USE_MEL_FILTER_METHOD 
+    // Origin, use filters
     int numMelBins = REBALANCE_NUM_SPECTRO_FREQS;
     WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
     mMelScale->HzToMelFilter(&melMagnsFilters, *ioMagns, mSampleRate, numMelBins);
-    //MelScale::HzToMel(&melMagnsFilters, *ioMagns, mSampleRate);
     *ioMagns = melMagnsFilters;
+#else 
+    // Quick method
+    BLUtils::ResizeLinear(ioMagns, REBALANCE_NUM_SPECTRO_FREQS);
+    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
+    MelScale::HzToMel(&melMagnsFilters, *ioMagns, mSampleRate);
+    *ioMagns = melMagnsFilters;
+#endif
     
 #if 0 // DEBUG
     BLDebug::DumpData("hz0.txt", *ioMagns);
@@ -670,9 +681,17 @@ RebalanceMaskPredictorComp6::DownsampleHzToMel(WDL_TypedBuf<BL_FLOAT> *ioMagns)
 void
 RebalanceMaskPredictorComp6::UpdsampleMelToHz(WDL_TypedBuf<BL_FLOAT> *ioMagns)
 {
+#if USE_MEL_FILTER_METHOD
+    // Origin method with filters
     int numFreqBins = mBufferSize/2;
     WDL_TypedBuf<BL_FLOAT> hzMagnsFilters = *ioMagns;
     mMelScale->MelToHzFilter(&hzMagnsFilters, *ioMagns, mSampleRate, numFreqBins);
-    //MelScale::MelToHz(&melMagnsFilters, *ioMagns, mSampleRate);
     *ioMagns = hzMagnsFilters;
+#else
+    // Quick method
+    BLUtils::ResizeLinear(ioMagns, mBufferSize/2);
+    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
+    MelScale::MelToHz(&melMagnsFilters, *ioMagns, mSampleRate);
+    *ioMagns = melMagnsFilters;
+#endif
 }
