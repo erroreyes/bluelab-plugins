@@ -6,11 +6,14 @@
 //
 //
 
+#include <MelScale.h>
 #include <BLUtils.h>
 
 #include "RebalanceDumpFftObj2.h"
 
-RebalanceDumpFftObj2::RebalanceDumpFftObj2(int bufferSize, int numInputCols)
+RebalanceDumpFftObj2::RebalanceDumpFftObj2(int bufferSize,
+                                           BL_FLOAT sampleRate,
+                                           int numInputCols)
 : MultichannelProcess()
 {
     mNumInputCols = numInputCols;
@@ -21,9 +24,16 @@ RebalanceDumpFftObj2::RebalanceDumpFftObj2(int bufferSize, int numInputCols)
     {
         BLUtils::ResizeFillZeros(&mCols[i], bufferSize/2);
     }
+    
+    mSampleRate = sampleRate;
+    
+    mMelScale = new MelScale();
 }
 
-RebalanceDumpFftObj2::~RebalanceDumpFftObj2() {}
+RebalanceDumpFftObj2::~RebalanceDumpFftObj2()
+{
+    delete mMelScale;
+}
 
 void
 RebalanceDumpFftObj2::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
@@ -44,6 +54,13 @@ RebalanceDumpFftObj2::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *
     
     WDL_TypedBuf<BL_FLOAT> magnsMix;
     BLUtils::ComplexToMagn(&magnsMix, dataBuffer);
+    
+    // Downsample and convert to mel
+    int numMelBins = REBALANCE_NUM_SPECTRO_FREQS;
+    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = magnsMix;
+    mMelScale->HzToMelFilter(&melMagnsFilters, magnsMix, mSampleRate, numMelBins);
+    //MelScale::HzToMel(&melMagnsFilters, *ioMagns, mSampleRate);
+    magnsMix = melMagnsFilters;
     
     mCols.push_back(magnsMix);
 }

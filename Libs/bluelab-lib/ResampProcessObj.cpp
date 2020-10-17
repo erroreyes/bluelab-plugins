@@ -152,7 +152,8 @@ ResampProcessObj::Process(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers)
     if (std::fabs(mSampleRate - mTargetSampleRate) < BL_EPS)
     // Nothing to do
     {
-        ProcessSamplesBuffers(ioBuffers, NULL);
+        vector<WDL_TypedBuf<BL_FLOAT> > copyBuffers = *ioBuffers;
+        ProcessSamplesBuffers(ioBuffers, &copyBuffers);
         
         return;
     }

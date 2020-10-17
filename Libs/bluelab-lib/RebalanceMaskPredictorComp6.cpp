@@ -21,7 +21,7 @@ using namespace std;
 #include "RebalanceMaskPredictorComp6.h"
 
 // See Rebalance
-#define EPS 1e-10
+//#define EPS 1e-10
 
 // With 100, the slope is very steep
 // (but the sound seems similar to 10).
@@ -63,7 +63,10 @@ RebalanceMaskPredictorComp6::RebalanceMaskPredictorComp6(int bufferSize,
     
 #if USE_MASK_STACK
     for (int i = 0; i < NUM_STEM_SOURCES; i++)
-        mMaskStacks[i] = new RebalanceMaskStack2(mBufferSize/2, MASK_STACK_DEPTH);
+        mMaskStacks[i] = new RebalanceMaskStack2(REBALANCE_NUM_SPECTRO_FREQS,
+                                                 //REBALANCE_TARGET_BUFFER_SIZE,
+                                                 //mBufferSize/2,
+                                                 MASK_STACK_DEPTH);
 #endif
     
 #ifndef WIN32
@@ -153,7 +156,7 @@ RebalanceMaskPredictorComp6::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
     //
-    ProcessInputMagns(&magns);
+    DownsampleHzToMel(&magns);
     
     // mMixCols is filled with zeros at the origin
     mMixCols.push_back(magns);
@@ -176,7 +179,11 @@ RebalanceMaskPredictorComp6::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX
     ApplyMasksContrast(masks);
     
     for (int i = 0; i < NUM_STEM_SOURCES; i++)
+    {
+        UpdsampleMelToHz(&masks[i]);
+        
         mMasks[i] = masks[i];
+    }
 }
 
 bool
@@ -389,7 +396,9 @@ RebalanceMaskPredictorComp6::ComputeMasks(WDL_TypedBuf<BL_FLOAT> masks[NUM_STEM_
     }
 #endif
     
-    ComputeLineMasks(masks, masks0, mBufferSize/2);
+    ComputeLineMasks(masks, masks0,
+                     REBALANCE_NUM_SPECTRO_FREQS);
+                     //mBufferSize/2);
     
     // Theshold, just in case (prediction can return negative mask values)
     for (int i = 0; i < NUM_STEM_SOURCES; i++)
@@ -461,7 +470,8 @@ RebalanceMaskPredictorComp6::UpdateCurrentMasksAdd(const vector<WDL_TypedBuf<BL_
 void
 RebalanceMaskPredictorComp6::UpdateCurrentMasksScroll()
 {
-    int numFreqs = mBufferSize/2;
+    //int numFreqs = mBufferSize/2;
+    int numFreqs = REBALANCE_NUM_SPECTRO_FREQS;
     int numCols = mNumSpectroCols;
     
     for (int i = 0; i < mCurrentMasks.size(); i++)
@@ -535,7 +545,7 @@ RebalanceMaskPredictorComp6::NormalizeMasks(WDL_TypedBuf<BL_FLOAT> masks[NUM_STE
         
         BL_FLOAT sum = vals[0] + vals[1] + vals[2] + vals[3];
         
-        if (sum > EPS)
+        if (sum > BL_EPS)
         {
             BL_FLOAT tvals[NUM_STEM_SOURCES];
             
@@ -555,8 +565,6 @@ RebalanceMaskPredictorComp6::NormalizeMasks(WDL_TypedBuf<BL_FLOAT> masks[NUM_STE
 void
 RebalanceMaskPredictorComp6::ApplyMasksContrast(WDL_TypedBuf<BL_FLOAT> masks[NUM_STEM_SOURCES])
 {
-#define EPS 1e-15
-    
     vector<MaskContrastStruct> mc;
     mc.resize(NUM_STEM_SOURCES);
     
@@ -578,7 +586,7 @@ RebalanceMaskPredictorComp6::ApplyMasksContrast(WDL_TypedBuf<BL_FLOAT> masks[NUM
         BL_FLOAT minValue = mc[0].mValue;
         BL_FLOAT maxValue = mc[3].mValue;
         
-        if (std::fabs(maxValue - minValue) < EPS)
+        if (std::fabs(maxValue - minValue) < BL_EPS)
             continue;
         
         for (int k = 0; k < NUM_STEM_SOURCES; k++)
@@ -615,16 +623,18 @@ RebalanceMaskPredictorComp6::InitMixCols()
     for (int i = 0; i < mNumSpectroCols; i++)
     {
         WDL_TypedBuf<BL_FLOAT> col;
-        BLUtils::ResizeFillZeros(&col, mBufferSize/2);
+        BLUtils::ResizeFillZeros(&col,
+                                 REBALANCE_NUM_SPECTRO_FREQS);
+                                 //mBufferSize/2);
         
         mMixCols.push_back(col);
     }
 }
 
 void
-RebalanceMaskPredictorComp6::ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns)
+RebalanceMaskPredictorComp6::DownsampleHzToMel(WDL_TypedBuf<BL_FLOAT> *ioMagns)
 {
-    int numMelBins = ioMagns->GetSize();
+    int numMelBins = REBALANCE_NUM_SPECTRO_FREQS;
     WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
     mMelScale->HzToMelFilter(&melMagnsFilters, *ioMagns, mSampleRate, numMelBins);
     //MelScale::HzToMel(&melMagnsFilters, *ioMagns, mSampleRate);
@@ -655,4 +665,14 @@ RebalanceMaskPredictorComp6::ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns)
     mMelScale->MelToHzFilter(&hzMagns2, melMagnsFilters, mSampleRate, numMelBins);
     BLDebug::DumpData("hz3.txt", hzMagns2);
 #endif
+}
+
+void
+RebalanceMaskPredictorComp6::UpdsampleMelToHz(WDL_TypedBuf<BL_FLOAT> *ioMagns)
+{
+    int numFreqBins = mBufferSize/2;
+    WDL_TypedBuf<BL_FLOAT> hzMagnsFilters = *ioMagns;
+    mMelScale->MelToHzFilter(&hzMagnsFilters, *ioMagns, mSampleRate, numFreqBins);
+    //MelScale::MelToHz(&melMagnsFilters, *ioMagns, mSampleRate);
+    *ioMagns = hzMagnsFilters;
 }

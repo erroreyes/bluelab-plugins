@@ -16,10 +16,11 @@ using namespace std;
 
 // RebalanceDumpFftObj2: from RebalanceDumpFftObj
 // for ResampProcessObj
+class MelScale;
 class RebalanceDumpFftObj2 : public MultichannelProcess
 {
 public:
-    RebalanceDumpFftObj2(int bufferSize, int numInputCols);
+    RebalanceDumpFftObj2(int bufferSize, BL_FLOAT sampleRate, int numInputCols);
     
     virtual ~RebalanceDumpFftObj2();
     
@@ -33,6 +34,10 @@ protected:
     int mNumInputCols;
     
     deque<WDL_TypedBuf<BL_FLOAT> > mCols;
+    
+    BL_FLOAT mSampleRate;
+    
+    MelScale *mMelScale;
 };
 
 #endif /* RebalanceDumpFftObj2_hpp */

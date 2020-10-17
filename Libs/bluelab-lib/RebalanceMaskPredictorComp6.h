@@ -125,7 +125,8 @@ protected:
     
     void InitMixCols();
 
-    void ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns);
+    void DownsampleHzToMel(WDL_TypedBuf<BL_FLOAT> *ioMagns);
+    void UpdsampleMelToHz(WDL_TypedBuf<BL_FLOAT> *ioMagns);
     
     //
     int mBufferSize;

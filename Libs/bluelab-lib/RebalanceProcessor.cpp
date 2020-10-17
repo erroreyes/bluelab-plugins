@@ -150,7 +150,9 @@ RebalanceProcessor::InitDump()
         mTargetFftObj->SetKeepSynthesisEnergy(FftProcessObj16::ALL_CHANNELS, 0);
         
         // Dump stereo to mono signal
-        mDumpObj = new RebalanceDumpFftObj2(mTargetBufferSize, mNumSpectroCols);
+        mDumpObj = new RebalanceDumpFftObj2(mTargetBufferSize,
+                                            mTargetSampleRate,
+                                            mNumSpectroCols);
         
         mTargetFftObj->AddMultichannelProcess(mDumpObj);
         
