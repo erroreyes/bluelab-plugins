@@ -8,13 +8,9 @@
 
 #include <cmath>
 
-extern "C" {
-#include <libmfcc.h>
-}
-
-extern "C" {
-#include <fast-dct-lee.h>
-}
+#include <vector>
+#include <algorithm>
+using namespace std;
 
 #include <BLUtils.h>
 #include <BLDebug.h>
@@ -134,69 +130,6 @@ MelScale::MelToHz(WDL_TypedBuf<BL_FLOAT> *resultMagns,
     }
 }
 
-#if 0
-void
-MelScale::HzToMelMfcc(WDL_TypedBuf<BL_FLOAT> *result,
-                      const WDL_TypedBuf<BL_FLOAT> &magns,
-                      BL_FLOAT sampleRate, int numMelBins)
-{
-    result->Resize(numMelBins);
-    BLUtils::FillAllZero(result);
-    
-    int numFilters = numMelBins; //64; //30; //256; //60; //30; //numMelBins;
-    int numCoeffs = numMelBins;
-    
-    BL_FLOAT *spectrum = magns.Get();
-    int spectralDataArraySize = magns.GetSize();
-    
-    /*WDL_TypedBuf<BL_FLOAT> normMagns = magns;
-    BL_FLOAT coeff = sqrt(normMagns.GetSize());
-    BLUtils::MultValues(&normMagns, coeff);
-    BL_FLOAT *spectrum = normMagns.Get();*/
-    
-    /*WDL_TypedBuf<BL_FLOAT> fftMagns = magns;
-    fftMagns.Resize(fftMagns.GetSize()*2);
-    BLUtils::FillSecondFftHalf(&fftMagns);
-    BL_FLOAT *spectrum = fftMagns.Get();
-    int spectralDataArraySize = fftMagns.GetSize();*/
-    
-    WDL_TypedBuf<double> tmpDebugData;
-    tmpDebugData.Resize(magns.GetSize());
-    
-    for (int coeff = 0; coeff < numCoeffs; coeff++)
-    {
-        BL_FLOAT res = BLGetCoefficient(spectrum, (int)sampleRate,
-                                        numFilters, spectralDataArraySize, coeff,
-                                        tmpDebugData.Get());
-        
-        result->Get()[coeff] = res;
-        
-        if (coeff == 0)
-            BLDebug::DumpData("filters.txt", tmpDebugData);
-        else
-        {
-            BLDebug::AppendNewline("filters.txt");
-            BLDebug::AppendData("filters.txt", tmpDebugData);
-        }
-    }
-    
-#if 0
-    // Now, to have mel from mfcc, we need to do idct(log(mfcc))
-    // (or dct(log(mfcc), not sure...)
-    //
-    // See: https://stackoverflow.com/questions/53925401/difference-between-mel-spectrogram-and-an-mfcc/54326385#54326385
-    for (int i = 0; i < result->GetSize(); i++)
-    {
-        BL_FLOAT val = result->Get()[i];
-        val = log(val + 1.0);
-        result->Get()[i] = val;
-    }
-    
-    FastDctLee_inverseTransform(result->Get(), result->GetSize());
-#endif
-}
-#endif
-
 // See: https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html
 void
 MelScale::HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
@@ -229,8 +162,11 @@ MelScale::HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
     {
         // Compute hz value
         BL_FLOAT val = melPoints.Get()[i];
-        
         val = MelToHz(val);
+        
+        // Debug
+        //BL_FLOAT t = ((BL_FLOAT)i)/(melPoints.GetSize() - 1);
+        //BL_FLOAT val = t*(sampleRate*0.5);
         
         hzPoints.Get()[i] = val;
     }
@@ -250,7 +186,8 @@ MelScale::HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
         BL_FLOAT val = hzPoints.Get()[i];
         
         val = val*hzPerBinInv;
-        val = std::floor(val);
+        //val = std::floor(val); // ORIG
+        // Finally, for the new solution that fills holes, do not round or trunk
         
         bin.Get()[i] = val;
     }
@@ -259,6 +196,12 @@ MelScale::HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
     
     // Apply filters
     //
+    
+    // Implementation of :
+    // https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html
+    // => Makes holes between filters on the low frequencies (when using a big numFilterd)
+#if 0
+    
     result->Resize(numFilters);
     BLUtils::FillAllZero(result);
     
@@ -298,6 +241,147 @@ MelScale::HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
             BLDebug::AppendData("filters.txt", dbgFilterBank);
         }
     }
+#endif
     
-    // TODO: manage attenuation (triangles area must always have the same area
+    // Fix holes between filters on the low frequencies
+    // by uysing trapezoid areas
+#if 1
+    result->Resize(numFilters);
+    BLUtils::FillAllZero(result);
+    
+    // Debug
+    vector<WDL_TypedBuf<double> > dbgFilterBanks;
+    dbgFilterBanks.resize(numFilters);
+    for (int i = 0; i < numFilters; i++)
+    {
+        dbgFilterBanks[i].Resize(numFilters);
+        BLUtils::FillAllZero(&dbgFilterBanks[i]);
+    }
+    
+    // For each destination value
+    for (int i = 0; i < result->GetSize(); i++)
+    {
+        // For each filter
+        for (int m = 1; m < numFilters + 1; m++)
+        {
+            BL_FLOAT fmin = bin.Get()[m - 1]; // left
+            BL_FLOAT fmid = bin.Get()[m];     // center
+            BL_FLOAT fmax = bin.Get()[m + 1]; // right
+            
+            // Check roughtly the bounds
+            //if ((i + 1 < std::floor(fmin)) || (i > std::ceil(fmax)))
+            //    // Not inside the current filter
+            //    continue;
+            
+            // Trapezoid
+            BL_FLOAT x0 = i;
+            if (fmin > x0)
+                x0 = fmin;
+            
+            BL_FLOAT x1 = i + 1;
+            if (fmax < x1)
+                x1 = fmax;
+            
+            BL_FLOAT tarea = ComputeTriangleAreaBetween(fmin, fmid, fmax, x0, x1);
+            
+            // Normalize
+            tarea /= (fmid - fmin)*0.5 + (fmax - fmid)*0.5;
+            
+            // Debug
+            dbgFilterBanks[m - 1].Get()[i] += tarea;
+            
+            // Compute the filter value
+            result->Get()[m - 1] += tarea*magns.Get()[i];
+        }
+    }
+    
+    // When displaying in Scilab, think to display the transpose, with the "'":
+    // plot(filters')
+    //
+    //for (int m = 0; m < numFilters; m++)
+    //for (int m = 0; m < numFilters; m += 20)
+    for (int m = 3; m < 5; m++)
+    {
+        if (m == 3)
+        {
+            BLDebug::DumpData("filters.txt", dbgFilterBanks[m]);
+        }
+        else
+        {
+            BLDebug::AppendNewline("filters.txt");
+            BLDebug::AppendData("filters.txt", dbgFilterBanks[m]);
+        }
+    }
+#endif
+}
+
+BL_FLOAT
+MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax,
+                                     BL_FLOAT x0, BL_FLOAT x1)
+{
+    if ((x0 > txmax) || (x1 < txmin))
+        return 0.0;
+    
+    vector<BL_FLOAT> x;
+    x.push_back(txmin);
+    x.push_back(txmid);
+    x.push_back(txmax);
+    x.push_back(x0);
+    x.push_back(x1);
+    sort(x.begin(), x.end());
+    
+    BL_FLOAT points[5][2];
+    for (int i = 0; i < 5; i++)
+    {
+        points[i][0] = x[i];
+        points[i][1] = ComputeTriangleY(txmin, txmid, txmax, x[i]);
+    }
+    
+    BL_FLOAT area = 0.0;
+    for (int i = 0; i < 4; i++)
+    {
+        // Suppress the cases which are out of [x0, x1] bounds
+        if ((points[i][0] >= x1) ||
+            (points[i + 1][0] <= x0))
+            continue;
+            
+        BL_FLOAT y0 = points[i][1];
+        BL_FLOAT y1 = points[i + 1][1];
+        if (y0 > y1)
+        {
+            BL_FLOAT tmp = y0;
+            y0 = y1;
+            y1 = tmp;
+        }
+        
+        BL_FLOAT a = (points[i + 1][0] - points[i][0])*(y0 + (y1 - y0)*0.5);
+        
+        area += a;
+    }
+    
+    return area;
+}
+
+
+BL_FLOAT
+MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax,
+                           BL_FLOAT x)
+{
+    if (x <= txmin)
+        return 0.0;
+    if (x >= txmax)
+        return 0.0;
+    
+    if (x <= txmid)
+    {
+        BL_FLOAT t = (x - txmin)/(txmid - txmin);
+        
+        return t;
+    }
+    else // x >= txmid
+    {
+        BL_FLOAT t = 1.0 - (x - txmid)/(txmax - txmid);
+        
+        return t;
+    }
 }
