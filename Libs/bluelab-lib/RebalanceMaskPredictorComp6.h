@@ -45,6 +45,7 @@ using namespace iplug;
 // RebalanceMaskPredictorComp5: for Leonardo Pepino method
 //
 class RebalanceMaskStack2;
+class MelScale;
 class RebalanceMaskPredictorComp6 : public MultichannelProcess
 {
 public:
@@ -167,6 +168,9 @@ protected:
     int mPredictModulo;
     
     int mNumSpectroCols;
+    
+    //
+    MelScale *mMelScale;
 };
 
 #endif /* defined(__BL_Rebalance__RebalanceMaskPredictorComp6__) */

@@ -82,11 +82,15 @@ RebalanceMaskPredictorComp6::RebalanceMaskPredictorComp6(int bufferSize,
     InitMixCols();
     
     mMaskPredictStepNum = 0;
+    
+    mMelScale = new MelScale();
 }
 
 RebalanceMaskPredictorComp6::~RebalanceMaskPredictorComp6()
 {
     delete mModel;
+    
+    delete mMelScale;
 }
 
 void
@@ -620,32 +624,35 @@ RebalanceMaskPredictorComp6::InitMixCols()
 void
 RebalanceMaskPredictorComp6::ProcessInputMagns(WDL_TypedBuf<BL_FLOAT> *ioMagns)
 {
+    int numMelBins = ioMagns->GetSize();
+    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
+    mMelScale->HzToMelFilter(&melMagnsFilters, *ioMagns, mSampleRate, numMelBins);
+    //MelScale::HzToMel(&melMagnsFilters, *ioMagns, mSampleRate);
+    *ioMagns = melMagnsFilters;
+    
+#if 0 // DEBUG
     BLDebug::DumpData("hz0.txt", *ioMagns);
     
     WDL_TypedBuf<BL_FLOAT> melMagns = *ioMagns;
     MelScale::HzToMel(&melMagns, *ioMagns, mSampleRate);
     BLDebug::DumpData("mel0.txt", melMagns);
     
-    // TEST
-    /*int numMelBins = ioMagns->GetSize();
-    WDL_TypedBuf<BL_FLOAT> melMagnsMfcc = *ioMagns;
-    MelScale::HzToMelMfcc(&melMagnsMfcc, *ioMagns, mSampleRate, numMelBins);
-    BLDebug::DumpData("mel1.txt", melMagnsMfcc);*/
-    
-    int numMelBins = ioMagns->GetSize();
-    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
-    MelScale::HzToMelFilter(&melMagnsFilters, *ioMagns, mSampleRate, numMelBins);
-    BLDebug::DumpData("mel1.txt", melMagnsFilters);
-    
-    // TEST
     WDL_TypedBuf<BL_FLOAT> hzMagns0;
     MelScale::MelToHz(&hzMagns0, melMagns, mSampleRate);
     BLDebug::DumpData("hz1.txt", hzMagns0);
+    
+    int numMelBins = ioMagns->GetSize();
+    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = *ioMagns;
+    mMelScale->HzToMelFilter(&melMagnsFilters, *ioMagns, mSampleRate, numMelBins);
+    BLDebug::DumpData("mel1.txt", melMagnsFilters);
     
     // TEST
     WDL_TypedBuf<BL_FLOAT> hzMagns1;
     MelScale::MelToHz(&hzMagns1, melMagnsFilters, mSampleRate);
     BLDebug::DumpData("hz2.txt", hzMagns1);
     
-    *ioMagns = melMagns;
+    WDL_TypedBuf<BL_FLOAT> hzMagns2;
+    mMelScale->MelToHzFilter(&hzMagns2, melMagnsFilters, mSampleRate, numMelBins);
+    BLDebug::DumpData("hz3.txt", hzMagns2);
+#endif
 }

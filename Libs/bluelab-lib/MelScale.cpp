@@ -175,11 +175,27 @@ MelScale::HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
         (sampleRate != mHzToMelFilterBank.mSampleRate) ||
         (numFilters != mHzToMelFilterBank.mNumFilters))
     {
-        CreateFilterBand(&mHzToMelFilterBank, magns.GetSize(),
-                         sampleRate, numFilters);
+        CreateFilterBankHzToMel(&mHzToMelFilterBank, magns.GetSize(),
+                                sampleRate, numFilters);
     }
     
     ApplyFilterBank(result, magns, mHzToMelFilterBank);
+}
+
+void
+MelScale::MelToHzFilter(WDL_TypedBuf<BL_FLOAT> *result,
+                        const WDL_TypedBuf<BL_FLOAT> &magns,
+                        BL_FLOAT sampleRate, int numFilters)
+{
+    if ((magns.GetSize() != mMelToHzFilterBank.mDataSize) ||
+        (sampleRate != mMelToHzFilterBank.mSampleRate) ||
+        (numFilters != mMelToHzFilterBank.mNumFilters))
+    {
+        CreateFilterBankMelToHz(&mMelToHzFilterBank, magns.GetSize(),
+                                sampleRate, numFilters);
+    }
+    
+    ApplyFilterBank(result, magns, mMelToHzFilterBank);
 }
 
 BL_FLOAT
@@ -255,8 +271,8 @@ MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax,
 
 // See: https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html
 void
-MelScale::CreateFilterBand(FilterBank *filterBank, int dataSize,
-                           BL_FLOAT sampleRate, int numFilters)
+MelScale::CreateFilterBankHzToMel(FilterBank *filterBank, int dataSize,
+                                  BL_FLOAT sampleRate, int numFilters)
 {
     filterBank->mDataSize = dataSize;
     filterBank->mSampleRate = sampleRate;
@@ -347,6 +363,102 @@ MelScale::CreateFilterBand(FilterBank *filterBank, int dataSize,
             tarea /= (fmid - fmin)*0.5 + (fmax - fmid)*0.5;
             
             filterBank->mFilters[m - 1].mData.Get()[i] += tarea;
+        }
+    }
+}
+
+void
+MelScale::CreateFilterBankMelToHz(FilterBank *filterBank, int dataSize,
+                                  BL_FLOAT sampleRate, int numFilters)
+{
+    filterBank->mDataSize = dataSize;
+    filterBank->mSampleRate = sampleRate;
+    filterBank->mNumFilters = numFilters;
+    
+    filterBank->mFilters.resize(filterBank->mNumFilters);
+    
+    for (int i = 0; i < filterBank->mFilters.size(); i++)
+    {
+        filterBank->mFilters[i].mData.Resize(dataSize);
+        BLUtils::FillAllZero(&filterBank->mFilters[i].mData);
+        
+        filterBank->mFilters[i].mBounds[0] = -1;
+        filterBank->mFilters[i].mBounds[1] = -1;
+    }
+    
+    // Create filters
+    //
+    BL_FLOAT lowFreqHz = 0.0;
+    BL_FLOAT highFreqHz = sampleRate*0.5;
+    
+    WDL_TypedBuf<BL_FLOAT> hzPoints;
+    hzPoints.Resize(numFilters + 2);
+    for (int i = 0; i < hzPoints.GetSize(); i++)
+    {
+        // Compute hz value
+        BL_FLOAT t = ((BL_FLOAT)i)/(hzPoints.GetSize() - 1);
+        BL_FLOAT val = lowFreqHz + t*(highFreqHz - lowFreqHz);
+        
+        hzPoints.Get()[i] = val;
+    }
+    
+    // Compute hz points
+    WDL_TypedBuf<BL_FLOAT> melPoints;
+    melPoints.Resize(hzPoints.GetSize());
+    for (int i = 0; i < melPoints.GetSize(); i++)
+    {
+        // Compute hz value
+        BL_FLOAT val = hzPoints.Get()[i];
+        val = HzToMel(val);
+        melPoints.Get()[i] = val;
+    }
+    
+    // Compute bin points
+    WDL_TypedBuf<BL_FLOAT> bin;
+    bin.Resize(melPoints.GetSize());
+    
+    BL_FLOAT maxMel = HzToMel(sampleRate*0.5);
+    BL_FLOAT melPerBinInv = (dataSize + 1)/maxMel;
+    for (int i = 0; i < bin.GetSize(); i++)
+    {
+        // Compute mel value
+        BL_FLOAT val = melPoints.Get()[i];
+        
+        // For the new solution that fills holes, do not round or trunk
+        val = val*melPerBinInv;
+        
+        bin.Get()[i] = val;
+    }
+    
+    // For each destination value
+    for (int i = 0; i < dataSize; i++)
+    {
+        // For each filter
+        for (int m = 1; m < numFilters /*+ 1*/; m++)
+        {
+            BL_FLOAT fmin = bin.Get()[m - 1]; // left
+            BL_FLOAT fmid = bin.Get()[m];     // center
+            BL_FLOAT fmax = bin.Get()[m + 1]; // right
+            
+            //
+            filterBank->mFilters[m /*- 1*/].mBounds[0] = std::floor(fmin);
+            filterBank->mFilters[m /*- 1*/].mBounds[1] = std::ceil(fmax);
+            
+            // Trapezoid
+            BL_FLOAT x0 = i;
+            if (fmin > x0)
+                x0 = fmin;
+            
+            BL_FLOAT x1 = i + 1;
+            if (fmax < x1)
+                x1 = fmax;
+            
+            BL_FLOAT tarea = ComputeTriangleAreaBetween(fmin, fmid, fmax, x0, x1);
+            
+            // Normalize
+            tarea /= (fmid - fmin)*0.5 + (fmax - fmid)*0.5;
+            
+            filterBank->mFilters[m /*- 1*/].mData.Get()[i] += tarea;
         }
     }
 }

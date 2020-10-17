@@ -37,6 +37,10 @@ public:
     void HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
                        const WDL_TypedBuf<BL_FLOAT> &magns,
                        BL_FLOAT sampleRate, int numFilters);
+    // Inverse
+    void MelToHzFilter(WDL_TypedBuf<BL_FLOAT> *result,
+                       const WDL_TypedBuf<BL_FLOAT> &magns,
+                       BL_FLOAT sampleRate, int numFilters);
     
     static void MelToMFCC(WDL_TypedBuf<BL_FLOAT> *result,
                           const WDL_TypedBuf<BL_FLOAT> &melMagns);
@@ -74,13 +78,17 @@ protected:
         vector<Filter> mFilters;
     };
     
-    void CreateFilterBand(FilterBank *filterBank, int dataSize,
-                          BL_FLOAT sampleRate, int numFilters);
+    void CreateFilterBankHzToMel(FilterBank *filterBank, int dataSize,
+                                 BL_FLOAT sampleRate, int numFilters);
+    void CreateFilterBankMelToHz(FilterBank *filterBank, int dataSize,
+                                 BL_FLOAT sampleRate, int numFilters);
     void ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
                          const WDL_TypedBuf<BL_FLOAT> &magns,
                          const FilterBank &filterBank);
     
+    //
     FilterBank mHzToMelFilterBank;
+    FilterBank mMelToHzFilterBank;
 };
 
 #endif /* MelScale_hpp */
