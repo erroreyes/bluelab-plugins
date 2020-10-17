@@ -34,13 +34,14 @@ public:
                         BL_FLOAT sampleRate);
     
     // Use real Hz to Mel conversion, using filters
-    static void HzToMelFilter_old(WDL_TypedBuf<BL_FLOAT> *result,
-                                  const WDL_TypedBuf<BL_FLOAT> &magns,
-                                  BL_FLOAT sampleRate, int numFilters);
-    
     void HzToMelFilter(WDL_TypedBuf<BL_FLOAT> *result,
                        const WDL_TypedBuf<BL_FLOAT> &magns,
                        BL_FLOAT sampleRate, int numFilters);
+    
+    static void MelToMFCC(WDL_TypedBuf<BL_FLOAT> *result,
+                          const WDL_TypedBuf<BL_FLOAT> &melMagns);
+    static void MFCCToMel(WDL_TypedBuf<BL_FLOAT> *result,
+                          const WDL_TypedBuf<BL_FLOAT> &mfccMagns);
     
 protected:
     static BL_FLOAT ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax,
