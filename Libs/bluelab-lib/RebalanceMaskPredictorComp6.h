@@ -141,6 +141,9 @@ protected:
     
     deque<WDL_TypedBuf<BL_FLOAT> > mMixCols;
     
+    // Debug
+    deque<WDL_TypedBuf<BL_FLOAT> > dbgSamplesCols;
+    
     // Do not compute masks at each step
     int mMaskPredictStepNum;
     vector<WDL_TypedBuf<BL_FLOAT> > mCurrentMasks;

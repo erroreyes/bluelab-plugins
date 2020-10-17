@@ -11,6 +11,7 @@ using namespace std;
 
 #include <BLUtils.h>
 #include <BLDebug.h>
+#include <PPMFile.h>
 
 // Darknet
 #include <DNNModelDarknetMc.h>
@@ -39,6 +40,9 @@ using namespace std;
 
 // When set to 0, use quick method
 #define USE_MEL_FILTER_METHOD 1
+
+static int dbgCount = 0;
+float colorCoeff = 100.0; //1.0; //10.0; //50.0; //100.0;
 
 RebalanceMaskPredictorComp6::RebalanceMaskPredictorComp6(int bufferSize,
                                                          BL_FLOAT overlapping,
@@ -158,12 +162,39 @@ RebalanceMaskPredictorComp6::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX
     WDL_TypedBuf<BL_FLOAT> phases;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
+    dbgSamplesCols.push_back(magns);
+    dbgSamplesCols.pop_front();
+    
     //
     DownsampleHzToMel(&magns);
     
     // mMixCols is filled with zeros at the origin
     mMixCols.push_back(magns);
     mMixCols.pop_front();
+    
+    if (dbgCount == 20)
+    {
+        WDL_TypedBuf<BL_FLOAT> dbgSamplesBuf;
+        ColumnsToBuffer(&dbgSamplesBuf, dbgSamplesCols);
+        PPMFile::SavePPM("samples.ppm", dbgSamplesBuf.Get(),
+                         dbgSamplesCols[0].GetSize(), dbgSamplesCols.size(),
+                         1, 255.0*colorCoeff);
+        
+        WDL_TypedBuf<BL_FLOAT> dbgMixBuf;
+        ColumnsToBuffer(&dbgMixBuf, mMixCols);
+        PPMFile::SavePPM("down-samples.ppm", dbgMixBuf.Get(),
+                         mMixCols[0].GetSize(), mMixCols.size(),
+                         1, 255.0*colorCoeff);
+        
+        deque<WDL_TypedBuf<BL_FLOAT> > upsampleCols = mMixCols;
+        for (int i = 0; i < upsampleCols.size(); i++)
+            UpdsampleMelToHz(&upsampleCols[i]);
+        WDL_TypedBuf<BL_FLOAT> dbgUpsampleBuf;
+        ColumnsToBuffer(&dbgUpsampleBuf, upsampleCols);
+        PPMFile::SavePPM("up-samples.ppm", dbgUpsampleBuf.Get(),
+                         upsampleCols[0].GetSize(), upsampleCols.size(),
+                         1, 255.0*colorCoeff);
+    }
     
     WDL_TypedBuf<BL_FLOAT> mixBufHisto;
     ColumnsToBuffer(&mixBufHisto, mMixCols);
@@ -187,6 +218,8 @@ RebalanceMaskPredictorComp6::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX
         
         mMasks[i] = masks[i];
     }
+    
+    dbgCount++;
 }
 
 bool
@@ -382,6 +415,23 @@ RebalanceMaskPredictorComp6::ComputeMasks(WDL_TypedBuf<BL_FLOAT> masks[NUM_STEM_
         
         for (int i = 0; i < NUM_STEM_SOURCES; i++)
             masks0[i] = masks0v[i];
+    }
+    
+    if (dbgCount == 20)
+    {
+        PPMFile::SavePPM("mask0.ppm", masks0[0].Get(),
+                         mMixCols[0].GetSize(), 1,
+                         1, 255.0*colorCoeff);
+    }
+    
+    if (dbgCount == 20)
+    {
+        WDL_TypedBuf<BL_FLOAT> tmp = masks0[0];
+        UpdsampleMelToHz(&tmp);
+        
+        PPMFile::SavePPM("mask0-upsample.ppm", tmp.Get(),
+                         dbgSamplesCols[0].GetSize(), 1,
+                         1, 255.0*colorCoeff);
     }
     
 #if USE_MASK_STACK
@@ -631,6 +681,17 @@ RebalanceMaskPredictorComp6::InitMixCols()
                                  //mBufferSize/2);
         
         mMixCols.push_back(col);
+    }
+    
+    // Debug
+    dbgSamplesCols.clear();
+    for (int i = 0; i < mNumSpectroCols; i++)
+    {
+        WDL_TypedBuf<BL_FLOAT> col;
+        BLUtils::ResizeFillZeros(&col,
+                                 mBufferSize/2);
+        
+        dbgSamplesCols.push_back(col);
     }
 }
 
