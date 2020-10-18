@@ -37,12 +37,6 @@
 [submodule "flac"]
 	path = flac
 	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
-[submodule "OpenBLAS"]
-	path = OpenBLAS
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
-[submodule "DSP-Cpp-filters"]
-	path = DSP-Cpp-filters
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "bl-darknet"]
 	path = bl-darknet
 	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
