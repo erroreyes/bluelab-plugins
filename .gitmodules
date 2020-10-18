@@ -37,3 +37,6 @@
 [submodule "flac"]
 	path = flac
 	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/flac/flac
+[submodule "OpenBLAS"]
+	path = OpenBLAS
+	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/OpenBLAS
