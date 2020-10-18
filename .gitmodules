@@ -1,48 +1,48 @@
 [submodule "iPlug2"]
 	path = iPlug2
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "BL-Plugins"]
 	path = BL-Plugins
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/BL-Plugins
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/RandomSequence"]
 	path = Libs/RandomSequence
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/RandomSequence
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/libebur128"]
 	path = Libs/libebur128
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/libebur128
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/darknet"]
 	path = Libs/darknet
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/darknet
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/glm"]
 	path = Libs/glm
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/glm
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/RTConvolve"]
 	path = Libs/RTConvolve
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/RTConvolve
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/fmem"]
 	path = Libs/fmem
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/fmem
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/DSP-Cpp-filters"]
 	path = Libs/DSP-Cpp-filters
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/DSP-Cpp-filters
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "Libs/sndfilter"]
 	path = Libs/sndfilter
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/sndfilter
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "BuildSystem"]
 	path = BuildSystem
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/BuildSystem
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "TestSystem-mac"]
 	path = TestSystem-mac
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/TestSystem-mac
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "flac"]
 	path = flac
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/flac/flac
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "OpenBLAS"]
 	path = OpenBLAS
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/OpenBLAS
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "DSP-Cpp-filters"]
 	path = DSP-Cpp-filters
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/DSP-Cpp-filters
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
 [submodule "bl-darknet"]
 	path = bl-darknet
-	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/bl-darknet
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
