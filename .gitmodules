@@ -1,42 +1,42 @@
 [submodule "iPlug2"]
 	path = iPlug2
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:iPlug2.git
 [submodule "BL-Plugins"]
 	path = BL-Plugins
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:BL-Plugins.git
 [submodule "Libs/RandomSequence"]
 	path = Libs/RandomSequence
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:RandomSequence.git
 [submodule "Libs/libebur128"]
 	path = Libs/libebur128
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:libebur128.git
 [submodule "Libs/darknet"]
 	path = Libs/darknet
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:darknet.git
 [submodule "Libs/glm"]
 	path = Libs/glm
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:glm.git
 [submodule "Libs/RTConvolve"]
 	path = Libs/RTConvolve
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:RTConvolve.git
 [submodule "Libs/fmem"]
 	path = Libs/fmem
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:fmem.git
 [submodule "Libs/DSP-Cpp-filters"]
 	path = Libs/DSP-Cpp-filters
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:DSP-Cpp-filters.git
 [submodule "Libs/sndfilter"]
 	path = Libs/sndfilter
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:sndfilter.git
 [submodule "BuildSystem"]
 	path = BuildSystem
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:BuildSystem.git
 [submodule "TestSystem-mac"]
 	path = TestSystem-mac
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:TestSystem-mac.git
 [submodule "flac"]
 	path = flac
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:flac.git
 [submodule "bl-darknet"]
 	path = bl-darknet
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bluelab.git
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bl-darknet.git
