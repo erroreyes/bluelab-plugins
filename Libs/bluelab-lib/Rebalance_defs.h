@@ -65,6 +65,9 @@
 #define REBALANCE_NUM_SPECTRO_COLS 32
 #define REBALANCE_PREDICT_MODULO_NUM 3
 
+// When set to 0, use quick method
+#define REBALANCE_USE_MEL_FILTER_METHOD 1
+
 enum RebalanceMode
 {
     SOFT = 0,

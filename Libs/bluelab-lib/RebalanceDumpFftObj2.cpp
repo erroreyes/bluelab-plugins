@@ -56,11 +56,18 @@ RebalanceDumpFftObj2::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *
     BLUtils::ComplexToMagn(&magnsMix, dataBuffer);
     
     // Downsample and convert to mel
+#if REBALANCE_USE_MEL_FILTER_METHOD
     int numMelBins = REBALANCE_NUM_SPECTRO_FREQS;
     WDL_TypedBuf<BL_FLOAT> melMagnsFilters = magnsMix;
     mMelScale->HzToMelFilter(&melMagnsFilters, magnsMix, mSampleRate, numMelBins);
-    //MelScale::HzToMel(&melMagnsFilters, *ioMagns, mSampleRate);
     magnsMix = melMagnsFilters;
+#else
+    // Quick method
+    BLUtils::ResizeLinear(magnsMix, REBALANCE_NUM_SPECTRO_FREQS);
+    WDL_TypedBuf<BL_FLOAT> melMagnsFilters = magnsMix;
+    MelScale::HzToMel(&melMagnsFilters, *ioMagns, mSampleRate);
+    magnsMix = melMagnsFilters;
+#endif
     
     mCols.push_back(magnsMix);
 }
