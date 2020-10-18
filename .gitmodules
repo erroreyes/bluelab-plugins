@@ -40,3 +40,6 @@
 [submodule "OpenBLAS"]
 	path = OpenBLAS
 	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/OpenBLAS
+[submodule "DSP-Cpp-filters"]
+	path = DSP-Cpp-filters
+	url = /Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/DSP-Cpp-filters
