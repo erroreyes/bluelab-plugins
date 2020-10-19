@@ -43,4 +43,3 @@
 [submodule "flac"]
 	path = Libs/flac
 	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:flac.git
-	
