@@ -40,3 +40,6 @@
 [submodule "bl-darknet"]
 	path = bl-darknet
 	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bl-darknet.git
+[submodule "OpenBLAS"]
+	path = Libs/OpenBLAS
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:OpenBLAS.git
