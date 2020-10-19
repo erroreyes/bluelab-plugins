@@ -34,12 +34,13 @@
 [submodule "TestSystem-mac"]
 	path = TestSystem-mac
 	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:TestSystem-mac.git
-[submodule "flac"]
-	path = flac
-	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:flac.git
 [submodule "bl-darknet"]
 	path = bl-darknet
 	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:bl-darknet.git
 [submodule "OpenBLAS"]
 	path = Libs/OpenBLAS
 	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:OpenBLAS.git
+[submodule "flac"]
+	path = Libs/flac
+	url = bluelabpxx@ssh.cluster026.hosting.ovh.net:flac.git
+	
