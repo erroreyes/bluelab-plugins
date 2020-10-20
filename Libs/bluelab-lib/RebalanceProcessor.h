@@ -65,8 +65,9 @@ protected:
     //
     int mBufferSize;
     int mTargetBufferSize;
-    
     int mOverlapping;
+    
+    int mBlockSize;
     
     int mNumSpectroCols;
     

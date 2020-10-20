@@ -37,6 +37,8 @@ RebalanceProcessor::RebalanceProcessor(BL_FLOAT sampleRate, BL_FLOAT targetSampl
     mOverlapping = overlapping;
     
     mNumSpectroCols = numSpectroCols;
+    
+    mBlockSize = bufferSize;
 }
 
 RebalanceProcessor::~RebalanceProcessor()
@@ -166,6 +168,8 @@ RebalanceProcessor::Reset(BL_FLOAT sampleRate, int blockSize)
 {
     ResampProcessObj::Reset(sampleRate, blockSize);
     
+    mBlockSize = blockSize;
+    
     if (mTargetFftObj != NULL)
         mTargetFftObj->Reset();
 }
@@ -173,7 +177,11 @@ RebalanceProcessor::Reset(BL_FLOAT sampleRate, int blockSize)
 int
 RebalanceProcessor::GetLatency()
 {
-    int latency = ResampProcessObj::GetLatency();
+    int lat0 = ResampProcessObj::GetLatency();
+    int lat1 = mNativeFftObj->ComputeLatency(mBlockSize);
+    int lat2 = mMaskPred->GetLatency();
+    
+    int latency = lat0 + lat1 + lat2;
     
     return latency;
 }
