@@ -3900,7 +3900,8 @@ GraphControl11::DoDraw(IGraphics &graphics)
     
     nvgReset(mVg);
     
-#if !USE_FBO
+//#if !USE_FBO
+#if !USE_FBO || (!defined IGRAPHICS_GL)
     // #bl-iplug2
     // Be sure to draw only in the graph.
     // So when using IPlug2, we won't draw on the other GUI componenets.
