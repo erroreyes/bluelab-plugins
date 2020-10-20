@@ -14,6 +14,8 @@ using namespace std;
 
 #include <FftProcessObj16.h>
 
+#include <Rebalance_defs.h>
+
 // RebalanceDumpFftObj2: from RebalanceDumpFftObj
 // for ResampProcessObj
 class MelScale;
