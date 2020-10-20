@@ -25,7 +25,7 @@
 #include "fast-dct-8.h"
 
 
-static const double S[] = {
+static const DCT_FLOAT S[] = {
 	0.353553390593273762200422,
 	0.254897789552079584470970,
 	0.270598050073098492199862,
@@ -36,7 +36,7 @@ static const double S[] = {
 	1.281457723870753089398043,
 };
 
-static const double A[] = {
+static const DCT_FLOAT A[] = {
 	NAN,
 	0.707106781186547524400844,
 	0.541196100146196984399723,
@@ -48,41 +48,41 @@ static const double A[] = {
 
 // DCT type II, scaled. Algorithm by Arai, Agui, Nakajima, 1988.
 // See: https://web.stanford.edu/class/ee398a/handouts/lectures/07-TransformCoding.pdf#page=30
-void FastDct8_transform(double vector[static 8]) {
-	const double v0 = vector[0] + vector[7];
-	const double v1 = vector[1] + vector[6];
-	const double v2 = vector[2] + vector[5];
-	const double v3 = vector[3] + vector[4];
-	const double v4 = vector[3] - vector[4];
-	const double v5 = vector[2] - vector[5];
-	const double v6 = vector[1] - vector[6];
-	const double v7 = vector[0] - vector[7];
+void FastDct8_transform(DCT_FLOAT vector[static 8]) {
+	const DCT_FLOAT v0 = vector[0] + vector[7];
+	const DCT_FLOAT v1 = vector[1] + vector[6];
+	const DCT_FLOAT v2 = vector[2] + vector[5];
+	const DCT_FLOAT v3 = vector[3] + vector[4];
+	const DCT_FLOAT v4 = vector[3] - vector[4];
+	const DCT_FLOAT v5 = vector[2] - vector[5];
+	const DCT_FLOAT v6 = vector[1] - vector[6];
+	const DCT_FLOAT v7 = vector[0] - vector[7];
 	
-	const double v8 = v0 + v3;
-	const double v9 = v1 + v2;
-	const double v10 = v1 - v2;
-	const double v11 = v0 - v3;
-	const double v12 = -v4 - v5;
-	const double v13 = (v5 + v6) * A[3];
-	const double v14 = v6 + v7;
+	const DCT_FLOAT v8 = v0 + v3;
+	const DCT_FLOAT v9 = v1 + v2;
+	const DCT_FLOAT v10 = v1 - v2;
+	const DCT_FLOAT v11 = v0 - v3;
+	const DCT_FLOAT v12 = -v4 - v5;
+	const DCT_FLOAT v13 = (v5 + v6) * A[3];
+	const DCT_FLOAT v14 = v6 + v7;
 	
-	const double v15 = v8 + v9;
-	const double v16 = v8 - v9;
-	const double v17 = (v10 + v11) * A[1];
-	const double v18 = (v12 + v14) * A[5];
+	const DCT_FLOAT v15 = v8 + v9;
+	const DCT_FLOAT v16 = v8 - v9;
+	const DCT_FLOAT v17 = (v10 + v11) * A[1];
+	const DCT_FLOAT v18 = (v12 + v14) * A[5];
 	
-	const double v19 = -v12 * A[2] - v18;
-	const double v20 = v14 * A[4] - v18;
+	const DCT_FLOAT v19 = -v12 * A[2] - v18;
+	const DCT_FLOAT v20 = v14 * A[4] - v18;
 	
-	const double v21 = v17 + v11;
-	const double v22 = v11 - v17;
-	const double v23 = v13 + v7;
-	const double v24 = v7 - v13;
+	const DCT_FLOAT v21 = v17 + v11;
+	const DCT_FLOAT v22 = v11 - v17;
+	const DCT_FLOAT v23 = v13 + v7;
+	const DCT_FLOAT v24 = v7 - v13;
 	
-	const double v25 = v19 + v24;
-	const double v26 = v23 + v20;
-	const double v27 = v23 - v20;
-	const double v28 = v24 - v19;
+	const DCT_FLOAT v25 = v19 + v24;
+	const DCT_FLOAT v26 = v23 + v20;
+	const DCT_FLOAT v27 = v23 - v20;
+	const DCT_FLOAT v28 = v24 - v19;
 	
 	vector[0] = S[0] * v15;
 	vector[1] = S[1] * v26;
@@ -96,42 +96,42 @@ void FastDct8_transform(double vector[static 8]) {
 
 
 // DCT type III, scaled. A straightforward inverse of the forward algorithm.
-void FastDct8_inverseTransform(double vector[static 8]) {
-	const double v15 = vector[0] / S[0];
-	const double v26 = vector[1] / S[1];
-	const double v21 = vector[2] / S[2];
-	const double v28 = vector[3] / S[3];
-	const double v16 = vector[4] / S[4];
-	const double v25 = vector[5] / S[5];
-	const double v22 = vector[6] / S[6];
-	const double v27 = vector[7] / S[7];
+void FastDct8_inverseTransform(DCT_FLOAT vector[static 8]) {
+	const DCT_FLOAT v15 = vector[0] / S[0];
+	const DCT_FLOAT v26 = vector[1] / S[1];
+	const DCT_FLOAT v21 = vector[2] / S[2];
+	const DCT_FLOAT v28 = vector[3] / S[3];
+	const DCT_FLOAT v16 = vector[4] / S[4];
+	const DCT_FLOAT v25 = vector[5] / S[5];
+	const DCT_FLOAT v22 = vector[6] / S[6];
+	const DCT_FLOAT v27 = vector[7] / S[7];
 	
-	const double v19 = (v25 - v28) / 2;
-	const double v20 = (v26 - v27) / 2;
-	const double v23 = (v26 + v27) / 2;
-	const double v24 = (v25 + v28) / 2;
+	const DCT_FLOAT v19 = (v25 - v28) / 2;
+	const DCT_FLOAT v20 = (v26 - v27) / 2;
+	const DCT_FLOAT v23 = (v26 + v27) / 2;
+	const DCT_FLOAT v24 = (v25 + v28) / 2;
 	
-	const double v7  = (v23 + v24) / 2;
-	const double v11 = (v21 + v22) / 2;
-	const double v13 = (v23 - v24) / 2;
-	const double v17 = (v21 - v22) / 2;
+	const DCT_FLOAT v7  = (v23 + v24) / 2;
+	const DCT_FLOAT v11 = (v21 + v22) / 2;
+	const DCT_FLOAT v13 = (v23 - v24) / 2;
+	const DCT_FLOAT v17 = (v21 - v22) / 2;
 	
-	const double v8 = (v15 + v16) / 2;
-	const double v9 = (v15 - v16) / 2;
+	const DCT_FLOAT v8 = (v15 + v16) / 2;
+	const DCT_FLOAT v9 = (v15 - v16) / 2;
 	
-	const double v18 = (v19 - v20) * A[5];  // Different from original
-	const double v12 = (v19 * A[4] - v18) / (A[2] * A[5] - A[2] * A[4] - A[4] * A[5]);
-	const double v14 = (v18 - v20 * A[2]) / (A[2] * A[5] - A[2] * A[4] - A[4] * A[5]);
+	const DCT_FLOAT v18 = (v19 - v20) * A[5];  // Different from original
+	const DCT_FLOAT v12 = (v19 * A[4] - v18) / (A[2] * A[5] - A[2] * A[4] - A[4] * A[5]);
+	const DCT_FLOAT v14 = (v18 - v20 * A[2]) / (A[2] * A[5] - A[2] * A[4] - A[4] * A[5]);
 	
-	const double v6 = v14 - v7;
-	const double v5 = v13 / A[3] - v6;
-	const double v4 = -v5 - v12;
-	const double v10 = v17 / A[1] - v11;
+	const DCT_FLOAT v6 = v14 - v7;
+	const DCT_FLOAT v5 = v13 / A[3] - v6;
+	const DCT_FLOAT v4 = -v5 - v12;
+	const DCT_FLOAT v10 = v17 / A[1] - v11;
 	
-	const double v0 = (v8 + v11) / 2;
-	const double v1 = (v9 + v10) / 2;
-	const double v2 = (v9 - v10) / 2;
-	const double v3 = (v8 - v11) / 2;
+	const DCT_FLOAT v0 = (v8 + v11) / 2;
+	const DCT_FLOAT v1 = (v9 + v10) / 2;
+	const DCT_FLOAT v2 = (v9 - v10) / 2;
+	const DCT_FLOAT v3 = (v8 - v11) / 2;
 	
 	vector[0] = (v0 + v7) / 2;
 	vector[1] = (v1 + v6) / 2;

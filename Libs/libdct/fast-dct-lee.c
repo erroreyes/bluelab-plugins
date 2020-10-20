@@ -27,18 +27,18 @@
 #include "fast-dct-lee.h"
 
 
-static void forwardTransform(double vector[], double temp[], size_t len);
-static void inverseTransform(double vector[], double temp[], size_t len);
+static void forwardTransform(DCT_FLOAT vector[], DCT_FLOAT temp[], size_t len);
+static void inverseTransform(DCT_FLOAT vector[], DCT_FLOAT temp[], size_t len);
 
 
 // DCT type II, unscaled. Algorithm by Byeong Gi Lee, 1984.
 // See: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.118.3056&rep=rep1&type=pdf#page=34
-bool FastDctLee_transform(double vector[], size_t len) {
+bool FastDctLee_transform(DCT_FLOAT vector[], size_t len) {
 	if (len <= 0 || (len & (len - 1)) != 0)
 		return false;  // Length is not power of 2
-	if (SIZE_MAX / sizeof(double) < len)
+	if (SIZE_MAX / sizeof(DCT_FLOAT) < len)
 		return false;
-	double *temp = malloc(len * sizeof(double));
+	DCT_FLOAT *temp = malloc(len * sizeof(DCT_FLOAT));
 	if (temp == NULL)
 		return false;
 	forwardTransform(vector, temp, len);
@@ -47,13 +47,13 @@ bool FastDctLee_transform(double vector[], size_t len) {
 }
 
 
-static void forwardTransform(double vector[], double temp[], size_t len) {
+static void forwardTransform(DCT_FLOAT vector[], DCT_FLOAT temp[], size_t len) {
 	if (len == 1)
 		return;
 	size_t halfLen = len / 2;
 	for (size_t i = 0; i < halfLen; i++) {
-		double x = vector[i];
-		double y = vector[len - 1 - i];
+		DCT_FLOAT x = vector[i];
+		DCT_FLOAT y = vector[len - 1 - i];
 		temp[i] = x + y;
 		temp[i + halfLen] = (x - y) / (cos((i + 0.5) * M_PI / len) * 2);
 	}
@@ -70,12 +70,12 @@ static void forwardTransform(double vector[], double temp[], size_t len) {
 
 // DCT type III, unscaled. Algorithm by Byeong Gi Lee, 1984.
 // See: https://www.nayuki.io/res/fast-discrete-cosine-transform-algorithms/lee-new-algo-discrete-cosine-transform.pdf
-bool FastDctLee_inverseTransform(double vector[], size_t len) {
+bool FastDctLee_inverseTransform(DCT_FLOAT vector[], size_t len) {
 	if (len <= 0 || (len & (len - 1)) != 0)
 		return false;  // Length is not power of 2
-	if (SIZE_MAX / sizeof(double) < len)
+	if (SIZE_MAX / sizeof(DCT_FLOAT) < len)
 		return false;
-	double *temp = malloc(len * sizeof(double));
+	DCT_FLOAT *temp = malloc(len * sizeof(DCT_FLOAT));
 	if (temp == NULL)
 		return false;
 	vector[0] /= 2;
@@ -85,7 +85,7 @@ bool FastDctLee_inverseTransform(double vector[], size_t len) {
 }
 
 
-static void inverseTransform(double vector[], double temp[], size_t len) {
+static void inverseTransform(DCT_FLOAT vector[], DCT_FLOAT temp[], size_t len) {
 	if (len == 1)
 		return;
 	size_t halfLen = len / 2;
@@ -98,8 +98,8 @@ static void inverseTransform(double vector[], double temp[], size_t len) {
 	inverseTransform(temp, vector, halfLen);
 	inverseTransform(&temp[halfLen], vector, halfLen);
 	for (size_t i = 0; i < halfLen; i++) {
-		double x = temp[i];
-		double y = temp[i + halfLen] / (cos((i + 0.5) * M_PI / len) * 2);
+		DCT_FLOAT x = temp[i];
+		DCT_FLOAT y = temp[i + halfLen] / (cos((i + 0.5) * M_PI / len) * 2);
 		vector[i] = x + y;
 		vector[len - 1 - i] = x - y;
 	}

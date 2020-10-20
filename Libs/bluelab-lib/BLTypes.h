@@ -73,6 +73,7 @@
 #define R8B_FLOAT double // r8brain reampler
 #define DECIMATOR_SAMPLE float
 #define WDL_RESAMPLE_TYPE float
+#define DCT_FLOAT float
 #else
 #define BL_FLOAT double
 #define WDL_FFT_REALSIZE 8 // WDL fft
@@ -85,6 +86,7 @@
 #define DECIMATOR_SAMPLE double
 #define WDL_RESAMPLE_FULL_SINC_PRECISION
 #define WDL_RESAMPLE_TYPE double
+#define DCT_FLOAT double
 #endif
 
 // When we inject samples of value 0, after having injected non-zero signal,

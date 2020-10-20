@@ -25,15 +25,16 @@
 
 #include <stddef.h>
 
+#include "libdct_defs.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-double *NaiveDct_transform(double vector[], size_t len);
+DCT_FLOAT *NaiveDct_transform(DCT_FLOAT vector[], size_t len);
 
-double *NaiveDct_inverseTransform(double vector[], size_t len);
+DCT_FLOAT *NaiveDct_inverseTransform(DCT_FLOAT vector[], size_t len);
 
 
 #ifdef __cplusplus

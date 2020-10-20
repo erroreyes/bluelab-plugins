@@ -26,15 +26,16 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "libdct_defs.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-bool FastDctLee_transform(double vector[], size_t len);
+bool FastDctLee_transform(DCT_FLOAT vector[], size_t len);
 
-bool FastDctLee_inverseTransform(double vector[], size_t len);
+bool FastDctLee_inverseTransform(DCT_FLOAT vector[], size_t len);
 
 
 #ifdef __cplusplus

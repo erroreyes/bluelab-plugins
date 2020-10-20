@@ -29,16 +29,16 @@
 
 // DCT type II, unscaled.
 // See: https://en.wikipedia.org/wiki/Discrete_cosine_transform#DCT-II
-double *NaiveDct_transform(double vector[], size_t len) {
-	if (SIZE_MAX / sizeof(double) < len)
+DCT_FLOAT *NaiveDct_transform(DCT_FLOAT vector[], size_t len) {
+	if (SIZE_MAX / sizeof(DCT_FLOAT) < len)
 		return NULL;
-	double *result = malloc(len * sizeof(double));
+	DCT_FLOAT *result = malloc(len * sizeof(DCT_FLOAT));
 	if (result == NULL)
 		return NULL;
 	
-	double factor = M_PI / len;
+	DCT_FLOAT factor = M_PI / len;
 	for (size_t i = 0; i < len; i++) {
-		double sum = 0;
+		DCT_FLOAT sum = 0;
 		for (size_t j = 0; j < len; j++)
 			sum += vector[j] * cos((j + 0.5) * i * factor);
 		result[i] = sum;
@@ -49,16 +49,16 @@ double *NaiveDct_transform(double vector[], size_t len) {
 
 // DCT type III, unscaled.
 // See: https://en.wikipedia.org/wiki/Discrete_cosine_transform#DCT-III
-double *NaiveDct_inverseTransform(double vector[], size_t len) {
-	if (SIZE_MAX / sizeof(double) < len)
+DCT_FLOAT *NaiveDct_inverseTransform(DCT_FLOAT vector[], size_t len) {
+	if (SIZE_MAX / sizeof(DCT_FLOAT) < len)
 		return NULL;
-	double *result = malloc(len * sizeof(double));
+	DCT_FLOAT *result = malloc(len * sizeof(DCT_FLOAT));
 	if (result == NULL)
 		return NULL;
 	
-	double factor = M_PI / len;
+	DCT_FLOAT factor = M_PI / len;
 	for (size_t i = 0; i < len; i++) {
-		double sum = vector[0] / 2;
+		DCT_FLOAT sum = vector[0] / 2;
 		for (size_t j = 1; j < len; j++)
 			sum += vector[j] * cos(j * (i + 0.5) * factor);
 		result[i] = sum;
