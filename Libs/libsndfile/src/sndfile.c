@@ -3072,10 +3072,12 @@ psf_open_file (SF_PRIVATE *psf, SF_INFO *sfinfo)
 				error = aiff_open (psf) ;
 				break ;
 
+#if !BL_DISABLE_AU_FILE_FORMAT
 		case	SF_FORMAT_AU :
 				error = au_open (psf) ;
 				break ;
-
+#endif
+            
 		case	SF_FORMAT_RAW :
 				error = raw_open (psf) ;
 				break ;

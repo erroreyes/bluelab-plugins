@@ -56,6 +56,9 @@
 #endif
 
 
+// #bluelab
+// This file format functions conflicts with iPlug2
+#define BL_DISABLE_AU_FILE_FORMAT 1
 
 /*
 ** Inspiration : http://sourcefrog.net/weblog/software/languages/C/unused.html
@@ -870,7 +873,11 @@ int psf_ferror (SF_PRIVATE *psf) ;
 */
 
 int		aiff_open	(SF_PRIVATE *psf) ;
+
+#if !BL_DISABLE_AU_FILE_FORMAT
 int		au_open		(SF_PRIVATE *psf) ;
+#endif
+
 int		avr_open	(SF_PRIVATE *psf) ;
 int		htk_open	(SF_PRIVATE *psf) ;
 int		ircam_open	(SF_PRIVATE *psf) ;

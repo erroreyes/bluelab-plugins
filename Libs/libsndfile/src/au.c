@@ -101,6 +101,7 @@ static int		au_read_header (SF_PRIVATE *psf) ;
 ** Public function.
 */
 
+#if !BL_DISABLE_AU_FILE_FORMAT
 int
 au_open	(SF_PRIVATE *psf)
 {	int		subformat ;
@@ -182,10 +183,12 @@ au_open	(SF_PRIVATE *psf)
 
 	return error ;
 } /* au_open */
+#endif
 
 /*------------------------------------------------------------------------------
 */
 
+#if !BL_DISABLE_AU_FILE_FORMAT
 static int
 au_close	(SF_PRIVATE *psf)
 {
@@ -194,6 +197,7 @@ au_close	(SF_PRIVATE *psf)
 
 	return 0 ;
 } /* au_close */
+#endif
 
 static int
 au_write_header (SF_PRIVATE *psf, int calc_length)

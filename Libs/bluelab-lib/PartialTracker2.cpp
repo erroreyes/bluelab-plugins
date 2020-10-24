@@ -862,6 +862,8 @@ bool
 PartialTracker2::GetPartials(vector<Partial> *partials)
 {
     *partials = mResult;
+    
+    return true;
 }
 
 void

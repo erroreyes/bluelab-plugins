@@ -1677,6 +1677,8 @@ SASFrame2::ComputeSamplesFlag()
 #if COMPUTE_SAS_SAMPLES_OVERLAP
     return true;
 #endif
+    
+    return false;
 }
 
 bool
@@ -1707,6 +1709,8 @@ SASFrame2::ComputeSamplesWinFlag()
 #if COMPUTE_SAS_SAMPLES_OVERLAP
     return false;
 #endif
+    
+    return false;
 }
 
 void
