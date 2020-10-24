@@ -10,6 +10,7 @@ Launched from USB key Windows 10/64GB
 Mavericks (unpaid):
 - created installation USB key, from Mac2011(Sierra), using the command line special command, and using MAVERICKS.dmg
 - booted on this MAvericks installation key and installed on the disk
+Example of command line: sudo /Applications/Install\ OS\ X\ El\ Capitan.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume --applicationpath /Applications/Install\ OS\ X\ El\ Capitan.app
 
 Windows7 (unpaid):
 - cloned another USB key which had working Windows 7 on it
