@@ -9,6 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <Axis3DFactory2.h>
+#include <BLUtils.h>
 
 #include "SMVProcessXComputerScope.h"
 

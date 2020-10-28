@@ -184,8 +184,12 @@ KemarHRTF::LoadWin(IGraphics* pGraphics, HRTF **outHrtf)
 		{
 			int azim = MIN_AZIM + j;
 
+            // TODO: for iPlug2, manage to declare all resource strings
+            char rcName[512];
+            sprintf(rcName, "H%de%03da.%s", elev, azim, RESP_EXT);
+
 			WDL_TypedBuf<BL_FLOAT> *outImpulseResponses[2];
-			ReadOneFileWin((IGraphicsWin *)pGraphics, outImpulseResponses, rcId);
+            ReadOneFileWin((IGraphicsWin*)pGraphics, outImpulseResponses, rcName); // rcId);
 
 			// Deduce the values we can deduce
 			// (we have the front at 0 degrees)
@@ -213,8 +217,11 @@ KemarHRTF::LoadWin(IGraphics* pGraphics, HRTF **outHrtf)
 
 bool
 KemarHRTF::ReadOneFileWin(IGraphicsWin *pGraphics, 
-						  WDL_TypedBuf<BL_FLOAT> *outImpulseResponses[2], int rcId)
+						  WDL_TypedBuf<BL_FLOAT> *outImpulseResponses[2], 
+                          //int rcId)
+                          const char *rcFn)
 {
+#if 0 // iPlug1
 	void *rcBuf;
 	long rcSize;
 	bool loaded = pGraphics->LoadWindowsResource(rcId, "RCDATA", &rcBuf, &rcSize);
@@ -222,6 +229,12 @@ KemarHRTF::ReadOneFileWin(IGraphicsWin *pGraphics,
 		// There was no file in the resources corresponding to this given impulse response
 		// This is normal: in Kemar, we don't have every measurements, and here, we fill by interpolation
 		return false;
+#endif
+
+    WDL_TypedBuf<uint8_t> rcBuf = pGraphics->LoadResource(rcFn, "RCDATA");
+    long rcSize = rcBuf.GetSize();
+    if (rcSize == 0)
+        return false;
 
 	// Allocate only if the file exists in the resources
 	// Otherwise, keep the null value, which is good for further interpolation
@@ -239,7 +252,7 @@ KemarHRTF::ReadOneFileWin(IGraphicsWin *pGraphics,
 	long fileSize = rcSize / sizeof(short);
 
 	// Read the file
-	short *buf = (short *)rcBuf;
+	short *buf = (short *)rcBuf.Get();
 
 	// Interleaved
 	// Ok for compact !

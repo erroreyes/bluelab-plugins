@@ -67,8 +67,10 @@ protected:
 	// NIKO-WIN
 #ifdef WIN32  // Load from Windows resources
 	static bool LoadWin(IGraphics *pGraphics, HRTF **outHrtf);
-	static bool ReadOneFileWin(IGraphicsWin* pGraphics, 
-							   WDL_TypedBuf<BL_FLOAT> *outImpulseResponses[2], int rcId);
+	static bool ReadOneFileWin(IGraphicsWin* pGraphics,
+							   WDL_TypedBuf<BL_FLOAT>* outImpulseResponses[2],
+							   //int rcId);
+							   const char* rcFn);
 #endif
 };
 

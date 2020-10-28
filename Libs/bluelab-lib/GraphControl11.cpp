@@ -3716,6 +3716,7 @@ GraphControl11::MillisToPoints(long long int elapsed, int sampleRate, int numSam
     return numPoints;
 }
 
+#if 0 // iPlug2 / Windows
 void
 GraphControl11::InitFont(const char *fontPath)
 {
@@ -3755,6 +3756,7 @@ GraphControl11::InitFont(const char *fontPath)
 	mFontInitialized = true;
 #endif
 }
+#endif
 
 void
 GraphControl11::DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y, BL_GUI_FLOAT fontSize,

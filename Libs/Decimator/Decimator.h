@@ -1,6 +1,8 @@
 #ifndef DECIMATOR_H
 #define DECIMATOR_H
 
+#include <BLUtils.h>
+
 // Polyphase decimation filter.
 //
 // Convert an oversampled audio stream to non-oversampled.  Uses a

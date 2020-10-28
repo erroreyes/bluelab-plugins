@@ -41,7 +41,8 @@ RebalanceMaskPredictorComp6::RebalanceMaskPredictorComp6(int bufferSize,
                                                          BL_FLOAT overlapping,
                                                          BL_FLOAT sampleRate,
                                                          int numSpectroCols,
-                                                         const IPluginBase &plug)
+                                                         const IPluginBase &plug,
+                                                         IGraphics &graphics)
 {
     mBufferSize = bufferSize;
     mOverlapping = overlapping;
@@ -78,8 +79,8 @@ RebalanceMaskPredictorComp6::RebalanceMaskPredictorComp6(int bufferSize,
     CreateModel(MODEL_NAME, resourcePath, &mModel);
     
 #else // WIN32
-    mModel = new DNNModelDarknet();
-    mModel->LoadWin(graphics, MODEL_ID, WEIGHTS_ID);
+    mModel = new DNNModelDarknetMc();
+    mModel->LoadWin(graphics, MODEL_FN, WEIGHTS_FN);
 #endif
     
     InitMixCols();

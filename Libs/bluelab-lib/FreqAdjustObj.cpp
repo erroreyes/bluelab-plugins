@@ -10,6 +10,8 @@
 #include <memory.h>
 #include <math.h>
 
+#include <BLUtils.h>
+
 #include "FreqAdjustObj.h"
 
 

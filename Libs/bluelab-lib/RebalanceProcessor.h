@@ -29,7 +29,8 @@ public:
     
     virtual ~RebalanceProcessor();
     
-    void InitDetect(const IPluginBase &plug);
+    void InitDetect(const IPluginBase &plug,
+                    IGraphics& graphics);
     
     void InitDump();
     

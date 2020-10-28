@@ -563,9 +563,11 @@ protected:
     
     static BL_GUI_FLOAT MillisToPoints(long long int elapsed, int sampleRate, int numSamplesPoint);
     
+#if 0 // iPlug2 / Windows
     // Text
     void InitFont(const char *fontPath);
-    
+#endif
+
     void DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y,
                   BL_GUI_FLOAT fontSize, const char *text,
                   int color[4], int halign, int valign,

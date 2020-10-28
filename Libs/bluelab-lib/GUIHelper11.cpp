@@ -472,25 +472,35 @@ GUIHelper11::CreateHelpButton(Plugin *plug, IGraphics *graphics,
     sprintf(fullFileName, "%s/%s", resDir, manualFileName);
 #else
     // On windows, we must load the resource from dll, save it to the temp file
-    // before re-opning it
+    // before re-opening it
+#if 0 // iPlug1
     IGraphicsWin *graphWin = (IGraphicsWin *)graphics;
     void *resBuf;
     long resSize;
     bool res = graphWin->LoadWindowsResource(manResId, "PDF",
                                              &resBuf, &resSize);
     if (!res)
-        return NULL;
-    
+        return;
+#endif
+
+    WDL_TypedBuf<uint8_t> resBuf = graphics->LoadResource(MANUAL_FN, "RCDATA");
+    long resSize = resBuf.GetSize();
+    if (resSize == 0)
+        return;
+
     TCHAR tempPathBuffer[MAX_PATH];
     GetTempPath(MAX_PATH, tempPathBuffer);
-    
+
+#if 0 // iPlug1
     // Remove the "manual" directory from the path
-    fileName = Utils::GetFileName(fileName);
-    
+    fileName = BLUtils::GetFileName(fileName);
     sprintf(fullFileName, "%s%s", tempPathBuffer, fileName);
+#endif
+
+    sprintf(fullFileName, "%s%s", tempPathBuffer, MANUAL_FN);
     
     FILE *file = fopen(fullFileName, "wb");
-    fwrite(resBuf, 1, resSize, file);
+    fwrite(resBuf.Get(), 1, resSize, file);
     fclose(file);
 #endif
     

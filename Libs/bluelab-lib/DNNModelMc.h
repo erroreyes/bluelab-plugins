@@ -27,9 +27,11 @@ public:
                       const char *resourcePath) = 0;
                 
     // For WIN32
-    virtual bool LoadWin(IGraphics *pGraphics,
-                         int modelRcId, int weightsRcId) = 0;
-    
+    //virtual bool LoadWin(IGraphics *pGraphics,
+    //                     int modelRcId, int weightsRcId) = 0;
+    virtual bool LoadWin(IGraphics &pGraphics, 
+                         const char* modelRcName, const char* weightsRcName) = 0;
+
     // Returns several masks at once
     virtual void Predict(const WDL_TypedBuf<BL_FLOAT> &input,
                          vector<WDL_TypedBuf<BL_FLOAT> > *masks) = 0;

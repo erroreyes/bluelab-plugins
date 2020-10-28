@@ -21,7 +21,13 @@ IHelpButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
 #endif
     
 #ifdef WIN32
+
+#ifndef VST3_API
     ShellExecute(NULL, "open", mFileName, NULL, NULL, SW_SHOWNORMAL);
+#else
+    ShellExecute(NULL, (LPCWSTR)"open", (LPCWSTR)mFileName, NULL, NULL, SW_SHOWNORMAL);
+#endif
+
 #endif
     
     IBitmapControl::OnMouseDown(x, y, mod);

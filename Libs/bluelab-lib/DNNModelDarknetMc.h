@@ -26,7 +26,7 @@ public:
               const char *resourcePath);
     
     // For WIN32
-    bool LoadWin(IGraphics *pGraphics, int modelRcId, int weightsRcId);
+    bool LoadWin(IGraphics &pGraphics, const char* modelRcName, const char* weightsRcName);
     
     void Predict(const WDL_TypedBuf<BL_FLOAT> &input,
                  vector<WDL_TypedBuf<BL_FLOAT> > *masks);

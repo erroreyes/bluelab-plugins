@@ -60,12 +60,13 @@ RebalanceProcessor::~RebalanceProcessor()
 }
 
 void
-RebalanceProcessor::InitDetect(const IPluginBase &plug)
+RebalanceProcessor::InitDetect(const IPluginBase &plug,
+                               IGraphics &graphics)
 {
     mMaskPred = new RebalanceMaskPredictorComp6(mTargetBufferSize, mOverlapping,
                                                 mTargetSampleRate,
                                                 mNumSpectroCols,
-                                                plug);
+                                                plug, graphics);
     mMaskPred->SetPredictModuloNum(REBALANCE_PREDICT_MODULO_NUM);
     
     if (mTargetFftObj == NULL)

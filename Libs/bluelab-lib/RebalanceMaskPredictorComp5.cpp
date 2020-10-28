@@ -122,10 +122,21 @@ RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize,
     //mModels[2]->LoadWin(graphics, MODEL2_ID, WEIGHTS2_ID);
     //mModels[3]->LoadWin(graphics, MODEL3_ID, WEIGHTS3_ID);
     
+#if 0 // iPlug1
     mModels[0] = new DNNModelDarknet();
-    mModels[0]->LoadWin(graphics, MODEL_ID, WEIGHTS_ID);
+    //mModels[0]->LoadWin(graphics, MODEL_ID, WEIGHTS_ID);
+    mModels[0]->LoadWin(graphics, MODEL_FN, WEIGHTS_FN);
 #endif
-    
+
+    // New
+    WDL_String resPath;
+    BLUtils::GetFullPlugResourcesPath(plug, &resPath);
+
+    const char* resourcePath = resPath.Get();
+
+    CreateModel(MODEL_NAME, resourcePath, &mModels[0]);
+#endif
+   
     InitMixCols();
     
 #if FORCE_SAMPLE_RATE

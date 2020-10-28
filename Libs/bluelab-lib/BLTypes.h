@@ -16,7 +16,7 @@
 #include <ScopedNoDenormals2.h>
 #endif
 
-#include "config.h"
+#include "bl_config.h"
 
 //
 #ifndef BL_GUI_TYPE_FLOAT

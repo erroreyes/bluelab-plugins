@@ -10,6 +10,10 @@
 
 extern "C" {
 #include <fmem.h>
+
+#ifdef WIN32
+#include <fmemopen-win.h>
+#endif
 }
 
 #include <BLUtils.h>
@@ -19,6 +23,8 @@ extern "C" {
 
 #include "DNNModelDarknetMc.h"
 
+// Was just a test to avoid writing the temporary file to disk (failed)
+#define USE_FMEMOPEN_WIN 0 //1
 
 #define NORMALIZE_INPUT 1
 
@@ -64,10 +70,12 @@ DNNModelDarknetMc::Load(const char *modelFileName,
 
 // For WIN32
 bool
-DNNModelDarknetMc::LoadWin(IGraphics *pGraphics,
-                           int modelRcId, int weightsRcId)
+DNNModelDarknetMc::LoadWin(IGraphics &pGraphics,
+                           const char *modelRcName, const char *weightsRcName)
 {
 #ifdef WIN32
+
+#if 0 // iPlug1
     void *modelRcBuf;
 	long modelRcSize;
 	bool loaded = ((IGraphicsWin *)pGraphics)->LoadWindowsResource(modelRcId,
@@ -83,43 +91,64 @@ DNNModelDarknetMc::LoadWin(IGraphics *pGraphics,
                                                               "RCDATA",
                                                               &weightsRcBuf,
                                                               &weightsRcSize);
-    
     if (!loaded)
 		return false;
+#endif->
+
+#if 1 // iPlug2
+    WDL_TypedBuf<uint8_t> modelRcBuf = pGraphics.LoadResource(modelRcName, "CFG");
+    long modelRcSize = modelRcBuf.GetSize();
+    if (modelRcSize == 0)
+        return false;
     
-    
+    WDL_TypedBuf<uint8_t> weightsRcBuf = pGraphics.LoadResource(weightsRcName, "WEIGHTS");
+    long weightsRcSize = weightsRcBuf.GetSize();
+    if (weightsRcSize == 0)
+        return false;
+#endif
+
     // Model
+#if !USE_FMEMOPEN_WIN
     fmem fmem0;
     fmem_init(&fmem0);
-    //FILE *file0 = fmem_open(&fmem0, "r");
     FILE *file0 = fmem_open(&fmem0, "w+");
-    //fmem_mem(&fmem0, &modelRcBuf, &modelRcSize);
-    fwrite(modelRcBuf, 1, modelRcSize, file0);
+    //fmem_mem(&fmem0, &modelRcBuf.Get(), modelRcSize);
+    fwrite(modelRcBuf.Get(), 1, modelRcSize, file0);
     fflush(file0);
     fseek(file0, 0L, SEEK_SET);
-    
+#else
+    FILE* file0 = fmemopen_win(modelRcBuf.Get(), modelRcSize, "w+");
+#endif
+
     // Weights
+#if !USE_FMEMOPEN_WIN
     fmem fmem1;
     fmem_init(&fmem1);
-    //FILE *file1 = fmem_open(&fmem1, "rb");
     FILE *file1 = fmem_open(&fmem1, "wb+");
     //fmem_mem(&fmem1, &weightsRcBuf, &weightsRcSize);
-    fwrite(weightsRcBuf, 1, weightsRcSize, file1);
+    fwrite(weightsRcBuf.Get(), 1, weightsRcSize, file1);
     fflush(file1);
     fseek(file1, 0L, SEEK_SET);
-    
+#else
+    FILE* file1 = fmemopen_win(weightsRcBuf.Get(), weightsRcSize, "wb+");
+#endif
+
     // Load network
     mNet = load_network_file(file0, file1, 0);
     set_batch_network(mNet, 1);
     
     // Model
     fclose(file0);
+#if !USE_FMEMOPEN_WIN
     fmem_term(&fmem0);
-    
+#endif
+
     // Weights
     fclose(file1);
+#if !USE_FMEMOPEN_WIN
     fmem_term(&fmem1);
-    
+#endif
+
 	return true;
 #endif
 

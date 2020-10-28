@@ -14,6 +14,10 @@
 
 #include <xmmintrin.h>
 
+#ifdef WIN32
+#include <cstdint>
+#endif
+
 // From Juce...
 class ScopedNoDenormals2
 {
