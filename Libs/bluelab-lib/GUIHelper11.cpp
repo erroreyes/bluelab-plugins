@@ -35,7 +35,7 @@
 #define DEMO_MODE 0 // 1
 #endif
 
-#define DEMO_MESSAGE "[DEMO] Please consider buying if you like it !"
+#define DEMO_MESSAGE "[DEMO] Please consider buying if you like it!"
 
 
 GUIHelper11::GUIHelper11(Style style)
