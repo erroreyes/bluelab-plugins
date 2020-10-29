@@ -26,6 +26,17 @@
 
 #define TEXTFIELD_BITMAP "textfield.png"
 
+// Demo mode
+#if DEMO_VERSION
+#define DEMO_MODE 1
+#endif
+
+#ifndef DEMO_MODE
+#define DEMO_MODE 0 // 1
+#endif
+
+#define DEMO_MESSAGE "[DEMO] Please consider buying if you like it !"
+
 
 GUIHelper11::GUIHelper11(Style style)
 {
@@ -102,6 +113,11 @@ GUIHelper11::GUIHelper11(Style style)
         
         mHelpButtonOffsetX = -44.0;
         mHelpButtonOffsetY = -4.0;
+        
+        mDemoTextSize = 10.0;
+        mDemoTextOffsetX = 2.0;
+        mDemoTextOffsetY = 2.0;
+        mDemoTextColor = IColor(255, 200, 0, 0);
     }
 }
 
@@ -515,7 +531,6 @@ GUIHelper11::CreateHelpButton(Plugin *plug, IGraphics *graphics,
 #endif
 }
 
-
 void
 GUIHelper11::CreatePlugName(Plugin *plug, IGraphics *graphics,
                             const char *plugNameFname, Position pos)
@@ -545,6 +560,24 @@ GUIHelper11::CreatePlugName(Plugin *plug, IGraphics *graphics,
     control->SetInteractionDisabled(true);
     
     graphics->AttachControl(control);
+}
+
+void
+GUIHelper11::CreateDemoMessage(IGraphics *graphics)
+{
+#if DEMO_MODE
+    int x = mDemoTextOffsetX;
+    int y = graphics->Height() - mDemoTextSize - mDemoTextOffsetY;
+    
+    ITextControl *textControl = CreateText(graphics,
+                                           x, y,
+                                           DEMO_MESSAGE,
+                                           mDemoTextSize,
+                                           mDemoTextColor, EAlign::Near);
+    
+    // Avoids that the trial message masks the interaction on the help button for example
+    textControl->SetInteractionDisabled(true);
+#endif
 }
 
 void

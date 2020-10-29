@@ -126,6 +126,7 @@ public:
                           const char *manualFileName,
                           Position pos);
 
+    void CreateDemoMessage(IGraphics *graphics);
     
     // NOTE: not sure it is still useful
     static void UpdateText(Plugin *plug, int paramIdx);
@@ -191,6 +192,11 @@ protected:
     
     float mHelpButtonOffsetX;
     float mHelpButtonOffsetY;
+    
+    float mDemoTextSize;
+    float mDemoTextOffsetX;
+    float mDemoTextOffsetY;
+    IColor mDemoTextColor;
 };
 
 #endif /* GUIHelper11_hpp */
