@@ -885,11 +885,6 @@ GUIHelper11::GUIResizePostResizeGUI(Plugin *plug,
     // Re-attach the graph
     if (graph != NULL)
         pGraphics->AttachControl(graph);
-    
-#if 0 // #bluelab: todo; re-enable this
-    //RefreshControlValues();
-    pGraphics->RefreshAllControlsValues();
-#endif
 }
 
 IControl *
@@ -962,8 +957,6 @@ GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y,
                                        textOffsetX, textOffsetY);
     
     control->SetInteractionDisabled(true);
-    
-    //graphics->AttachControl(control);
 }
 
 float
