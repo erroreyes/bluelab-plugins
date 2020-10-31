@@ -11,6 +11,7 @@
 
 #include <IRolloverButtonControl.h>
 #include <IPlugConstants.h>
+#include <ResizeGUIPluginInterface.h>
 
 using namespace iplug;
 using namespace iplug::igraphics;
@@ -25,7 +26,7 @@ using namespace iplug::igraphics;
 class IGUIResizeButtonControl : public IRolloverButtonControl
 {
 public:
-    IGUIResizeButtonControl(Plugin *plug,
+    IGUIResizeButtonControl(ResizeGUIPluginInterface *plug,
                             float x, float y,
                             const IBitmap &bitmap,
                             int paramIdx,
@@ -41,7 +42,7 @@ public:
         mIsMouseClicking = false;
     }
     
-    IGUIResizeButtonControl(Plugin *plug,
+    IGUIResizeButtonControl(ResizeGUIPluginInterface *plug,
                             float x, float y,
                             const IBitmap &bitmap,
                             int resizeWidth, int resizeHeight,
@@ -69,7 +70,7 @@ public:
     void OnMouseDblClick(float x, float y, const IMouseMod &mod) override {}
     
 protected:
-    Plugin *mPlug;
+    ResizeGUIPluginInterface *mPlug;
     
     int mResizeWidth;
     int mResizeHeight;

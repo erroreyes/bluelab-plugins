@@ -849,7 +849,8 @@ GUIHelper11::GUIResizeOnWindowResizePre(Plugin *plug, GraphControl11 *graph,
     int newGraphWidth = graphWidthSmall + graphOffsetX;
     int newGraphHeight = graphHeightSmall + graphOffsetY;
     
-    graph->Resize(newGraphWidth, newGraphHeight);
+    if (graph != NULL)
+        graph->Resize(newGraphWidth, newGraphHeight);
     
     // Other controls
     *offsetX = 0;
@@ -881,7 +882,8 @@ GUIHelper11::GUIResizeOnWindowResizePost(Plugin *plug, GraphControl11 *graph)
     IGraphics *pGraphics = plug->GetUI();
     
     // Re-attach the graph
-    pGraphics->AttachControl(graph);
+    if (graph != NULL)
+        pGraphics->AttachControl(graph);
     
 #if 0 // #bluelab: todo; re-enable this
     //RefreshControlValues();
@@ -890,7 +892,7 @@ GUIHelper11::GUIResizeOnWindowResizePost(Plugin *plug, GraphControl11 *graph)
 }
 
 IControl *
-GUIHelper11::CreateGUIResizeButton(Plugin *plug, IGraphics *graphics,
+GUIHelper11::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *graphics,
                                    float x, float y,
                                    const char *bitmapFname,
                                    char *label,

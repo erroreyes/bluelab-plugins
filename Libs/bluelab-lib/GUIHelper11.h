@@ -13,6 +13,7 @@
 
 #include <BLVumeterControl.h>
 #include <BLVumeterNeedleControl.h>
+#include <ResizeGUIPluginInterface.h>
 
 #include "IPlug_include_in_plug_hdr.h"
 
@@ -140,7 +141,8 @@ public:
                            EAlign titleAlign = EAlign::Center,
                            const char **radioLabels = NULL);
     
-    IControl *CreateGUIResizeButton(Plugin *plug, IGraphics *graphics,
+    IControl *CreateGUIResizeButton(ResizeGUIPluginInterface *plug,
+                                    IGraphics *graphics,
                                     float x, float y,
                                     const char *bitmapFname,
                                     char *label,
