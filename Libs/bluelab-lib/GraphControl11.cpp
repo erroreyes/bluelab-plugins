@@ -268,6 +268,17 @@ GraphControl11::Resize(int width, int height)
             mVAxis->mOffsetX -= dWidth;
     }
     
+#if USE_FBO && (defined IGRAPHICS_GL)
+    if (mFBO != NULL)
+    {
+        //nvgDeleteFramebuffer(mFBO);
+        
+        ((IGraphicsNanoVG *)mGraphics)->DeleteFBO(mFBO);
+        
+        mFBO = NULL;
+    }
+#endif
+    
       // FIXED: Resize the FBO instead of deleting and re-creating it
       //
       // Avoids loosing the display on a second similar plugin,

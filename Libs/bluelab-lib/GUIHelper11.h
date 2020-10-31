@@ -163,12 +163,19 @@ public:
                                       IGUIResizeButtonControl *buttons[],
                                       int numButtons);
     
-    static void GUIResizeOnWindowResizePre(Plugin *plug, GraphControl11 *graph,
-                                           int graphWidthSmall, int graphHeightSmall,
-                                           int guiWidths[], int guiHeights[],
-                                           int numSizes, int *offsetX, int *offsetY);
+    static void GUIResizeComputeOffsets(int newGUIWidth,
+                                        int newGUIHeight,
+                                        int guiWidths[],
+                                        int guiHeights[],
+                                        int numSizes,
+                                        int *offsetX,
+                                        int *offsetY);
     
-    static void GUIResizeOnWindowResizePost(Plugin *plug, GraphControl11 *graph);
+    static void GUIResizePostResizeGUI(Plugin *plug,
+                                       GraphControl11 *graph,
+                                       int graphWidthSmall,
+                                       int graphHeightSmall,
+                                       int offsetX, int offsetY);
     
     
 protected:

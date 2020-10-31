@@ -19,7 +19,7 @@ public:
     
     Plugin *GetPlug() { return mPlug; }
          
-    virtual void PreResizeGUI() = 0;
+    virtual void PreResizeGUI(int newGUIWidth, int newGUIHeight) = 0;
     virtual void PostResizeGUI() = 0;
     
 protected:

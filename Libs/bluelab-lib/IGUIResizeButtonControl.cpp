@@ -27,7 +27,7 @@ IGUIResizeButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
     // Check to not resize to identity if we re-clicked on the button already active
     if (std::fabs(GetValue() - prevValue) > BL_EPS)
     {
-        mPlug->PreResizeGUI();
+        mPlug->PreResizeGUI(mResizeWidth, mResizeHeight);
         
         bool needsPlatformResize = true;
         if (mPlug->GetPlug()->GetUI() != NULL)

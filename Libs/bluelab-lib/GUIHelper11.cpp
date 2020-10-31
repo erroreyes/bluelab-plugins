@@ -832,31 +832,22 @@ GUIHelper11::GUIResizePreResizeGUI(IGraphics *pGraphics,
 }
 
 void
-GUIHelper11::GUIResizeOnWindowResizePre(Plugin *plug, GraphControl11 *graph,
-                                        int graphWidthSmall, int graphHeightSmall,
-                                        int guiWidths[], int guiHeights[],
-                                        int numSizes, int *offsetX, int *offsetY)
+GUIHelper11::GUIResizeComputeOffsets(int newGUIWidth,
+                                     int newGUIHeight,
+                                     int guiWidths[],
+                                     int guiHeights[],
+                                     int numSizes,
+                                     int *offsetX,
+                                     int *offsetY)
 {
     if (numSizes == 0)
         return;
-    
-    IGraphics *pGraphics = plug->GetUI();
-    
-    // Graph
-    int graphOffsetX = pGraphics->Width() - guiWidths[0];
-    int graphOffsetY = pGraphics->Height() - guiHeights[0];
-    
-    int newGraphWidth = graphWidthSmall + graphOffsetX;
-    int newGraphHeight = graphHeightSmall + graphOffsetY;
-    
-    if (graph != NULL)
-        graph->Resize(newGraphWidth, newGraphHeight);
     
     // Other controls
     *offsetX = 0;
     for (int i = 0; i < numSizes; i++)
     {
-        if (pGraphics->Width() == guiWidths[i])
+        if (newGUIWidth == guiWidths[i])
         {
             *offsetX = guiWidths[i] - guiWidths[0];
             
@@ -867,7 +858,7 @@ GUIHelper11::GUIResizeOnWindowResizePre(Plugin *plug, GraphControl11 *graph,
     *offsetY = 0;
     for (int i = 0; i < numSizes; i++)
     {
-        if (pGraphics->Height() == guiHeights[i])
+        if (newGUIHeight == guiHeights[i])
         {
             *offsetY = guiHeights[i] - guiHeights[0];
             
@@ -877,9 +868,19 @@ GUIHelper11::GUIResizeOnWindowResizePre(Plugin *plug, GraphControl11 *graph,
 }
 
 void
-GUIHelper11::GUIResizeOnWindowResizePost(Plugin *plug, GraphControl11 *graph)
+GUIHelper11::GUIResizePostResizeGUI(Plugin *plug,
+                                    GraphControl11 *graph,
+                                    int graphWidthSmall,
+                                    int graphHeightSmall,
+                                    int offsetX, int offsetY)
 {
     IGraphics *pGraphics = plug->GetUI();
+    
+    int newGraphWidth = graphWidthSmall + offsetX;
+    int newGraphHeight = graphHeightSmall + offsetY;
+    
+    if (graph != NULL)
+        graph->Resize(newGraphWidth, newGraphHeight);
     
     // Re-attach the graph
     if (graph != NULL)
