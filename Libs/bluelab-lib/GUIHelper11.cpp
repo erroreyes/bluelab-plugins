@@ -896,6 +896,7 @@ IControl *
 GUIHelper11::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *graphics,
                                    float x, float y,
                                    const char *bitmapFname,
+                                   int paramIdx,
                                    char *label,
                                    int resizeWidth, int resizeHeight)
 {
@@ -912,6 +913,7 @@ GUIHelper11::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *gr
     // With rollover
     IControl *control =
         new IGUIResizeButtonControl(plug, x, y, bitmap,
+                                    paramIdx,
                                     resizeWidth, resizeHeight);
     
     graphics->AttachControl(control);
@@ -923,6 +925,13 @@ GUIHelper11::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *gr
                 label, Size::SIZE_DEFAULT);
     
     return control;
+}
+
+void
+GUIHelper11::RefreshAllParameters(Plugin *plug, int numParams)
+{
+    for (int i = 0; i < numParams; i++)
+        plug->SendParameterValueFromAPI(i, plug->GetParam(i)->Value(), false);
 }
 
 void

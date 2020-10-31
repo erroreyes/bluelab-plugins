@@ -145,6 +145,7 @@ public:
                                     IGraphics *graphics,
                                     float x, float y,
                                     const char *bitmapFname,
+                                    int paramIdx,
                                     char *label,
                                     int resizeWidth, int resizeHeight);
     
@@ -177,6 +178,8 @@ public:
                                        int graphHeightSmall,
                                        int offsetX, int offsetY);
     
+    // Refresh all the controls, from their values
+    static void RefreshAllParameters(Plugin *plug, int numParams);
     
 protected:
     void CreateTitle(IGraphics *graphics, float x, float y,

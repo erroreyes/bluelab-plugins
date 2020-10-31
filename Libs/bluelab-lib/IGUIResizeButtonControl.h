@@ -47,7 +47,7 @@ public:
                             const IBitmap &bitmap,
                             int resizeWidth, int resizeHeight,
                             EBlend blend = EBlend::Default)
-    : IRolloverButtonControl(x, y, bitmap, kNoParameter, blend)
+    : IRolloverButtonControl(x, y, bitmap, kNoParameter, false, blend)
     {
         mPlug = plug;
         
