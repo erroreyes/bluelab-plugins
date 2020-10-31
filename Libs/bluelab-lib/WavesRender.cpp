@@ -8,15 +8,10 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <LinesRender2.h>
-
-#include <BLUtils.h>
-
 //#include <Wav3s.h>
 #include <Axis3D.h>
+#include <BLUtils.h>
 
 #include "WavesRender.h"
 

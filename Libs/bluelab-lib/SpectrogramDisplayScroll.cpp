@@ -8,26 +8,9 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// Opengl
-//#include <GL/glew.h>
-
-//#ifdef __APPLE__
-//#include <OpenGL/OpenGL.h>
-//#include <OpenGL/glu.h>
-//#endif
-
-// #bl-iplug2
-//#include "nanovg.h"
-
-// Warning: Niko hack in NanoVg to support FBO even on GL2
-//#define NANOVG_GL2_IMPLEMENTATION
-
-//#include "nanovg_gl.h"
-//#include "nanovg_gl_utils.h"
-//
-
 #include <BLSpectrogram3.h>
 #include <UpTime.h>
+#include <BLDebug.h>
 
 #include "SpectrogramDisplayScroll.h"
 
@@ -221,15 +204,11 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
 #if USE_SPECTRO_NEAREST
                                               NVG_IMAGE_NEAREST |
 #endif
-                                              
 #if GLSL_COLORMAP
-                                              // #bl-iplug2
-                                              //NVG_IMAGE_ONE_FLOAT_FORMAT,
-                                              0,
+                                              NVG_IMAGE_ONE_FLOAT_FORMAT,
 #else
                                               0,
 #endif
-                                              //,
                                               mSpectroImageData.Get());
         
         mNeedUpdateSpectrogram = false;
@@ -259,15 +238,11 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
 #if USE_SPECTRO_NEAREST
                                                   NVG_IMAGE_NEAREST |
 #endif
-                                                  
 #if GLSL_COLORMAP
-                                                  // #bl-iplug2
-                                                  //NVG_IMAGE_ONE_FLOAT_FORMAT,
-                                                  0,
+                                                  NVG_IMAGE_ONE_FLOAT_FORMAT,
 #else
                                                   0,
 #endif
-                                                  
                                                   mSpectroImageData.Get());
             
 			// No need since it has been better fixed in nanovg
@@ -328,8 +303,7 @@ SpectrogramDisplayScroll::DrawSpectrogram(int width, int height)
     
     // New: set colormap only in the spectrogram state
 #if GLSL_COLORMAP
-    // #bl-iplug2
-    //nvgSetColormap(mVg, mNvgColormapImage);
+    nvgSetColormap(mVg, mNvgColormapImage);
 #endif
 
     BL_FLOAT scrollOffsetPixels = ComputeScrollOffsetPixels(width);

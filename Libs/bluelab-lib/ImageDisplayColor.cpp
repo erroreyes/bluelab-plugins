@@ -8,24 +8,6 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// Opengl
-//#include <GL/glew.h>
-
-//#ifdef __APPLE__
-//#include <OpenGL/OpenGL.h>
-//#include <OpenGL/glu.h>
-//#endif
-
-// #bl-iplug2
-//#include "nanovg.h"
-
-// Warning: Niko hack in NanoVg to support FBO even on GL2
-//#define NANOVG_GL2_IMPLEMENTATION
-
-//#include "nanovg_gl.h"
-//#include "nanovg_gl_utils.h"
-//
-
 #include "ImageDisplayColor.h"
 
 #include "resource.h"

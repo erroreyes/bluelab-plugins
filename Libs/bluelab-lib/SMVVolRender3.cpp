@@ -6,9 +6,6 @@
 //
 //
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #ifdef IGRAPHICS_NANOVG
 
 #include <RayCaster2.h>

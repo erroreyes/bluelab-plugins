@@ -13,6 +13,8 @@
 
 #include <IBitmapControlAnim.h>
 #include <IHelpButtonControl.h>
+#include <IRadioButtonsControl.h>
+#include <IGUIResizeButtonControl.h>
 
 #include "GUIHelper11.h"
 
@@ -37,6 +39,16 @@
 
 #define DEMO_MESSAGE "[DEMO] Please consider buying if you like it!"
 
+// Ableton, Windows
+// - play
+// - change to medium GUI
+// - change to small GUI
+// => after a little while, the medium GUI button is selected again automatically,
+// and the GUI starts to resize, then it freezes
+//
+// FIX: use SetValueFromUserInput() to avoid a call by the host to VSTSetParameter()
+// NOTE: may still freeze some rare times
+#define FIX_ABLETON_RESIZE_GUI_FREEZE 1
 
 GUIHelper11::GUIHelper11(Style style)
 {
@@ -118,6 +130,13 @@ GUIHelper11::GUIHelper11(Style style)
         mDemoTextOffsetX = 2.0;
         mDemoTextOffsetY = 2.0;
         mDemoTextColor = IColor(255, 200, 0, 0);
+        
+        mRadioLabelTextSize = 15;
+        mRadioLabelTextOffsetX = 6.0;
+        mRadioLabelTextColor = IColor(255, 100, 100, 161);
+        
+        mButtonLabelTextOffsetX = 3.0;
+        mButtonLabelTextOffsetY = 3.0;
     }
 }
 
@@ -328,7 +347,7 @@ GUIHelper11::CreateBitmap(IGraphics *graphics,
     if (width != NULL)
         *width = bitmap.W();
     if (height != NULL)
-        *height = bitmap.H()/bitmap.N();;
+        *height = bitmap.H()/bitmap.N();
     
     IBitmapControl *result = new IBitmapControl(x + offsetX, y + offsetY, bitmap);
     result->SetInteractionDisabled(true);
@@ -580,6 +599,118 @@ GUIHelper11::CreateDemoMessage(IGraphics *graphics)
 #endif
 }
 
+IRadioButtonsControl *
+GUIHelper11::CreateRadioButtons(IGraphics *graphics,
+                                float x, float y,
+                                const char *bitmapFname,
+                                int numButtons, float size, int paramIdx,
+                                bool horizontalFlag, const char *title,
+                                EAlign align,
+                                EAlign titleAlign,
+                                const char **radioLabels)
+{
+    IBitmap bitmap = graphics->LoadBitmap(bitmapFname, 2);
+    
+    float titleX = x;
+    if (titleAlign == EAlign::Center)
+        titleX = x + bitmap.W()/2;
+    else if (titleAlign == EAlign::Far)
+        titleX = x + bitmap.W();
+    
+    // Title
+    CreateTitle(graphics, titleX, y, title, SIZE_DEFAULT, titleAlign);
+    
+    // Radio labels
+    if (numButtons > 0)
+    {
+        if (!horizontalFlag)
+        {
+            int labelX = x;
+            if (align == EAlign::Far)
+                labelX = labelX - bitmap.W() - mRadioLabelTextOffsetX;
+            
+            if (align == EAlign::Near)
+            {
+                labelX = labelX + bitmap.W() + mRadioLabelTextOffsetX;
+            }
+            
+            int spaceBetween = (size - numButtons*bitmap.H()/2)/(numButtons - 1);
+            int stepSize = bitmap.H()/2 + spaceBetween;
+            
+            for (int i = 0; i < numButtons; i++)
+            {
+                IText labelText(mRadioLabelTextSize,
+                                mRadioLabelTextColor,
+                                TITLE_TEXT_FONT,
+                                align);
+                
+                int labelY = y + i*stepSize;
+                const char *labelStr = radioLabels[i];
+                CreateRadioLabelText(graphics,
+                                     labelX, labelY,
+                                     labelStr,
+                                     bitmap,
+                                     labelText,
+                                     align);
+            }
+        }
+        else
+        {
+            // NOTE: not really tested
+            
+            int labelY = x;
+            //if (titleAlign == IText::kAlignFar)
+            //    labelX = labelX - bitmap.W - RADIO_LABEL_TEXT_OFFSET;
+            
+            if (align == EAlign::Near)
+            {
+                // TODO: implement this
+            }
+            
+            int spaceBetween = (size - numButtons*bitmap.H()/2)/(numButtons - 1);
+            int stepSize = bitmap.H()/2 + spaceBetween;
+            
+            for (int i = 0; i < numButtons; i++)
+            {
+                // new
+                IText labelText(mRadioLabelTextSize,
+                                mRadioLabelTextColor,
+                                TITLE_TEXT_FONT,
+                                align);
+                
+                int labelX = x + i*stepSize;
+                const char *labelStr = radioLabels[i];
+                CreateRadioLabelText(graphics,
+                                     labelX, labelY,
+                                     labelStr,
+                                     bitmap,
+                                     labelText,
+                                     align);
+            }
+        }
+    }
+    
+    // Buttons
+    IRECT rect(x, y, x + size, y + bitmap.H());
+    EDirection direction = EDirection::Horizontal;
+    if (!horizontalFlag)
+    {
+        rect = IRECT(x, y, x + bitmap.W(), y + size);
+        
+        direction = EDirection::Vertical;
+    }
+    
+    IRadioButtonsControl *control =
+        new IRadioButtonsControl(rect,
+                                 paramIdx, numButtons,
+                                 bitmap, direction);
+    
+    graphics->AttachControl(control);
+    
+    return control;
+}
+
+
 void
 GUIHelper11::UpdateText(Plugin *plug, int paramIdx)
 {
@@ -589,8 +720,211 @@ GUIHelper11::UpdateText(Plugin *plug, int paramIdx)
 }
 
 void
+GUIHelper11::ResetParameter(Plugin *plug, int paramIdx)
+{
+    if (plug->GetUI())
+    {
+        plug->GetParam(paramIdx)->SetToDefault();
+        
+        plug->SendParameterValueFromAPI(paramIdx, plug->GetParam(paramIdx)->Value(), false);
+    }
+}
+
+void
+GUIHelper11::GUIResizeParamChange(Plugin *plug, int paramNum,
+                                  int params[], IGUIResizeButtonControl *buttons[],
+                                  int guiWidth, int guiHeight,
+                                  int numParams)
+{
+    // For fix Ableton Windows resize GUI
+    bool winPlatform = false;
+#ifdef WIN32
+    winPlatform = true;
+#endif
+    
+    bool fixAbletonWin = false;
+#if FIX_ABLETON_RESIZE_GUI_FREEZE
+    fixAbletonWin = true;
+#endif
+    
+    int val = plug->GetParam(params[paramNum])->Int();
+    if (val == 1)
+    {
+        // Reset the two other buttons
+        
+        // For the moment, keep the only case of Ableton Windows
+        // (because we already have tested all plugs on Mac,
+        // and half of the hosts on Windows)
+        if (!winPlatform || !fixAbletonWin || (plug->GetHost() != kHostAbletonLive))
+        {
+            for (int i = 0; i < numParams; i++)
+            {
+                if (i != paramNum)
+                    GUIHelper11::ResetParameter(plug, params[i]);
+            }
+        }
+        else
+            // Ableton Windows + fix enabled
+        {
+            for (int i = 0; i < numParams; i++)
+            {
+                if (i != paramNum)
+                    buttons[i]->SetValueFromUserInput(0.0);
+            }
+        }
+        
+        // When initializing the plugin, the previous size was not set correctly
+        // But without the following test, clicking on a size button made an infinite loop
+        if ((buttons[paramNum] != NULL) &&
+            (!buttons[paramNum]->IsMouseClicking()))
+        {
+            // If size will not change, OnWindowResize() won't be called,
+            // then we need to avoid detaching graph in PreResizeGUI()
+            IGraphics *pGraphics = plug->GetUI();
+            int width = pGraphics->Width();
+            int height = pGraphics->Height();
+            
+#if 0 // #bluelab: todo re-enable it!
+            bool needDetachGraph = ((width != guiWidth) || (height != guiHeight));
+            
+            plug->GUIResizeSetNeedDetachGraph(needDetachGraph);
+            
+            plug->ResizeGUI(guiWidth, guiHeight);
+            
+            plug->GUIResizeSetNeedDetachGraph(true);
+#endif
+        }
+    }
+}
+
+void
+GUIHelper11::GUIResizePreResizeGUI(IGraphics *pGraphics,
+                                   IGUIResizeButtonControl *buttons[],
+                                   int numButtons)
+{
+    // Avoid memory corruption:
+    // ResizeGUI() is called from the buttons
+    // And during ResizeGUI(), the previous controls are deleted
+    // (including the buttons)
+    // Then we will delete button from its own code in OnMouseClick()
+    // if the buttons are still attached
+    bool isMouseClicking = false;
+    for (int i = 0; i < numButtons; i++)
+    {
+        if ((buttons[i] != NULL) && buttons[i]->IsMouseClicking())
+        {
+            isMouseClicking = true;
+            
+            break;
+        }
+    }
+    
+    if (isMouseClicking)
+    {
+        for (int i = 0; i < numButtons; i++)
+        {
+            if (buttons[i] != NULL)
+            {
+                pGraphics->DetachControl(buttons[i]);
+            }
+        }
+    }
+}
+
+void
+GUIHelper11::GUIResizeOnWindowResizePre(Plugin *plug, GraphControl11 *graph,
+                                        int graphWidthSmall, int graphHeightSmall,
+                                        int guiWidths[], int guiHeights[],
+                                        int numSizes, int *offsetX, int *offsetY)
+{
+    if (numSizes == 0)
+        return;
+    
+    IGraphics *pGraphics = plug->GetUI();
+    
+    // Graph
+    int graphOffsetX = pGraphics->Width() - guiWidths[0];
+    int graphOffsetY = pGraphics->Height() - guiHeights[0];
+    
+    int newGraphWidth = graphWidthSmall + graphOffsetX;
+    int newGraphHeight = graphHeightSmall + graphOffsetY;
+    
+    graph->Resize(newGraphWidth, newGraphHeight);
+    
+    // Other controls
+    *offsetX = 0;
+    for (int i = 0; i < numSizes; i++)
+    {
+        if (pGraphics->Width() == guiWidths[i])
+        {
+            *offsetX = guiWidths[i] - guiWidths[0];
+            
+            break;
+        }
+    }
+    
+    *offsetY = 0;
+    for (int i = 0; i < numSizes; i++)
+    {
+        if (pGraphics->Height() == guiHeights[i])
+        {
+            *offsetY = guiHeights[i] - guiHeights[0];
+            
+            break;
+        }
+    }
+}
+
+void
+GUIHelper11::GUIResizeOnWindowResizePost(Plugin *plug, GraphControl11 *graph)
+{
+    IGraphics *pGraphics = plug->GetUI();
+    
+    // Re-attach the graph
+    pGraphics->AttachControl(graph);
+    
+#if 0 // #bluelab: todo; re-enable this
+    //RefreshControlValues();
+    pGraphics->RefreshAllControlsValues();
+#endif
+}
+
+IControl *
+GUIHelper11::CreateGUIResizeButton(Plugin *plug, IGraphics *graphics,
+                                   float x, float y,
+                                   const char *bitmapFname,
+                                   char *label,
+                                   int resizeWidth, int resizeHeight)
+{
+    int bmpFrames = 3;
+    
+    IBitmap bitmap = graphics->LoadBitmap(bitmapFname, bmpFrames);
+    
+    IRECT pR;
+    pR.L = x;
+    pR.T = y;
+    pR.R = x + bitmap.W();
+    pR.B = y + bitmap.H();
+    
+    // With rollover
+    IControl *control =
+        new IGUIResizeButtonControl(plug, x, y, bitmap,
+                                    resizeWidth, resizeHeight);
+    
+    graphics->AttachControl(control);
+    
+    // Add the label
+    CreateTitle(graphics,
+                x + mButtonLabelTextOffsetX,
+                y + bitmap.H()*1.5/((BL_FLOAT)bmpFrames) + mButtonLabelTextOffsetY,
+                label, Size::SIZE_DEFAULT);
+    
+    return control;
+}
+
+void
 GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y,
-                         const char *title, Size size)
+                         const char *title, Size size, EAlign align)
 {
     float titleSize = mTitleTextSize;
     float textOffsetX = mTitleTextOffsetX;
@@ -603,10 +937,13 @@ GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y,
         textOffsetY = mTitleTextOffsetYBig;
     }
     
-    IText text(titleSize, mTitleTextColor, TITLE_TEXT_FONT, EAlign::Center);
+    IText text(titleSize, mTitleTextColor, TITLE_TEXT_FONT, align);
     float width = GetTextWidth(graphics, text, title);
     
-    x -= width/2.0;
+    if (align == EAlign::Center)
+        x -= width/2.0;
+    else if (align == EAlign::Far)
+        x -= width;
     
     ITextControl *control = CreateText(graphics, x, y,
                                        title, text,
@@ -614,7 +951,7 @@ GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y,
     
     control->SetInteractionDisabled(true);
     
-    graphics->AttachControl(control);
+    //graphics->AttachControl(control);
 }
 
 float
@@ -632,7 +969,8 @@ GUIHelper11::GetTextWidth(IGraphics *graphics, const IText &text, const char *te
 ITextControl *
 GUIHelper11::CreateText(IGraphics *graphics, float x, float y,
                         const char *textStr, const IText &text,
-                        float offsetX, float offsetY)
+                        float offsetX, float offsetY,
+                        EAlign align)
 {
     float width = GetTextWidth(graphics, text, textStr);
     
@@ -672,4 +1010,34 @@ GUIHelper11::CreateValue(IGraphics *graphics, float x, float y,
     graphics->AttachControl(caption);
     
     return caption;
+}
+
+ITextControl *
+GUIHelper11::CreateRadioLabelText(IGraphics *graphics,
+                                  float x, float y,
+                                  const char *textStr,
+                                  const IBitmap &bitmap,
+                                  const IText &text,
+                                  EAlign align)
+{
+    float width = GetTextWidth(graphics, text, textStr);
+    
+    // Adjust for aligne center
+    float dx = 0.0;
+    
+    // Adjust for align far
+    if (align == EAlign::Far)
+    {
+        int bmpWidth = bitmap.W();
+        dx = -width + bmpWidth;
+    }
+    
+    IRECT rect(x + dx, y,
+               (x + width) + dx, y + text.mSize);
+    
+    ITextControl *control = new ITextControl(rect, textStr, text);
+    
+    graphics->AttachControl(control);
+    
+    return control;
 }

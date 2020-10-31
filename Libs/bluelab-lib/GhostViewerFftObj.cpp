@@ -10,9 +10,7 @@
 
 #include <BLSpectrogram3.h>
 #include <BLUtils.h>
-
-// #bl-iplug2
-//#include "nanovg.h"
+#include <BLDebug.h>
 
 #include <SpectrogramDisplay.h>
 #include <SpectrogramDisplayScroll.h>
@@ -93,20 +91,11 @@ GhostViewerFftObj::GetSpectrogram()
     return mSpectrogram;
 }
 
-#if USE_SPECTRO_SCROLL
 void
 GhostViewerFftObj::SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }
-#else
-void
-GhostViewerFftObj::SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay)
-{
-    mSpectroDisplay = spectroDisplay;
-}
-
-#endif
 
 void
 GhostViewerFftObj::SetSpeedMod(int speedMod)
@@ -168,9 +157,7 @@ GhostViewerFftObj::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 #else // Simple add
     if (mSpectroDisplay != NULL)
     {
-#if USE_SPECTRO_SCROLL
         mSpectroDisplay->AddSpectrogramLine(magns, phases);
-#endif
     }
     else
         mSpectrogram->AddLine(magns, phases);

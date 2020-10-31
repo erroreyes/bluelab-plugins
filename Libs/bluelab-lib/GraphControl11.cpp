@@ -25,6 +25,9 @@
 
 #include "GraphControl11.h"
 
+//#define GRAPH_FONT "font"
+#define GRAPH_FONT "font-bold"
+
 // Disabled for UST + IPlug2
 // Because DrawFillCurve() took a lot of resources.
 // And we don't have the curve fill bug anymore by default!
@@ -1107,7 +1110,7 @@ GraphControl11::DrawText(NVGcontext *vg,
     nvgSave(vg);
     
     nvgFontSize(vg, fontSize*fontSizeCoeff);
-	nvgFontFace(vg, "font");
+	nvgFontFace(vg, GRAPH_FONT);
     nvgFontBlur(vg, 0);
 	nvgTextAlign(vg, halign | valign);
     
@@ -1128,7 +1131,8 @@ GraphControl11::DrawText(NVGcontext *vg,
 
 void
 GraphControl11::SetSpectrogram(BLSpectrogram3 *spectro,
-                               BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right, BL_GUI_FLOAT bottom)
+                               BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right,
+                               BL_GUI_FLOAT bottom)
 {
     // #bl-iplug2: set mVg every time, and not at the beginning
     // here, we have many chances that mVg is NULL.
@@ -1604,7 +1608,7 @@ GraphControl11::AddAxis(GraphAxis *axis, char *data[][2], int numData, int axisC
         axis->mLabelColor[i] = sLabelColor[i];
 
 #if FIX_INIT_COLORS
-	axis->mLabelOverlayColor[i] = 0;
+        axis->mLabelOverlayColor[i] = 0;
 #endif
 	
         if (axisLabelOverlayColor != NULL)
@@ -1619,7 +1623,7 @@ GraphControl11::AddAxis(GraphAxis *axis, char *data[][2], int numData, int axisC
         }
       
 #if FIX_INIT_COLORS
-	axis->mLinesOverlayColor[i] = 0;
+        axis->mLinesOverlayColor[i] = 0;
 #endif
   
         if (axisLinesOverlayColor != NULL)
@@ -3721,7 +3725,7 @@ void
 GraphControl11::InitFont(const char *fontPath)
 {
 #ifndef WIN32
-    nvgCreateFont(mVg, "font", fontPath);
+    nvgCreateFont(mVg, GRAPH_FONT, fontPath);
 
 	mFontInitialized = true;
 #else //  On windows, resources are not external files 
@@ -3751,7 +3755,7 @@ GraphControl11::InitFont(const char *fontPath)
 	int ndata = fontResourceSize;
 	memcpy(data, fontResourceData, ndata);
 
-	nvgCreateFontMem(mVg, "font", data, ndata, 1);
+	nvgCreateFontMem(mVg, GRAPH_FONT, data, ndata, 1);
 
 	mFontInitialized = true;
 #endif
@@ -3821,9 +3825,9 @@ GraphControl11::Draw(IGraphics &graphics)
     // Keep a reference, for deleting FBO
     mGraphics = &graphics;
     
-    mVg = (NVGcontext *)graphics.GetDrawContext();
+    SetVg(graphics);
     
-    // Checked: if we fall here, the graph is sur to have mIsEnabled = true!
+    // Checked: if we fall here, the graph is sure to have mIsEnabled = true!
     if (!mIsEnabled)
         return;
     
@@ -3890,7 +3894,7 @@ GraphControl11::Draw(IGraphics &graphics)
 void
 GraphControl11::DoDraw(IGraphics &graphics)
 {
-    mVg = (NVGcontext *)graphics.GetDrawContext();
+    SetVg(graphics);
     
     // Checked: if we fall here, the graph is sur to have mIsEnabled = true!
     if (!mIsEnabled)
@@ -4326,6 +4330,21 @@ GraphControl11::IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
     }
     
     return true;
+}
+
+void
+GraphControl11::SetVg(IGraphics &graphics)
+{
+    mVg = (NVGcontext *)graphics.GetDrawContext();
+    
+    if (mSpectrogramDisplay != NULL)
+        mSpectrogramDisplay->SetNvgContext(mVg);
+    if (mSpectrogramDisplayScroll != NULL)
+        mSpectrogramDisplayScroll->SetNvgContext(mVg);
+    if (mSpectrogramDisplayScroll2 != NULL)
+        mSpectrogramDisplayScroll2->SetNvgContext(mVg);
+    if (mImageDisplay != NULL)
+        mImageDisplay->SetNvgContext(mVg);
 }
 
 #endif // IGRAPHICS_NANOVG

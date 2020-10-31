@@ -7,17 +7,11 @@
 //
 
 #include <BLSpectrogram3.h>
-
-#include <BLUtils.h>
-
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <GraphControl11.h>
 #include <SpectrogramDisplay.h>
 #include <ImageDisplay.h>
-
 #include <DUETSeparator3.h>
+#include <BLUtils.h>
 
 #include "StereoDeReverbProcess.h"
 

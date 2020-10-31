@@ -14,9 +14,6 @@
 
 // Debug
 #include "GraphControl11.h"
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <KemarHrtf.h>
 #include <HRTF.h>
 

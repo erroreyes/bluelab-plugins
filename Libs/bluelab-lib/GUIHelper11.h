@@ -21,6 +21,8 @@ using namespace iplug;
 using namespace iplug::igraphics;
 
 class GraphControl11;
+class IRadioButtonsControl;
+class IGUIResizeButtonControl;
 
 // TODO
 #define VumeterControl IBKnobControl
@@ -128,16 +130,54 @@ public:
 
     void CreateDemoMessage(IGraphics *graphics);
     
+    IRadioButtonsControl *
+        CreateRadioButtons(IGraphics *graphics,
+                           float x, float y,
+                           const char *bitmapFname,
+                           int numButtons, float size, int paramIdx,
+                           bool horizontalFlag, const char *title,
+                           EAlign align = EAlign::Center,
+                           EAlign titleAlign = EAlign::Center,
+                           const char **radioLabels = NULL);
+    
+    IControl *CreateGUIResizeButton(Plugin *plug, IGraphics *graphics,
+                                    float x, float y,
+                                    const char *bitmapFname,
+                                    char *label,
+                                    int resizeWidth, int resizeHeight);
+    
     // NOTE: not sure it is still useful
     static void UpdateText(Plugin *plug, int paramIdx);
     
+    static void ResetParameter(Plugin *plug, int paramIdx);
+    
+    // GUI resize
+    static void GUIResizeParamChange(Plugin *plug, int paramNum,
+                                     int params[], IGUIResizeButtonControl *buttons[],
+                                     int guiWidth, int guiHeight,
+                                     int numParams);
+    
+    static void GUIResizePreResizeGUI(IGraphics *pGraphics,
+                                      IGUIResizeButtonControl *buttons[],
+                                      int numButtons);
+    
+    static void GUIResizeOnWindowResizePre(Plugin *plug, GraphControl11 *graph,
+                                           int graphWidthSmall, int graphHeightSmall,
+                                           int guiWidths[], int guiHeights[],
+                                           int numSizes, int *offsetX, int *offsetY);
+    
+    static void GUIResizeOnWindowResizePost(Plugin *plug, GraphControl11 *graph);
+    
+    
 protected:
     void CreateTitle(IGraphics *graphics, float x, float y,
-                     const char *title, Size size);
+                     const char *title, Size size,
+                     EAlign align = EAlign::Center);
     
     ITextControl *CreateText(IGraphics *graphics, float x, float y,
                              const char *textStr, const IText &text,
-                             float offsetX, float offsetY);
+                             float offsetX, float offsetY,
+                             EAlign align = EAlign::Center);
     
     ICaptionControl *CreateValue(IGraphics *graphics, float x, float y,
                                  int paramIdx);
@@ -146,7 +186,13 @@ protected:
                                   int paramIdx);
 
     float GetTextWidth(IGraphics *graphics, const IText &text, const char *textStr);
-
+    
+    ITextControl *CreateRadioLabelText(IGraphics *graphics,
+                                       float x, float y,
+                                       const char *textStr,
+                                       const IBitmap &bitmap,
+                                       const IText &text,
+                                       EAlign align = EAlign::Near);
     
     
     //
@@ -197,6 +243,13 @@ protected:
     float mDemoTextOffsetX;
     float mDemoTextOffsetY;
     IColor mDemoTextColor;
+    
+    float mRadioLabelTextSize;
+    float mRadioLabelTextOffsetX;
+    IColor mRadioLabelTextColor;
+    
+    float mButtonLabelTextOffsetX;
+    float mButtonLabelTextOffsetY;
 };
 
 #endif /* GUIHelper11_hpp */

@@ -10,7 +10,10 @@
 
 #include "ColorMap4.h"
 
+#include <BLTypes.h>
 #include <BLUtils.h>
+#include <BLDebug.h>
+
 #include "PPMFile.h"
 
 #include "BLSpectrogram3.h"
@@ -815,22 +818,28 @@ BLSpectrogram3::GetImageDataFloat(int width, int height, unsigned char *buf)
         
         BL_FLOAT *magnsBuf = magns.Get();
         
-        for (int i = mHeight - 1; i >= 0 ; i--)
+        // TEST: try to copy the memory in blocks to optimize
+        // doesn't work: width and height are reversed.
+        //memcpy(&buf[j*magns.GetSize()*sizeof(float)],
+        //       magns.Get(),
+        //       magns.GetSize()*sizeof(float));
+        //continue;
+        
+        //for (int i = mHeight - 1; i >= 0 ; i--)
+        for (int i = 0; i < mHeight; i++)
         {
             BL_FLOAT magnValue = magnsBuf[i];
-            
-            //if (mDisplayMagns)
-            {
-                if (magnValue > 1.0)
-                    magnValue = 1.0;
+            if (magnValue > 1.0)
+                magnValue = 1.0;
                 
-                int pixIdx = i*width + j;
-                ((float *)buf)[pixIdx] = (float)magnValue;
-            }
-#endif
+            // Fix for iPlug2
+            //int pixIdx = i*width + j;
+            int pixIdx = (mHeight - 1 - i)*width + j;
+            ((float *)buf)[pixIdx] = (float)magnValue;
         }
     }
 }
+#endif
 
 void
 BLSpectrogram3::GetColormapImageDataRGBA(WDL_TypedBuf<unsigned int> *colormapImageData)

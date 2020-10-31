@@ -12,9 +12,6 @@
 
 #include <BLUtils.h>
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <GraphControl11.h>
 #include <SpectrogramDisplay.h>
 #include <ImageDisplay.h>

@@ -8,9 +8,6 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include "StereoWidthGraphDrawer2.h"
 
 #define OFFSET_X 6.0 //2.0

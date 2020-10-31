@@ -13,11 +13,7 @@
 #include <deque>
 using namespace std;
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <GraphControl11.h>
-
 #include <Axis3D.h>
 
 #define PROFILE_RENDER 0

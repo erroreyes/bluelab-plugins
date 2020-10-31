@@ -8,9 +8,6 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include "USTLissajousGraphDrawer.h"
 
 #define MALIK_CIRCLE 1

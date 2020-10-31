@@ -8,18 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// Warning: Niko hack in NanoVg to support FBO even on GL2
-//#define NANOVG_GL2_IMPLEMENTATION
-
-//#include "nanovg_gl.h"
-//#include "nanovg_gl_utils.h"
-
-// #bl-iplug2
-//#include "nanovg.h"
-
 // For SWAP_COLOR
 #include <GraphControl11.h>
-
 #include <BLUtils.h>
 
 #include "Axis3D.h"

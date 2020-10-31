@@ -8,9 +8,6 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include "BLCircleGraphDrawer.h"
 
 #define FIX_CIRCLE_DRAWER_BOTTOM_LINE 1

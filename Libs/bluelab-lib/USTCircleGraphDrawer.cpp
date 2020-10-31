@@ -8,9 +8,6 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <BLUtils.h>
 
 #include "USTCircleGraphDrawer.h"

@@ -10,9 +10,6 @@
 
 #include <cmath>
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <USTPluginInterface.h>
 
 #include "USTUpmixGraphDrawer.h"

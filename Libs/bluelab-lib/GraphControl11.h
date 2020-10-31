@@ -38,7 +38,7 @@ using namespace std;
 
 // FBO rendering
 // Avoids blinking
-#define USE_FBO 1 //0 //1
+#define USE_FBO 1 //0
 
 #ifdef WIN32
 // Convert from RGBA to ABGR
@@ -602,6 +602,8 @@ protected:
     // No more used
     bool NeedUpdateGUI();
     
+    void SetVg(IGraphics &graphics);
+
     //
     
     // For UST

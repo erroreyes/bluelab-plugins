@@ -11,9 +11,6 @@
 #include <BLSpectrogram3.h>
 #include <BLUtils.h>
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <SpectrogramDisplay.h>
 #include <SpectrogramDisplayScroll.h>
 

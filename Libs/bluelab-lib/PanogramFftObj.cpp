@@ -10,15 +10,10 @@
 
 #include <BLSpectrogram3.h>
 #include <Window.h>
-#include <BLUtils.h>
-
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <SpectrogramDisplayScroll.h>
 #include <HistoMaskLine2.h>
-
 #include <PanogramPlayFftObj.h>
+#include <BLUtils.h>
 
 #include "PanogramFftObj.h"
 

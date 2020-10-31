@@ -7,7 +7,7 @@
 //
 
 #ifndef IBitmapControlAnim_h
-#define IBitmapControlAnim_hp
+#define IBitmapControlAnim_h
 
 #include <IControl.h>
 

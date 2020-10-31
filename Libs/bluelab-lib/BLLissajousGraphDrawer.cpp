@@ -8,9 +8,6 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include "BLLissajousGraphDrawer.h"
 
 #define TITLE_POS_X FONT_SIZE*0.5

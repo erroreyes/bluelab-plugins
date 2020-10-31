@@ -8,25 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// Opengl
-//#include <GL/glew.h>
-
-//#ifdef __APPLE__
-//#include <OpenGL/OpenGL.h>
-//#include <OpenGL/glu.h>
-//#endif
-
-// #bl-iplug2
-//#include "nanovg.h"
-
-// Warning: Niko hack in NanoVg to support FBO even on GL2
-//#define NANOVG_GL2_IMPLEMENTATION
-
-//#include "nanovg_gl.h"
-//#include "nanovg_gl_utils.h"
-//
-
-#include "ColorMap4.h"
+#include <ColorMap4.h>
 
 #include "ImageDisplay.h"
 
@@ -202,14 +184,11 @@ ImageDisplay::DoUpdateImage()
                                        w, h,
                                        nearestFlag |
 #if GLSL_COLORMAP
-                                       // #bl-iplug2
-                                       0,
-                                       //NVG_IMAGE_ONE_FLOAT_FORMAT,
+                                       NVG_IMAGE_ONE_FLOAT_FORMAT,
 #else
                                        0,
 #endif
-                                        //,
-                                        mImageData.Get());
+                                       mImageData.Get());
         
         mNeedUpdateImage = false;
         mNeedUpdateImageData = false;
@@ -232,13 +211,10 @@ ImageDisplay::DoUpdateImage()
                                            w, h,
                                            nearestFlag |
 #if GLSL_COLORMAP
-                                           // #bl-iplug2
-                                           0,
-                                           //NVG_IMAGE_ONE_FLOAT_FORMAT,
+                                           NVG_IMAGE_ONE_FLOAT_FORMAT,
 #else
                                            0,
 #endif
-                                                  
                                             mImageData.Get());
             
 			// No need since it has been better fixed in nanovg
@@ -298,8 +274,7 @@ ImageDisplay::DrawImage(int width, int height)
     
     // New: set colormap only in the Image state
 #if GLSL_COLORMAP
-    // #bl-iplug2
-    //nvgSetColormap(mVg, mNvgColormapImage);
+    nvgSetColormap(mVg, mNvgColormapImage);
 #endif
     
     //

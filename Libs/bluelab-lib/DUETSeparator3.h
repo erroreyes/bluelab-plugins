@@ -11,6 +11,8 @@
 
 #include <PeakDetector2D2.h>
 
+#include "../../WDL/fft.h"
+
 #include "IPlug_include_in_plug_hdr.h"
 
 class DUETHistogram2;

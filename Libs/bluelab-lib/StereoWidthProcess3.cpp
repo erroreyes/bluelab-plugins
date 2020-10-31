@@ -17,9 +17,8 @@
 #include "StereoWidthProcess3.h"
 
 // Debug
-#include "GraphControl11.h"
-// #bl-iplug2
-//#include "nanovg.h"
+#include <GraphControl11.h>
+
 
 #if 0
 BUG: wobble with stereoize (due to fft reconstruction, and wobbling pure frequencies)

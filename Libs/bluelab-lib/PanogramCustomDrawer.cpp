@@ -8,10 +8,6 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// #bl-iplug2
-//#include "nanovg.h"
-
-//#include <Panogram.h>
 #include <GraphControl11.h>
 
 #include "PanogramCustomDrawer.h"

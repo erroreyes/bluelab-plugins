@@ -15,9 +15,6 @@
 #include <deque>
 using namespace std;
 
-// #bl-iplug2
-//#include "nanovg.h"
-
 #include <GraphControl11.h>
 
 #define PROFILE_RENDER 0 //1

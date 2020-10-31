@@ -14,9 +14,6 @@
 // From ChromaFftObj
 //
 
-// Disable for debugging
-#define USE_SPECTRO_SCROLL 1
-
 class BLSpectrogram3;
 class SpectrogramDisplayScroll;
 
@@ -35,25 +32,18 @@ public:
     
     BLSpectrogram3 *GetSpectrogram();
     
-#if USE_SPECTRO_SCROLL
     void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
-#else
-    void SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay);
-#endif
     
     void SetSpeedMod(int speedMod);
     
 protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
-    
+
+    //
     BLSpectrogram3 *mSpectrogram;
     
-#if USE_SPECTRO_SCROLL
     SpectrogramDisplayScroll *mSpectroDisplay;
-#else
-    SpectrogramDisplay *mSpectroDisplay;
-#endif
     
     long mLineCount;
     
