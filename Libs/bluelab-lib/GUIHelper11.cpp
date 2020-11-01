@@ -835,7 +835,7 @@ GUIHelper11::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *gr
                                    const char *bitmapFname,
                                    int paramIdx,
                                    char *label,
-                                   int resizeWidth, int resizeHeight)
+                                   int guiSizeIdx)
 {
     int bmpFrames = 3;
     
@@ -850,8 +850,7 @@ GUIHelper11::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *gr
     // With rollover
     IControl *control =
         new IGUIResizeButtonControl(plug, x, y, bitmap,
-                                    paramIdx,
-                                    resizeWidth, resizeHeight);
+                                    paramIdx, guiSizeIdx);
     
     graphics->AttachControl(control);
     

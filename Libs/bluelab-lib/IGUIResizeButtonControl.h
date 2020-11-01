@@ -30,14 +30,13 @@ public:
                             float x, float y,
                             const IBitmap &bitmap,
                             int paramIdx,
-                            int resizeWidth, int resizeHeight,
+                            int guiSizeIdx,
                             EBlend blend = EBlend::Default)
     : IRolloverButtonControl(x, y, bitmap, paramIdx, false, blend)
     {
         mPlug = plug;
         
-        mResizeWidth = resizeWidth;
-        mResizeHeight = resizeHeight;
+        mGuiSizeIdx = guiSizeIdx;
         
         mIsMouseClicking = false;
     }
@@ -45,14 +44,13 @@ public:
     IGUIResizeButtonControl(ResizeGUIPluginInterface *plug,
                             float x, float y,
                             const IBitmap &bitmap,
-                            int resizeWidth, int resizeHeight,
+                            int guiSizeIdx,
                             EBlend blend = EBlend::Default)
     : IRolloverButtonControl(x, y, bitmap, kNoParameter, false, blend)
     {
         mPlug = plug;
         
-        mResizeWidth = resizeWidth;
-        mResizeHeight = resizeHeight;
+        mGuiSizeIdx = guiSizeIdx;
     }
     
     virtual ~IGUIResizeButtonControl() {}
@@ -72,8 +70,7 @@ public:
 protected:
     ResizeGUIPluginInterface *mPlug;
     
-    int mResizeWidth;
-    int mResizeHeight;
+    int mGuiSizeIdx;
     
     bool mIsMouseClicking;
 };

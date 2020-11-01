@@ -147,7 +147,7 @@ public:
                                     const char *bitmapFname,
                                     int paramIdx,
                                     char *label,
-                                    int resizeWidth, int resizeHeight);
+                                    int guiSizeIdx);
     
     static void ResetParameter(Plugin *plug, int paramIdx);
     
