@@ -155,10 +155,14 @@ public:
     static void ResetParameter(Plugin *plug, int paramIdx);
     
     // GUI resize
-    static void GUIResizeParamChange(Plugin *plug, int paramNum,
+    static void GUIResizeParamChange(ResizeGUIPluginInterface *plug,
+                                     int paramNum,
                                      int params[], IGUIResizeButtonControl *buttons[],
-                                     int guiWidth, int guiHeight,
-                                     int numParams);
+                                     int newGUIWidth,
+                                     int newGUIHeight,
+                                     int guiWidth,
+                                     int guiHeight,
+                                     int numSizes);
     
     static void GUIResizePreResizeGUI(IGraphics *pGraphics,
                                       IGUIResizeButtonControl *buttons[],

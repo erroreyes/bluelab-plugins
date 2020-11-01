@@ -731,10 +731,12 @@ GUIHelper11::ResetParameter(Plugin *plug, int paramIdx)
 }
 
 void
-GUIHelper11::GUIResizeParamChange(Plugin *plug, int paramNum,
+GUIHelper11::GUIResizeParamChange(ResizeGUIPluginInterface *plug,
+                                  int paramNum,
                                   int params[], IGUIResizeButtonControl *buttons[],
                                   int guiWidth, int guiHeight,
-                                  int numParams)
+                                  int newGUIWidth, int newGUIHeight,
+                                  int numSizes)
 {
     // For fix Ableton Windows resize GUI
     bool winPlatform = false;
@@ -747,7 +749,7 @@ GUIHelper11::GUIResizeParamChange(Plugin *plug, int paramNum,
     fixAbletonWin = true;
 #endif
     
-    int val = plug->GetParam(params[paramNum])->Int();
+    int val = plug->GetPlug()->GetParam(params[paramNum])->Int();
     if (val == 1)
     {
         // Reset the two other buttons
@@ -755,18 +757,19 @@ GUIHelper11::GUIResizeParamChange(Plugin *plug, int paramNum,
         // For the moment, keep the only case of Ableton Windows
         // (because we already have tested all plugs on Mac,
         // and half of the hosts on Windows)
-        if (!winPlatform || !fixAbletonWin || (plug->GetHost() != kHostAbletonLive))
+        if (!winPlatform || !fixAbletonWin ||
+            (plug->GetPlug()->GetHost() != kHostAbletonLive))
         {
-            for (int i = 0; i < numParams; i++)
+            for (int i = 0; i < numSizes; i++)
             {
                 if (i != paramNum)
-                    GUIHelper11::ResetParameter(plug, params[i]);
+                    GUIHelper11::ResetParameter(plug->GetPlug(), params[i]);
             }
         }
         else
             // Ableton Windows + fix enabled
         {
-            for (int i = 0; i < numParams; i++)
+            for (int i = 0; i < numSizes; i++)
             {
                 if (i != paramNum)
                     buttons[i]->SetValueFromUserInput(0.0);
@@ -780,18 +783,28 @@ GUIHelper11::GUIResizeParamChange(Plugin *plug, int paramNum,
         {
             // If size will not change, OnWindowResize() won't be called,
             // then we need to avoid detaching graph in PreResizeGUI()
-            IGraphics *pGraphics = plug->GetUI();
-            int width = pGraphics->Width();
-            int height = pGraphics->Height();
+            //IGraphics *pGraphics = plug->GetUI();
+            //int width = pGraphics->Width();
+            //int height = pGraphics->Height();
             
-#if 0 // #bluelab: todo re-enable it!
-            bool needDetachGraph = ((width != guiWidth) || (height != guiHeight));
+            //
+            //bool needDetachGraph =
+            //            ((newGUIWidth != guiWidth) || (newGUIHeight != guiHeight));
             
-            plug->GUIResizeSetNeedDetachGraph(needDetachGraph);
+            //plug->GUIResizeSetNeedDetachGraph(needDetachGraph);
+            //plug->ResizeGUI(guiWidth, guiHeight);
+            //plug->GUIResizeSetNeedDetachGraph(true);
+
+#if 0
+            plug->PreResizeGUI(newGUIWidth, newGUIHeight);
             
-            plug->ResizeGUI(guiWidth, guiHeight);
-            
-            plug->GUIResizeSetNeedDetachGraph(true);
+            bool needsPlatformResize = true;
+            if (plug->GetPlug()->GetUI() != NULL)
+                plug->GetPlug()->GetUI()->Resize(newGUIWidth,
+                                                 newGUIHeight,
+                                                 1.0f,
+                                                 needsPlatformResize);
+            plug->PostResizeGUI();
 #endif
         }
     }
