@@ -151,26 +151,6 @@ public:
     
     static void ResetParameter(Plugin *plug, int paramIdx);
     
-    // GUI resize
-    static void GUIResizeParamChange(ResizeGUIPluginInterface *plug,
-                                     int paramNum,
-                                     int params[], IGUIResizeButtonControl *buttons[],
-                                     int numParams);
-    
-    static void GUIResizePreResizeGUI(IGraphics *pGraphics,
-                                      IGUIResizeButtonControl *buttons[],
-                                      int numButtons);
-    
-    static void GUIResizeComputeOffsets(int defaultGUIWidth, int defaultGUIHeight,
-                                        int newGUIWidth, int newGUIHeight,
-                                        int *offsetX, int *offsetY);
-    
-    static void GUIResizePostResizeGUI(Plugin *plug,
-                                       GraphControl11 *graph,
-                                       int graphWidthSmall,
-                                       int graphHeightSmall,
-                                       int offsetX, int offsetY);
-    
     // Refresh all the controls, from their values
     static void RefreshAllParameters(Plugin *plug, int numParams);
     
