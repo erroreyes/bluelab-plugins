@@ -29,12 +29,10 @@ IGUIResizeButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
     {
         mPlug->PreResizeGUI(mResizeWidth, mResizeHeight);
         
-        bool needsPlatformResize = true;
         if (mPlug->GetPlug()->GetUI() != NULL)
             mPlug->GetPlug()->GetUI()->Resize(mResizeWidth,
                                               mResizeHeight,
-                                              1.0f,
-                                              needsPlatformResize);
+                                              1.0f, true);
         mPlug->PostResizeGUI();
     }
     
