@@ -149,32 +149,21 @@ public:
                                     char *label,
                                     int resizeWidth, int resizeHeight);
     
-    // NOTE: not sure it is still useful
-    static void UpdateText(Plugin *plug, int paramIdx);
-    
     static void ResetParameter(Plugin *plug, int paramIdx);
     
     // GUI resize
     static void GUIResizeParamChange(ResizeGUIPluginInterface *plug,
                                      int paramNum,
                                      int params[], IGUIResizeButtonControl *buttons[],
-                                     int newGUIWidth,
-                                     int newGUIHeight,
-                                     int guiWidth,
-                                     int guiHeight,
-                                     int numSizes);
+                                     int numParams);
     
     static void GUIResizePreResizeGUI(IGraphics *pGraphics,
                                       IGUIResizeButtonControl *buttons[],
                                       int numButtons);
     
-    static void GUIResizeComputeOffsets(int newGUIWidth,
-                                        int newGUIHeight,
-                                        int guiWidths[],
-                                        int guiHeights[],
-                                        int numSizes,
-                                        int *offsetX,
-                                        int *offsetY);
+    static void GUIResizeComputeOffsets(int defaultGUIWidth, int defaultGUIHeight,
+                                        int newGUIWidth, int newGUIHeight,
+                                        int *offsetX, int *offsetY);
     
     static void GUIResizePostResizeGUI(Plugin *plug,
                                        GraphControl11 *graph,

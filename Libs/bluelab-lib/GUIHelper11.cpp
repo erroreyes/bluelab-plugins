@@ -710,22 +710,12 @@ GUIHelper11::CreateRadioButtons(IGraphics *graphics,
     return control;
 }
 
-
-void
-GUIHelper11::UpdateText(Plugin *plug, int paramIdx)
-{
-    // bl-iplug2: makes infinite loop with OnParamChange()
-    //double normValue = plug->GetParam(paramIdx)->Value();
-    //plug->SetParameterValue(paramIdx, normValue);
-}
-
 void
 GUIHelper11::ResetParameter(Plugin *plug, int paramIdx)
 {
     if (plug->GetUI())
     {
         plug->GetParam(paramIdx)->SetToDefault();
-        
         plug->SendParameterValueFromAPI(paramIdx, plug->GetParam(paramIdx)->Value(), false);
     }
 }
@@ -734,9 +724,7 @@ void
 GUIHelper11::GUIResizeParamChange(ResizeGUIPluginInterface *plug,
                                   int paramNum,
                                   int params[], IGUIResizeButtonControl *buttons[],
-                                  int guiWidth, int guiHeight,
-                                  int newGUIWidth, int newGUIHeight,
-                                  int numSizes)
+                                  int numParams)
 {
     // For fix Ableton Windows resize GUI
     bool winPlatform = false;
@@ -760,7 +748,7 @@ GUIHelper11::GUIResizeParamChange(ResizeGUIPluginInterface *plug,
         if (!winPlatform || !fixAbletonWin ||
             (plug->GetPlug()->GetHost() != kHostAbletonLive))
         {
-            for (int i = 0; i < numSizes; i++)
+            for (int i = 0; i < numParams; i++)
             {
                 if (i != paramNum)
                     GUIHelper11::ResetParameter(plug->GetPlug(), params[i]);
@@ -769,43 +757,11 @@ GUIHelper11::GUIResizeParamChange(ResizeGUIPluginInterface *plug,
         else
             // Ableton Windows + fix enabled
         {
-            for (int i = 0; i < numSizes; i++)
+            for (int i = 0; i < numParams; i++)
             {
                 if (i != paramNum)
                     buttons[i]->SetValueFromUserInput(0.0);
             }
-        }
-        
-        // When initializing the plugin, the previous size was not set correctly
-        // But without the following test, clicking on a size button made an infinite loop
-        if ((buttons[paramNum] != NULL) &&
-            (!buttons[paramNum]->IsMouseClicking()))
-        {
-            // If size will not change, OnWindowResize() won't be called,
-            // then we need to avoid detaching graph in PreResizeGUI()
-            //IGraphics *pGraphics = plug->GetUI();
-            //int width = pGraphics->Width();
-            //int height = pGraphics->Height();
-            
-            //
-            //bool needDetachGraph =
-            //            ((newGUIWidth != guiWidth) || (newGUIHeight != guiHeight));
-            
-            //plug->GUIResizeSetNeedDetachGraph(needDetachGraph);
-            //plug->ResizeGUI(guiWidth, guiHeight);
-            //plug->GUIResizeSetNeedDetachGraph(true);
-
-#if 0
-            plug->PreResizeGUI(newGUIWidth, newGUIHeight);
-            
-            bool needsPlatformResize = true;
-            if (plug->GetPlug()->GetUI() != NULL)
-                plug->GetPlug()->GetUI()->Resize(newGUIWidth,
-                                                 newGUIHeight,
-                                                 1.0f,
-                                                 needsPlatformResize);
-            plug->PostResizeGUI();
-#endif
         }
     }
 }
@@ -845,39 +801,12 @@ GUIHelper11::GUIResizePreResizeGUI(IGraphics *pGraphics,
 }
 
 void
-GUIHelper11::GUIResizeComputeOffsets(int newGUIWidth,
-                                     int newGUIHeight,
-                                     int guiWidths[],
-                                     int guiHeights[],
-                                     int numSizes,
-                                     int *offsetX,
-                                     int *offsetY)
+GUIHelper11::GUIResizeComputeOffsets(int defaultGUIWidth, int defaultGUIHeight,
+                                     int newGUIWidth, int newGUIHeight,
+                                     int *offsetX, int *offsetY)
 {
-    if (numSizes == 0)
-        return;
-    
-    // Other controls
-    *offsetX = 0;
-    for (int i = 0; i < numSizes; i++)
-    {
-        if (newGUIWidth == guiWidths[i])
-        {
-            *offsetX = guiWidths[i] - guiWidths[0];
-            
-            break;
-        }
-    }
-    
-    *offsetY = 0;
-    for (int i = 0; i < numSizes; i++)
-    {
-        if (newGUIHeight == guiHeights[i])
-        {
-            *offsetY = guiHeights[i] - guiHeights[0];
-            
-            break;
-        }
-    }
+    *offsetX = newGUIWidth - defaultGUIWidth;
+    *offsetY = newGUIHeight - defaultGUIHeight;
 }
 
 void
