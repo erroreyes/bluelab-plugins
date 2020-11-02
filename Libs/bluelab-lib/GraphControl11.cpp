@@ -23,6 +23,8 @@
 #include <ImageDisplay.h>
 #include <UpTime.h>
 
+#include <GraphTimeAxis4.h>
+
 #include "GraphControl11.h"
 
 //#define GRAPH_FONT "font"
@@ -170,6 +172,8 @@ GraphControl11::GraphControl11(Plugin *pPlug, IGraphics *graphics,
 #if PROFILE_GRAPH
     mDebugCount = 0;
 #endif
+    
+    mGraphTimeAxis = NULL;
 }
 
 GraphControl11::~GraphControl11()
@@ -1633,6 +1637,12 @@ ImageDisplay *
 GraphControl11::GetImageDisplay()
 {
     return mImageDisplay;
+}
+
+void
+GraphControl11::SetGraphYimeAxis(GraphTimeAxis4 *timeAxis)
+{
+    mGraphTimeAxis = timeAxis;
 }
 
 void
@@ -4235,6 +4245,10 @@ GraphControl11::DoDraw(IGraphics &graphics)
     
     if (mSpectrogramDisplayScroll2 != NULL)
         mSpectrogramDisplayScroll2->DrawSpectrogram(width, height);
+    
+    // Update the time axis, so we are very accurate at each Draw() call
+    if (mGraphTimeAxis != NULL)
+        mGraphTimeAxis->Update();
     
     DrawAxis(true);
     

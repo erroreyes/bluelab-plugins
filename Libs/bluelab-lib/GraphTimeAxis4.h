@@ -38,12 +38,17 @@ public:
     void Reset(int bufferSize, BL_FLOAT timeDuration,
                BL_FLOAT spacingSeconds);
     
-    void Update(BL_FLOAT currentTime);
+    void UpdateFromTransport(BL_FLOAT currentTime);
+    void Update();
+    void SetTransportPlaying(bool flag);
     
     static BL_FLOAT ComputeTimeDuration(int numBuffers, int bufferSize,
                                         int oversampling, BL_FLOAT sampleRate);
     
 protected:
+    void Update(BL_FLOAT currentTime);
+    
+    //
     GraphControl11 *mGraph;
     
     int mBufferSize;
@@ -54,6 +59,11 @@ protected:
     BL_FLOAT mSpacingSeconds;
     
     BL_FLOAT mCurrentTime;
+    
+    //
+    bool mTransportIsPlaying;
+    BL_FLOAT mCurrentTimeTransport;
+    BL_FLOAT mStartTimeTransport;
 };
 
 #endif // IGRAPHICS_NANOVG

@@ -77,6 +77,9 @@ public:
     int GetSpeedMod();
 #endif
     
+    // We scale up a bit, to hide the borders
+    BL_FLOAT GetScaleRatio();
+    
 protected:
     void AddSpectrogramLines(BL_FLOAT numLines);
     

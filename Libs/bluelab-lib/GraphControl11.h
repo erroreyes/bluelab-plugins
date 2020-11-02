@@ -109,6 +109,7 @@ class BLSpectrogram3;
 class SpectrogramDisplay;
 class SpectrogramDisplayScroll;
 class SpectrogramDisplayScroll2; // A bit drafty... (for InfrasonicViewer)
+class GraphTimeAxis4;
 
 // Added this test to avoid redraw everything each time
 // NOTE: added for StereoWidth
@@ -457,6 +458,8 @@ public:
                             ImageDisplay::Mode mode = ImageDisplay::MODE_LINEAR);
     ImageDisplay *GetImageDisplay();
     
+    void SetGraphYimeAxis(GraphTimeAxis4 *timeAxis);
+    
     void SetDataChanged();
     
     //
@@ -676,6 +679,8 @@ protected:
     
     // ImageDisplay
     ImageDisplay *mImageDisplay;
+    
+    GraphTimeAxis4 *mGraphTimeAxis;
     
 private:    
 	bool mFontInitialized;

@@ -9,6 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <GraphControl11.h>
+#include <BLUtils.h>
 
 #include "GraphTimeAxis4.h"
 
@@ -34,6 +35,10 @@ GraphTimeAxis4::GraphTimeAxis4()
     mGraph = NULL;
     
     mCurrentTime = 0.0;
+    
+    mTransportIsPlaying = false;
+    mCurrentTimeTransport = 0.0;
+    mStartTimeTransport = 0.0;
 }
 
 GraphTimeAxis4::~GraphTimeAxis4() {}
@@ -89,6 +94,34 @@ GraphTimeAxis4::Reset(int bufferSize, BL_FLOAT timeDuration,
     // Reset the labels
     Update(mCurrentTime);
 #endif
+}
+
+void
+GraphTimeAxis4::UpdateFromTransport(BL_FLOAT currentTime)
+{
+    mCurrentTimeTransport = currentTime;
+    
+    mStartTimeTransport = ((BL_FLOAT)BLUtils::GetTimeMillis())*0.001;
+    
+    Update(mCurrentTimeTransport);
+}
+
+void
+GraphTimeAxis4::Update()
+{
+    if (!mTransportIsPlaying)
+        return;
+    
+    BL_FLOAT now = ((BL_FLOAT)BLUtils::GetTimeMillis())*0.001;
+    BL_FLOAT elapsed = now - mStartTimeTransport;
+    
+    Update(mCurrentTime + elapsed);
+}
+
+void
+GraphTimeAxis4::SetTransportPlaying(bool flag)
+{
+    mTransportIsPlaying = flag;
 }
 
 void

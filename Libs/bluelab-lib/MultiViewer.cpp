@@ -119,7 +119,7 @@ MultiViewer::SetTime(BL_FLOAT durationSeconds, BL_FLOAT timeOrigin)
     int bufferSize = mSamplesToSpectro->GetBufferSize();
     
     mTimeAxis->Reset(bufferSize, durationSeconds, durationSeconds/10.0);
-    mTimeAxis->Update(timeOrigin);
+    mTimeAxis->UpdateFromTransport(timeOrigin);
 }
 
 void

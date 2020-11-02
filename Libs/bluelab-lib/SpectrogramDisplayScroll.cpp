@@ -37,8 +37,7 @@
 #define FIX_SPECTROGRAM_JITTER 0
 
 
-SpectrogramDisplayScroll::SpectrogramDisplayScroll(Plugin *plug,
-                                                   NVGcontext *vg)
+SpectrogramDisplayScroll::SpectrogramDisplayScroll(Plugin *plug, NVGcontext *vg)
 {
     mPlug = plug;
     
@@ -469,6 +468,14 @@ SpectrogramDisplayScroll::GetSpeedMod()
 }
 #endif
 
+BL_FLOAT
+SpectrogramDisplayScroll::GetScaleRatio()
+{
+    int maxCols = mSpectrogram->GetMaxNumCols();
+    BL_FLOAT ratio = ((BL_FLOAT)(maxCols - MARGIN_COEFF))/maxCols;
+    
+    return ratio;
+}
 
 void
 SpectrogramDisplayScroll::AddSpectrogramLines(BL_FLOAT numLines)
