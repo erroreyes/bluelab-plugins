@@ -38,7 +38,7 @@ GraphTimeAxis4::GraphTimeAxis4()
     
     mTransportIsPlaying = false;
     mCurrentTimeTransport = 0.0;
-    mStartTimeTransport = 0.0;
+    mTransporttimeStamp = 0.0;
 }
 
 GraphTimeAxis4::~GraphTimeAxis4() {}
@@ -101,7 +101,7 @@ GraphTimeAxis4::UpdateFromTransport(BL_FLOAT currentTime)
 {
     mCurrentTimeTransport = currentTime;
     
-    mStartTimeTransport = ((BL_FLOAT)BLUtils::GetTimeMillis())*0.001;
+    mTransporttimeStamp = ((BL_FLOAT)BLUtils::GetTimeMillis())*0.001;
     
     Update(mCurrentTimeTransport);
 }
@@ -113,7 +113,7 @@ GraphTimeAxis4::Update()
         return;
     
     BL_FLOAT now = ((BL_FLOAT)BLUtils::GetTimeMillis())*0.001;
-    BL_FLOAT elapsed = now - mStartTimeTransport;
+    BL_FLOAT elapsed = now - mTransporttimeStamp;
     
     Update(mCurrentTime + elapsed);
 }
@@ -167,26 +167,6 @@ GraphTimeAxis4::Update(BL_FLOAT currentTime)
     
     for (int i = 0; i < MAX_NUM_LABELS; i++)
     {
-#if 0 // Bad if we want to display e.g 0.5s
-        // Check the "units"
-        if ((i > 0) && (i < mNumLabels - 1))
-            // Middle values
-        {
-            if (duration >= 1000.0)
-            {
-                tm = ((int)(tm/1000.0))*1000.0;
-            }
-            else if (duration >= 100.0)
-            {
-                tm = ((int)(tm/100.0))*100.0;
-            }
-            else if (duration >= 10.0)
-            {
-                tm = ((int)(tm/10.0))*10.0;
-            }
-        }
-#endif
-        
         // Parameter
         BL_FLOAT t = (tm - startTime)/duration;
         
@@ -216,49 +196,7 @@ GraphTimeAxis4::Update(BL_FLOAT currentTime)
             // Default
             sprintf(hAxisData[i][1], "0s");
             
-#if 0 // Prev formatting
-            if ((seconds != 0) && (millis != 0))
-                sprintf(hAxisData[i][1], "%ds %dms", seconds, millis);
-            else
-                if ((seconds == 0) && (millis != 0))
-                    sprintf(hAxisData[i][1], "%dms", millis);
-                else
-                    if ((seconds != 0) && (millis == 0))
-                        sprintf(hAxisData[i][1], "%ds", seconds);
-#endif
-            
-#if 0 // New formatting: s/ms
-            if ((seconds != 0) && (millis != 0))
-                sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/100);
-            else
-                if ((seconds == 0) && (millis != 0))
-                    sprintf(hAxisData[i][1], "%dms", millis);
-                else
-                    if ((seconds != 0) && (millis == 0))
-                        sprintf(hAxisData[i][1], "%ds", seconds);
-#endif
-            
-#if 0 // New formatting2: manage minutes and hours, formating like hh:mm:ss.ms
-            if (hours != 0)
-            {
-                sprintf(hAxisData[i][1], "%d:%d:%d.%d", hours, minutes, seconds, millis/100);
-            }
-            else if (minutes != 0)
-            {
-                sprintf(hAxisData[i][1], "%d:%d.%d", minutes, seconds, millis/100);
-            }
-            else if (seconds != 0)
-            {
-                sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/100);
-            }
-            else if (millis != 0)
-            {
-                sprintf(hAxisData[i][1], "%dms", millis/100);
-            }
-#endif
-            
-#if 1 // New formatting3: manage minutes and hours, formating like hh:mm:ss.ms
-            //if ((hours != 0) && (minutes != 0) && (seconds != 0) && (millis != 0))
+            // New formatting3: manage minutes and hours, formating like hh:mm:ss.ms
             if (hours != 0)
             {
                 sprintf(hAxisData[i][1], "%d:%02d:%d.%d", hours, minutes, seconds, millis/100);
@@ -281,8 +219,6 @@ GraphTimeAxis4::Update(BL_FLOAT currentTime)
                 
                 sprintf(hAxisData[i][1], "%dms", millis);
             }
-#endif
-            
 #endif
         }
         

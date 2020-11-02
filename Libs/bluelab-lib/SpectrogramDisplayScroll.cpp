@@ -58,7 +58,7 @@ SpectrogramDisplayScroll::SpectrogramDisplayScroll(Plugin *plug, NVGcontext *vg)
     
     mBufferSize = 2048;
     mSampleRate = 44100.0;
-    mOverlapping = 0; // NEW 20191006
+    mOverlapping = 0;
     
     mPrevSpectroLineNum = 0;
     
@@ -280,7 +280,8 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
         {
             mColormapImageData = colorMapData;
         
-            nvgUpdateImage(mVg, mNvgColormapImage, (unsigned char *)mColormapImageData.Get());
+            nvgUpdateImage(mVg, mNvgColormapImage,
+                           (unsigned char *)mColormapImageData.Get());
         }
     }
     
@@ -312,8 +313,6 @@ SpectrogramDisplayScroll::DrawSpectrogram(int width, int height)
     //
     
     // Display the rightmost par in case of zoom
-    //NVGpaint imgPaint = nvgImagePattern(mVg, 0.0, 0.0, width, height,
-    //                                    0.0, mNvgSpectroImage, mSpectrogramAlpha);
     BL_FLOAT alpha = 1.0;
     NVGpaint imgPaint = nvgImagePattern(mVg,
                                         mSpectrogramBounds[0]*width + scrollOffsetPixels,
@@ -377,7 +376,7 @@ SpectrogramDisplayScroll::SetSpectrogram(BLSpectrogram3 *spectro,
     mPrevSpectroLineNum = mSpectrogram->GetTotalLineNum();
     // Must set a value at the beginning
     // (otherwise scrolling will be very slow with overlapping 4)
-    mAddLineRemainder = mOverlapping;//4; // 16; //4;//37;
+    mAddLineRemainder = mOverlapping;
 }
 
 void

@@ -62,7 +62,7 @@ SpectrogramDisplayScroll2::SpectrogramDisplayScroll2(Plugin *plug,
     
     mBufferSize = 2048;
     mSampleRate = 44100.0;
-    mOverlapping = 0; // NEW 20191006
+    mOverlapping = 0;
     
     mPrevSpectroLineNum = 0;
     
@@ -312,8 +312,6 @@ SpectrogramDisplayScroll2::DrawSpectrogram(int width, int height)
     //
     
     // Display the rightmost par in case of zoom
-    //NVGpaint imgPaint = nvgImagePattern(mVg, 0.0, 0.0, width, height,
-    //                                    0.0, mNvgSpectroImage, mSpectrogramAlpha);
     BL_FLOAT alpha = 1.0;
     NVGpaint imgPaint = nvgImagePattern(mVg,
                                         mSpectrogramBounds[0]*width + scrollOffsetPixels,
@@ -497,8 +495,6 @@ SpectrogramDisplayScroll2::ComputeScrollOffsetPixels(int width)
     
     // PROBLEM with Logic (Good with Reaper)
     // IsPlaying() should be called from the audio thread, which is not the case here
-    //bool isPlaying = mPlug->IsPlaying();
-    
     bool isPlaying = mIsPlaying;
     if (!isPlaying)
     {
@@ -559,35 +555,10 @@ SpectrogramDisplayScroll2::ComputeScrollOffsetPixels(int width)
     
     BL_FLOAT lineNumPixels = 0.0;
     
-#if 1 // ORIGIN
-      // GOOD with MARGIN_COEFF at 1 !
-      // Small drift
+    // GOOD with MARGIN_COEFF at 1 !
+    // Small drift
     if (numCols > 0)
         lineNumPixels = ((BL_FLOAT)width)/numCols;
-#endif
-    
-#if 0 // TEST 1
-      // GOOD with MARGIN_COEFF at 1 !
-      // Small drift
-    
-    // Remember: the spectrogram has bees stretched a bin on x
-    // to avoid seeing black borders !
-    if (numCols > MARGIN_COEFF)
-        lineNumPixels = ((BL_FLOAT)width)/(numCols - MARGIN_COEFF);
-#endif
-    
-#if 0 //1 // TEST 2
-      // GOOD with MARGIN_COEFF at 1 !
-      // Small drift
-    
-    if (numCols > 0)
-    {
-        // Remember: the spectrogram has bees stretched a bin on x
-        // to avoid seeing black borders !
-        BL_FLOAT normWidth = mSpectrogramBounds[2] - mSpectrogramBounds[0];
-        lineNumPixels = (width*normWidth)/numCols;
-    }
-#endif
     
     BL_FLOAT offsetPixels = mLinesOffset*lineNumPixels;
     

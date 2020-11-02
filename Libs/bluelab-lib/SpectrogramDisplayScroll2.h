@@ -45,7 +45,6 @@ public:
     virtual ~SpectrogramDisplayScroll2();
     
     void SetNvgContext(NVGcontext *vg);    
-    // Added during GHOST_OPTIM_GL
     void ResetGL();
     
     void Reset();
