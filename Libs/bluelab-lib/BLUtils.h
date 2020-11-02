@@ -83,6 +83,7 @@ __COLOR__[3] = ((float)__A__)/255.0;
 
 #define BL_EPS 1e-15
 
+#define Y_LOG_SCALE_FACTOR 3.5
 
 inline double
 bl_round(double x)

@@ -526,7 +526,8 @@ GraphControl11::ReplaceHAxis(char *data[][2], int numData)
     
     for (int i = 0; i < 4; i++)
         mHAxis->mLinesOverlayColor[i] = linesOverlayColor[i];
-
+#endif
+    
     //
     mHAxis->mFontSizeCoeff = fontSizeCoeff;
  
@@ -542,8 +543,8 @@ GraphControl11::ReplaceHAxis(char *data[][2], int numData)
 
     mHAxis->mAlignTextRight = alignTextRight;
     mHAxis->mAlignRight = alignRight;
-#endif
-    
+
+    //
     mDirty = true;
     mDataChanged = true;
 }
@@ -612,13 +613,110 @@ GraphControl11::RemoveVAxis()
 }
 
 void
+GraphControl11::ReplaceVAxis(char *data[][2], int numData)
+{
+    WDL_MutexLock lock(&mMutex);
+    
+    // Initialize the colors !
+    int axisColor[4] = { 0, 0, 0, 0 };
+    int axisLabelColor[4] = { 0, 0, 0, 0 };
+    
+    BL_GUI_FLOAT offset = 0.0;
+    BL_GUI_FLOAT offsetX = 0.0;
+    
+    BL_GUI_FLOAT offsetY = 0.0;
+    
+    bool overlay = false;
+    bool linesOverlay = false;
+    
+    int labelOverlayColor[4] = { 0, 0, 0, 0 };
+    int linesOverlayColor[4] = { 0, 0, 0, 0 };
+    
+    bool xDbScale = false;
+    
+    bool alignTextRight;
+    bool alignRight;
+
+    //
+    BL_GUI_FLOAT fontSizeCoeff = mVAxis->mFontSizeCoeff;
+    
+    if (mVAxis != NULL)
+    {
+        for (int i = 0; i < 4; i++)
+            axisColor[i] = mVAxis->mColor[i];
+        
+        for (int i = 0; i < 4; i++)
+            axisLabelColor[i] = mVAxis->mLabelColor[i];
+        
+        offset = mVAxis->mOffset;
+        offsetX = mVAxis->mOffsetX;
+        
+        offsetY = mVAxis->mOffsetY;
+        
+        overlay = mVAxis->mOverlay;
+        linesOverlay = mVAxis->mLinesOverlay;
+        
+        for (int i = 0; i < 4; i++)
+            labelOverlayColor[i] = mVAxis->mLabelOverlayColor[i];
+        
+        for (int i = 0; i < 4; i++)
+            linesOverlayColor[i] = mVAxis->mLinesOverlayColor[i];
+        
+        xDbScale = mVAxis->mXdBScale;
+        
+        alignTextRight = mVAxis->mAlignTextRight;
+        alignRight = mVAxis->mAlignRight;
+        
+        delete mVAxis;
+    }
+    
+    AddVAxis(data, numData, axisColor, axisLabelColor,
+             offset, offsetX, labelOverlayColor);
+    
+    // Set correclty the saved colors
+    // (Because AddHAxis() swaps the colors, and set them to the members.
+    // So with the previous code, the colors are swapped twice).
+    for (int i = 0; i < 4; i++)
+        mVAxis->mColor[i] = axisColor[i];
+    
+    for (int i = 0; i < 4; i++)
+        mVAxis->mLabelColor[i] = axisLabelColor[i];
+    
+    for (int i = 0; i < 4; i++)
+        mVAxis->mLabelOverlayColor[i] = labelOverlayColor[i];
+    
+    for (int i = 0; i < 4; i++)
+        mVAxis->mLinesOverlayColor[i] = linesOverlayColor[i];
+    
+    //
+    mVAxis->mFontSizeCoeff = fontSizeCoeff;
+    
+    mVAxis->mOffset = offset;
+    mVAxis->mOffsetX = offsetX;
+    
+    mVAxis->mOffsetY = offsetY;
+    
+    mVAxis->mOverlay = overlay;
+    mVAxis->mLinesOverlay = linesOverlay;
+    
+    mVAxis->mXdBScale = xDbScale;
+    
+    mVAxis->mAlignTextRight = alignTextRight;
+    mVAxis->mAlignRight = alignRight;
+    
+    //
+    mDirty = true;
+    mDataChanged = true;
+}
+
+void
 GraphControl11::AddVAxis(char *data[][2], int numData,
                          int axisColor[4], int axisLabelColor[4],
                         bool dbFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                         BL_GUI_FLOAT offset, int axisOverlayColor[4],
                         BL_GUI_FLOAT fontSizeCoeff, bool alignTextRight,
                         int axisLinesOverlayColor[4],
-                         bool alignRight)
+                        bool alignRight)
 {
     WDL_MutexLock lock(&mMutex);
     
@@ -646,7 +744,8 @@ void
 GraphControl11::AddVAxis(char *data[][2], int numData,
                          int axisColor[4], int axisLabelColor[4],
                          bool dbFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
-                         BL_GUI_FLOAT offset, BL_GUI_FLOAT offsetX, int axisOverlayColor[4],
+                         BL_GUI_FLOAT offset, BL_GUI_FLOAT offsetX,
+                         int axisOverlayColor[4],
                          BL_GUI_FLOAT fontSizeCoeff, bool alignTextRight,
                          int axisLinesOverlayColor[4],
                          bool alignRight)

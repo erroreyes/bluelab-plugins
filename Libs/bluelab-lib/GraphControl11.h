@@ -215,7 +215,6 @@ public:
                    int axisLinesOverlayColor[4] = NULL);
     
     void ReplaceHAxis(char *data[][2], int numData);
-    
     void RemoveHAxis();
     
     void AddVAxis(char *data[][2], int numData,
@@ -248,6 +247,7 @@ public:
                   bool alignRight = true);
 
     void RemoveVAxis();
+    void ReplaceVAxis(char *data[][2], int numData);
     
     void SetXScale(bool dBFlag, BL_GUI_FLOAT minX = 0.0, BL_GUI_FLOAT maxX = 1.0);
     
