@@ -174,6 +174,8 @@ GraphControl11::GraphControl11(Plugin *pPlug, IGraphics *graphics,
 
 GraphControl11::~GraphControl11()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     for (int i = 0; i < mNumCurves; i++)
         delete mCurves[i];
     
@@ -217,6 +219,8 @@ GraphControl11::~GraphControl11()
 void
 GraphControl11::SetEnabled(bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mIsEnabled = flag;
 }
 
@@ -224,6 +228,8 @@ GraphControl11::SetEnabled(bool flag)
 void
 GraphControl11::SetNumCurveValues(int numCurveValues)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mNumCurveValues = numCurveValues;
     
     for (int i = 0; i < mNumCurves; i++)
@@ -247,6 +253,8 @@ GraphControl11::GetSize(int *width, int *height)
 void
 GraphControl11::Resize(int width, int height)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // BL-Waves debug: add a mutex here ?
     
     // We must have width and height multiple of 4
@@ -299,6 +307,8 @@ GraphControl11::Resize(int width, int height)
 void
 GraphControl11::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0, BL_GUI_FLOAT x1, BL_GUI_FLOAT y1)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mBounds[0] = x0;
     mBounds[1] = y0;
     mBounds[2] = x1;
@@ -311,6 +321,8 @@ GraphControl11::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0, BL_GUI_FLOAT x1, BL_
 void
 GraphControl11::Resize(int numCurveValues)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mNumCurveValues = numCurveValues;
     
     for (int i = 0; i < mNumCurves; i++)
@@ -334,6 +346,8 @@ GraphControl11::GetNumCurveValues()
 void
 GraphControl11::OnGUIIdle()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
@@ -345,6 +359,8 @@ GraphControl11::OnGUIIdle()
 void
 GraphControl11::SetSeparatorY0(BL_GUI_FLOAT lineWidth, int color[4])
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mSeparatorY0 = true;
     mSepY0LineWidth = lineWidth;
     
@@ -363,6 +379,8 @@ GraphControl11::AddHAxis(char *data[][2], int numData, bool xDbScale,
                          BL_GUI_FLOAT fontSizeCoeff,
                          int axisLinesOverlayColor[4])
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mHAxis = new GraphAxis();
     mHAxis->mOffset = 0.0;
     
@@ -393,6 +411,8 @@ GraphControl11::AddHAxis0(char *data[][2], int numData, bool xDbScale,
                           BL_GUI_FLOAT fontSizeCoeff,
                           int axisLinesOverlayColor[4])
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mHAxis = new GraphAxis();
     mHAxis->mOffset = 0.0;
     
@@ -418,6 +438,8 @@ GraphControl11::AddHAxis0(char *data[][2], int numData, bool xDbScale,
 void
 GraphControl11::ReplaceHAxis(char *data[][2], int numData)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if !FIX_HAXIS_COLOR_SWAP
     int axisColor[4];
     int axisLabelColor[4];
@@ -525,6 +547,8 @@ GraphControl11::ReplaceHAxis(char *data[][2], int numData)
 void
 GraphControl11::RemoveHAxis()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mHAxis != NULL)
         delete mHAxis;
     
@@ -538,6 +562,8 @@ GraphControl11::AddVAxis(char *data[][2], int numData, int axisColor[4],
                          bool alignTextRight, int axisLinesOverlayColor[4],
                          bool alignRight)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mVAxis = new GraphAxis();
     mVAxis->mOverlay = false;
     mVAxis->mLinesOverlay = false;
@@ -573,6 +599,8 @@ GraphControl11::AddVAxis(char *data[][2], int numData, int axisColor[4],
 void
 GraphControl11::RemoveVAxis()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mVAxis != NULL)
         delete mVAxis;
     
@@ -580,13 +608,16 @@ GraphControl11::RemoveVAxis()
 }
 
 void
-GraphControl11::AddVAxis(char *data[][2], int numData, int axisColor[4], int axisLabelColor[4],
+GraphControl11::AddVAxis(char *data[][2], int numData,
+                         int axisColor[4], int axisLabelColor[4],
                         bool dbFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                         BL_GUI_FLOAT offset, int axisOverlayColor[4],
                         BL_GUI_FLOAT fontSizeCoeff, bool alignTextRight,
                         int axisLinesOverlayColor[4],
                          bool alignRight)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mVAxis = new GraphAxis();
     mVAxis->mOverlay = false;
     mVAxis->mLinesOverlay = false;
@@ -608,13 +639,16 @@ GraphControl11::AddVAxis(char *data[][2], int numData, int axisColor[4], int axi
 }
 
 void
-GraphControl11::AddVAxis(char *data[][2], int numData, int axisColor[4], int axisLabelColor[4],
+GraphControl11::AddVAxis(char *data[][2], int numData,
+                         int axisColor[4], int axisLabelColor[4],
                          bool dbFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                          BL_GUI_FLOAT offset, BL_GUI_FLOAT offsetX, int axisOverlayColor[4],
                          BL_GUI_FLOAT fontSizeCoeff, bool alignTextRight,
                          int axisLinesOverlayColor[4],
                          bool alignRight)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mVAxis = new GraphAxis();
     mVAxis->mOverlay = false;
     mVAxis->mLinesOverlay = false;
@@ -639,6 +673,8 @@ GraphControl11::AddVAxis(char *data[][2], int numData, int axisColor[4], int axi
 void
 GraphControl11::SetXScale(bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mXdBScale = dbFlag;
     
     mMinX = minX;
@@ -651,6 +687,8 @@ GraphControl11::SetXScale(bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
 void
 GraphControl11::SetAutoAdjust(bool flag, BL_GUI_FLOAT smoothCoeff)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mAutoAdjustFlag = flag;
     
     mAutoAdjustParamSmoother.SetSmoothCoeff(smoothCoeff);
@@ -662,6 +700,8 @@ GraphControl11::SetAutoAdjust(bool flag, BL_GUI_FLOAT smoothCoeff)
 void
 GraphControl11::SetYScaleFactor(BL_GUI_FLOAT factor)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mYScaleFactor = factor;
     
     mDirty = true;
@@ -671,6 +711,8 @@ GraphControl11::SetYScaleFactor(BL_GUI_FLOAT factor)
 void
 GraphControl11::SetClearColor(int r, int g, int b, int a)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     SET_COLOR_FROM_INT(mClearColor, r, g, b, a);
     
     mDirty = true;
@@ -680,6 +722,8 @@ GraphControl11::SetClearColor(int r, int g, int b, int a)
 void
 GraphControl11::SetCurveColor(int curveNum, int r, int g, int b)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -692,6 +736,8 @@ GraphControl11::SetCurveColor(int curveNum, int r, int g, int b)
 void
 GraphControl11::SetCurveAlpha(int curveNum, BL_GUI_FLOAT alpha)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -704,6 +750,8 @@ GraphControl11::SetCurveAlpha(int curveNum, BL_GUI_FLOAT alpha)
 void
 GraphControl11::SetCurveLineWidth(int curveNum, BL_GUI_FLOAT lineWidth)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -716,6 +764,8 @@ GraphControl11::SetCurveLineWidth(int curveNum, BL_GUI_FLOAT lineWidth)
 void
 GraphControl11::SetCurveBevel(int curveNum, bool bevelFlag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -728,6 +778,8 @@ GraphControl11::SetCurveBevel(int curveNum, bool bevelFlag)
 void
 GraphControl11::SetCurveSmooth(int curveNum, bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -740,6 +792,8 @@ GraphControl11::SetCurveSmooth(int curveNum, bool flag)
 void
 GraphControl11::SetCurveFill(int curveNum, bool flag, BL_GUI_FLOAT originY)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
 
@@ -753,6 +807,8 @@ GraphControl11::SetCurveFill(int curveNum, bool flag, BL_GUI_FLOAT originY)
 void
 GraphControl11::SetCurveFillColor(int curveNum, int r, int g, int b)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -766,6 +822,8 @@ GraphControl11::SetCurveFillColor(int curveNum, int r, int g, int b)
 void
 GraphControl11::SetCurveFillAlpha(int curveNum, BL_GUI_FLOAT alpha)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -778,6 +836,8 @@ GraphControl11::SetCurveFillAlpha(int curveNum, BL_GUI_FLOAT alpha)
 void
 GraphControl11::SetCurveFillAlphaUp(int curveNum, BL_GUI_FLOAT alpha)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -791,6 +851,8 @@ GraphControl11::SetCurveFillAlphaUp(int curveNum, BL_GUI_FLOAT alpha)
 void
 GraphControl11::SetCurvePointSize(int curveNum, BL_GUI_FLOAT pointSize)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -803,6 +865,8 @@ GraphControl11::SetCurvePointSize(int curveNum, BL_GUI_FLOAT pointSize)
 void
 GraphControl11::SetCurvePointOverlay(int curveNum, bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -815,6 +879,8 @@ GraphControl11::SetCurvePointOverlay(int curveNum, bool flag)
 void
 GraphControl11::SetCurveWeightMultAlpha(int curveNum, bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -827,6 +893,8 @@ GraphControl11::SetCurveWeightMultAlpha(int curveNum, bool flag)
 void
 GraphControl11::SetCurveWeightTargetColor(int curveNum, int color[4])
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -837,8 +905,11 @@ GraphControl11::SetCurveWeightTargetColor(int curveNum, int color[4])
 }
 
 void
-GraphControl11::SetCurveXScale(int curveNum, bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
+GraphControl11::SetCurveXScale(int curveNum, bool dbFlag,
+                               BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -853,6 +924,8 @@ GraphControl11::SetCurvePointStyle(int curveNum, bool pointFlag,
                                    bool pointsAsLinesPolar,
                                    bool pointsAsLines)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -869,6 +942,8 @@ GraphControl11::SetCurveValuesPoint(int curveNum,
                                    const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
                                    const WDL_TypedBuf<BL_GUI_FLOAT> &yValues)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -917,6 +992,8 @@ GraphControl11::SetCurveValuesPointEx(int curveNum,
                                       const WDL_TypedBuf<BL_GUI_FLOAT> &yValues,
                                       bool singleScale, bool scaleX, bool centerFlag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1023,6 +1100,8 @@ GraphControl11::SetCurveValuesPointWeight(int curveNum,
                                          const WDL_TypedBuf<BL_GUI_FLOAT> &yValues,
                                          const WDL_TypedBuf<BL_GUI_FLOAT> &weights)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1066,6 +1145,8 @@ void
 GraphControl11::SetCurveColorWeight(int curveNum,
                                    const WDL_TypedBuf<BL_GUI_FLOAT> &colorWeights)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1077,6 +1158,8 @@ GraphControl11::SetCurveColorWeight(int curveNum,
 void
 GraphControl11::SetCurveSingleValueH(int curveNum, bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1089,6 +1172,8 @@ GraphControl11::SetCurveSingleValueH(int curveNum, bool flag)
 void
 GraphControl11::SetCurveSingleValueV(int curveNum, bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1101,6 +1186,8 @@ GraphControl11::SetCurveSingleValueV(int curveNum, bool flag)
 void
 GraphControl11::SetCurveOptimSameColor(int curveNum, bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1118,6 +1205,8 @@ GraphControl11::DrawText(NVGcontext *vg,
                          const char *text, int color[4],
                          int halign, int valign, BL_GUI_FLOAT fontSizeCoeff)
 {
+    // static method -> no mutex!
+    
     nvgSave(vg);
     
     nvgFontSize(vg, fontSize*fontSizeCoeff);
@@ -1145,6 +1234,8 @@ GraphControl11::SetSpectrogram(BLSpectrogram3 *spectro,
                                BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right,
                                BL_GUI_FLOAT bottom)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // #bl-iplug2: set mVg every time, and not at the beginning
     // here, we have many chances that mVg is NULL.
     // And do this for spectrogramdisplayscroll, image display and so on...
@@ -1167,6 +1258,8 @@ void
 GraphControl11::SetSpectrogramScroll(BLSpectrogram3 *spectro,
                                      BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right, BL_GUI_FLOAT bottom)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mSpectrogramDisplayScroll != NULL)
         delete mSpectrogramDisplayScroll;
     
@@ -1185,6 +1278,8 @@ void
 GraphControl11::SetSpectrogramScroll2(BLSpectrogram3 *spectro,
                                      BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right, BL_GUI_FLOAT bottom)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mSpectrogramDisplayScroll2 != NULL)
         delete mSpectrogramDisplayScroll2;
     
@@ -1202,6 +1297,8 @@ GraphControl11::GetSpectrogramDisplayScroll2()
 void
 GraphControl11::UpdateSpectrogram(bool updateData, bool updateFullData)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mSpectrogramDisplay != NULL)
         mSpectrogramDisplay->UpdateSpectrogram(updateData, updateFullData);
     
@@ -1218,6 +1315,8 @@ GraphControl11::UpdateSpectrogram(bool updateData, bool updateFullData)
 void
 GraphControl11::UpdateSpectrogramColormap(bool updateData)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mSpectrogramDisplayScroll != NULL)
         mSpectrogramDisplayScroll->UpdateColormap(updateData);
     
@@ -1231,12 +1330,16 @@ GraphControl11::UpdateSpectrogramColormap(bool updateData)
 void
 GraphControl11::AddCustomDrawer(GraphCustomDrawer *customDrawer)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mCustomDrawers.push_back(customDrawer);
 }
 
 void
 GraphControl11::CustomDrawersPreDraw()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
@@ -1252,6 +1355,8 @@ GraphControl11::CustomDrawersPreDraw()
 void
 GraphControl11::CustomDrawersPostDraw()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
@@ -1267,6 +1372,8 @@ GraphControl11::CustomDrawersPostDraw()
 void
 GraphControl11::DrawSeparatorY0()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (!mSeparatorY0)
         return;
     
@@ -1306,6 +1413,8 @@ GraphControl11::DrawSeparatorY0()
 void
 GraphControl11::AddCustomControl(GraphCustomControl *customControl)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mCustomControls.push_back(customControl);
 }
 
@@ -1454,6 +1563,8 @@ GraphControl11::OnMouseOut()
 void
 GraphControl11::DBG_PrintCoords(int x, int y)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
@@ -1469,6 +1580,8 @@ GraphControl11::DBG_PrintCoords(int x, int y)
 void
 GraphControl11::SetBackgroundImage(IBitmap bmp)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mBgImage = bmp;
     
     mDirty = true;
@@ -1478,6 +1591,8 @@ GraphControl11::SetBackgroundImage(IBitmap bmp)
 void
 GraphControl11::SetOverlayImage(IBitmap bmp)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mOverlayImage = bmp;
     
     mDirty = true;
@@ -1487,12 +1602,16 @@ GraphControl11::SetOverlayImage(IBitmap bmp)
 void
 GraphControl11::SetDisablePointOffsetHack(bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mDisablePointOffsetHack = flag;
 }
 
 void
 GraphControl11::SetRecreateWhiteImageHack(bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mRecreateWhiteImageHack = flag;
 }
 
@@ -1501,6 +1620,8 @@ GraphControl11::CreateImageDisplay(BL_GUI_FLOAT left, BL_GUI_FLOAT top,
                                    BL_GUI_FLOAT right, BL_GUI_FLOAT bottom,
                                    ImageDisplay::Mode mode)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mImageDisplay != NULL)
         delete mImageDisplay;
     
@@ -1517,6 +1638,8 @@ GraphControl11::GetImageDisplay()
 void
 GraphControl11::SetDataChanged()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mDataChanged = true;
     
     if (mIsEnabled) // new
@@ -1526,6 +1649,8 @@ GraphControl11::SetDataChanged()
 void
 GraphControl11::SetDirty(bool triggerAction, int valIdx)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Set dirty only if the graph is enabled.
     // (otherwise we have the risk to try to draw a graph that is disabled).
     if (mIsEnabled)
@@ -1537,6 +1662,8 @@ GraphControl11::SetDirty(bool triggerAction, int valIdx)
 void
 GraphControl11::DisplayCurveDescriptions()
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #define OFFSET_Y 4.0
     
 #define DESCR_X 40.0
@@ -1604,6 +1731,8 @@ GraphControl11::AddAxis(GraphAxis *axis, char *data[][2], int numData, int axisC
                        BL_GUI_FLOAT minVal, BL_GUI_FLOAT maxVal, int axisLabelOverlayColor[4],
                        int axisLinesOverlayColor[4])
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Copy color
     for (int i = 0; i < 4; i++)
     {
@@ -1673,6 +1802,8 @@ GraphControl11::AddAxis(GraphAxis *axis, char *data[][2], int numData, int axisC
 void
 GraphControl11::SetCurveDescription(int curveNum, const char *description, int descrColor[4])
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1685,6 +1816,8 @@ GraphControl11::SetCurveDescription(int curveNum, const char *description, int d
 void
 GraphControl11::SetCurveLimitToBounds(int curveNum, bool flag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1697,6 +1830,8 @@ GraphControl11::SetCurveLimitToBounds(int curveNum, bool flag)
 void
 GraphControl11::ResetCurve(int curveNum, BL_GUI_FLOAT val)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1708,8 +1843,11 @@ GraphControl11::ResetCurve(int curveNum, BL_GUI_FLOAT val)
 }
 
 void
-GraphControl11::SetCurveYScale(int curveNum, bool dbFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY)
+GraphControl11::SetCurveYScale(int curveNum, bool dbFlag,
+                               BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1722,6 +1860,8 @@ GraphControl11::SetCurveYScale(int curveNum, bool dbFlag, BL_GUI_FLOAT minY, BL_
 void
 GraphControl11::CurveFillAllValues(int curveNum, BL_GUI_FLOAT val)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1735,6 +1875,8 @@ GraphControl11::CurveFillAllValues(int curveNum, BL_GUI_FLOAT val)
 void
 GraphControl11::SetCurveValues(int curveNum, const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1747,6 +1889,8 @@ GraphControl11::SetCurveValues(int curveNum, const WDL_TypedBuf<BL_GUI_FLOAT> *v
 void
 GraphControl11::SetCurveValues2(int curveNum, const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1769,6 +1913,8 @@ GraphControl11::SetCurveValues2(int curveNum, const WDL_TypedBuf<BL_GUI_FLOAT> *
 void
 GraphControl11::SetCurveValues3(int curveNum, const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1794,6 +1940,8 @@ void
 GraphControl11::SetCurveValuesDecimateSimple(int curveNum,
                                              const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1831,6 +1979,8 @@ GraphControl11::SetCurveValuesDecimate(int curveNum,
                                       const WDL_TypedBuf<BL_GUI_FLOAT> *values,
                                       bool isWaveSignal)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1887,6 +2037,8 @@ GraphControl11::SetCurveValuesDecimate2(int curveNum,
                                         const WDL_TypedBuf<BL_GUI_FLOAT> *values,
                                         bool isWaveSignal)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1925,6 +2077,8 @@ GraphControl11::SetCurveValuesDecimate3(int curveNum,
                                         const WDL_TypedBuf<BL_GUI_FLOAT> *values,
                                         bool isWaveSignal)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -1959,10 +2113,13 @@ GraphControl11::SetCurveValuesDecimate3(int curveNum,
 }
 
 void
-GraphControl11::SetCurveValuesXDbDecimate(int curveNum, const WDL_TypedBuf<BL_GUI_FLOAT> *values,
+GraphControl11::SetCurveValuesXDbDecimate(int curveNum,
+                                          const WDL_TypedBuf<BL_GUI_FLOAT> *values,
                                           int nativeBufferSize, BL_GUI_FLOAT sampleRate,
                                           BL_GUI_FLOAT decimFactor)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int bufferSize = BLUtils::PlugComputeBufferSize(nativeBufferSize, sampleRate);
     BL_GUI_FLOAT hzPerBin = sampleRate/bufferSize;
     
@@ -1987,10 +2144,13 @@ GraphControl11::SetCurveValuesXDbDecimate(int curveNum, const WDL_TypedBuf<BL_GU
 }
 
 void
-GraphControl11::SetCurveValuesXDbDecimateDb(int curveNum, const WDL_TypedBuf<BL_GUI_FLOAT> *values,
+GraphControl11::SetCurveValuesXDbDecimateDb(int curveNum,
+                                            const WDL_TypedBuf<BL_GUI_FLOAT> *values,
                                            int nativeBufferSize, BL_GUI_FLOAT sampleRate,
                                            BL_GUI_FLOAT decimFactor, BL_GUI_FLOAT minValueDb)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int bufferSize = BLUtils::PlugComputeBufferSize(nativeBufferSize, sampleRate);
     BL_GUI_FLOAT hzPerBin = sampleRate/bufferSize;
     
@@ -2017,6 +2177,8 @@ GraphControl11::SetCurveValuesXDbDecimateDb(int curveNum, const WDL_TypedBuf<BL_
 void
 GraphControl11::SetCurveValue(int curveNum, BL_GUI_FLOAT t, BL_GUI_FLOAT val)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -2060,6 +2222,8 @@ GraphControl11::SetCurveValue(int curveNum, BL_GUI_FLOAT t, BL_GUI_FLOAT val)
 void
 GraphControl11::SetCurveSingleValueH(int curveNum, BL_GUI_FLOAT val)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -2072,6 +2236,8 @@ GraphControl11::SetCurveSingleValueH(int curveNum, BL_GUI_FLOAT val)
 void
 GraphControl11::SetCurveSingleValueV(int curveNum, BL_GUI_FLOAT val)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -2084,6 +2250,8 @@ GraphControl11::SetCurveSingleValueV(int curveNum, BL_GUI_FLOAT val)
 void
 GraphControl11::PushCurveValue(int curveNum, BL_GUI_FLOAT val)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curveNum >= mNumCurves)
         return;
     
@@ -2105,6 +2273,8 @@ GraphControl11::PushCurveValue(int curveNum, BL_GUI_FLOAT val)
 void
 GraphControl11::DrawAxis(bool lineLabelFlag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mHAxis != NULL)
         DrawAxis(mHAxis, true, lineLabelFlag);
     
@@ -2115,21 +2285,29 @@ GraphControl11::DrawAxis(bool lineLabelFlag)
 void
 GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     nvgSave(mVg);
     nvgStrokeWidth(mVg, 1.0);
     
-    int axisColor[4] = { axis->mColor[0], axis->mColor[1], axis->mColor[2], axis->mColor[3] };
+    int axisColor[4] = { axis->mColor[0], axis->mColor[1],
+                         axis->mColor[2], axis->mColor[3] };
     SWAP_COLOR(axisColor);
     
-    int axisLabelOverlayColor[4] = { axis->mLabelOverlayColor[0], axis->mLabelOverlayColor[1],
-                                     axis->mLabelOverlayColor[2], axis->mLabelOverlayColor[3] };
+    int axisLabelOverlayColor[4] = { axis->mLabelOverlayColor[0],
+                                     axis->mLabelOverlayColor[1],
+                                     axis->mLabelOverlayColor[2],
+                                     axis->mLabelOverlayColor[3] };
     SWAP_COLOR(axisLabelOverlayColor);
     
-    int axisLinesOverlayColor[4] = { axis->mLinesOverlayColor[0], axis->mLinesOverlayColor[1],
-                                     axis->mLinesOverlayColor[2], axis->mLinesOverlayColor[3] };
+    int axisLinesOverlayColor[4] = { axis->mLinesOverlayColor[0],
+                                     axis->mLinesOverlayColor[1],
+                                     axis->mLinesOverlayColor[2],
+                                     axis->mLinesOverlayColor[3] };
     SWAP_COLOR(axisLinesOverlayColor);
     
-    nvgStrokeColor(mVg, nvgRGBA(axisColor[0], axisColor[1], axisColor[2], axisColor[3]));
+    nvgStrokeColor(mVg, nvgRGBA(axisColor[0], axisColor[1],
+                                axisColor[2], axisColor[3]));
     
     int width = this->mRECT.W();
     int height = this->mRECT.H();
@@ -2149,7 +2327,6 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                 t = BLUtils::NormalizedXTodB(t, mMinX, mMaxX);
             
             BL_GUI_FLOAT x = t*width;
-        
             if ((i > 0) && (i < axis->mValues.size() - 1))
             {
                 if (lineLabelFlag)
@@ -2174,8 +2351,11 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                     
                     if (axis->mLinesOverlay)
                     {
-                        nvgStrokeColor(mVg, nvgRGBA(axisLinesOverlayColor[0], axisLinesOverlayColor[1],
-                                                    axisLinesOverlayColor[2], axisLinesOverlayColor[3]));
+                        nvgStrokeColor(mVg,
+                                       nvgRGBA(axisLinesOverlayColor[0],
+                                               axisLinesOverlayColor[1],
+                                               axisLinesOverlayColor[2],
+                                               axisLinesOverlayColor[3]));
                         
                         BL_GUI_FLOAT y0 = 0.0;
                         BL_GUI_FLOAT y1 = height;
@@ -2210,7 +2390,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                                  axis->mFontSizeCoeff);
                     }
                     
-                    DrawText(x, textOffset + axis->mOffsetY*height,
+                    DrawText(x,
+                             textOffset + axis->mOffsetY*height,
                              FONT_SIZE, text, axis->mLabelColor,
                              NVG_ALIGN_CENTER, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);
@@ -2232,7 +2413,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                     }
                     
                     // First text: aligne left
-                    DrawText(x + textOffset, textOffset + axis->mOffsetY*height, FONT_SIZE,
+                    DrawText(x + textOffset,
+                             textOffset + axis->mOffsetY*height, FONT_SIZE,
                              text, axis->mLabelColor, NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);
                 }
@@ -2250,7 +2432,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                     }
                     
                     // Last text: aligne right
-                    DrawText(x - textOffset, textOffset + axis->mOffsetY*height,
+                    DrawText(x - textOffset,
+                             textOffset + axis->mOffsetY*height,
                              FONT_SIZE, text, axis->mLabelColor,
                              NVG_ALIGN_RIGHT, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);
@@ -2299,8 +2482,11 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                     
                     if (axis->mLinesOverlay)
                     {
-                        nvgStrokeColor(mVg, nvgRGBA(axisLinesOverlayColor[0], axisLinesOverlayColor[1],
-                                                    axisLinesOverlayColor[2], axisLinesOverlayColor[3]));
+                        nvgStrokeColor(mVg,
+                                       nvgRGBA(axisLinesOverlayColor[0],
+                                               axisLinesOverlayColor[1],
+                                               axisLinesOverlayColor[2],
+                                               axisLinesOverlayColor[3]));
                         
                         BL_GUI_FLOAT x0 = 0.0;
                         BL_GUI_FLOAT x1 = width;
@@ -2317,7 +2503,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                         nvgLineTo(mVg, x1, yf);
                         nvgStroke(mVg);
                         
-                        nvgStrokeColor(mVg, nvgRGBA(axisColor[0], axisColor[1], axisColor[2], axisColor[3]));
+                        nvgStrokeColor(mVg, nvgRGBA(axisColor[0], axisColor[1],
+                                                    axisColor[2], axisColor[3]));
                     }
                 }
                 else
@@ -2336,7 +2523,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                                  axis->mFontSizeCoeff);
                     }
                     
-                    DrawText(textOffset + axis->mOffsetX, y, FONT_SIZE, text,
+                    DrawText(textOffset + axis->mOffsetX,
+                             y, FONT_SIZE, text,
                              axis->mLabelColor,
                              align | NVG_ALIGN_MIDDLE,
                              NVG_ALIGN_BOTTOM,
@@ -2359,7 +2547,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                                  axis->mFontSizeCoeff);
                     }
                     
-                    DrawText(textOffset + axis->mOffsetX, y + FONT_SIZE*0.75, FONT_SIZE, text,
+                    DrawText(textOffset + axis->mOffsetX,
+                             y + FONT_SIZE*0.75, FONT_SIZE, text,
                              axis->mLabelColor, NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);
                 }
@@ -2377,7 +2566,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
                                  axis->mFontSizeCoeff);
                     }
                     
-                    DrawText(textOffset + axis->mOffsetX, y - FONT_SIZE*1.5, FONT_SIZE, text,
+                    DrawText(textOffset + axis->mOffsetX,
+                             y - FONT_SIZE*1.5, FONT_SIZE, text,
                              axis->mLabelColor, NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);
                 }
@@ -2391,6 +2581,8 @@ GraphControl11::DrawAxis(GraphAxis *axis, bool horizontal, bool lineLabelFlag)
 void
 GraphControl11::DrawCurves()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     for (int i = 0; i < mNumCurves; i++)
     {
         if (!mCurves[i]->mSingleValueH && !mCurves[i]->mSingleValueV)
@@ -2496,6 +2688,8 @@ GraphControl11::DrawCurves()
 void
 GraphControl11::DrawLineCurve(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if CURVE_DEBUG
     int numPointsDrawn = 0;
 #endif
@@ -2580,6 +2774,8 @@ GraphControl11::DrawLineCurve(GraphCurve4 *curve)
 void
 GraphControl11::DrawFillCurve(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2677,6 +2873,8 @@ GraphControl11::DrawFillCurve(GraphCurve4 *curve)
 void
 GraphControl11::DrawFillCurve(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2886,6 +3084,8 @@ GraphControl11::DrawFillCurve(GraphCurve4 *curve)
 void
 GraphControl11::DrawLineCurveSVH(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curve->mYValues.GetSize() == 0)
         return;
     
@@ -2927,6 +3127,8 @@ GraphControl11::DrawLineCurveSVH(GraphCurve4 *curve)
 void
 GraphControl11::DrawFillCurveSVH(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (curve->mYValues.GetSize() == 0)
         return;
     
@@ -3018,6 +3220,8 @@ GraphControl11::DrawFillCurveSVH(GraphCurve4 *curve)
 void
 GraphControl11::DrawLineCurveSVV(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Finally, take the Y value
     // We will have to care about the curve Y scale !
     if (curve->mYValues.GetSize() == 0)
@@ -3071,6 +3275,8 @@ GraphControl11::DrawLineCurveSVV(GraphCurve4 *curve)
 void
 GraphControl11::DrawFillCurveSVV(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Finally, take the Y value
     // We will have to care about the curve Y scale !
     if (curve->mYValues.GetSize() == 0)
@@ -3130,6 +3336,8 @@ GraphControl11::DrawFillCurveSVV(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurve(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 1);
     if (curveUndefined)
@@ -3218,6 +3426,8 @@ GraphControl11::DrawPointCurve(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurveOptimSameColor(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 1);
     if (curveUndefined)
@@ -3311,6 +3521,8 @@ GraphControl11::DrawPointCurveOptimSameColor(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurveLinesPolar(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -3370,6 +3582,8 @@ GraphControl11::DrawPointCurveLinesPolar(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurveLinesPolarWeights(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -3437,6 +3651,8 @@ GraphControl11::DrawPointCurveLinesPolarWeights(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurveLinesPolarFill(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -3509,6 +3725,8 @@ GraphControl11::DrawPointCurveLinesPolarFill(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurveLines(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -3564,6 +3782,8 @@ GraphControl11::DrawPointCurveLines(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurveLinesWeights(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -3632,6 +3852,8 @@ GraphControl11::DrawPointCurveLinesWeights(GraphCurve4 *curve)
 void
 GraphControl11::DrawPointCurveLinesFill(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -3686,6 +3908,8 @@ GraphControl11::DrawPointCurveLinesFill(GraphCurve4 *curve)
 void
 GraphControl11::AutoAdjust()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // First, compute the maximum value of all the curves
     BL_GUI_FLOAT max = -1e16;
     for (int i = 0; i < mNumCurves; i++)
@@ -3735,6 +3959,8 @@ GraphControl11::MillisToPoints(long long int elapsed, int sampleRate, int numSam
 void
 GraphControl11::InitFont(const char *fontPath)
 {
+    WDL_MutexLock lock(&mMutex);
+    
 #ifndef WIN32
     nvgCreateFont(mVg, GRAPH_FONT, fontPath);
 
@@ -3778,6 +4004,8 @@ GraphControl11::DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y, BL_GUI_FLOAT fontSize,
                         const char *text, int color[4],
                         int halign, int valign, BL_GUI_FLOAT fontSizeCoeff)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
@@ -3789,6 +4017,8 @@ GraphControl11::DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y, BL_GUI_FLOAT fontSize,
 bool
 GraphControl11::NeedUpdateGUI()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mSpectrogramDisplay != NULL)
     {
         bool needUpdate = mSpectrogramDisplay->NeedUpdateSpectrogram();
@@ -3833,6 +4063,8 @@ GraphControl11::Draw(IGraphics &graphics)
 void
 GraphControl11::Draw(IGraphics &graphics)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Keep a reference, for deleting FBO
     mGraphics = &graphics;
     
@@ -3905,11 +4137,15 @@ GraphControl11::Draw(IGraphics &graphics)
 void
 GraphControl11::DoDraw(IGraphics &graphics)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     SetVg(graphics);
     
     // Checked: if we fall here, the graph is sur to have mIsEnabled = true!
     if (!mIsEnabled)
+    {
         return;
+    }
     
     nvgSave(mVg);
     
@@ -4043,6 +4279,8 @@ GraphControl11::DoDraw(IGraphics &graphics)
 BL_GUI_FLOAT
 GraphControl11::ConvertX(GraphCurve4 *curve, BL_GUI_FLOAT val, BL_GUI_FLOAT width)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     BL_GUI_FLOAT x = val;
     if (x < GRAPH_VALUE_UNDEFINED)
     {
@@ -4064,6 +4302,8 @@ GraphControl11::ConvertX(GraphCurve4 *curve, BL_GUI_FLOAT val, BL_GUI_FLOAT widt
 BL_GUI_FLOAT
 GraphControl11::ConvertY(GraphCurve4 *curve, BL_GUI_FLOAT val, BL_GUI_FLOAT height)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     BL_GUI_FLOAT y = val;
     if (y < GRAPH_VALUE_UNDEFINED)
     {
@@ -4087,6 +4327,8 @@ void
 GraphControl11::ConvertX(GraphCurve4 *curve, WDL_TypedBuf<BL_GUI_FLOAT> *vals,
                          BL_GUI_FLOAT width)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     BL_GUI_FLOAT xCoeff = width/(curve->mMaxX - curve->mMinX);
     
     for (int i = 0; i < vals->GetSize(); i++)
@@ -4123,6 +4365,8 @@ void
 GraphControl11::ConvertY(GraphCurve4 *curve, WDL_TypedBuf<BL_GUI_FLOAT> *vals,
                          BL_GUI_FLOAT height)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     BL_GUI_FLOAT yCoeff =
             mAutoAdjustFactor * mYScaleFactor*height/(curve->mMaxY - curve->mMinY);
     
@@ -4159,6 +4403,8 @@ GraphControl11::ConvertY(GraphCurve4 *curve, WDL_TypedBuf<BL_GUI_FLOAT> *vals,
 void
 GraphControl11::SetCurveDrawStyle(GraphCurve4 *curve)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     nvgStrokeWidth(mVg, curve->mLineWidth);
     
     if (curve->mBevelFlag)
@@ -4186,6 +4432,8 @@ GraphControl11::SetCurveDrawStyle(GraphCurve4 *curve)
 void
 GraphControl11::SetCurveDrawStyleWeight(GraphCurve4 *curve, BL_GUI_FLOAT weight)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int sColor[4];
     if (!curve->mUseWeightTargetColor)
     {
@@ -4253,6 +4501,8 @@ GraphControl11::SetCurveDrawStyleWeight(GraphCurve4 *curve, BL_GUI_FLOAT weight)
 BL_GUI_FLOAT
 GraphControl11::ConvertToBoundsX(BL_GUI_FLOAT t)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Rescale
     t *= (mBounds[2] - mBounds[0]);
     t += mBounds[0];
@@ -4268,7 +4518,9 @@ GraphControl11::ConvertToBoundsX(BL_GUI_FLOAT t)
 
 BL_GUI_FLOAT
 GraphControl11::ConvertToBoundsY(BL_GUI_FLOAT t)
-{    
+{
+    WDL_MutexLock lock(&mMutex);
+    
     // Rescale
     t *= (mBounds[3] - mBounds[1]);
     t += (1.0 - mBounds[3]);
@@ -4285,6 +4537,8 @@ GraphControl11::ConvertToBoundsY(BL_GUI_FLOAT t)
 void
 GraphControl11::DrawBackgroundImage(IGraphics &graphics)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mBgImage.GetAPIBitmap() == NULL)
         return;
     
@@ -4302,6 +4556,8 @@ GraphControl11::DrawBackgroundImage(IGraphics &graphics)
 void
 GraphControl11::DrawOverlayImage(IGraphics &graphics)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mOverlayImage.GetAPIBitmap() == NULL)
         return;
     
@@ -4319,6 +4575,8 @@ GraphControl11::IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
                                  const WDL_TypedBuf<BL_GUI_FLOAT> &y,
                                  int minNumValues)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (x.GetSize() != y.GetSize())
         return true;
     
@@ -4346,6 +4604,8 @@ GraphControl11::IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
 void
 GraphControl11::SetVg(IGraphics &graphics)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mVg = (NVGcontext *)graphics.GetDrawContext();
     
     if (mSpectrogramDisplay != NULL)

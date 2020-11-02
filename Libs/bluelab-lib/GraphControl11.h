@@ -501,7 +501,6 @@ protected:
         bool mAlignTextRight;
         
         bool mAlignRight;
-        
     } GraphAxis;
     
     //
@@ -698,6 +697,8 @@ private:
     BlaTimer mDebugTimer;
     int mDebugCount;
 #endif
+    
+    WDL_Mutex mMutex;
 };
 
 #endif // IGRAPHICS_NANOVG

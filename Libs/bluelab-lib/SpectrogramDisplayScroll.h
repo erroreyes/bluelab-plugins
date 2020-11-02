@@ -74,6 +74,7 @@ public:
     
 #if USE_VARIABLE_SPEED
     void SetSpeedMod(int speedMod);
+    int GetSpeedMod();
 #endif
     
 protected:

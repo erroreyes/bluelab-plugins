@@ -41,7 +41,7 @@ public:
     void Update(BL_FLOAT currentTime);
     
     static BL_FLOAT ComputeTimeDuration(int numBuffers, int bufferSize,
-                                      int oversampling, BL_FLOAT sampleRate);
+                                        int oversampling, BL_FLOAT sampleRate);
     
 protected:
     GraphControl11 *mGraph;

@@ -345,7 +345,8 @@ SpectrogramDisplayScroll::DrawSpectrogram(int width, int height)
 
 void
 SpectrogramDisplayScroll::SetSpectrogram(BLSpectrogram3 *spectro,
-                                         BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom)
+                                         BL_FLOAT left, BL_FLOAT top,
+                                         BL_FLOAT right, BL_FLOAT bottom)
 {
     mSpectrogram = spectro;
     
@@ -460,6 +461,12 @@ SpectrogramDisplayScroll::SetSpeedMod(int speedMod)
 {
     mSpeedMod = speedMod;
 }
+
+int
+SpectrogramDisplayScroll::GetSpeedMod()
+{
+    return mSpeedMod;
+}
 #endif
 
 
@@ -534,7 +541,6 @@ SpectrogramDisplayScroll::ComputeScrollOffsetPixels(int width)
     // Update
     mPrevIsPlaying = isPlaying;
     
-    
     // Do compute the offset
     //
     
@@ -547,7 +553,6 @@ SpectrogramDisplayScroll::ComputeScrollOffsetPixels(int width)
     
     // Compute the offset in units "line"
     BL_FLOAT offsetLine = lineSpeed*(((BL_FLOAT)elapsedMillis)/1000.0);
-    
     mLinesOffset -= offsetLine;
     
     // How many lines added
@@ -556,7 +561,6 @@ SpectrogramDisplayScroll::ComputeScrollOffsetPixels(int width)
     mPrevSpectroLineNum = currentLineNum;
     
     mLinesOffset += diffLineNum;
-    
     if (mLinesOffset < 0.0)
         mLinesOffset = 0.0;
     
