@@ -27,7 +27,10 @@
 
 // Avoid that the last label is partially displayed, and cropped
 // (was the case with Reverb, and display 1 second interval)
-#define SQUEEZE_LAST_CROPPED_LABEL 1
+//
+// For GhostViewer, setting to 1 is bad
+// => it makes the last label pop inside a previous large empty space
+#define SQUEEZE_LAST_CROPPED_LABEL 0 //1
 
 
 GraphTimeAxis4::GraphTimeAxis4()
