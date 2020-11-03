@@ -28,6 +28,7 @@ Watermark::SetWatermarkMessage(Plugin *plug, IGraphics *graphics,
                                                    x, y,
                                                    watermarkMessage,
                                                    WATERMARK_TEXT_SIZE,
+                                                   WATERMARK_TEXT_FONT,
                                                    mTextColor,
                                                    EAlign::Near);
 

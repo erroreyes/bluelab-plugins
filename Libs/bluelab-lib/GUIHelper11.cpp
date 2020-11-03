@@ -18,15 +18,10 @@
 
 #include "GUIHelper11.h"
 
-// Text
-//#define TITLE_TEXT_FONT "font-bold"
-//#define VALUE_TEXT_FONT "font-bold"
-//#define VERSION_TEXT_FONT "font-bold"
-#define TITLE_TEXT_FONT "font-regular"
-#define VALUE_TEXT_FONT "font-regular"
-#define VERSION_TEXT_FONT "font-regular"
-
-#define TEXTFIELD_BITMAP "textfield.png"
+// Available fonts:
+// - "font-regular"
+// - "font-light"
+// - "font-bold"
 
 // Demo mode
 #if DEMO_VERSION
@@ -34,10 +29,11 @@
 #endif
 
 #ifndef DEMO_MODE
-#define DEMO_MODE 0 // 1
+#define DEMO_MODE 0
 #endif
 
 #define DEMO_MESSAGE "[DEMO] Please consider buying if you like it!"
+
 
 GUIHelper11::GUIHelper11(Style style)
 {
@@ -61,46 +57,50 @@ GUIHelper11::GUIHelper11(Style style)
         mValueTextBGColor = IColor(0, 0, 0, 0);
         
         mVersionTextSize = 12.0;
-        //mVersionTextOffset = 3.0;
         mVersionTextOffsetX = 100.0;
         mVersionTextOffsetY = 3.0;
         mVersionTextColor = IColor(255, 110 , 110, 110);
         
         mVumeterColor = IColor(255, 131 , 152, 214);
         mVumeterNeedleColor = IColor(255, 237, 120, 31);
-        mVumeterNeedleDepth = 2.0; //4.0;
+        mVumeterNeedleDepth = 2.0;
     }
     
     if (style == STYLE_BLUELAB)
     {
         mCreateTitles = true;
         
-        mTitleTextSize = 16.0; //20.0; //13.0;
+        mTitleTextSize = 16.0;
         mTitleTextOffsetX = 0.0;
-        mTitleTextOffsetY = -23.0;
+        mTitleTextOffsetY = -23.0; //-16.0;
         mTitleTextColor = IColor(255, 110, 110, 110);
         
         mTitleTextSizeBig = 20.0;
         mTitleTextOffsetXBig = 0.0;
-        mTitleTextOffsetYBig = -32.0; //-23.0;
+        mTitleTextOffsetYBig = -32.0;
+        
+        mDefaultTitleSize = SIZE_SMALL;
+        mTitleFont = "font-bold";
         
         mValueCaptionOffset = 0.0;
-        mValueTextSize = 16.0; //14.0;
+        mValueTextSize = 16.0;
         mValueTextOffsetX = -1.0;
-        mValueTextOffsetY = 14.0; //13.0;
+        mValueTextOffsetY = 14.0;
         mValueTextColor = IColor(255, 240, 240, 255);
         mValueTextFGColor = mValueTextColor;
         mValueTextBGColor = IColor(0, 0, 0, 0);
+        //mValueTextFont = "font-regular";
+        mValueTextFont = "font-bold";
         
         mVersionTextSize = 12.0;
-        //mVersionTextOffset = 3.0;
         mVersionTextOffsetX = 100.0;
         mVersionTextOffsetY = 3.0;
         mVersionTextColor = IColor(255, 110 , 110, 110);
+        mVersionTextFont = "font-regular";
         
         mVumeterColor = IColor(255, 131 , 152, 214);
         mVumeterNeedleColor = IColor(255, 237, 120, 31);
-        mVumeterNeedleDepth = 2.0; //4.0;
+        mVumeterNeedleDepth = 2.0;
         
         mLogoOffsetX = 0.0;
         mLogoOffsetY = -1.0;
@@ -119,10 +119,12 @@ GUIHelper11::GUIHelper11(Style style)
         mDemoTextOffsetX = 2.0;
         mDemoTextOffsetY = 2.0;
         mDemoTextColor = IColor(255, 200, 0, 0);
+        mDemoFont = "font-regular";
         
         mRadioLabelTextSize = 15;
         mRadioLabelTextOffsetX = 6.0;
         mRadioLabelTextColor = IColor(255, 100, 100, 161);
+        mLabelTextFont = "font-bold";
         
         mButtonLabelTextOffsetX = 3.0;
         mButtonLabelTextOffsetY = 3.0;
@@ -135,7 +137,9 @@ IBKnobControl *
 GUIHelper11::CreateKnob(IGraphics *graphics,
                         float x, float y,
                         const char *bitmapFname, int nStates,
-                        int paramIdx, const char *title,
+                        int paramIdx,
+                        const char *tfBitmapFname,
+                        const char *title,
                         Size titleSize,
                         ICaptionControl **caption)
 {
@@ -155,6 +159,7 @@ GUIHelper11::CreateKnob(IGraphics *graphics,
     ICaptionControl *caption0 =
                 CreateValue(graphics,
                             x + bitmap.W()/2, y + bitmap.H()/bitmap.N(),
+                            tfBitmapFname,
                             paramIdx);
     if (caption != NULL)
         *caption = caption0;
@@ -311,10 +316,11 @@ GUIHelper11::CreateVumeterNeedleV(IGraphics *graphics,
 ITextControl *
 GUIHelper11::CreateText(IGraphics *graphics, float x, float y,
                         const char *textStr, float size,
+                        const char *font,
                         const IColor &color, EAlign align,
                         float offsetX, float offsetY)
 {
-    IText text(size, color, TITLE_TEXT_FONT, align);
+    IText text(size, color, font, align);
     
     float width = GetTextWidth(graphics, text, textStr);
     
@@ -385,17 +391,14 @@ GUIHelper11::CreateVersion(Plugin *plug, IGraphics *graphics,
     }
     
     IText versionText(mVersionTextSize,
-                      mVersionTextColor, VERSION_TEXT_FONT, textAlign);
+                      mVersionTextColor, mVersionTextFont, textAlign);
     
     if (pos == BOTTOM)
     {
         float textWidth = GetTextWidth(graphics, versionText, versionStr0);
         
         x = graphics->Width()/2 - textWidth/2.0;
-        
         y = graphics->Height() - mVersionTextSize - mVersionTextOffsetY;
-        
-        //textAlign = EAlign::Center;
     }
     
     float textWidth = GetTextWidth(graphics, versionText, versionStr0);
@@ -503,16 +506,6 @@ GUIHelper11::CreateHelpButton(Plugin *plug, IGraphics *graphics,
 #else
     // On windows, we must load the resource from dll, save it to the temp file
     // before re-opening it
-#if 0 // iPlug1
-    IGraphicsWin *graphWin = (IGraphicsWin *)graphics;
-    void *resBuf;
-    long resSize;
-    bool res = graphWin->LoadWindowsResource(manResId, "PDF",
-                                             &resBuf, &resSize);
-    if (!res)
-        return;
-#endif
-
     WDL_TypedBuf<uint8_t> resBuf = graphics->LoadResource(MANUAL_FN, "RCDATA");
     long resSize = resBuf.GetSize();
     if (resSize == 0)
@@ -520,12 +513,6 @@ GUIHelper11::CreateHelpButton(Plugin *plug, IGraphics *graphics,
 
     TCHAR tempPathBuffer[MAX_PATH];
     GetTempPath(MAX_PATH, tempPathBuffer);
-
-#if 0 // iPlug1
-    // Remove the "manual" directory from the path
-    fileName = BLUtils::GetFileName(fileName);
-    sprintf(fullFileName, "%s%s", tempPathBuffer, fileName);
-#endif
 
     sprintf(fullFileName, "%s%s", tempPathBuffer, MANUAL_FN);
     
@@ -585,8 +572,8 @@ GUIHelper11::CreateDemoMessage(IGraphics *graphics)
     
     ITextControl *textControl = CreateText(graphics,
                                            x, y,
-                                           DEMO_MESSAGE,
-                                           mDemoTextSize,
+                                           DEMO_MESSAGE, mDemoTextSize,
+                                           mDemoFont,
                                            mDemoTextColor, EAlign::Near);
     
     // Avoids that the trial message masks the interaction on the help button for example
@@ -636,7 +623,7 @@ GUIHelper11::CreateRadioButtons(IGraphics *graphics,
             {
                 IText labelText(mRadioLabelTextSize,
                                 mRadioLabelTextColor,
-                                TITLE_TEXT_FONT,
+                                mLabelTextFont,
                                 align);
                 
                 int labelY = y + i*stepSize;
@@ -670,7 +657,7 @@ GUIHelper11::CreateRadioButtons(IGraphics *graphics,
                 // new
                 IText labelText(mRadioLabelTextSize,
                                 mRadioLabelTextColor,
-                                TITLE_TEXT_FONT,
+                                mLabelTextFont,
                                 align);
                 
                 int labelX = x + i*stepSize;
@@ -760,6 +747,9 @@ void
 GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y,
                          const char *title, Size size, EAlign align)
 {
+    if (size == SIZE_DEFAULT)
+        size = mDefaultTitleSize;
+    
     float titleSize = mTitleTextSize;
     float textOffsetX = mTitleTextOffsetX;
     float textOffsetY = mTitleTextOffsetY;
@@ -771,7 +761,7 @@ GUIHelper11::CreateTitle(IGraphics *graphics, float x, float y,
         textOffsetY = mTitleTextOffsetYBig;
     }
     
-    IText text(titleSize, mTitleTextColor, TITLE_TEXT_FONT, align);
+    IText text(titleSize, mTitleTextColor, mTitleFont, align);
     float width = GetTextWidth(graphics, text, title);
     
     if (align == EAlign::Center)
@@ -817,13 +807,15 @@ GUIHelper11::CreateText(IGraphics *graphics, float x, float y,
 }
 
 ICaptionControl *
-GUIHelper11::CreateValue(IGraphics *graphics, float x, float y,
+GUIHelper11::CreateValue(IGraphics *graphics,
+                         float x, float y,
+                         const char *bitmapFname,
                          int paramIdx)
 {
     // Bitmap
     float width;
     float height;
-    CreateBitmap(graphics, x, y, TEXTFIELD_BITMAP,
+    CreateBitmap(graphics, x, y, bitmapFname,
                  mValueTextOffsetX, mValueTextOffsetY,
                  &width, &height);
 
@@ -833,7 +825,7 @@ GUIHelper11::CreateValue(IGraphics *graphics, float x, float y,
                  x + width/2.0 + mValueTextOffsetX,
                  y + height + mValueTextOffsetY);
     
-    IText text(mValueTextSize, mValueTextColor, VALUE_TEXT_FONT,
+    IText text(mValueTextSize, mValueTextColor, mValueTextFont,
                EAlign::Center, EVAlign::Middle, 0.0,
                mValueTextBGColor, mValueTextFGColor);
     ICaptionControl *caption = new ICaptionControl(bounds, paramIdx, text,

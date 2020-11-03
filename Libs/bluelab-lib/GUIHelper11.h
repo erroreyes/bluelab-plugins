@@ -48,6 +48,7 @@ public:
     enum Size
     {
         SIZE_DEFAULT,
+        SIZE_SMALL,
         SIZE_BIG
     };
     
@@ -58,7 +59,9 @@ public:
     IBKnobControl *CreateKnob(IGraphics *graphics,
                               float x, float y,
                               const char *bitmapFname, int nStates,
-                              int paramIdx, const char *title = NULL,
+                              int paramIdx,
+                              const char *tfBitmapFname,
+                              const char *title = NULL,
                               Size titleSize = SIZE_DEFAULT,
                               ICaptionControl **caption = NULL);
     
@@ -104,6 +107,7 @@ public:
     ITextControl *CreateText(IGraphics *graphics,
                              float x, float y,
                              const char *textStr, float size,
+                             const char *font,
                              const IColor &color, EAlign align,
                              float offsetX = 0.0, float offsetY = 0.0);
 
@@ -170,7 +174,9 @@ protected:
                              float offsetX, float offsetY,
                              EAlign align = EAlign::Center);
     
-    ICaptionControl *CreateValue(IGraphics *graphics, float x, float y,
+    ICaptionControl *CreateValue(IGraphics *graphics,
+                                 float x, float y,
+                                 const char *bitmapFname,
                                  int paramIdx);
     
     ITextControl *CreateValueText(IGraphics *graphics, float x, float y,
@@ -196,6 +202,9 @@ protected:
     float mTitleTextOffsetY;
     IColor mTitleTextColor;
     
+    Size mDefaultTitleSize;
+    char *mTitleFont;
+    
     float mTitleTextSizeBig;
     float mTitleTextOffsetXBig;
     float mTitleTextOffsetYBig;
@@ -207,11 +216,13 @@ protected:
     IColor mValueTextColor;
     IColor mValueTextFGColor;
     IColor mValueTextBGColor;
+    char *mValueTextFont;
     
     float mVersionTextSize;
     float mVersionTextOffsetX;
     float mVersionTextOffsetY;
     IColor mVersionTextColor;
+    char *mVersionTextFont;
     
     IColor mVumeterColor;
     IColor mVumeterNeedleColor;
@@ -234,10 +245,12 @@ protected:
     float mDemoTextOffsetX;
     float mDemoTextOffsetY;
     IColor mDemoTextColor;
+    char *mDemoFont;
     
     float mRadioLabelTextSize;
     float mRadioLabelTextOffsetX;
     IColor mRadioLabelTextColor;
+    char *mLabelTextFont;
     
     float mButtonLabelTextOffsetX;
     float mButtonLabelTextOffsetY;
