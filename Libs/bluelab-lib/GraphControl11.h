@@ -458,7 +458,7 @@ public:
                             ImageDisplay::Mode mode = ImageDisplay::MODE_LINEAR);
     ImageDisplay *GetImageDisplay();
     
-    void SetGraphYimeAxis(GraphTimeAxis4 *timeAxis);
+    void SetGraphTimeAxis(GraphTimeAxis4 *timeAxis);
     
     void SetDataChanged();
     

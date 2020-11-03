@@ -70,15 +70,21 @@ public:
                                 const char *overlayFname = NULL);
 #endif // IGRAPHICS_NANOVG
     
+    // 2 states or more
     IBSwitchControl *CreateSwitchButton(IGraphics *graphics,
                                         float x, float y,
                                         const char *bitmapFname, int nStates,
-                                        int paramIdx, const char *title = NULL);
+                                        int paramIdx,
+                                        const char *title = NULL,
+                                        Size titleSize = SIZE_DEFAULT);
     
+    // 2 states
     IBSwitchControl *CreateToggleButton(IGraphics *graphics,
                                         float x, float y,
                                         const char *bitmapFname,
-                                        int paramIdx, const char *title = NULL);
+                                        int paramIdx,
+                                        const char *title = NULL,
+                                        Size titleSize = SIZE_DEFAULT);
     
     VumeterControl *CreateVumeter(IGraphics *graphics,
                                   float x, float y,

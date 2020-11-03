@@ -1739,7 +1739,7 @@ GraphControl11::GetImageDisplay()
 }
 
 void
-GraphControl11::SetGraphYimeAxis(GraphTimeAxis4 *timeAxis)
+GraphControl11::SetGraphTimeAxis(GraphTimeAxis4 *timeAxis)
 {
     mGraphTimeAxis = timeAxis;
 }

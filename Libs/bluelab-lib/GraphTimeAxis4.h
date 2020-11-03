@@ -63,7 +63,7 @@ protected:
     //
     bool mTransportIsPlaying;
     BL_FLOAT mCurrentTimeTransport;
-    BL_FLOAT mTransporttimeStamp;
+    long int mTransportTimeStamp;
 };
 
 #endif // IGRAPHICS_NANOVG

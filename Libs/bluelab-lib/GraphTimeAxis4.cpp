@@ -41,7 +41,7 @@ GraphTimeAxis4::GraphTimeAxis4()
     
     mTransportIsPlaying = false;
     mCurrentTimeTransport = 0.0;
-    mTransporttimeStamp = 0.0;
+    mTransportTimeStamp = 0;
 }
 
 GraphTimeAxis4::~GraphTimeAxis4() {}
@@ -56,6 +56,7 @@ GraphTimeAxis4::Init(GraphControl11 *graph, int bufferSize,
     mTimeDuration = timeDuration;
     mSpacingSeconds = spacingSeconds;
     
+    mGraph->SetGraphTimeAxis(this);
     //
     
     // Horizontal axis: time
@@ -104,7 +105,7 @@ GraphTimeAxis4::UpdateFromTransport(BL_FLOAT currentTime)
 {
     mCurrentTimeTransport = currentTime;
     
-    mTransporttimeStamp = ((BL_FLOAT)BLUtils::GetTimeMillis())*0.001;
+    mTransportTimeStamp = BLUtils::GetTimeMillis();
     
     Update(mCurrentTimeTransport);
 }
@@ -115,10 +116,10 @@ GraphTimeAxis4::Update()
     if (!mTransportIsPlaying)
         return;
     
-    BL_FLOAT now = ((BL_FLOAT)BLUtils::GetTimeMillis())*0.001;
-    BL_FLOAT elapsed = now - mTransporttimeStamp;
+    long int now = BLUtils::GetTimeMillis();
+    BL_FLOAT elapsed = (now - mTransportTimeStamp)*0.001;
     
-    Update(mCurrentTime + elapsed);
+    Update(mCurrentTimeTransport + elapsed);
 }
 
 void

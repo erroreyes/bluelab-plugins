@@ -198,13 +198,17 @@ GUIHelper11::CreateGraph(Plugin *plug, IGraphics *graphics,
 }
 #endif // IGRAPHICS_NANOVG
 
+
 IBSwitchControl *
 GUIHelper11::CreateSwitchButton(IGraphics *graphics,
                                 float x, float y,
                                 const char *bitmapFname, int nStates,
-                                int paramIdx, const char *title)
+                                int paramIdx, const char *title,
+                                Size titleSize)
 {
     IBitmap bitmap = graphics->LoadBitmap(bitmapFname, nStates);
+ 
+    CreateTitle(graphics, x + bitmap.W()/2, y, title, titleSize);
     
     IBSwitchControl *button = new IBSwitchControl(x, y, bitmap, paramIdx);
     graphics->AttachControl(button);
@@ -216,11 +220,13 @@ IBSwitchControl *
 GUIHelper11::CreateToggleButton(IGraphics *graphics,
                                 float x, float y,
                                 const char *bitmapFname,
-                                int paramIdx, const char *title)
+                                int paramIdx, const char *title,
+                                Size titleSize)
 {
     IBSwitchControl *button = CreateSwitchButton(graphics, x, y,
                                                  bitmapFname, 2,
-                                                 paramIdx, title);
+                                                 paramIdx,
+                                                 title, titleSize);
     
     return button;
 }
