@@ -18,7 +18,7 @@
 // Disable for debugging
 #define USE_SPECTRO_SCROLL 1
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplayScroll2;
 
 class InfrasonicViewerFftObj2 : public ProcessObj
@@ -35,7 +35,7 @@ public:
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate,
                BL_FLOAT timeWindowSec);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
 #if USE_SPECTRO_SCROLL
     void SetSpectrogramDisplay(SpectrogramDisplayScroll2 *spectroDisplay);
@@ -57,7 +57,7 @@ protected:
 
     int ComputeLastBin(BL_FLOAT freq);
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
 #if USE_SPECTRO_SCROLL
     SpectrogramDisplayScroll2 *mSpectroDisplay;

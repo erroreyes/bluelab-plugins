@@ -15,7 +15,7 @@
 //
 // From BatFftObj2 (directly)
 //
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplay;
 class HistoMaskLine2;
 
@@ -34,7 +34,7 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     void SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay);
     
@@ -76,8 +76,8 @@ protected:
                          WDL_TypedBuf<BL_FLOAT> *coordsX,
                          WDL_TypedBuf<BL_FLOAT> *coordsY);
 
-    
-    BLSpectrogram3 *mSpectrogram;
+    //
+    BLSpectrogram4 *mSpectrogram;
     
     SpectrogramDisplay *mSpectroDisplay;
     

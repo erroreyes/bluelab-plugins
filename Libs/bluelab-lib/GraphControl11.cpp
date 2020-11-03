@@ -1333,7 +1333,7 @@ GraphControl11::DrawText(NVGcontext *vg,
 }
 
 void
-GraphControl11::SetSpectrogram(BLSpectrogram3 *spectro,
+GraphControl11::SetSpectrogram(BLSpectrogram4 *spectro,
                                BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right,
                                BL_GUI_FLOAT bottom)
 {
@@ -1358,7 +1358,7 @@ GraphControl11::GetSpectrogramDisplay()
 }
 
 void
-GraphControl11::SetSpectrogramScroll(BLSpectrogram3 *spectro,
+GraphControl11::SetSpectrogramScroll(BLSpectrogram4 *spectro,
                                      BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right, BL_GUI_FLOAT bottom)
 {
     WDL_MutexLock lock(&mMutex);
@@ -1378,7 +1378,7 @@ GraphControl11::GetSpectrogramDisplayScroll()
 }
 
 void
-GraphControl11::SetSpectrogramScroll2(BLSpectrogram3 *spectro,
+GraphControl11::SetSpectrogramScroll2(BLSpectrogram4 *spectro,
                                      BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right, BL_GUI_FLOAT bottom)
 {
     WDL_MutexLock lock(&mMutex);

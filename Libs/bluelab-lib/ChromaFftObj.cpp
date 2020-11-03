@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <Window.h>
 #include <BLUtils.h>
 
@@ -35,7 +35,7 @@ ChromaFftObj::ChromaFftObj(int bufferSize, int oversampling, int freqRes,
                            BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -120,7 +120,7 @@ ChromaFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT samp
 #endif
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 ChromaFftObj::GetSpectrogram()
 {
     return mSpectrogram;

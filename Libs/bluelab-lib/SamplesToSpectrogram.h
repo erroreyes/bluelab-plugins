@@ -13,7 +13,7 @@
 
 #include "IPlug_include_in_plug_hdr.h"
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SimpleSpectrogramFftObj;
 class FftProcessObj16;
 
@@ -30,13 +30,13 @@ public:
     
     void SetSamples(const WDL_TypedBuf<BL_FLOAT> &samples);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
 protected:
     FftProcessObj16 *mFftObj;
     SimpleSpectrogramFftObj *mSpectrogramFftObj;
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
 };
 
 #endif /* defined(__BL_Reverb__SamplesToSpectrogram__) */

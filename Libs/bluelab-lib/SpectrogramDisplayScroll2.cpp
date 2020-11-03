@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <UpTime.h>
 
 #include "SpectrogramDisplayScroll2.h"
@@ -340,8 +340,9 @@ SpectrogramDisplayScroll2::DrawSpectrogram(int width, int height)
 }
 
 void
-SpectrogramDisplayScroll2::SetSpectrogram(BLSpectrogram3 *spectro,
-                                         BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom)
+SpectrogramDisplayScroll2::SetSpectrogram(BLSpectrogram4 *spectro,
+                                          BL_FLOAT left, BL_FLOAT top, BL_FLOAT right,
+                                          BL_FLOAT bottom)
 {
     mSpectrogram = spectro;
     

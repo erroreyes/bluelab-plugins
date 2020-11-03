@@ -6,7 +6,7 @@
 //
 //
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 
 #include <BLUtils.h>
 
@@ -17,7 +17,7 @@ SimpleSpectrogramFftObj::SimpleSpectrogramFftObj(int bufferSize,
                                                  BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
 
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
 }
@@ -47,7 +47,7 @@ SimpleSpectrogramFftObj::Reset(int bufferSize, int oversampling,
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 SimpleSpectrogramFftObj::GetSpectrogram()
 {
     return mSpectrogram;

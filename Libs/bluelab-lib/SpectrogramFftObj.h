@@ -16,8 +16,7 @@
 #define CONSTANT_SPEED_FEATURE 1
 
 
-class BLSpectrogram3;
-
+class BLSpectrogram4;
 class SpectrogramFftObj : public ProcessObj
 {
 public:
@@ -31,7 +30,7 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     // After editing, set again the full data
     //
@@ -62,7 +61,7 @@ protected:
     int ComputeAddStep();
 #endif
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
     long mLineCount;
     

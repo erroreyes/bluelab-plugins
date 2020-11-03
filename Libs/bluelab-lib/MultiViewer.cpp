@@ -60,7 +60,7 @@ MultiViewer::MultiViewer(Plugin *plug, IGraphics *pGraphics,
     //
     mSamplesToSpectro = new SamplesToSpectrogram(sampleRate);
     
-    BLSpectrogram3 *spectro = mSamplesToSpectro->GetSpectrogram();
+    BLSpectrogram4 *spectro = mSamplesToSpectro->GetSpectrogram();
     mGraph->SetSpectrogram(spectro, 0.0, 0.0, 1.0, 1.0);
     
     // Curves

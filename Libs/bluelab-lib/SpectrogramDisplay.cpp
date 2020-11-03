@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <MiniView.h>
 
 #include "SpectrogramDisplay.h"
@@ -468,7 +468,7 @@ SpectrogramDisplay::GetSpectroNormCoordinate(int x, int y, int width, int height
 }
 
 void
-SpectrogramDisplay::SetSpectrogram(BLSpectrogram3 *spectro,
+SpectrogramDisplay::SetSpectrogram(BLSpectrogram4 *spectro,
                                    BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom)
 {
     mSpectrogram = spectro;

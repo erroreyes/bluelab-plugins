@@ -14,7 +14,7 @@
 // From ChromaFftObj
 //
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplayScroll;
 
 class GhostViewerFftObj : public ProcessObj
@@ -30,7 +30,7 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
     
@@ -41,7 +41,7 @@ protected:
                             const WDL_TypedBuf<BL_FLOAT> &phases);
 
     //
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
     SpectrogramDisplayScroll *mSpectroDisplay;
     

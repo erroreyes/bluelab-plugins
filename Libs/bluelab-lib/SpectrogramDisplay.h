@@ -15,7 +15,7 @@
 
 #include <BLTypes.h>
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class MiniView;
 struct /*class*/ NVGcontext;
 
@@ -48,7 +48,7 @@ public:
                                   BL_FLOAT *nx, BL_FLOAT *ny);
     
     // Spectrogram
-    void SetSpectrogram(BLSpectrogram3 *spectro,
+    void SetSpectrogram(BLSpectrogram4 *spectro,
                         BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom);
     
     void ShowSpectrogram(bool flag);
@@ -101,7 +101,7 @@ protected:
     NVGcontext *mVg;
     
     // Spectrogram
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     BL_FLOAT mSpectrogramBounds[4];
     
     int mNvgSpectroImage;

@@ -13,12 +13,10 @@
 
 // From BatFftObj5 (directly)
 //
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplay;
 class ImageDisplay;
-
 class DUETSeparator3;
-
 class StereoDeReverbProcess : public MultichannelProcess
 {
 public:

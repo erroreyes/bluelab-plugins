@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 
 #include <BLUtils.h>
 
@@ -38,7 +38,7 @@ DUETFftObj2::DUETFftObj2(GraphControl11 *graph,
 {
     mGraph = graph;
     
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     mImageDisplay = NULL;
@@ -168,7 +168,7 @@ DUETFftObj2::Update()
         Process();
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 DUETFftObj2::GetSpectrogram()
 {
     return mSpectrogram;

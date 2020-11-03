@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <BLUtils.h>
 
 #include <SpectrogramDisplay.h>
@@ -30,10 +30,10 @@ GhostViewerFftObjSubSonic::GhostViewerFftObjSubSonic(int bufferSize,
 {
     int lastBin = ComputeLastBin(MAX_FREQ);
 
-    //mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
-    //mSpectrogram = new BLSpectrogram3(lastBin/(2*oversampling)/*4*/, -1);
-    mSpectrogram = new BLSpectrogram3(lastBin/4, -1);
-    //mSpectrogram = new BLSpectrogram3(lastBin, -1);
+    //mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    //mSpectrogram = new BLSpectrogram4(lastBin/(2*oversampling)/*4*/, -1);
+    mSpectrogram = new BLSpectrogram4(lastBin/4, -1);
+    //mSpectrogram = new BLSpectrogram4(lastBin, -1);
     
     mSpectroDisplay = NULL;
     
@@ -107,7 +107,7 @@ GhostViewerFftObjSubSonic::Reset(int bufferSize, int oversampling,
     mOverlapLines.clear();
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 GhostViewerFftObjSubSonic::GetSpectrogram()
 {
     return mSpectrogram;

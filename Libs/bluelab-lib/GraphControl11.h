@@ -105,7 +105,7 @@ using namespace iplug::igraphics;
 struct NVGcontext;
 struct NVGLUframebuffer;
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplay;
 class SpectrogramDisplayScroll;
 class SpectrogramDisplayScroll2; // A bit drafty... (for InfrasonicViewer)
@@ -394,19 +394,19 @@ public:
                          BL_GUI_FLOAT fontSizeCoeff = 1.0);
     
     // SpectrogramDisplay, for Ghost
-    void SetSpectrogram(BLSpectrogram3 *spectro,
+    void SetSpectrogram(BLSpectrogram4 *spectro,
                         BL_GUI_FLOAT left, BL_GUI_FLOAT top,
                         BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
     SpectrogramDisplay *GetSpectrogramDisplay();
     
     // SpectrgramDisplayScroll, for Chroma and GhostViewer
-    void SetSpectrogramScroll(BLSpectrogram3 *spectro,
+    void SetSpectrogramScroll(BLSpectrogram4 *spectro,
                               BL_GUI_FLOAT left, BL_GUI_FLOAT top,
                               BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
     SpectrogramDisplayScroll *GetSpectrogramDisplayScroll();
     
     // For SpectrogramDisplayScroll2
-    void SetSpectrogramScroll2(BLSpectrogram3 *spectro,
+    void SetSpectrogramScroll2(BLSpectrogram4 *spectro,
                                BL_GUI_FLOAT left, BL_GUI_FLOAT top,
                                BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
     SpectrogramDisplayScroll2 *GetSpectrogramDisplayScroll2();

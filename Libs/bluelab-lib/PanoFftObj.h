@@ -14,7 +14,7 @@
 // From ChromaFftObj
 //
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplayScroll;
 
 class PanoFftObj : public MultichannelProcess
@@ -30,7 +30,7 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
     
@@ -44,7 +44,7 @@ protected:
                          WDL_TypedBuf<BL_FLOAT> *panoLine);
     
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
     SpectrogramDisplayScroll *mSpectroDisplay;
     

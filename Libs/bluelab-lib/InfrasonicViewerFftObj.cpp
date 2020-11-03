@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <SpectrogramDisplay.h>
 #include <SpectrogramDisplayScroll.h>
 #include <BLUtils.h>
@@ -31,10 +31,10 @@ InfrasonicViewerFftObj::InfrasonicViewerFftObj(int bufferSize,
     
     int lastBin = ComputeLastBin(mMaxFreq);
 
-    //mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
-    //mSpectrogram = new BLSpectrogram3(lastBin/(2*oversampling)/*4*/, -1);
-    mSpectrogram = new BLSpectrogram3(lastBin/4, -1);
-    //mSpectrogram = new BLSpectrogram3(lastBin, -1);
+    //mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    //mSpectrogram = new BLSpectrogram4(lastBin/(2*oversampling)/*4*/, -1);
+    mSpectrogram = new BLSpectrogram4(lastBin/4, -1);
+    //mSpectrogram = new BLSpectrogram4(lastBin, -1);
     
     mSpectroDisplay = NULL;
     
@@ -196,7 +196,7 @@ InfrasonicViewerFftObj::Reset(int bufferSize, int oversampling,
 }
 #endif
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 InfrasonicViewerFftObj::GetSpectrogram()
 {
     return mSpectrogram;

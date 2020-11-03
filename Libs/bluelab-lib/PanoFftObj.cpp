@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <Window.h>
 #include <SpectrogramDisplayScroll.h>
 #include <BLUtils.h>
@@ -24,7 +24,7 @@ PanoFftObj::PanoFftObj(int bufferSize, int oversampling, int freqRes,
                       BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -108,7 +108,7 @@ PanoFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
     mOverlapLines.clear();
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 PanoFftObj::GetSpectrogram()
 {
     return mSpectrogram;

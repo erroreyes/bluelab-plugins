@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <BLUtils.h>
 #include <BLDebug.h>
 
@@ -23,7 +23,7 @@ GhostViewerFftObj::GhostViewerFftObj(int bufferSize, int oversampling, int freqR
                                      BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -85,7 +85,7 @@ GhostViewerFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT
     mOverlapLines.clear();
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 GhostViewerFftObj::GetSpectrogram()
 {
     return mSpectrogram;

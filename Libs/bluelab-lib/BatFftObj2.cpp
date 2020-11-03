@@ -6,7 +6,7 @@
 //
 //
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <Window.h>
 #include <BLUtils.h>
 
@@ -55,7 +55,7 @@ BatFftObj2::BatFftObj2(int bufferSize, int oversampling, int freqRes,
                        BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -235,7 +235,7 @@ BatFftObj2::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
 #endif
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 BatFftObj2::GetSpectrogram()
 {
     return mSpectrogram;

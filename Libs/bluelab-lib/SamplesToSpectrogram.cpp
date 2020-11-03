@@ -6,7 +6,7 @@
 //
 //
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <SimpleSpectrogramFftObj.h>
 #include <FftProcessObj16.h>
 
@@ -158,7 +158,7 @@ SamplesToSpectrogram::SetSamples(const WDL_TypedBuf<BL_FLOAT> &samples)
     }
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 SamplesToSpectrogram::GetSpectrogram()
 {
     return mSpectrogram;

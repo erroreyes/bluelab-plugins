@@ -11,8 +11,7 @@
 
 #include "FftProcessObj16.h"
 
-class BLSpectrogram3;
-
+class BLSpectrogram4;
 class SpectrogramFftObjEXPE : public ProcessObj
 {
 public:
@@ -26,7 +25,7 @@ public:
     
     void Reset(int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     // After editing, set again the full data
     //
@@ -54,7 +53,7 @@ protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
     long mLineCount;
     

@@ -6,7 +6,7 @@
 //
 //
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <GraphControl11.h>
 #include <SpectrogramDisplay.h>
 #include <ImageDisplay.h>

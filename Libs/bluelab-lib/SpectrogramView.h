@@ -14,13 +14,12 @@ using namespace std;
 
 #include "IPlug_include_in_plug_hdr.h"
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class FftProcessObj16;
-
 class SpectrogramView
 {
 public:
-    SpectrogramView(BLSpectrogram3 *spectrogram,
+    SpectrogramView(BLSpectrogram4 *spectrogram,
                     FftProcessObj16 *fftObj,
                     int maxNumCols,
                     BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
@@ -94,7 +93,7 @@ public:
     void SetSampleRate(BL_FLOAT sampleRate);
     
 protected:
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     int mMaxNumCols;
     
     FftProcessObj16 *mFftObj;

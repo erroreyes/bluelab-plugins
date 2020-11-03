@@ -34,7 +34,7 @@ using namespace iplug;
 // => need to integrate USE_VARIABLE_SPEED from SpectrogramDisplay
 // if needed
 //
-class BLSpectrogram3;
+class BLSpectrogram4;
 class NVGcontext;
 
 class SpectrogramDisplayScroll2
@@ -58,7 +58,7 @@ public:
     void DrawSpectrogram(int width, int height);
     
     // Spectrogram
-    void SetSpectrogram(BLSpectrogram3 *spectro,
+    void SetSpectrogram(BLSpectrogram4 *spectro,
                         BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom);
     
     void SetFftParams(int bufferSize, int overlapping, BL_FLOAT sampleRate);
@@ -88,7 +88,7 @@ protected:
     NVGcontext *mVg;
     
     // Spectrogram
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     BL_FLOAT mSpectrogramBounds[4];
     
     int mNvgSpectroImage;

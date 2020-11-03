@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <Window.h>
 #include <SpectrogramDisplayScroll.h>
 #include <HistoMaskLine2.h>
@@ -34,7 +34,7 @@ PanogramFftObj::PanogramFftObj(int bufferSize, int oversampling, int freqRes,
                                BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -137,7 +137,7 @@ PanogramFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sa
     mAddLineCount = 0;
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 PanogramFftObj::GetSpectrogram()
 {
     return mSpectrogram;

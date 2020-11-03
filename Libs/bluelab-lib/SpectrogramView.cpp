@@ -6,7 +6,7 @@
 //
 //
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <FftProcessObj16.h>
 #include <Resampler2.h>
 #include <BLUtils.h>
@@ -31,7 +31,7 @@
 // (FIXED => overlapping=1)
 #define FULL_STEP_PROCESS 0
 
-SpectrogramView::SpectrogramView(BLSpectrogram3 *spectrogram,
+SpectrogramView::SpectrogramView(BLSpectrogram4 *spectrogram,
                                  FftProcessObj16 *fftObj,
                                  int maxNumCols,
                                  BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,

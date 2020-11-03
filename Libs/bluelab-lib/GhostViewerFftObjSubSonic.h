@@ -17,7 +17,7 @@
 // Disable for debugging
 #define USE_SPECTRO_SCROLL 1
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplayScroll;
 
 class GhostViewerFftObjSubSonic : public ProcessObj
@@ -33,7 +33,7 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
 #if USE_SPECTRO_SCROLL
     void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
@@ -54,7 +54,7 @@ protected:
 
     int ComputeLastBin(BL_FLOAT freq);
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
 #if USE_SPECTRO_SCROLL
     SpectrogramDisplayScroll *mSpectroDisplay;

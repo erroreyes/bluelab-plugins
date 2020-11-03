@@ -14,7 +14,7 @@
 // From ChromaFftObj
 //
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplayScroll;
 class HistoMaskLine2;
 class PanogramPlayFftObj;
@@ -32,7 +32,7 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
     
@@ -54,8 +54,9 @@ protected:
                          WDL_TypedBuf<BL_FLOAT> *panoLine,
                          HistoMaskLine2 *maskLine = NULL);
     
+    //
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
     SpectrogramDisplayScroll *mSpectroDisplay;
     

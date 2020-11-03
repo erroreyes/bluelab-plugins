@@ -12,8 +12,7 @@
 #include "FftProcessObj16.h"
 
 
-class BLSpectrogram3;
-
+class BLSpectrogram4;
 class SimpleSpectrogramFftObj : public ProcessObj
 {
 public:
@@ -27,14 +26,14 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
 protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
     
     //
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
 };
 
 #endif /* defined(__BL_Ghost__SimpleSpectrogramFftObj__) */

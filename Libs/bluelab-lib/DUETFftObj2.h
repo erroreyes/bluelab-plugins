@@ -15,7 +15,7 @@
 
 // From BatFftObj5 (directly)
 //
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplay;
 class ImageDisplay;
 
@@ -43,7 +43,7 @@ public:
     // To be called from the audio thread, to force update if a parameter changed.
     void Update();
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     void SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay);
     
@@ -98,7 +98,7 @@ protected:
     int mSampleRate;
     
     //
-    BLSpectrogram3 *mSpectrogram; // Unused
+    BLSpectrogram4 *mSpectrogram; // Unused
     SpectrogramDisplay *mSpectroDisplay;
     GraphControl11 *mGraph;
     

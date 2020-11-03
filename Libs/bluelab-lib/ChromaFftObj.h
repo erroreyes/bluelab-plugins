@@ -28,7 +28,7 @@
 // From SpectrogramFftObj
 //
 
-class BLSpectrogram3;
+class BLSpectrogram4;
 class SpectrogramDisplayScroll;
 
 #if USE_FREQ_OBJ
@@ -48,7 +48,7 @@ public:
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
-    BLSpectrogram3 *GetSpectrogram();
+    BLSpectrogram4 *GetSpectrogram();
     
     void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
     
@@ -71,7 +71,7 @@ protected:
     
     BL_FLOAT ComputeC0Freq();
     
-    BLSpectrogram3 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
     SpectrogramDisplayScroll *mSpectroDisplay;
     

@@ -6,7 +6,7 @@
 //
 //
 
-#include <BLSpectrogram3.h>
+#include <BLSpectrogram4.h>
 #include <BLUtils.h>
 
 #include "SpectrogramFftObjEXPE.h"
@@ -20,7 +20,7 @@ SpectrogramFftObjEXPE::SpectrogramFftObjEXPE(int bufferSize, int oversampling, i
                                      BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram3(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
 
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
@@ -64,7 +64,7 @@ SpectrogramFftObjEXPE::Reset(int oversampling, int freqRes, BL_FLOAT sampleRate)
     mOverlapLines.clear();
 }
 
-BLSpectrogram3 *
+BLSpectrogram4 *
 SpectrogramFftObjEXPE::GetSpectrogram()
 {
     return mSpectrogram;
