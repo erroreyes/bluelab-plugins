@@ -18,6 +18,8 @@ using namespace std;
 
 #include "IPlug_include_in_plug_hdr.h"
 
+#define OPTIM_SPECTROGRAM2 1
+
 // BLSpectrogram4: from BLSpectrogram3
 // - use ColormapFactory
 class ColorMap4;
@@ -64,10 +66,10 @@ public:
     
     
     // Image data
-    void GetImageDataFloat(int width, int height, unsigned char *buf);
+    bool GetImageDataFloat(int width, int height, unsigned char *buf);
     
     // Colormap image data
-    void GetColormapImageDataRGBA(WDL_TypedBuf<unsigned int> *colormapImageData);
+    bool GetColormapImageDataRGBA(WDL_TypedBuf<unsigned int> *colormapImageData);
     
     // Load and save
     static BLSpectrogram4 *Load(const char *fileName);
@@ -87,6 +89,7 @@ public:
     void SavePPM32(const char *filename);
     
     unsigned long long GetTotalLineNum();
+    
     
 protected:
     void UnwrapAllPhases(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
@@ -167,7 +170,12 @@ protected:
     
     bool mProgressivePhaseUnwrap;
     
-    static unsigned char mPhasesColor[4];    
+    static unsigned char mPhasesColor[4];
+    
+#if OPTIM_SPECTROGRAM2
+    bool mSpectroDataChanged;
+    bool mColormapDataChanged;
+#endif
 };
 
 #endif /* defined(__Denoiser__BLSpectrogram4__) */

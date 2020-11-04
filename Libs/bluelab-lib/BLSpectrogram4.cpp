@@ -19,6 +19,10 @@
 #define DPHASE_MULT_X 0.001
 #define DPHASE_MULT_Y 0.01
 
+// Optimizes well
+// Avoid recomputing the colormap each time.
+#define OPTIM_SPECTROGRAM 1
+
 unsigned char BLSpectrogram4::mPhasesColor[4] = { 255, 255, 255, 255 };
 
 
@@ -57,6 +61,11 @@ BLSpectrogram4::BLSpectrogram4(int height, int maxCols,
     mProgressivePhaseUnwrap = true;
     
     mTotalLineNum = 0;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+    mColormapDataChanged = true;
+#endif
 }
 
 BLSpectrogram4::~BLSpectrogram4()
@@ -75,6 +84,10 @@ BLSpectrogram4::SetRange(BL_FLOAT range)
     
     mColorMap->SetRange(mRange);
     mColorMap->Generate();
+    
+#if OPTIM_SPECTROGRAM2
+    mColormapDataChanged = true;
+#endif
 }
 
 void
@@ -84,12 +97,20 @@ BLSpectrogram4::SetContrast(BL_FLOAT contrast)
     
     mColorMap->SetContrast(mContrast);
     mColorMap->Generate();
+    
+#if OPTIM_SPECTROGRAM2
+    mColormapDataChanged = true;
+#endif
 }
 
 void
 BLSpectrogram4::SetDisplayMagns(bool flag)
 {
     mDisplayMagns = flag;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
 }
 
 void
@@ -97,6 +118,10 @@ BLSpectrogram4::SetYLogScale(bool flag, BL_FLOAT factor)
 {
     mYLogScale = flag;
     mYLogScaleFactor = factor;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
 }
 
 void
@@ -109,6 +134,10 @@ BLSpectrogram4::SetDisplayPhasesX(bool flag)
     }
     
     mDisplayPhasesX = flag;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
 }
 
 void
@@ -121,12 +150,20 @@ BLSpectrogram4::SetDisplayPhasesY(bool flag)
     }
     
     mDisplayPhasesY = flag;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
 }
 
 void
 BLSpectrogram4::SetDisplayDPhases(bool flag)
 {
     mDisplayDPhases = flag;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
 }
 
 void
@@ -137,6 +174,11 @@ BLSpectrogram4::Reset()
     mUnwrappedPhases.clear();
     
     mTotalLineNum = 0;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+    mColormapDataChanged = true;
+#endif
 }
 
 void
@@ -154,6 +196,11 @@ BLSpectrogram4::Reset(int height, int maxCols)
         // when the spectrogram is not totally full
         FillWithZeros();
     }
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+    mColormapDataChanged = true;
+#endif
 }
 
 int
@@ -185,6 +232,10 @@ BLSpectrogram4::SetColorMap(ColorMapFactory::ColorMap colorMapId)
     // Forward the current parameters
     mColorMap->SetRange(mRange);
     mColorMap->SetContrast(mContrast);
+    
+#if OPTIM_SPECTROGRAM2
+    mColormapDataChanged = true;
+#endif
 }
 
 void
@@ -253,6 +304,10 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     }
     
     mTotalLineNum++;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
 }
 
 bool
@@ -271,11 +326,18 @@ BLSpectrogram4::GetLine(int index,
 }
 
 // Optimized version: keep the strict minimum
-void
+bool
 BLSpectrogram4::GetImageDataFloat(int width, int height, unsigned char *buf)
 {
+#if !OPTIM_SPECTROGRAM
     mColorMap->SetRange(mRange);
     mColorMap->SetContrast(mContrast);
+#endif
+ 
+#if OPTIM_SPECTROGRAM2
+    if (!mSpectroDataChanged)
+        return false;
+#endif
     
     // Empty the buffer
     // Because the spectrogram may be not totally full
@@ -298,12 +360,29 @@ BLSpectrogram4::GetImageDataFloat(int width, int height, unsigned char *buf)
             ((float *)buf)[pixIdx] = (float)magnValue;
         }
     }
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = false;
+#endif
+    
+    return true;
 }
 
-void
+bool
 BLSpectrogram4::GetColormapImageDataRGBA(WDL_TypedBuf<unsigned int> *colormapImageData)
 {
+#if OPTIM_SPECTROGRAM2
+    if (!mColormapDataChanged)
+        return false;
+#endif
+    
     mColorMap->GetDataRGBA(colormapImageData);
+    
+#if OPTIM_SPECTROGRAM2
+    mColormapDataChanged = false;
+#endif
+    
+    return true;
 }
 
 // NOTE: deque is very slow for direct access to elements,
@@ -468,6 +547,10 @@ BLSpectrogram4::FillWithZeros()
     }
     
     mUnwrappedPhases = mPhases;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
 }
 
 void

@@ -36,7 +36,6 @@
 // Added for InfraSonicViewer
 #define FIX_SPECTROGRAM_JITTER 0
 
-
 SpectrogramDisplayScroll::SpectrogramDisplayScroll(Plugin *plug, NVGcontext *vg)
 {
     mPlug = plug;
@@ -226,37 +225,42 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
             mSpectroImageData.Resize(imageSize);
             
             memset(mSpectroImageData.Get(), 0, imageSize);
-            mSpectrogram->GetImageDataFloat(w, h, mSpectroImageData.Get());
+            bool updated = mSpectrogram->GetImageDataFloat(w, h, mSpectroImageData.Get());
             
-            // Spectrogram image
-            if (mNvgSpectroImage != 0)
-                nvgDeleteImage(mVg, mNvgSpectroImage);
+            if (updated)
+            {
+                // Spectrogram image
+                if (mNvgSpectroImage != 0)
+                    nvgDeleteImage(mVg, mNvgSpectroImage);
             
-            mNvgSpectroImage = nvgCreateImageRGBA(mVg,
-                                                  w, h,
+                mNvgSpectroImage = nvgCreateImageRGBA(mVg,
+                                                      w, h,
 #if USE_SPECTRO_NEAREST
-                                                  NVG_IMAGE_NEAREST |
+                                                      NVG_IMAGE_NEAREST |
 #endif
 #if GLSL_COLORMAP
-                                                  NVG_IMAGE_ONE_FLOAT_FORMAT,
+                                                      NVG_IMAGE_ONE_FLOAT_FORMAT,
 #else
-                                                  0,
+                                                      0,
 #endif
-                                                  mSpectroImageData.Get());
-            
-			// No need since it has been better fixed in nanovg
+                                                      mSpectroImageData.Get());
+            }
+			 // No need since it has been better fixed in nanovg
 #ifdef WIN32 // Hack: after having created the image, update it again
 			 // FIX: spectrogram blinking between random pixels and correct pixels  
-			//nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());
+			 //nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());
 #endif
         }
         else
         {
-            memset(mSpectroImageData.Get(), 0, imageSize);
-            mSpectrogram->GetImageDataFloat(w, h, mSpectroImageData.Get());
-            
-            // Spectrogram image
-            nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());
+                memset(mSpectroImageData.Get(), 0, imageSize);
+                bool updated =
+                        mSpectrogram->GetImageDataFloat(w, h, mSpectroImageData.Get());
+                if (updated)
+                {
+                    // Spectrogram image
+                    nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());
+                }
         }
     }
     
@@ -264,24 +268,28 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
     {
         // Colormap
         WDL_TypedBuf<unsigned int> colorMapData;
-        mSpectrogram->GetColormapImageDataRGBA(&colorMapData);
-    
-        if (colorMapData.GetSize() != mColormapImageData.GetSize())
+        bool updated = mSpectrogram->GetColormapImageDataRGBA(&colorMapData);
+        if (updated)
         {
-            mColormapImageData = colorMapData;
+            if (colorMapData.GetSize() != mColormapImageData.GetSize())
+            {
+                mColormapImageData = colorMapData;
         
-            if (mNvgColormapImage != 0)
-                nvgDeleteImage(mVg, mNvgColormapImage);
+                if (mNvgColormapImage != 0)
+                    nvgDeleteImage(mVg, mNvgColormapImage);
         
-            mNvgColormapImage = nvgCreateImageRGBA(mVg,
-                                                   mColormapImageData.GetSize(), 1, NVG_IMAGE_NEAREST /*0*/,
-                                                   (unsigned char *)mColormapImageData.Get());
-        } else
-        {
-            mColormapImageData = colorMapData;
+                    mNvgColormapImage = nvgCreateImageRGBA(mVg,
+                                                           mColormapImageData.GetSize(),
+                                                           1, NVG_IMAGE_NEAREST /*0*/,
+                                                           (unsigned char *)mColormapImageData.Get());
+            }
+            else
+            {
+                mColormapImageData = colorMapData;
         
-            nvgUpdateImage(mVg, mNvgColormapImage,
-                           (unsigned char *)mColormapImageData.Get());
+                nvgUpdateImage(mVg, mNvgColormapImage,
+                               (unsigned char *)mColormapImageData.Get());
+            }
         }
     }
     
