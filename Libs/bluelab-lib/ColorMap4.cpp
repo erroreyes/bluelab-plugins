@@ -16,10 +16,12 @@
 #define MAX_RANGE 0.996
 
 
-#define EPS 1e-15
-
-#define GHOST_OPTIM 1
-
+// Was 1 at the origin
+// GOOD: Better when it is 0
+// (colors are spread better in the colormap when dumping it to ppm)
+// When set to 0, the lowest colors are compressed, and most of the colormap
+// contains brightest colors.
+#define USE_SQRT_HACK 0 // 1
 
 ColorMap4::ColorMap4(bool glsl)
 {
@@ -65,10 +67,8 @@ ColorMap4::Generate()
 void
 ColorMap4::SetRange(BL_FLOAT range)
 {
-#if GHOST_OPTIM
-  if (std::fabs((BL_FLOAT)(mRange - range*MAX_RANGE)) < EPS)
+  if (std::fabs((BL_FLOAT)(mRange - range*MAX_RANGE)) < BL_EPS)
         return;
-#endif
 
     mRange = range*MAX_RANGE;
     
@@ -84,10 +84,8 @@ ColorMap4::GetRange()
 void
 ColorMap4::SetContrast(BL_FLOAT contrast)
 {
-#if GHOST_OPTIM
-  if (std::fabs(mContrast - contrast) < EPS)
+  if (std::fabs(mContrast - contrast) < BL_EPS)
         return;
-#endif
     
     mContrast = contrast;
     
@@ -158,7 +156,7 @@ ColorMap4::Generate(WDL_TypedBuf<CmColor> *result)
 {
     long colorMapSize = (!mUseGLsl) ? 256*256 : 4096;
     
-    result->Resize(colorMapSize);
+    result->Resize((int)colorMapSize);
     
     for (int i = 0; i < result->GetSize(); i++)
     {
@@ -187,8 +185,10 @@ ColorMap4::Generate(WDL_TypedBuf<CmColor> *result)
         if (t > 1.0)
             t = 1.0;
         
-        // This seems to look better like this
+#if USE_SQRT_HACK
+        // OLD: This seems to look better like this
         t = std::sqrt(t);
+#endif
         
         // Result
         int col[4];

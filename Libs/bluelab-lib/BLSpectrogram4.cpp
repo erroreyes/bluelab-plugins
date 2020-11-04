@@ -185,8 +185,6 @@ BLSpectrogram4::SetColorMap(ColorMapFactory::ColorMap colorMapId)
     // Forward the current parameters
     mColorMap->SetRange(mRange);
     mColorMap->SetContrast(mContrast);
-    
-    mColorMap->Generate();
 }
 
 void

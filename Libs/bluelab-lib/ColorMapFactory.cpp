@@ -334,9 +334,11 @@ ColorMapFactory::CreateColorMap(ColorMap colorMapId)
     {
         result->Generate();
         
-        //char debugFileName[255];
-        //sprintf(debugFileName, "colormap-%d.ppm", colorMapId);
-        //result->SavePPM(debugFileName);
+#if 0 // DEBUG
+        char debugFileName[255];
+        sprintf(debugFileName, "colormap-%d.ppm", colorMapId);
+        result->SavePPM(debugFileName);
+#endif
     }
     
     return result;
