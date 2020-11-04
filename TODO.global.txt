@@ -2,3 +2,4 @@
 Maybe 25 fps for old Macs. 60fps for Windows 10 + high windows configs. 60 fps for Catalina.
 => or set fps dynamically (in the GUI, or in a config file)
 
+- Metal for new Macs, OpenGL for old Macs
