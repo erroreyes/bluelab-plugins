@@ -30,7 +30,7 @@ public:
     void OnMouseDown(float x, float y, const IMouseMod &mod);
     void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod);
     
-    bool OnKeyDown(float x, float y, int key, const IMouseMod &mod);
+    bool OnKeyDown(float x, float y, const IKeyPress& key) override;
     
 protected:
     DUETPlugInterface *mPlug;

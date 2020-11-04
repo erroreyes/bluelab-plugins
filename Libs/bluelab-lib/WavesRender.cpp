@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <IPlugConstants.h>
+
 #include <LinesRender2.h>
 //#include <Wav3s.h>
 #include <Axis3D.h>
@@ -257,12 +259,11 @@ WavesRender::OnMouseWheel(float x, float y,
 }
 
 bool
-WavesRender::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
+WavesRender::OnKeyDown(float x, float y, const IKeyPress& key)
 {
-// #bl-iplug2
-#if 0
-    
-    char c = key - KEY_ALPHA_A + 'a';
+    // #bl-iplug2: TODO: check this
+    //char c = key - KEY_ALPHA_A + 'a';
+    char c = key.VK - EVirtualKey::kVK_A + 'a';
     
     int keyLen = strlen(_ORXXKey);
     if ((mORXXKeyGuessStep < keyLen) &&
@@ -282,7 +283,6 @@ WavesRender::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
         
         mORXXKeyGuessStep = 0;
     }
-#endif
     
     return false;
 }

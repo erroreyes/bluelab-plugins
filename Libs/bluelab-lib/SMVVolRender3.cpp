@@ -700,20 +700,19 @@ SMVVolRender3::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 }
 
 bool
-SMVVolRender3::OnKeyDown(float x, float y, int key,
-                         const IMouseMod &mod)
+SMVVolRender3::OnKeyDown(float x, float y, const IKeyPress& key)
 {    
     bool cmdPressed = false;
     bool cmdReleased = false;
     
     // Detect "cmd" pressed or released
-    if (mod.Cmd && !mPrevCmdPressed)
+    if (key.C && !mPrevCmdPressed)
     {
         cmdPressed = true;
         mPrevCmdPressed = true;
     }
     
-    if (!mod.Cmd && mPrevCmdPressed)
+    if (!key.C && mPrevCmdPressed)
     {
         cmdReleased = true;
         mPrevCmdPressed = false;

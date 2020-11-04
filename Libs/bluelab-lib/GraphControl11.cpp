@@ -1575,12 +1575,11 @@ GraphControl11::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMo
 void/*bool*/
 GraphControl11::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
+    /*bool dblClickDone =*/ IControl::OnMouseDblClick(x, y, mod);
+    
     // #bl-iplug2
-#if 0
-    bool dblClickDone = IControl::OnMouseDblClick(x, y, mod);
-    if (!dblClickDone)
-        return; // false;
-#endif
+    //if (!dblClickDone)
+    //    return; // false;
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1614,10 +1613,10 @@ GraphControl11::OnMouseWheel(float x, float y, const IMouseMod &mod, float d)
 }
 
 bool
-GraphControl11::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
+GraphControl11::OnKeyDown(float x, float y, const IKeyPress& key)
 {
     // #bl-iplug2
-    //IControl::OnKeyDown(x, y, key, mod);
+    IControl::OnKeyDown(x, y, key);
     
 #if CUSTOM_CONTROL_FIX
     x -= mRECT.L;
@@ -1628,7 +1627,7 @@ GraphControl11::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
-        res = control->OnKeyDown(x, y, key, mod);
+        res = control->OnKeyDown(x, y, key);
     }
     
     return res;
@@ -4318,12 +4317,6 @@ GraphControl11::DoDraw(IGraphics &graphics)
     
     int width = this->mRECT.W();
     int height = this->mRECT.H();
-    
-    // #bl-iplug2
-#if 0
-    // Clear the GL Bitmap and bind the FBO at the same time !
-    LICE_Clear(mLiceFb, *((LICE_pixel *)&clearColor));
-#endif
     
     // nvgBeginFrame() ?
     

@@ -45,9 +45,9 @@ DUETCustomControl::OnMouseDrag(float x, float y, float dX, float dY, const IMous
 }
 
 bool
-DUETCustomControl::OnKeyDown(float x, float y, int key, const IMouseMod &mod)
+DUETCustomControl::OnKeyDown(float x, float y, const IKeyPress& key)
 {
-    if (mod.A)
+    if (key.A)
         mPlug->SetInvertPickSelection(true);
     else
         mPlug->SetInvertPickSelection(false);

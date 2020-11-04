@@ -157,8 +157,7 @@ public:
                                          const IMouseMod &mod) {}; //{ return false; }
     virtual void OnMouseWheel(float x, float y,
                               const IMouseMod &mod, BL_GUI_FLOAT d) {};
-    virtual bool OnKeyDown(float x, float y, int key,
-                           const IMouseMod &mod) { return false; }
+    virtual bool OnKeyDown(float x, float y, const IKeyPress& key) { return false; }
     
     virtual void OnMouseOver(float x, float y, const IMouseMod &mod) {}
     virtual void OnMouseOut() {}
@@ -431,7 +430,7 @@ public:
     void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod) override;
     void/*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
     void OnMouseWheel(float x, float y, const IMouseMod &mod, float d) override;
-    bool OnKeyDown(float x, float y, int key, const IMouseMod &mod) /*override*/;
+    bool OnKeyDown(float x, float y, const IKeyPress& key) override;
     
     void OnMouseOver(float x, float y, const IMouseMod &mod) override;
     void OnMouseOut() override;
