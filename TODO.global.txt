@@ -3,3 +3,15 @@ Maybe 25 fps for old Macs. 60fps for Windows 10 + high windows configs. 60 fps f
 => or set fps dynamically (in the GUI, or in a config file)
 
 - Metal for new Macs, OpenGL for old Macs
+
+Port plugins:
+- plug name .png, manual, RELEASE-NOTEX.txt
+- bl_config.h
+- GUID
+- use 2 functions for MyMakeGraphics() & MyMakeLayout()
+- remove printf("create controls")
+- remove UpdateText()
+- remove MakeDefaultPReset()
+- double -> BL_FLOAT
+
+TODO: gain smother: use CParamSmooth

@@ -737,6 +737,12 @@ GUIHelper11::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *gr
 }
 
 void
+GUIHelper11::GetValueTextColor(IColor *valueTextColor) const
+{
+    *valueTextColor = mValueTextColor;
+}
+
+void
 GUIHelper11::RefreshAllParameters(Plugin *plug, int numParams)
 {
     for (int i = 0; i < numParams; i++)

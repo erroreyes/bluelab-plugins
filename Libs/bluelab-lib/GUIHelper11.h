@@ -159,6 +159,8 @@ public:
                                     char *label,
                                     int guiSizeIdx);
     
+    void GetValueTextColor(IColor *valueTextColor) const;
+    
     static void ResetParameter(Plugin *plug, int paramIdx);
     
     // Refresh all the controls, from their values
