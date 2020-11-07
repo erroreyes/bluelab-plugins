@@ -51,12 +51,12 @@ public:
     void SetProcessingEnabled(bool flag);
     
     // Mixture is the full sound
-    // magns is the estimated sound for a given mask
+    // values is the estimated sound for a given mask
     void Process(const WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues,
                  const WDL_TypedBuf<WDL_FFT_COMPLEX> &values,
                  WDL_TypedBuf<WDL_FFT_COMPLEX> *softMask);
     
-    // Return the centerd data values in ioMixtureValues and ioValues
+    // Return the centered data values in ioMixtureValues and ioValues
     void ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues,
                          WDL_TypedBuf<WDL_FFT_COMPLEX> *ioValues,
                          WDL_TypedBuf<WDL_FFT_COMPLEX> *softMask);

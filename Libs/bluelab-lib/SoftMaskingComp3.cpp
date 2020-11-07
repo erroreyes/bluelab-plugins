@@ -249,7 +249,7 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues
         }
     }
     
-    // Even if processing enabled is tru or false,
+    // Even if processing enabled is true or false,
     // update the data from the history
     
     // Compute the centered values

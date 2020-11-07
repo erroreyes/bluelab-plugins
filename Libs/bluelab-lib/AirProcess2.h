@@ -30,6 +30,7 @@ using namespace std;
 // - code clean (removed transient stuff)
 
 class PartialTracker3;
+class SoftMaskingComp3;
 class AirProcess2 : public ProcessObj
 {
 public:
@@ -49,6 +50,8 @@ public:
     void SetThreshold(BL_FLOAT threshold);
     void SetMix(BL_FLOAT mix);
     
+    int GetLatency();
+    
 protected:
     void DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                         const WDL_TypedBuf<BL_FLOAT> &phases);
@@ -64,6 +67,9 @@ protected:
     BL_FLOAT mTransientSP;
     
     bool mDebugFreeze;
+    
+    // First is noise masking, second is harmo masking
+    SoftMaskingComp3 *mSoftMaskingComps[2];
     
 #if AIR_PROCESS_PROFILE
     BlaTimer mTimer;

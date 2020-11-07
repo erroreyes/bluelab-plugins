@@ -10,10 +10,13 @@
 #include <DebugGraph.h>
 
 #include <PartialTracker3.h>
+#include <SoftMaskingComp3.h>
 
 #include "AirProcess2.h"
 
-#define EPS 1e-15
+#define USE_SOFT_MASKING 1 // 0
+// 8 gives more gating, but less musical noise remaining
+#define SOFT_MASKING_HISTO_SIZE 8
 
 #define FIX_RESET 1
 
@@ -36,6 +39,14 @@ AirProcess2::AirProcess2(int bufferSize,
     
     mDebugFreeze = false;
     
+    for (int i = 0; i < 2; i++)
+    {
+        mSoftMaskingComps[i] = NULL;
+#if USE_SOFT_MASKING
+        mSoftMaskingComps[i] = new SoftMaskingComp3(SOFT_MASKING_HISTO_SIZE);
+#endif
+    }
+    
 #if AIR_PROCESS_PROFILE
     BlaTimer::Reset(&mTimer, &mCount);
 #endif
@@ -44,6 +55,12 @@ AirProcess2::AirProcess2(int bufferSize,
 AirProcess2::~AirProcess2()
 {
     delete mPartialTracker;
+    
+    for (int i = 0; i < 2; i++)
+    {
+        if (mSoftMaskingComps[i] != NULL)
+            delete mSoftMaskingComps[i];
+    }
 }
 
 void
@@ -65,6 +82,14 @@ AirProcess2::Reset(int bufferSize, int overlapping, int oversampling,
     
 #if FIX_RESET
     mPartialTracker->Reset();
+#endif
+    
+#if USE_SOFT_MASKING
+    for (int i = 0; i < 2; i++)
+    {
+        if (mSoftMaskingComps[i] != NULL)
+            mSoftMaskingComps[i]->Reset();
+    }
 #endif
 }
 
@@ -131,7 +156,9 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         BL_FLOAT noiseCoeff;
         BL_FLOAT harmoCoeff;
         BLUtils::MixParamToCoeffs(mMix, &noiseCoeff, &harmoCoeff);
-        
+     
+        // Origin
+#if !USE_SOFT_MASKING
         // Result
         WDL_TypedBuf<BL_FLOAT> newMagns;
         newMagns.Resize(magns.GetSize());
@@ -144,6 +171,87 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             newMagns.Get()[i] = val;
         }
         magns = newMagns;
+#else // New: soft masking
+        
+        WDL_TypedBuf<BL_FLOAT> noiseRatio;
+        noiseRatio.Resize(noise.GetSize());
+        WDL_TypedBuf<BL_FLOAT> harmoRatio;
+        harmoRatio.Resize(harmo.GetSize());
+        for (int i = 0; i < noiseRatio.GetSize(); i++)
+        {
+            BL_FLOAT n = noise.Get()[i];
+            BL_FLOAT h = harmo.Get()[i];
+            
+            //BL_FLOAT nr = 0.0;
+            //if (n + h > BL_EPS)
+            //    nr = n/(n + h);
+    
+            // Warning: the sum of noise + harmo could be greater
+            // than the total magn.
+            // This is because we fill the holes in the noise.
+            BL_FLOAT m = magns.Get()[i];
+            BL_FLOAT nr = 0.0;
+            BL_FLOAT hr = 0.0;
+            if (m > BL_EPS)
+            {
+                nr = n/m;
+                hr = h/m;
+            }
+            
+            noiseRatio.Get()[i] = nr;
+            harmoRatio.Get()[i] = 1.0 - nr;
+        }
+        
+        // 0: noise, 1: harmo
+        WDL_TypedBuf<WDL_FFT_COMPLEX> result[2];
+        for (int i = 0; i < 2; i++)
+        {
+            WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples0 = fftSamples;
+            WDL_TypedBuf<WDL_FFT_COMPLEX> inMask = fftSamples;
+            
+            if (i == 0)
+                BLUtils::MultValues(&inMask, noiseRatio);
+            else
+                BLUtils::MultValues(&inMask, harmoRatio);
+            
+            WDL_TypedBuf<WDL_FFT_COMPLEX> outMask;
+            mSoftMaskingComps[i]->ProcessCentered(&fftSamples0,
+                                                  &inMask,
+                                                  &outMask);
+        
+            // We have a shift of the input samples in ProcessCentered(),
+            // Must update (shift) input samples to take it into account.
+            result[i] = fftSamples0;
+            BLUtils::MultValues(&result[i], outMask);
+        }
+        
+        // Combine the result
+        WDL_TypedBuf<WDL_FFT_COMPLEX> outResult;
+        outResult.Resize(result[0].GetSize());
+        for (int i = 0; i < outResult.GetSize(); i++)
+        {
+            WDL_FFT_COMPLEX n = result[0].Get()[i];
+            n.re *= noiseCoeff;
+            n.im *= noiseCoeff;
+            
+            WDL_FFT_COMPLEX h = result[1].Get()[i];
+            h.re *= harmoCoeff;
+            h.im *= harmoCoeff;
+            
+            WDL_FFT_COMPLEX res;
+            COMP_ADD(n, h, res);
+            
+            outResult.Get()[i] = res;
+        }
+        
+        // Optim: avoid reconverting to magns
+        // and return early
+        *ioBuffer = outResult;
+        ioBuffer->Resize(ioBuffer->GetSize()*2);
+        BLUtils::FillSecondFftHalf(ioBuffer);
+        
+        return;
+#endif
     }
     
     // For noise envelope
@@ -166,6 +274,21 @@ void
 AirProcess2::SetMix(BL_FLOAT mix)
 {
     mMix = mix;
+}
+
+int
+AirProcess2::GetLatency()
+{
+#if USE_SOFT_MASKING
+    int latency = (SOFT_MASKING_HISTO_SIZE/2)*(mBufferSize/mOverlapping);
+    
+    // Hack
+    latency *= 0.75;
+    
+    return latency;
+#endif
+    
+    return 0;
 }
 
 void
