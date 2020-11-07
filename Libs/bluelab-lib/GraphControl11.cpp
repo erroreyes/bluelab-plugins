@@ -280,6 +280,30 @@ GraphControl11::Resize(int width, int height)
             mVAxis->mOffsetX -= dWidth;
     }
     
+    ResetGfx();
+    
+    // FIXED: Resize the FBO instead of deleting and re-creating it
+    //
+    // Avoids loosing the display on a second similar plugin,
+    // when resizing a given plugin (e.g Waves)
+    // (because FBO numbers are the same in different instances
+    // of plugin)
+    // (Reaper, Mac)
+    //
+    // And use lazy evaluation to resize, because here we are in the event
+    // thread, not in the graphic thread
+    //
+    mNeedResizeGraph = true;
+    
+    mDirty = true;
+    mDataChanged = true;
+}
+
+void
+GraphControl11::ResetGfx()
+{
+     WDL_MutexLock lock(&mMutex);
+    
 #if USE_FBO && (defined IGRAPHICS_GL)
     if (mFBO != NULL)
     {
@@ -291,25 +315,43 @@ GraphControl11::Resize(int width, int height)
     }
 #endif
     
-      // FIXED: Resize the FBO instead of deleting and re-creating it
-      //
-      // Avoids loosing the display on a second similar plugin,
-      // when resizing a given plugin (e.g Waves)
-      // (because FBO numbers are the same in different instances
-      // of plugin)
-      // (Reaper, Mac)
-      //
-      // And use lazy evaluation to resize, because here we are in the event
-      // thread, not in the graphic thread
-      //
-    mNeedResizeGraph = true;
+    if (mWhitePixImg >= 0)
+    {
+        nvgDeleteImage(mVg, mWhitePixImg);
     
-    mDirty = true;
-    mDataChanged = true;
+        mWhitePixImg = 0;
+    }
+    
+    if (mSpectrogramDisplay != NULL)
+        mSpectrogramDisplay->ResetGfx();
+    
+    if (mSpectrogramDisplayScroll != NULL)
+        mSpectrogramDisplayScroll->ResetGfx();
+    
+    if (mSpectrogramDisplayScroll2 != NULL)
+        mSpectrogramDisplayScroll2->ResetGfx();
+    
+    mVg = NULL;
 }
 
 void
-GraphControl11::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0, BL_GUI_FLOAT x1, BL_GUI_FLOAT y1)
+GraphControl11::RefreshGfx()
+{
+    WDL_MutexLock lock(&mMutex);
+    
+    if (mSpectrogramDisplay != NULL)
+        mSpectrogramDisplay->RefreshGfx();
+    
+    if (mSpectrogramDisplayScroll != NULL)
+        mSpectrogramDisplayScroll->RefreshGfx();
+    
+    if (mSpectrogramDisplayScroll2 != NULL)
+        mSpectrogramDisplayScroll2->RefreshGfx();
+}
+
+void
+GraphControl11::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0,
+                          BL_GUI_FLOAT x1, BL_GUI_FLOAT y1)
 {
     WDL_MutexLock lock(&mMutex);
     

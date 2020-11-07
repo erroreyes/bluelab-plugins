@@ -104,6 +104,14 @@ BLSpectrogram4::SetContrast(BL_FLOAT contrast)
 }
 
 void
+BLSpectrogram4::TouchColorMap()
+{
+#if OPTIM_SPECTROGRAM2
+    mColormapDataChanged = true;
+#endif
+}
+
+void
 BLSpectrogram4::SetDisplayMagns(bool flag)
 {
     mDisplayMagns = flag;

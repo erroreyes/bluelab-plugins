@@ -27,8 +27,9 @@ public:
     virtual ~SpectrogramDisplay();
     
     void SetNvgContext(NVGcontext *vg);
-    void ResetGL();
-                      
+    void ResetGfx();
+    void RefreshGfx();
+    
     void Reset();
     
     bool NeedUpdateSpectrogram();

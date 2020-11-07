@@ -182,6 +182,9 @@ public:
     void GetSize(int *width, int *height);
     void Resize(int width, int height);
     
+    void ResetGfx();
+    void RefreshGfx();
+    
     void SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0, BL_GUI_FLOAT x1, BL_GUI_FLOAT y1);
     
     // Not tested

@@ -78,7 +78,7 @@ SpectrogramDisplay::SetNvgContext(NVGcontext *vg)
 }
 
 void
-SpectrogramDisplay::ResetGL()
+SpectrogramDisplay::ResetGfx()
 {
     if (mNvgSpectroImage != 0)
         nvgDeleteImage(mVg, mNvgSpectroImage);
@@ -105,6 +105,15 @@ SpectrogramDisplay::ResetGL()
     mNeedUpdateSpectrogram = true;
     mNeedUpdateSpectrogramFullData = true;
 #endif
+}
+
+void
+SpectrogramDisplay::RefreshGfx()
+{
+    if (mSpectrogram != NULL)
+    {
+        mSpectrogram->TouchColorMap();
+    }
 }
 
 void
@@ -141,7 +150,8 @@ SpectrogramDisplay::DoUpdateSpectrogram()
     int h = mSpectrogram->GetHeight();
     
 #if 1 // Avoid white image when there is no data
-    if (w == 0)
+    if ((w == 0) ||
+        (mNvgSpectroImage == 0) || (mNvgSpectroFullImage == 0))
     {
         w = 1;
         int imageSize = w*h*4;
@@ -190,9 +200,11 @@ SpectrogramDisplay::DoUpdateSpectrogram()
     
     int imageSize = w*h*4;
     
-    if (mNeedUpdateSpectrogramData)
+    if (mNeedUpdateSpectrogramData ||
+        (mNvgSpectroImage == 0) || (mNvgSpectroFullImage == 0))
     {
-        if (mSpectroImageData.GetSize() != imageSize)
+        if ((mSpectroImageData.GetSize() != imageSize) ||
+            (mNvgSpectroImage == 0))
         {
             mSpectroImageData.Resize(imageSize);
             
@@ -221,7 +233,7 @@ SpectrogramDisplay::DoUpdateSpectrogram()
 			//nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());
 #endif
 
-            if (mNeedUpdateSpectrogramFullData)
+            if (mNeedUpdateSpectrogramFullData || (mNvgSpectroFullImage == 0))
             {
                 // Spectrogram full image
                 if (mNvgSpectroFullImage != 0)
@@ -266,7 +278,8 @@ SpectrogramDisplay::DoUpdateSpectrogram()
     WDL_TypedBuf<unsigned int> colorMapData;
     mSpectrogram->GetColormapImageDataRGBA(&colorMapData);
     
-    if (colorMapData.GetSize() != mColormapImageData.GetSize())
+    if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
+        (mNvgColormapImage == 0))
     {
         mColormapImageData = colorMapData;
         
@@ -276,7 +289,8 @@ SpectrogramDisplay::DoUpdateSpectrogram()
         mNvgColormapImage = nvgCreateImageRGBA(mVg,
                                                mColormapImageData.GetSize(), 1, NVG_IMAGE_NEAREST /*0*/,
                                                (unsigned char *)mColormapImageData.Get());
-    } else
+    }
+    else
     {
         mColormapImageData = colorMapData;
         

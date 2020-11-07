@@ -39,7 +39,9 @@ public:
     virtual ~SpectrogramDisplayScroll();
     
     void SetNvgContext(NVGcontext *vg);
-    void ResetGL();
+
+    void ResetGfx();
+    void RefreshGfx();
     
     void Reset();
     

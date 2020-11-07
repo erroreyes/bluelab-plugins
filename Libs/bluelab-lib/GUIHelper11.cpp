@@ -175,20 +175,36 @@ GUIHelper11::CreateGraph(Plugin *plug, IGraphics *graphics,
                          int numCurves, int numPoints,
                          const char *overlayFname)
 {
-    IBitmap bitmap = graphics->LoadBitmap(bitmapFname);
-    
     const char *resPath = graphics->GetSharedResourcesSubPath();
     char fontPath[MAX_PATH];
     sprintf(fontPath, "%s/%s", resPath, "font.ttf");
+    
+    IBitmap bitmap = graphics->LoadBitmap(bitmapFname);
     
     IRECT rect(x, y, x + bitmap.W(), y + bitmap.H());
     GraphControl11 *graph = new GraphControl11(plug, graphics, rect, paramIdx,
                                                numCurves, numPoints, fontPath);
     
+    RefreshGraphGfx(graphics, graph, bitmapFname, overlayFname);
+    
+    graphics->AttachControl(graph);
+    
+    return graph;
+}
+
+void
+GUIHelper11::RefreshGraphGfx(IGraphics *graphics,
+                             GraphControl11 *graph,
+                             const char *bitmapFname,
+                             const char *overlayFname)
+{
+    IBitmap bitmap = graphics->LoadBitmap(bitmapFname);
     graph->SetBackgroundImage(bitmap);
     
     if (overlayFname != NULL)
     {
+        const char *resPath = graphics->GetSharedResourcesSubPath();
+        
         char bmpPath[MAX_PATH];
         sprintf(bmpPath, "%s/%s", resPath, overlayFname);
         
@@ -197,10 +213,9 @@ GUIHelper11::CreateGraph(Plugin *plug, IGraphics *graphics,
         graph->SetOverlayImage(overlayBitmap);
     }
     
-    graphics->AttachControl(graph);
-    
-    return graph;
+    graph->RefreshGfx();
 }
+
 #endif // IGRAPHICS_NANOVG
 
 

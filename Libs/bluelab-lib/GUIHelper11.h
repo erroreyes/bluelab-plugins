@@ -71,6 +71,13 @@ public:
                                 const char *bitmapFname, int paramIdx,
                                 int numCurves, int numPoints,
                                 const char *overlayFname = NULL);
+    
+    // Must re-set the bitmaps after the plug window was closed
+    // (because we get a new nanovg context, and bitmaps depend on it)
+    static void RefreshGraphGfx(IGraphics *graphics,
+                                GraphControl11 *graph,
+                                const char *bitmapFname,
+                                const char *overlayFname = NULL);
 #endif // IGRAPHICS_NANOVG
     
     // 2 states or more

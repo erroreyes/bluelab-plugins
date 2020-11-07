@@ -168,7 +168,7 @@ ImageDisplay::DoUpdateImage()
     }
     
 #if 1 // Avoid white image when there is no data
-    if (w == 0)
+    if ((w == 0) || (mNvgImage == 0))
     {
         w = 1;
         int imageSize = w*h*4;
@@ -197,7 +197,7 @@ ImageDisplay::DoUpdateImage()
     }
 #endif
     
-    if (mNeedUpdateImageData)
+    if (mNeedUpdateImageData || (mNvgImage == 0))
     {
         if (mImageData.GetSize() != mPrevImageSize)
         {
@@ -236,7 +236,9 @@ ImageDisplay::DoUpdateImage()
     WDL_TypedBuf<unsigned int> colorMapData;
     mColorMap->GetDataRGBA(&colorMapData);
     
-    if (colorMapData.GetSize() != mColormapImageData.GetSize())
+    if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
+        (mNvgColormapImage == 0))
+        
     {
         mColormapImageData = colorMapData;
         

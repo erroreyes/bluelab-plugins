@@ -95,7 +95,7 @@ SpectrogramDisplayScroll2::SetNvgContext(NVGcontext *vg)
 }
 
 void
-SpectrogramDisplayScroll2::ResetGL()
+SpectrogramDisplayScroll2::ResetGfx()
 {
     if (mNvgSpectroImage != 0)
         nvgDeleteImage(mVg, mNvgSpectroImage);
@@ -126,6 +126,15 @@ SpectrogramDisplayScroll2::ResetGL()
 #if 1
     mNeedUpdateColormapData = true;
 #endif
+}
+
+void
+SpectrogramDisplayScroll2::RefreshGfx()
+{
+    if (mSpectrogram != NULL)
+    {
+        mSpectrogram->TouchColorMap();
+    }
 }
 
 void
@@ -186,7 +195,7 @@ SpectrogramDisplayScroll2::DoUpdateSpectrogram()
     int h = mSpectrogram->GetHeight();
     
 #if 1 // Avoid white image when there is no data
-    if (w == 0)
+    if ((w == 0) || (mNvgSpectroImage == 0))
     {
         w = 1;
         int imageSize = w*h*4;
@@ -219,9 +228,9 @@ SpectrogramDisplayScroll2::DoUpdateSpectrogram()
     
     int imageSize = w*h*4;
     
-    if (mNeedUpdateSpectrogramData)
+    if (mNeedUpdateSpectrogramData || (mNvgSpectroImage == 0))
     {
-        if (mSpectroImageData.GetSize() != imageSize)
+        if ((mSpectroImageData.GetSize() != imageSize) || (mNvgSpectroImage == 0))
         {
             mSpectroImageData.Resize(imageSize);
             
@@ -260,13 +269,14 @@ SpectrogramDisplayScroll2::DoUpdateSpectrogram()
         }
     }
     
-    if (mNeedUpdateColormapData)
+    if (mNeedUpdateColormapData || (mNvgColormapImage == 0))
     {
         // Colormap
         WDL_TypedBuf<unsigned int> colorMapData;
         mSpectrogram->GetColormapImageDataRGBA(&colorMapData);
     
-        if (colorMapData.GetSize() != mColormapImageData.GetSize())
+        if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
+            (mNvgColormapImage == 0))
         {
             mColormapImageData = colorMapData;
         
@@ -276,11 +286,13 @@ SpectrogramDisplayScroll2::DoUpdateSpectrogram()
             mNvgColormapImage = nvgCreateImageRGBA(mVg,
                                                    mColormapImageData.GetSize(), 1, NVG_IMAGE_NEAREST /*0*/,
                                                    (unsigned char *)mColormapImageData.Get());
-        } else
+        }
+        else
         {
             mColormapImageData = colorMapData;
         
-            nvgUpdateImage(mVg, mNvgColormapImage, (unsigned char *)mColormapImageData.Get());
+            nvgUpdateImage(mVg, mNvgColormapImage,
+                           (unsigned char *)mColormapImageData.Get());
         }
     }
     

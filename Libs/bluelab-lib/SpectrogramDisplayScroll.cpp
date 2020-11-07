@@ -94,7 +94,7 @@ SpectrogramDisplayScroll::SetNvgContext(NVGcontext *vg)
 }
 
 void
-SpectrogramDisplayScroll::ResetGL()
+SpectrogramDisplayScroll::ResetGfx()
 {
     if (mNvgSpectroImage != 0)
         nvgDeleteImage(mVg, mNvgSpectroImage);
@@ -125,6 +125,15 @@ SpectrogramDisplayScroll::ResetGL()
 #if 1
     mNeedUpdateColormapData = true;
 #endif
+}
+
+void
+SpectrogramDisplayScroll::RefreshGfx()
+{
+    if (mSpectrogram != NULL)
+    {
+        mSpectrogram->TouchColorMap();
+    }
 }
 
 void
@@ -185,7 +194,7 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
     int h = mSpectrogram->GetHeight();
     
 #if 1 // Avoid white image when there is no data
-    if (w == 0)
+    if ((w == 0) || (mNvgSpectroImage == 0))
     {
         w = 1;
         int imageSize = w*h*4;
@@ -218,9 +227,9 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
     
     int imageSize = w*h*4;
     
-    if (mNeedUpdateSpectrogramData)
+    if (mNeedUpdateSpectrogramData || (mNvgSpectroImage == 0))
     {
-        if (mSpectroImageData.GetSize() != imageSize)
+        if ((mSpectroImageData.GetSize() != imageSize) || (mNvgSpectroImage == 0))
         {
             mSpectroImageData.Resize(imageSize);
             
@@ -264,14 +273,15 @@ SpectrogramDisplayScroll::DoUpdateSpectrogram()
         }
     }
     
-    if (mNeedUpdateColormapData)
+    if (mNeedUpdateColormapData || (mNvgColormapImage == 0))
     {
         // Colormap
         WDL_TypedBuf<unsigned int> colorMapData;
         bool updated = mSpectrogram->GetColormapImageDataRGBA(&colorMapData);
-        if (updated)
+        if (updated || (mNvgColormapImage == 0))
         {
-            if (colorMapData.GetSize() != mColormapImageData.GetSize())
+            if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
+                (mNvgColormapImage == 0))
             {
                 mColormapImageData = colorMapData;
         

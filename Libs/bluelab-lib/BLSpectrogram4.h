@@ -35,8 +35,9 @@ public:
     void Reset(int height, int maxCols = -1);
     
     void SetRange(BL_FLOAT range);
-    
     void SetContrast(BL_FLOAT contrast);
+    
+    void TouchColorMap();
     
     void SetYLogScale(bool flag, BL_FLOAT factor);
     
