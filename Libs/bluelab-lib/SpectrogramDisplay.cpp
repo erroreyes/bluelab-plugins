@@ -113,6 +113,13 @@ SpectrogramDisplay::RefreshGfx()
     if (mSpectrogram != NULL)
     {
         mSpectrogram->TouchColorMap();
+        
+        if (mSpectrogram != NULL)
+        {
+            mSpectrogram->TouchColorMap();
+            
+            UpdateSpectrogram(true, true);
+        }
     }
 }
 
