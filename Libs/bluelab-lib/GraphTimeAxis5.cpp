@@ -187,12 +187,10 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
             {
                 sprintf(hAxisData[i][1], "%d:%02d:%d.%d", hours, minutes, seconds, millis/100);
             }
-            //else if ((minutes != 0) && (seconds != 0) && (millis != 0))
             else if (minutes != 0)
             {
                 sprintf(hAxisData[i][1], "%d:%02d.%d", minutes, seconds, millis/100);
             }
-            //else if ((seconds != 0) && (millis != 0))
             else if (seconds != 0)
             {
                 sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/100);

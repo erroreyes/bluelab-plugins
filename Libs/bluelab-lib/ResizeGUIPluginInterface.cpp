@@ -47,7 +47,7 @@ ResizeGUIPluginInterface::GUIResizeParamChange(int paramNum,
     fixAbletonWin = true;
 #endif
     
-    int val = GetPlug()->GetParam(params[paramNum])->Int();
+    int val = mPlug->GetParam(params[paramNum])->Int();
     if (val == 1)
     {
         // Reset the two other buttons
@@ -56,12 +56,12 @@ ResizeGUIPluginInterface::GUIResizeParamChange(int paramNum,
         // (because we already have tested all plugs on Mac,
         // and half of the hosts on Windows)
         if (!winPlatform || !fixAbletonWin ||
-            (GetPlug()->GetHost() != kHostAbletonLive))
+            (mPlug->GetHost() != kHostAbletonLive))
         {
             for (int i = 0; i < numParams; i++)
             {
                 if (i != paramNum)
-                    GUIHelper11::ResetParameter(GetPlug(), params[i]);
+                    GUIHelper11::ResetParameter(mPlug, params[i]);
             }
         }
         else
@@ -80,7 +80,7 @@ void
 ResizeGUIPluginInterface::GUIResizePreResizeGUI(IGUIResizeButtonControl *buttons[],
                                                 int numButtons)
 {
-    IGraphics *pGraphics = GetPlug()->GetUI();
+    IGraphics *pGraphics = mPlug->GetUI();
     if (pGraphics == NULL)
         return;
     
@@ -125,23 +125,3 @@ ResizeGUIPluginInterface::GUIResizeComputeOffsets(int defaultGUIWidth,
     *offsetY = newGUIHeight - defaultGUIHeight;
 }
 
-#if 0
-void
-ResizeGUIPluginInterface::GUIResizePostResizeGUI(GraphControl11 *graph,
-                                                 int graphWidthSmall,
-                                                 int graphHeightSmall,
-                                                 int offsetX, int offsetY)
-{
-    IGraphics *pGraphics = GetPlug()->GetUI();
-    
-    int newGraphWidth = graphWidthSmall + offsetX;
-    int newGraphHeight = graphHeightSmall + offsetY;
-    
-    if (graph != NULL)
-        graph->Resize(newGraphWidth, newGraphHeight);
-    
-    // Re-attach the graph
-    if (graph != NULL)
-        pGraphics->AttachControl(graph);
-}
-#endif

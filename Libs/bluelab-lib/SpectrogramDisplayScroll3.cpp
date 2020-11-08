@@ -12,8 +12,6 @@
 #include <UpTime.h>
 #include <BLDebug.h>
 
-//#include <GraphControl12.h> // For defines
-
 #include "SpectrogramDisplayScroll3.h"
 
 #define USE_SPECTRO_NEAREST 0
@@ -34,13 +32,13 @@ SpectrogramDisplayScroll3::SpectrogramDisplayScroll3(Plugin *plug)
     // Spectrogram
     mSpectrogram = NULL;
     mNvgSpectroImage = 0;
-    mNeedUpdateSpectrogram = true; //false;
-    mNeedUpdateSpectrogramData = true; //false;
+    mNeedUpdateSpectrogram = true;
+    mNeedUpdateSpectrogramData = true;
     
-    mNeedUpdateColormapData = true; //false;
+    mNeedUpdateColormapData = true;
     mNvgColormapImage = 0;
     
-    mShowSpectrogram = true; //false;
+    mShowSpectrogram = true;
     
     mSpectrogramGain = 1.0;
     
@@ -64,8 +62,6 @@ SpectrogramDisplayScroll3::SpectrogramDisplayScroll3(Plugin *plug)
     
     // Variable speed
     mSpeedMod = 1;
-    
-    //mFirstDraw = true;
 }
 
 SpectrogramDisplayScroll3::~SpectrogramDisplayScroll3()
@@ -79,14 +75,6 @@ SpectrogramDisplayScroll3::~SpectrogramDisplayScroll3()
     if (mNvgColormapImage != 0)
         nvgDeleteImage(mVg, mNvgColormapImage);
 }
-
-#if 0
-void
-SpectrogramDisplayScroll3::SetNvgContext(NVGcontext *vg)
-{
-    mVg = vg;
-}
-#endif
 
 void
 SpectrogramDisplayScroll3::Reset()
@@ -142,35 +130,6 @@ SpectrogramDisplayScroll3::DoUpdateSpectrogram()
     
     int w = mSpectrogram->GetNumCols();
     int h = mSpectrogram->GetHeight();
-    
-#if 0 ////
-#if 1 // Avoid white image when there is no data
-    if (w == 0)
-    {
-        int imageSize = w*h*4;
-        
-        mSpectroImageData.Resize(imageSize);
-        memset(mSpectroImageData.Get(), 0, imageSize);
-        
-        // Spectrogram image
-        if (mNvgSpectroImage != 0)
-            nvgDeleteImage(mVg, mNvgSpectroImage);
-        
-        mNvgSpectroImage = nvgCreateImageRGBA(mVg,
-                                              w, h,
-#if USE_SPECTRO_NEAREST
-                                              NVG_IMAGE_NEAREST |
-#endif
-                                              NVG_IMAGE_ONE_FLOAT_FORMAT,
-                                              mSpectroImageData.Get());
-        
-        mNeedUpdateSpectrogram = false;
-        mNeedUpdateSpectrogramData = false;
-        
-        return true;
-    }
-#endif
-#endif /////
     
     int imageSize = w*h*4;
     
@@ -233,7 +192,7 @@ SpectrogramDisplayScroll3::DoUpdateSpectrogram()
         
                     mNvgColormapImage = nvgCreateImageRGBA(mVg,
                                                            mColormapImageData.GetSize(),
-                                                           1, NVG_IMAGE_NEAREST /*0*/,
+                                                           1, NVG_IMAGE_NEAREST,
                                                            (unsigned char *)mColormapImageData.Get());
             }
             else
@@ -258,22 +217,8 @@ SpectrogramDisplayScroll3::PreDraw(NVGcontext *vg, int width, int height)
 {
     mVg = vg;
     
-#if 0 // TODO: delete this
-    if (mFirstDraw)
-    {
-        mSpectrogram->TouchData();
-        mSpectrogram->TouchColorMap();
-        
-        // TEST
-        mNeedUpdateSpectrogram = true;
-        mNeedUpdateSpectrogramData = true;
-        mNeedUpdateColormapData = true;
-      
-        mFirstDraw = false; // TEST
-    }
-#endif
-    
-    DoUpdateSpectrogram(); //
+    // Update just in case...
+    DoUpdateSpectrogram();
     
     if (!mShowSpectrogram)
         return;
@@ -302,11 +247,8 @@ SpectrogramDisplayScroll3::PreDraw(NVGcontext *vg, int width, int height)
     BL_GUI_FLOAT b1f = mSpectrogramBounds[1]*height;
     BL_GUI_FLOAT b3f = (mSpectrogramBounds[3] - mSpectrogramBounds[1])*height;
 
-    // If ever we flip, we don't display the spectrogram
-//#if GRAPH_CONTROL_FLIP_Y
-//    b1f = height - b1f;
-//    b3f = height - b3f;
-//#endif
+    // If ever we flip here (with GRAPH_CONTROL_FLIP_Y),
+    // the spectrogram won't be displayed.
     
     nvgBeginPath(mVg);
     nvgRect(mVg,
@@ -493,11 +435,6 @@ SpectrogramDisplayScroll3::ComputeScrollOffsetPixels(int width)
     // Special case: playback stopped
     //
     // If not playing, stop do not make the scrolling process
-    
-    // PROBLEM with Logic (Good with Reaper)
-    // IsPlaying() should be called from the audio thread, which is not the case here
-    //bool isPlaying = mPlug->IsPlaying();
-    
     bool isPlaying = mIsPlaying;
     if (!isPlaying)
     {

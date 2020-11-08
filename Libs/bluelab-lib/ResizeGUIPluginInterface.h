@@ -22,8 +22,6 @@ class ResizeGUIPluginInterface
 public:
     ResizeGUIPluginInterface(Plugin *plug) { mPlug = plug; }
     virtual ~ResizeGUIPluginInterface() {}
-    
-    Plugin *GetPlug() { return mPlug; }
          
     virtual void PreResizeGUI(int newGUIWidth, int newGUIHeight) = 0;
     virtual void PostResizeGUI() = 0;
@@ -45,11 +43,6 @@ protected:
     void GUIResizeComputeOffsets(int defaultGUIWidth, int defaultGUIHeight,
                                  int newGUIWidth, int newGUIHeight,
                                  int *offsetX, int *offsetY);
-    
-    //void GUIResizePostResizeGUI(GraphControl11 *graph,
-    //                            int graphWidthSmall,
-    //                            int graphHeightSmall,
-    //                            int offsetX, int offsetY);
     
     //
     Plugin *mPlug;

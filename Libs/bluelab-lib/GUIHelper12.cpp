@@ -70,7 +70,7 @@ GUIHelper12::GUIHelper12(Style style)
         
         mTitleTextSize = 16.0;
         mTitleTextOffsetX = 0.0;
-        mTitleTextOffsetY = -23.0; //-16.0;
+        mTitleTextOffsetY = -23.0;
         mTitleTextColor = IColor(255, 110, 110, 110);
         
         mTitleTextSizeBig = 20.0;

@@ -12,9 +12,6 @@
 
 #include <stdio.h>
 
-// Plugin resource file
-#include "resource.h"
-
 #include <GraphSwapColor.h>
 
 #include "SpectrogramDisplay.h"
@@ -134,14 +131,6 @@ GraphControl12::GraphControl12(Plugin *pPlug, IGraphics *graphics,
 
     mVg = NULL;
     
-#if 0
-    mSpectrogramDisplay = NULL;
-    mSpectrogramDisplayScroll = NULL;
-    mSpectrogramDisplayScroll2 = NULL;
-    
-    mImageDisplay = NULL;
-#endif
-    
     mBounds[0] = 0.0;
     mBounds[1] = 0.0;
     mBounds[2] = 1.0;
@@ -175,38 +164,6 @@ GraphControl12::~GraphControl12()
 {
     WDL_MutexLock lock(&mMutex);
     
-#if 0
-    if (mHAxis != NULL)
-        delete mHAxis;
-    
-    if (mVAxis != NULL)
-        delete mVAxis;
-#endif
-    
-#if 0
-    // FIX: delete the spectrogram display IN the context !
-    // (as it should be)
-    // FIXES: in Reaper, insert two Ghost-X in two tracks
-    // - play the first track to display the spectrogram
-    // - delete the second Ghost-X
-    // => The first spectrogram is not displayed anymore (black)
-    // (but the waveform is still displayed)
-    //
-    if (mSpectrogramDisplay != NULL)
-        delete mSpectrogramDisplay;
-    
-    if (mSpectrogramDisplayScroll != NULL)
-        delete mSpectrogramDisplayScroll;
-   
-    if (mSpectrogramDisplayScroll2 != NULL)
-        delete mSpectrogramDisplayScroll2;
-    
-    //
-    if (mImageDisplay != NULL)
-        delete mImageDisplay;
-#endif
-    
-    // NEW
     for (int i = 0; i < mCustomDrawers.size(); i++)
     {
         GraphCustomDrawer *drawer = mCustomDrawers[i];
@@ -216,8 +173,6 @@ GraphControl12::~GraphControl12()
 #if USE_FBO && (defined IGRAPHICS_GL)
     if (mFBO != NULL)
     {
-        //nvgDeleteFramebuffer(mFBO);
-        
         ((IGraphicsNanoVG *)mGraphics)->DeleteFBO(mFBO);
     }
 #endif
@@ -238,8 +193,6 @@ GraphControl12::Unlock()
 void
 GraphControl12::SetEnabled(bool flag)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mIsEnabled = flag;
 }
 
@@ -288,8 +241,7 @@ GraphControl12::Resize(int width, int height)
     // thread, not in the graphic thread
     //
     mNeedResizeGraph = true;
-    
-    //mDirty = true;
+
     mDataChanged = true;
 }
 
@@ -297,14 +249,11 @@ void
 GraphControl12::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0,
                           BL_GUI_FLOAT x1, BL_GUI_FLOAT y1)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mBounds[0] = x0;
     mBounds[1] = y0;
     mBounds[2] = x1;
     mBounds[3] = y1;
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
@@ -312,8 +261,6 @@ GraphControl12::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0,
 void
 GraphControl12::OnGUIIdle()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
@@ -325,15 +272,12 @@ GraphControl12::OnGUIIdle()
 void
 GraphControl12::SetSeparatorY0(BL_GUI_FLOAT lineWidth, int color[4])
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mSeparatorY0 = true;
     mSepY0LineWidth = lineWidth;
     
     for (int i = 0; i < 4; i++)
         mSepY0Color[i] = color[i];
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
@@ -358,49 +302,37 @@ GraphControl12::SetVAxis(GraphAxis2 *axis)
 void
 GraphControl12::SetXScale(bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mXdBScale = dbFlag;
     
     mMinX = minX;
     mMaxX = maxX;
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
 void
 GraphControl12::SetAutoAdjust(bool flag, BL_GUI_FLOAT smoothCoeff)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mAutoAdjustFlag = flag;
     
     mAutoAdjustParamSmoother.SetSmoothCoeff(smoothCoeff);
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
 void
 GraphControl12::SetYScaleFactor(BL_GUI_FLOAT factor)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mYScaleFactor = factor;
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
 void
 GraphControl12::SetClearColor(int r, int g, int b, int a)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     SET_COLOR_FROM_INT(mClearColor, r, g, b, a);
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
@@ -412,7 +344,7 @@ GraphControl12::DrawText(NVGcontext *vg,
                          const char *text, int color[4],
                          int halign, int valign, BL_GUI_FLOAT fontSizeCoeff)
 {
-    // static method -> no mutex!
+    // Static method -> no mutex!
     
     nvgSave(vg);
     
@@ -436,120 +368,15 @@ GraphControl12::DrawText(NVGcontext *vg,
     nvgRestore(vg);
 }
 
-#if 0
-void
-GraphControl12::SetSpectrogram(BLSpectrogram4 *spectro,
-                               BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right,
-                               BL_GUI_FLOAT bottom)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-    // #bl-iplug2: set mVg every time, and not at the beginning
-    // here, we have many chances that mVg is NULL.
-    // And do this for spectrogramdisplayscroll, image display and so on...
-    
-    if (mSpectrogramDisplay != NULL)
-        delete mSpectrogramDisplay;
-    
-    mSpectrogramDisplay = new SpectrogramDisplay(mVg);
-    mSpectrogramDisplay->SetSpectrogram(spectro,
-                                        left, top, right, bottom);
-}
-
-SpectrogramDisplay *
-GraphControl12::GetSpectrogramDisplay()
-{
-    return mSpectrogramDisplay;
-}
-
-void
-GraphControl12::SetSpectrogramScroll(BLSpectrogram4 *spectro,
-                                     BL_GUI_FLOAT left, BL_GUI_FLOAT top, BL_GUI_FLOAT right, BL_GUI_FLOAT bottom)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-    if (mSpectrogramDisplayScroll != NULL)
-        delete mSpectrogramDisplayScroll;
-    
-    mSpectrogramDisplayScroll = new SpectrogramDisplayScroll(mPlug, mVg);
-    mSpectrogramDisplayScroll->SetSpectrogram(spectro,
-                                              left, top, right, bottom);
-}
-
-SpectrogramDisplayScroll *
-GraphControl12::GetSpectrogramDisplayScroll()
-{
-    return mSpectrogramDisplayScroll;
-}
-
-void
-GraphControl12::SetSpectrogramScroll2(BLSpectrogram4 *spectro,
-                                      BL_GUI_FLOAT left, BL_GUI_FLOAT top,
-                                      BL_GUI_FLOAT right, BL_GUI_FLOAT bottom)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-    if (mSpectrogramDisplayScroll2 != NULL)
-        delete mSpectrogramDisplayScroll2;
-    
-    mSpectrogramDisplayScroll2 = new SpectrogramDisplayScroll2(mPlug, mVg);
-    mSpectrogramDisplayScroll2->SetSpectrogram(spectro,
-                                              left, top, right, bottom);
-}
-
-SpectrogramDisplayScroll2 *
-GraphControl12::GetSpectrogramDisplayScroll2()
-{
-    return mSpectrogramDisplayScroll2;
-}
-
-void
-GraphControl12::UpdateSpectrogram(bool updateData, bool updateFullData)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-    if (mSpectrogramDisplay != NULL)
-        mSpectrogramDisplay->UpdateSpectrogram(updateData, updateFullData);
-    
-    if (mSpectrogramDisplayScroll != NULL)
-        mSpectrogramDisplayScroll->UpdateSpectrogram(updateData);
-    
-    if (mSpectrogramDisplayScroll2 != NULL)
-        mSpectrogramDisplayScroll2->UpdateSpectrogram(updateData);
-    
-    //mDirty = true;
-    mDataChanged = true;
-}
-
-void
-GraphControl12::UpdateSpectrogramColormap(bool updateData)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-    if (mSpectrogramDisplayScroll != NULL)
-        mSpectrogramDisplayScroll->UpdateColormap(updateData);
-    
-    if (mSpectrogramDisplayScroll2 != NULL)
-        mSpectrogramDisplayScroll2->UpdateColormap(updateData);
-    
-    //mDirty = true;
-    mDataChanged = true;
-}
-#endif
-
 void
 GraphControl12::AddCustomDrawer(GraphCustomDrawer *customDrawer)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mCustomDrawers.push_back(customDrawer);
 }
 
 void
 GraphControl12::CustomDrawersPreDraw()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
@@ -565,8 +392,6 @@ GraphControl12::CustomDrawersPreDraw()
 void
 GraphControl12::CustomDrawersPostDraw()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
@@ -582,8 +407,6 @@ GraphControl12::CustomDrawersPostDraw()
 void
 GraphControl12::DrawSeparatorY0()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     if (!mSeparatorY0)
         return;
     
@@ -623,8 +446,6 @@ GraphControl12::DrawSeparatorY0()
 void
 GraphControl12::AddCustomControl(GraphCustomControl *customControl)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mCustomControls.push_back(customControl);
 }
 
@@ -679,10 +500,10 @@ GraphControl12::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMo
     }
 }
 
-void/*bool*/
+void
 GraphControl12::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
-    /*bool dblClickDone =*/ IControl::OnMouseDblClick(x, y, mod);
+    IControl::OnMouseDblClick(x, y, mod);
     
     // #bl-iplug2
     //if (!dblClickDone)
@@ -698,8 +519,6 @@ GraphControl12::OnMouseDblClick(float x, float y, const IMouseMod &mod)
         GraphCustomControl *control = mCustomControls[i];
         control->OnMouseDblClick(x, y, mod);
     }
-    
-    //return true;
 }
 
 void
@@ -772,8 +591,6 @@ GraphControl12::OnMouseOut()
 void
 GraphControl12::DBG_PrintCoords(int x, int y)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
@@ -789,62 +606,30 @@ GraphControl12::DBG_PrintCoords(int x, int y)
 void
 GraphControl12::SetBackgroundImage(IBitmap bmp)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mBgImage = bmp;
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
 void
 GraphControl12::SetOverlayImage(IBitmap bmp)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mOverlayImage = bmp;
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
 void
 GraphControl12::SetDisablePointOffsetHack(bool flag)
 {
-   //WDL_MutexLock lock(&mMutex);
-    
     mDisablePointOffsetHack = flag;
 }
 
 void
 GraphControl12::SetRecreateWhiteImageHack(bool flag)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mRecreateWhiteImageHack = flag;
 }
-
-#if 0
-void
-GraphControl12::CreateImageDisplay(BL_GUI_FLOAT left, BL_GUI_FLOAT top,
-                                   BL_GUI_FLOAT right, BL_GUI_FLOAT bottom,
-                                   ImageDisplay::Mode mode)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-    if (mImageDisplay != NULL)
-        delete mImageDisplay;
-    
-    mImageDisplay = new ImageDisplay(mVg, mode);
-    mImageDisplay->SetBounds(left, top, right, bottom);
-}
-
-ImageDisplay *
-GraphControl12::GetImageDisplay()
-{
-    return mImageDisplay;
-}
-#endif
 
 void
 GraphControl12::SetGraphTimeAxis(GraphTimeAxis4 *timeAxis)
@@ -855,19 +640,12 @@ GraphControl12::SetGraphTimeAxis(GraphTimeAxis4 *timeAxis)
 void
 GraphControl12::SetDataChanged()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     mDataChanged = true;
-    
-    //if (mIsEnabled) // new
-    //    mDirty = true;
 }
 
 void
 GraphControl12::SetDirty(bool triggerAction, int valIdx)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     // Set dirty only if the graph is enabled.
     // (otherwise we have the risk to try to draw a graph that is disabled).
     if (mIsEnabled)
@@ -880,15 +658,13 @@ GraphControl12::SetDirty(bool triggerAction, int valIdx)
 bool
 GraphControl12::IsDirty()
 {
-    // Always dirty
+    // Always dirty => Force redraw!
     return true;
 }
 
 void
 GraphControl12::DisplayCurveDescriptions()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #define OFFSET_Y 4.0
     
 #define DESCR_X 40.0
@@ -953,8 +729,6 @@ GraphControl12::DisplayCurveDescriptions()
 void
 GraphControl12::DrawAxis(bool lineLabelFlag)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     if (mHAxis != NULL)
         DrawAxis(mHAxis, true, lineLabelFlag);
     
@@ -965,8 +739,6 @@ GraphControl12::DrawAxis(bool lineLabelFlag)
 void
 GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     nvgSave(mVg);
     nvgStrokeWidth(mVg, 1.0);
     
@@ -1261,8 +1033,6 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
 void
 GraphControl12::DrawCurves()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     for (int i = 0; i < mCurves.size(); i++)
     {
         if (!mCurves[i]->mSingleValueH && !mCurves[i]->mSingleValueV)
@@ -1368,8 +1138,6 @@ GraphControl12::DrawCurves()
 void
 GraphControl12::DrawLineCurve(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if CURVE_DEBUG
     int numPointsDrawn = 0;
 #endif
@@ -1441,8 +1209,6 @@ GraphControl12::DrawLineCurve(GraphCurve5 *curve)
     nvgStroke(mVg);
     nvgRestore(mVg);
     
-    //mDirty = true;
-    
 #if CURVE_DEBUG
     fprintf(stderr, "GraphControl12::DrawLineCurve - num points: %d\n", numPointsDrawn);
 #endif
@@ -1454,8 +1220,6 @@ GraphControl12::DrawLineCurve(GraphCurve5 *curve)
 void
 GraphControl12::DrawFillCurve(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -1542,8 +1306,6 @@ GraphControl12::DrawFillCurve(GraphCurve5 *curve)
     nvgStroke(mVg);
 
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 #endif
 
@@ -1553,8 +1315,6 @@ GraphControl12::DrawFillCurve(GraphCurve5 *curve)
 void
 GraphControl12::DrawFillCurve(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -1753,8 +1513,6 @@ GraphControl12::DrawFillCurve(GraphCurve5 *curve)
     
     nvgRestore(mVg);
     
-    //mDirty = true;
-    
 #if CURVE_DEBUG
     fprintf(stderr, "GraphControl12::DrawFillCurve - num points: %d\n", numPointsDrawn);
 #endif
@@ -1764,8 +1522,6 @@ GraphControl12::DrawFillCurve(GraphCurve5 *curve)
 void
 GraphControl12::DrawLineCurveSVH(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     if (curve->mYValues.GetSize() == 0)
         return;
     
@@ -1800,15 +1556,11 @@ GraphControl12::DrawLineCurveSVH(GraphCurve5 *curve)
     
     nvgStroke(mVg);
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawFillCurveSVH(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     if (curve->mYValues.GetSize() == 0)
         return;
     
@@ -1893,15 +1645,11 @@ GraphControl12::DrawFillCurveSVH(GraphCurve5 *curve)
     
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawLineCurveSVV(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     // Finally, take the Y value
     // We will have to care about the curve Y scale !
     if (curve->mYValues.GetSize() == 0)
@@ -1946,17 +1694,12 @@ GraphControl12::DrawLineCurveSVV(GraphCurve5 *curve)
     
     nvgStroke(mVg);
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
-// Fill right
-// (only, for the moment)
+// Fill right (only, for the moment)
 void
 GraphControl12::DrawFillCurveSVV(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     // Finally, take the Y value
     // We will have to care about the curve Y scale !
     if (curve->mYValues.GetSize() == 0)
@@ -2007,8 +1750,6 @@ GraphControl12::DrawFillCurveSVV(GraphCurve5 *curve)
     
     nvgStroke(mVg);
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 // Optimized !
@@ -2016,8 +1757,6 @@ GraphControl12::DrawFillCurveSVV(GraphCurve5 *curve)
 void
 GraphControl12::DrawPointCurve(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 1);
     if (curveUndefined)
@@ -2099,15 +1838,11 @@ GraphControl12::DrawPointCurve(GraphCurve5 *curve)
 #endif
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawPointCurveOptimSameColor(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 1);
     if (curveUndefined)
@@ -2193,16 +1928,12 @@ GraphControl12::DrawPointCurveOptimSameColor(GraphCurve5 *curve)
     nvgQuads(mVg, centersBuf, numCenters, pointSize, mWhitePixImg);
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 // TEST (to display lines instead of points)
 void
 GraphControl12::DrawPointCurveLinesPolar(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2255,15 +1986,11 @@ GraphControl12::DrawPointCurveLinesPolar(GraphCurve5 *curve)
 #endif
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawPointCurveLinesPolarWeights(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2324,15 +2051,11 @@ GraphControl12::DrawPointCurveLinesPolarWeights(GraphCurve5 *curve)
     }
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawPointCurveLinesPolarFill(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2392,21 +2115,15 @@ GraphControl12::DrawPointCurveLinesPolarFill(GraphCurve5 *curve)
         
         nvgFill(mVg);
         
-        //nvgStroke(mVg);
-        
         lastValidIdx = i;
     }
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawPointCurveLines(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2455,15 +2172,11 @@ GraphControl12::DrawPointCurveLines(GraphCurve5 *curve)
     nvgStroke(mVg);
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawPointCurveLinesWeights(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2524,16 +2237,12 @@ GraphControl12::DrawPointCurveLinesWeights(GraphCurve5 *curve)
     }
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
-// doesn't work well (for non convex polygons)
+// Doesn't work well (for non convex polygons)
 void
 GraphControl12::DrawPointCurveLinesFill(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
 #if FIX_UNDEFINED_CURVES
     bool curveUndefined = IsCurveUndefined(curve->mXValues, curve->mYValues, 2);
     if (curveUndefined)
@@ -2581,15 +2290,11 @@ GraphControl12::DrawPointCurveLinesFill(GraphCurve5 *curve)
     nvgClosePath(mVg);
     nvgFill(mVg);
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::AutoAdjust()
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     // First, compute the maximum value of all the curves
     BL_GUI_FLOAT max = -1e16;
     for (int i = 0; i < mCurves.size(); i++)
@@ -2621,12 +2326,12 @@ GraphControl12::AutoAdjust()
     
     mAutoAdjustFactor = factor;
     
-    //mDirty = true;
     mDataChanged = true;
 }
 
 BL_GUI_FLOAT
-GraphControl12::MillisToPoints(long long int elapsed, int sampleRate, int numSamplesPoint)
+GraphControl12::MillisToPoints(long long int elapsed,
+                               int sampleRate, int numSamplesPoint)
 {
     BL_GUI_FLOAT numSamples = (((BL_GUI_FLOAT)elapsed)/1000.0)*sampleRate;
     
@@ -2635,101 +2340,17 @@ GraphControl12::MillisToPoints(long long int elapsed, int sampleRate, int numSam
     return numPoints;
 }
 
-#if 0 // iPlug2 / Windows
-void
-GraphControl12::InitFont(const char *fontPath)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-#ifndef WIN32
-    nvgCreateFont(mVg, GRAPH_FONT, fontPath);
-
-	mFontInitialized = true;
-#else //  On windows, resources are not external files 
-	
-	// Load the resource in memory, then create the nvg font
-
-	IGraphicsWin *graphics = (IGraphicsWin *)GetGUI();
-	if (graphics == NULL)
-		return;
-
-	HINSTANCE instance = graphics->GetHInstance();
-	if (instance == NULL)
-		return;
-
-	HRSRC fontResource = ::FindResource(instance, MAKEINTRESOURCE(FONT_ID), RT_RCDATA);
-
-	HMODULE module = instance;
-
-	unsigned int fontResourceSize = ::SizeofResource(module, fontResource);
-	HGLOBAL fontResourceData = ::LoadResource(module, fontResource);
-	void* pBinaryData = ::LockResource(fontResourceData);
-
-	if (pBinaryData == NULL)
-		return;
-
-	unsigned char* data = (unsigned char*)malloc(fontResourceSize);
-	int ndata = fontResourceSize;
-	memcpy(data, fontResourceData, ndata);
-
-	nvgCreateFontMem(mVg, GRAPH_FONT, data, ndata, 1);
-
-	mFontInitialized = true;
-#endif
-}
-#endif
-
 void
 GraphControl12::DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y, BL_GUI_FLOAT fontSize,
                         const char *text, int color[4],
                         int halign, int valign, BL_GUI_FLOAT fontSizeCoeff)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     int width = this->mRECT.W();
     int height = this->mRECT.H();
     
     DrawText(mVg, x, y, width, height,
              fontSize, text, color,
              halign, valign, fontSizeCoeff);
-}
-
-bool
-GraphControl12::NeedUpdateGUI()
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-#if 0
-    if (mSpectrogramDisplay != NULL)
-    {
-        bool needUpdate = mSpectrogramDisplay->NeedUpdateSpectrogram();
-        if (needUpdate)
-            return true;
-    }
-    
-    if (mSpectrogramDisplayScroll != NULL)
-    {
-        bool needUpdate = mSpectrogramDisplayScroll->NeedUpdateSpectrogram();
-        if (needUpdate)
-            return true;
-    }
-    
-    if (mSpectrogramDisplayScroll2 != NULL)
-    {
-        bool needUpdate = mSpectrogramDisplayScroll2->NeedUpdateSpectrogram();
-        if (needUpdate)
-            return true;
-    }
-    
-    if (mImageDisplay != NULL)
-    {
-        bool needUpdate = mImageDisplay->NeedUpdateImage();
-        if (needUpdate)
-            return true;
-    }
-#endif
-    
-    return false;
 }
 
 #if !USE_FBO || (!defined IGRAPHICS_GL)
@@ -2750,7 +2371,7 @@ GraphControl12::Draw(IGraphics &graphics)
     // Keep a reference, for deleting FBO
     mGraphics = &graphics;
     
-    SetVg(graphics);
+    mVg = (NVGcontext *)graphics.GetDrawContext();
     
     // Checked: if we fall here, the graph is sure to have mIsEnabled = true!
     if (!mIsEnabled)
@@ -2768,10 +2389,6 @@ GraphControl12::Draw(IGraphics &graphics)
             mFBO = nvgCreateFramebuffer(mVg, w, h, 0);
         }
     
-        // Debug
-        //graphics.DrawDottedRect(COLOR_GREEN, mRECT);
-        //graphics.FillRect(mMouseIsOver ? COLOR_TRANSLUCENT : COLOR_TRANSPARENT, mRECT);
-    
         nvgEndFrame(mVg);
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, &mInitialFBO);
     
@@ -2784,13 +2401,9 @@ GraphControl12::Draw(IGraphics &graphics)
     
         glScissor(0, 0, w, h);
         glClearColor(0.f, 0.f, 0.f, 0.f);
-        //glClearColor(1.f, 0.f, 0.f, 1.f); // Debug red
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     
         DoDraw(graphics);
-    
-        // BUG here
-        //glViewport(vp[0], vp[1], vp[2], vp[3]);
     
         nvgEndFrame(mVg);
     
@@ -2807,12 +2420,7 @@ GraphControl12::Draw(IGraphics &graphics)
     APIBitmap apibmp {mFBO->image, w, h, 1, 1.};
     IBitmap bmp {&apibmp, 1, false};
     
-    //graphics.DrawFittedBitmap(bmp, mRECT);
     graphics.DrawBitmap(bmp, mRECT);
-    
-//#if USE_FBO
-//    mVg = NULL;
-//#endif
 }
 #endif
 
@@ -2821,7 +2429,7 @@ GraphControl12::DoDraw(IGraphics &graphics)
 {
     WDL_MutexLock lock(&mMutex);
     
-    SetVg(graphics);
+    mVg = (NVGcontext *)graphics.GetDrawContext();
     
     // Checked: if we fall here, the graph is sur to have mIsEnabled = true!
     if (!mIsEnabled)
@@ -2831,11 +2439,8 @@ GraphControl12::DoDraw(IGraphics &graphics)
     
     nvgSave(mVg);
     
-    //nvgResetTransform(mVg);
-    
     nvgReset(mVg);
     
-//#if !USE_FBO
 #if !USE_FBO || (!defined IGRAPHICS_GL)
     // #bl-iplug2
     // Be sure to draw only in the graph.
@@ -2847,55 +2452,6 @@ GraphControl12::DoDraw(IGraphics &graphics)
     nvgTranslate(mVg, this->mRECT.L, this->mRECT.T);
 #endif
     
-#if 0
-    // Update first, before displaying
-    if (mSpectrogramDisplay != NULL)
-    {
-        bool updated = mSpectrogramDisplay->DoUpdateSpectrogram();
-        
-        //if (updated)
-        //{
-        //    mDirty = true;
-        //}
-    }
-   
-    //
-    if (mSpectrogramDisplayScroll != NULL)
-    {
-        bool updated = mSpectrogramDisplayScroll->DoUpdateSpectrogram();
-        //if (updated)
-        //{
-        //    mDirty = true;
-        //}
-    }
-    
-    // 2
-    if (mSpectrogramDisplayScroll2 != NULL)
-    {
-        bool updated = mSpectrogramDisplayScroll2->DoUpdateSpectrogram();
-        //if (updated)
-        //{
-        //    mDirty = true;
-        //}
-    }
-    
-    //
-    if (mImageDisplay != NULL)
-    {
-        bool updated = mImageDisplay->DoUpdateImage();
-        
-        //if (updated)
-        //{
-        //    mDirty = true;
-       // }
-    }
-#endif
-    
-    //int width = this->mRECT.W();
-    //int height = this->mRECT.H();
-    
-    // nvgBeginFrame() ?
-    
     DrawBackgroundImage(graphics);
     
     if (mAutoAdjustFlag)
@@ -2904,17 +2460,6 @@ GraphControl12::DoDraw(IGraphics &graphics)
     }
     
     CustomDrawersPreDraw();
-    
-#if 0
-    if (mSpectrogramDisplay != NULL)
-        mSpectrogramDisplay->DrawSpectrogram(width, height);
-    
-    if (mSpectrogramDisplayScroll != NULL)
-        mSpectrogramDisplayScroll->DrawSpectrogram(width, height);
-    
-    if (mSpectrogramDisplayScroll2 != NULL)
-        mSpectrogramDisplayScroll2->DrawSpectrogram(width, height);
-#endif
     
     // Update the time axis, so we are very accurate at each Draw() call
     if (mGraphTimeAxis != NULL)
@@ -2938,17 +2483,9 @@ GraphControl12::DoDraw(IGraphics &graphics)
     }
 #endif
     
-#if 0
-    //
-    if (mImageDisplay != NULL)
-        mImageDisplay->DrawImage(width, height);
-#endif
-    
     DrawAxis(false);
     
     DisplayCurveDescriptions();
-    
-    //DrawSpectrogram();
 
     CustomDrawersPostDraw();
     
@@ -2957,19 +2494,11 @@ GraphControl12::DoDraw(IGraphics &graphics)
     DrawOverlayImage(graphics);
     
     nvgRestore(mVg);
-    
-    //mDirty = false;
-   
-#if !USE_FBO
-    mVg = NULL;
-#endif
 }
 
 void
 GraphControl12::SetCurveDrawStyle(GraphCurve5 *curve)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     nvgStrokeWidth(mVg, curve->mLineWidth);
     
     if (curve->mBevelFlag)
@@ -2989,16 +2518,13 @@ GraphControl12::SetCurveDrawStyle(GraphCurve5 *curve)
         (int)(curve->mColor[2]*255), (int)(curve->mFillAlpha*255) };
     SWAP_COLOR(sFillColor);
     
-    nvgFillColor(mVg, nvgRGBA(sFillColor[0], sFillColor[1], sFillColor[2], sFillColor[3]));
-    
-    //mDirty = true;
+    nvgFillColor(mVg, nvgRGBA(sFillColor[0], sFillColor[1],
+                              sFillColor[2], sFillColor[3]));
 }
 
 void
 GraphControl12::SetCurveDrawStyleWeight(GraphCurve5 *curve, BL_GUI_FLOAT weight)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     int sColor[4];
     if (!curve->mUseWeightTargetColor)
     {
@@ -3060,14 +2586,13 @@ GraphControl12::SetCurveDrawStyleWeight(GraphCurve5 *curve, BL_GUI_FLOAT weight)
     }
     SWAP_COLOR(sFillColor);
     
-    nvgFillColor(mVg, nvgRGBA(sFillColor[0], sFillColor[1], sFillColor[2], sFillColor[3]));
+    nvgFillColor(mVg, nvgRGBA(sFillColor[0], sFillColor[1],
+                              sFillColor[2], sFillColor[3]));
 }
 
 BL_GUI_FLOAT
 GraphControl12::ConvertToBoundsX(BL_GUI_FLOAT t)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     // Rescale
     t *= (mBounds[2] - mBounds[0]);
     t += mBounds[0];
@@ -3084,8 +2609,6 @@ GraphControl12::ConvertToBoundsX(BL_GUI_FLOAT t)
 BL_GUI_FLOAT
 GraphControl12::ConvertToBoundsY(BL_GUI_FLOAT t)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     // Rescale
     t *= (mBounds[3] - mBounds[1]);
     t += (1.0 - mBounds[3]);
@@ -3102,8 +2625,6 @@ GraphControl12::ConvertToBoundsY(BL_GUI_FLOAT t)
 void
 GraphControl12::DrawBackgroundImage(IGraphics &graphics)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     if (mBgImage.GetAPIBitmap() == NULL)
         return;
     
@@ -3114,19 +2635,15 @@ GraphControl12::DrawBackgroundImage(IGraphics &graphics)
     graphics.DrawBitmap(mBgImage, bounds, 0, 0);
     
     nvgRestore(mVg);
-    
-    //mDirty = true;
 }
 
 void
 GraphControl12::DrawOverlayImage(IGraphics &graphics)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     if (mOverlayImage.GetAPIBitmap() == NULL)
         return;
     
-    nvgSave(mVg); // new
+    nvgSave(mVg);
     nvgTranslate(mVg, -this->mRECT.L, -this->mRECT.T);
     
     IRECT bounds = GetRECT();
@@ -3140,8 +2657,6 @@ GraphControl12::IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
                                  const WDL_TypedBuf<BL_GUI_FLOAT> &y,
                                  int minNumValues)
 {
-    //WDL_MutexLock lock(&mMutex);
-    
     if (x.GetSize() != y.GetSize())
         return true;
     
@@ -3164,25 +2679,6 @@ GraphControl12::IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
     }
     
     return true;
-}
-
-void
-GraphControl12::SetVg(IGraphics &graphics)
-{
-    //WDL_MutexLock lock(&mMutex);
-    
-    mVg = (NVGcontext *)graphics.GetDrawContext();
-    
-#if 0
-    if (mSpectrogramDisplay != NULL)
-        mSpectrogramDisplay->SetNvgContext(mVg);
-    if (mSpectrogramDisplayScroll != NULL)
-        mSpectrogramDisplayScroll->SetNvgContext(mVg);
-    if (mSpectrogramDisplayScroll2 != NULL)
-        mSpectrogramDisplayScroll2->SetNvgContext(mVg);
-    if (mImageDisplay != NULL)
-        mImageDisplay->SetNvgContext(mVg);
-#endif
 }
 
 #endif // IGRAPHICS_NANOVG

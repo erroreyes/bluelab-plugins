@@ -30,7 +30,6 @@ class IGUIResizeButtonControl;
 
 // GUIHelper12: from GUIHelper11, for GraphControl12
 //
-
 class GUIHelper12
 {
 public:

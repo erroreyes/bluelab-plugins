@@ -32,10 +32,6 @@ using namespace std;
 #include <Debug.h>
 #endif
 
-//#include <ImageDisplay.h>
-
-#include "resource.h"
-
 // FBO rendering
 // Avoids blinking
 #define USE_FBO 1 //0
@@ -81,10 +77,6 @@ using namespace iplug::igraphics;
 struct NVGcontext;
 struct NVGLUframebuffer;
 
-class BLSpectrogram4;
-//class SpectrogramDisplay;
-//class SpectrogramDisplayScroll;
-//class SpectrogramDisplayScroll2; // A bit drafty... (for InfrasonicViewer)
 class GraphAxis2;
 class GraphTimeAxis4;
 
@@ -153,15 +145,11 @@ public:
     
     void SetEnabled(bool flag);
     
-    // NEW: when updating buffer size
-    //void SetNumCurveValues(int numCurveValues);
-    
     void GetSize(int *width, int *height);
     void Resize(int width, int height);
     
     void SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0, BL_GUI_FLOAT x1, BL_GUI_FLOAT y1);
     
-    //
     void Draw(IGraphics &graphics) override;
     
     void OnGUIIdle() override;
@@ -191,30 +179,6 @@ public:
                          int color[4], int halign, int valign,
                          BL_GUI_FLOAT fontSizeCoeff = 1.0);
     
-#if 0
-    // SpectrogramDisplay, for Ghost
-    void SetSpectrogram(BLSpectrogram4 *spectro,
-                        BL_GUI_FLOAT left, BL_GUI_FLOAT top,
-                        BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
-    SpectrogramDisplay *GetSpectrogramDisplay();
-    
-    // SpectrgramDisplayScroll, for Chroma and GhostViewer
-    void SetSpectrogramScroll(BLSpectrogram4 *spectro,
-                              BL_GUI_FLOAT left, BL_GUI_FLOAT top,
-                              BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
-    SpectrogramDisplayScroll *GetSpectrogramDisplayScroll();
-    
-    // For SpectrogramDisplayScroll2
-    void SetSpectrogramScroll2(BLSpectrogram4 *spectro,
-                               BL_GUI_FLOAT left, BL_GUI_FLOAT top,
-                               BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
-    SpectrogramDisplayScroll2 *GetSpectrogramDisplayScroll2();
-    
-    void UpdateSpectrogram(bool updateData, bool updateFullData);
-    void UpdateSpectrogramColormap(bool updateData);
-#endif
-    
-    
     // Custom drawers
     void AddCustomDrawer(GraphCustomDrawer *customDrawer);
 
@@ -229,7 +193,7 @@ public:
     void OnMouseDown(float x, float y, const IMouseMod &mod) override;
     void OnMouseUp(float x, float y, const IMouseMod &mod) override;
     void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod) override;
-    void/*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
+    void OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
     void OnMouseWheel(float x, float y, const IMouseMod &mod, float d) override;
     bool OnKeyDown(float x, float y, const IKeyPress& key) override;
     
@@ -252,14 +216,6 @@ public:
     // Set to true to recreate the mWhitePixImg image at the beginning of each loop
     void SetRecreateWhiteImageHack(bool flag);
     
-#if 0
-    // Image display
-    void CreateImageDisplay(BL_GUI_FLOAT left, BL_GUI_FLOAT top,
-                            BL_GUI_FLOAT right, BL_GUI_FLOAT bottom,
-                            ImageDisplay::Mode mode = ImageDisplay::MODE_LINEAR);
-    ImageDisplay *GetImageDisplay();
-#endif
-    
     void SetGraphTimeAxis(GraphTimeAxis4 *timeAxis);
     
     void SetDataChanged();
@@ -267,20 +223,13 @@ public:
     //
     void SetDirty(bool triggerAction = true, int valIdx = kNoValIdx) override;
     
-    // Hack
+    // Hacked, always return true
     bool IsDirty() override;
     
 protected:
-    //
     void DoDraw(IGraphics &graphics);
     
     void DisplayCurveDescriptions();
-    
-    /*void AddAxis(GraphAxis *axis, char *data[][2], int numData,
-                 int axisColor[4], int axisLabelColor[4],
-                 BL_GUI_FLOAT mindB, BL_GUI_FLOAT maxdB,
-                 int axisOverlayColor[4] = NULL,
-                 int axisLinesOverlayColor[4] = NULL); */
     
     void DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag);
     
@@ -308,12 +257,10 @@ protected:
     
     // Draw points
     void DrawPointCurve(GraphCurve5 *curve);
-    //void DrawPointCurveWeights(GraphCurve5 *curve);
     
     // Optimized version. Draw all points with the same color
     void DrawPointCurveOptimSameColor(GraphCurve5 *curve);
     
-    // TEMPORARY
     // Draw lines, from a "middle" to each point
     void DrawPointCurveLinesPolar(GraphCurve5 *curve);
     
@@ -328,12 +275,8 @@ protected:
     
     void AutoAdjust();
     
-    static BL_GUI_FLOAT MillisToPoints(long long int elapsed, int sampleRate, int numSamplesPoint);
-    
-#if 0 // iPlug2 / Windows
-    // Text
-    void InitFont(const char *fontPath);
-#endif
+    static BL_GUI_FLOAT MillisToPoints(long long int elapsed,
+                                       int sampleRate, int numSamplesPoint);
 
     void DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y,
                   BL_GUI_FLOAT fontSize, const char *text,
@@ -356,20 +299,12 @@ protected:
                           const WDL_TypedBuf<BL_GUI_FLOAT> &y,
                           int minNumValues);
 
-    // No more used
-    bool NeedUpdateGUI();
-    
-    void SetVg(IGraphics &graphics);
-
     //
     
     // For UST
     bool mIsEnabled;
     
     BL_GUI_FLOAT mBounds[4];
-    
-    //int mNumCurveValues;
-    //int mNumCurves;
     
     vector<GraphCurve5 *> mCurves;
     
@@ -399,13 +334,6 @@ protected:
     
     WDL_String mFontPath;
     
-#if 0
-    // We will use either one or the other
-    SpectrogramDisplay *mSpectrogramDisplay;
-    SpectrogramDisplayScroll *mSpectrogramDisplayScroll;
-    SpectrogramDisplayScroll2 *mSpectrogramDisplayScroll2;
-#endif
-    
     // Custom drawers
     vector<GraphCustomDrawer *> mCustomDrawers;
     
@@ -431,13 +359,7 @@ protected:
     // For UST
     bool mDisablePointOffsetHack;
     
-    //
     bool mRecreateWhiteImageHack;
-    
-#if 0
-    // ImageDisplay
-    ImageDisplay *mImageDisplay;
-#endif
     
     GraphTimeAxis4 *mGraphTimeAxis;
     

@@ -43,7 +43,6 @@ GraphCurve5::GraphCurve5(int numValues)
     mFillAlphaUp = 0.0;
     mFillAlphaUpFlag = false;
     
-    // NEW
     SET_COLOR_FROM_INT(mFillColor, 0, 0, 0, 255);
     mFillColorSet = false;
     
@@ -132,9 +131,6 @@ GraphCurve5::ResetNumValues(int numValues)
     
     BLUtils::FillAllZero(&mXValues);
     BLUtils::FillAllZero(&mYValues);
-    
-    //BLUtils::ResizeFillZeros(&mXValues, mNumValues);
-    //BLUtils::ResizeFillZeros(&mYValues, mNumValues);
 }
 
 void
@@ -577,11 +573,6 @@ GraphCurve5::SetValues(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 void
 GraphCurve5::SetValues2(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 {
-    //if (values->GetSize() < mNumCurveValues)
-    //    // Something went wrong
-    //    return;
-    
-    //for (int i = 0; i < mNumCurveValues; i++)
     for (int i = 0; i < values->GetSize(); i++)
     {
         BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(values->GetSize() - 1);
@@ -599,7 +590,6 @@ GraphCurve5::SetValues3(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
     if (values->GetSize() == 0)
         return;
     
-    //for (int i = 0; i < mNumCurveValues; i++)
     for (int i = 0; i < values->GetSize(); i++)
     {
         BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(values->GetSize() - 1);
@@ -696,9 +686,6 @@ GraphCurve5::SetValuesDecimate2(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
         return;
     
     // Decimate
-    
-    //BL_GUI_FLOAT decFactor = ((BL_GUI_FLOAT)mNumCurveValues)/values->GetSize();
-    
     WDL_TypedBuf<BL_GUI_FLOAT> decimValues;
     if (isWaveSignal)
         BLUtils::DecimateSamples(&decimValues, *values, decFactor);
@@ -726,9 +713,6 @@ GraphCurve5::SetValuesDecimate3(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
         return;
     
     // Decimate
-    
-    //BL_GUI_FLOAT decFactor = ((BL_GUI_FLOAT)mNumCurveValues)/values->GetSize();
-    
     WDL_TypedBuf<BL_GUI_FLOAT> decimValues;
     if (isWaveSignal)
         BLUtils::DecimateSamples2(&decimValues, *values, decFactor);
@@ -919,9 +903,6 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
             {
                 if (x > 0.0)
                 {
-                    // Avoid -INF values
-                    //x = BLUtils::NormalizedYTodB(x, curve->mMinX, curve->mMaxX);
-                    
                     if (std::fabs(x) < BL_EPS)
                         x = mMinX;
                     else
@@ -956,9 +937,6 @@ GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
             {
                 if (y > 0.0)
                 {
-                    // Avoid -INF values
-                    //x = BLUtils::NormalizedYTodB(x, curve->mMinX, curve->mMaxX);
-                    
                     if (std::fabs(y) < BL_EPS)
                         y = mMinY;
                     else

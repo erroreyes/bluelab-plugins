@@ -40,8 +40,6 @@ public:
     
     virtual ~SpectrogramDisplayScroll3();
     
-    //void SetNvgContext(NVGcontext *vg);
-    
     void Reset();
     
     // For InfrasonicViewer
@@ -137,8 +135,6 @@ protected:
     
     // Variable speed
     int mSpeedMod;
-    
-    //bool mFirstDraw;
 };
 
 #endif // IGRAPHICS_NANOVG
