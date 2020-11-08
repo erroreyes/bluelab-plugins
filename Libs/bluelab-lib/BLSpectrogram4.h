@@ -65,6 +65,7 @@ public:
                  WDL_TypedBuf<BL_FLOAT> *magns,
                  WDL_TypedBuf<BL_FLOAT> *phases);
     
+    void TouchData();
     
     // Image data
     bool GetImageDataFloat(int width, int height, unsigned char *buf);

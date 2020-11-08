@@ -14,9 +14,10 @@
 // From ChromaFftObj
 //
 
-class BLSpectrogram4;
-class SpectrogramDisplayScroll;
+// SpectrogramDisplayScroll => SpectrogramDisplayScroll3
 
+class BLSpectrogram4;
+class SpectrogramDisplayScroll3;
 class GhostViewerFftObj : public ProcessObj
 {
 public:
@@ -32,7 +33,7 @@ public:
     
     BLSpectrogram4 *GetSpectrogram();
     
-    void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay);
     
     void SetSpeedMod(int speedMod);
     
@@ -43,7 +44,7 @@ protected:
     //
     BLSpectrogram4 *mSpectrogram;
     
-    SpectrogramDisplayScroll *mSpectroDisplay;
+    SpectrogramDisplayScroll3 *mSpectroDisplay;
     
     long mLineCount;
     

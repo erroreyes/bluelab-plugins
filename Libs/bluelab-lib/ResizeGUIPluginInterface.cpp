@@ -125,6 +125,7 @@ ResizeGUIPluginInterface::GUIResizeComputeOffsets(int defaultGUIWidth,
     *offsetY = newGUIHeight - defaultGUIHeight;
 }
 
+#if 0
 void
 ResizeGUIPluginInterface::GUIResizePostResizeGUI(GraphControl11 *graph,
                                                  int graphWidthSmall,
@@ -143,3 +144,4 @@ ResizeGUIPluginInterface::GUIResizePostResizeGUI(GraphControl11 *graph,
     if (graph != NULL)
         pGraphics->AttachControl(graph);
 }
+#endif

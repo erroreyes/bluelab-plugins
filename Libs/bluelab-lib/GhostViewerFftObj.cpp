@@ -13,7 +13,7 @@
 #include <BLDebug.h>
 
 #include <SpectrogramDisplay.h>
-#include <SpectrogramDisplayScroll.h>
+#include <SpectrogramDisplayScroll3.h>
 
 #include "GhostViewerFftObj.h"
 
@@ -92,7 +92,7 @@ GhostViewerFftObj::GetSpectrogram()
 }
 
 void
-GhostViewerFftObj::SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay)
+GhostViewerFftObj::SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }

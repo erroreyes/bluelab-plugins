@@ -333,6 +333,14 @@ BLSpectrogram4::GetLine(int index,
     return true;
 }
 
+void
+BLSpectrogram4::TouchData()
+{
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
+}
+
 // Optimized version: keep the strict minimum
 bool
 BLSpectrogram4::GetImageDataFloat(int width, int height, unsigned char *buf)

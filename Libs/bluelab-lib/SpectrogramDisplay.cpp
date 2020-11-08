@@ -118,7 +118,8 @@ SpectrogramDisplay::RefreshGfx()
         {
             mSpectrogram->TouchColorMap();
             
-            UpdateSpectrogram(true, true);
+            UpdateSpectrogram(true);
+            //UpdateColormap(true);
         }
     }
 }

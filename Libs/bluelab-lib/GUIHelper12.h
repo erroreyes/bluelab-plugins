@@ -1,13 +1,13 @@
 //
-//  GUIHelper11.hpp
+//  GUIHelper12.hpp
 //  UST-macOS
 //
 //  Created by applematuer on 9/25/20.
 //
 //
 
-#ifndef GUIHelper11_h
-#define GUIHelper11_h
+#ifndef GUIHelper12_h
+#define GUIHelper12_h
 
 #include <IControls.h>
 
@@ -21,14 +21,17 @@
 using namespace iplug;
 using namespace iplug::igraphics;
 
-class GraphControl11;
+class GraphControl12;
 class IRadioButtonsControl;
 class IGUIResizeButtonControl;
 
 // TODO
 #define VumeterControl IBKnobControl
 
-class GUIHelper11
+// GUIHelper12: from GUIHelper11, for GraphControl12
+//
+
+class GUIHelper12
 {
 public:
     enum Style
@@ -52,9 +55,9 @@ public:
         SIZE_BIG
     };
     
-    GUIHelper11(Style style);
+    GUIHelper12(Style style);
     
-    virtual ~GUIHelper11();
+    virtual ~GUIHelper12();
     
     IBKnobControl *CreateKnob(IGraphics *graphics,
                               float x, float y,
@@ -66,19 +69,10 @@ public:
                               ICaptionControl **caption = NULL);
     
 #ifdef IGRAPHICS_NANOVG
-    GraphControl11 *CreateGraph(Plugin *plug, IGraphics *graphics,
+    GraphControl12 *CreateGraph(Plugin *plug, IGraphics *graphics,
                                 float x, float y,
                                 const char *bitmapFname, int paramIdx,
-                                int numCurves, int numPoints,
                                 const char *overlayFname = NULL);
-    
-    // Must re-set the bitmaps after the plug window was closed
-    // (because we get a new nanovg context, and bitmaps depend on it)
-    void RefreshGraphGfx(IGraphics *graphics,
-                         GraphControl11 *graph,
-                         const char *bitmapFname,
-                         const char *overlayFname);
-    
 #endif // IGRAPHICS_NANOVG
     
     // 2 states or more
@@ -266,4 +260,4 @@ protected:
     float mButtonLabelTextOffsetY;
 };
 
-#endif /* GUIHelper11_hpp */
+#endif /* GUIHelper12_hpp */

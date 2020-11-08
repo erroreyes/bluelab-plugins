@@ -1,0 +1,470 @@
+//
+//  Graph.h
+//  Transient
+//
+//  Created by Apple m'a Tuer on 03/09/17.
+//
+//
+
+#ifndef GraphControl12_h
+#define GraphControl12_h
+
+#ifdef IGRAPHICS_NANOVG
+
+#include <string>
+#include <vector>
+using namespace std;
+
+#include "IPlug_include_in_plug_hdr.h"
+
+#include <lice.h>
+#include <IControl.h>
+
+#include <BLTypes.h>
+
+#include <GraphCurve5.h>
+#include <ParamSmoother.h>
+
+#define PROFILE_GRAPH 0
+
+#if PROFILE_GRAPH
+#include <BlaTimer.h>
+#include <Debug.h>
+#endif
+
+//#include <ImageDisplay.h>
+
+#include "resource.h"
+
+// FBO rendering
+// Avoids blinking
+#define USE_FBO 1 //0
+
+// Font size
+#define FONT_SIZE 14.0
+
+// #bl-iplug2
+// Every element had y reversed, except the bitmaps
+#define GRAPH_CONTROL_FLIP_Y 1
+
+#if USE_FBO
+typedef struct NVGLUframebuffer NVGLUframebuffer;
+#endif
+
+using namespace iplug;
+using namespace iplug::igraphics;
+
+// Graph class (Use NanoVG internally).
+// Bug correction: vertical axis and dB
+
+// Direct OpenGL render, no more GLReadPixels (8 x faster !)
+// Be sure to set OPENGL_YOULEAN_PATCH to 1, in Lice and IGraphicsMac.mm
+
+// Use with GraphCurve2
+// ... then use with GraphCurve3
+
+// From GraphControl5
+// Precompute all possible before while adding the points
+// (instead of computing at each draw)
+// (useful for large number of points, e.g 500000 for Impulse with 15s)
+//
+// GraphControl7 : added Spectrograms
+//
+// GraphControl8 : for BLSpectrogram3
+//
+// GraphControl9 : for BLSpectrogram3
+//
+// GraphControl10 : for SpectrogramDisplay
+//
+// GraphControl12: for IPlug2
+
+struct NVGcontext;
+struct NVGLUframebuffer;
+
+class BLSpectrogram4;
+//class SpectrogramDisplay;
+//class SpectrogramDisplayScroll;
+//class SpectrogramDisplayScroll2; // A bit drafty... (for InfrasonicViewer)
+class GraphAxis2;
+class GraphTimeAxis4;
+
+// Added this test to avoid redraw everything each time
+// NOTE: added for StereoWidth
+//
+// With this flag, everything is redrawn only if the lements changes
+// (not at each call to DrawGraph)
+//
+// => real optimization when nothing changes !
+//
+//#define DIRTY_OPTIM 1
+
+// Class to add special drawing, depending on the plugins
+class GraphCustomDrawer
+{
+public:
+    GraphCustomDrawer() {}
+    
+    virtual ~GraphCustomDrawer() {}
+    
+    // Implement one of the two methods, depending on when
+    // you whant to draw
+    
+    // Draw before everything
+    virtual void PreDraw(NVGcontext *vg, int width, int height) {}
+    
+    // Draw after everything
+    virtual void PostDraw(NVGcontext *vg, int width, int height) {}
+};
+
+class GraphCustomControl
+{
+public:
+    GraphCustomControl() {}
+    
+    virtual ~GraphCustomControl() {}
+    
+    virtual void OnMouseDown(float x, float y, const IMouseMod &mod) {}
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod) {}
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &mod) {}
+    virtual void OnMouseDblClick(float x, float y,
+                                 const IMouseMod &mod) {};
+    virtual void OnMouseWheel(float x, float y,
+                              const IMouseMod &mod, BL_GUI_FLOAT d) {};
+    virtual bool OnKeyDown(float x, float y, const IKeyPress& key) { return false; }
+    
+    virtual void OnMouseOver(float x, float y, const IMouseMod &mod) {}
+    virtual void OnMouseOut() {}
+    
+    virtual void OnGUIIdle() {}
+};
+
+// WARNING: Since GraphControl4 width must be a multiple of 4 !
+class GraphControl12 : public IControl
+{
+public:
+    GraphControl12(Plugin *pPlug, IGraphics *pGraphics,
+                   IRECT p, int paramIdx, const char *fontPath);
+    
+    virtual ~GraphControl12();
+    
+    void Lock();
+    void Unlock();
+    
+    void SetEnabled(bool flag);
+    
+    // NEW: when updating buffer size
+    //void SetNumCurveValues(int numCurveValues);
+    
+    void GetSize(int *width, int *height);
+    void Resize(int width, int height);
+    
+    void SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0, BL_GUI_FLOAT x1, BL_GUI_FLOAT y1);
+    
+    //
+    void Draw(IGraphics &graphics) override;
+    
+    void OnGUIIdle() override;
+    
+    
+    // Set a separator line at the bottom
+    void SetSeparatorY0(BL_GUI_FLOAT lineWidth, int color[4]);
+    
+    void AddCurve(GraphCurve5 *curve);
+    
+    void SetHAxis(GraphAxis2 *axis);
+    void SetVAxis(GraphAxis2 *axis);
+    
+    void SetXScale(bool dBFlag, BL_GUI_FLOAT minX = 0.0, BL_GUI_FLOAT maxX = 1.0);
+    
+    void SetAutoAdjust(bool flag, BL_GUI_FLOAT smoothCoeff);
+    
+    void SetYScaleFactor(BL_GUI_FLOAT factor);
+    
+    void SetClearColor(int r, int g, int b, int a);
+    
+    //
+    static void DrawText(NVGcontext *vg,
+                         BL_GUI_FLOAT x, BL_GUI_FLOAT y,
+                         BL_GUI_FLOAT graphWidth, BL_GUI_FLOAT graphHeight,
+                         BL_GUI_FLOAT fontSize, const char *text,
+                         int color[4], int halign, int valign,
+                         BL_GUI_FLOAT fontSizeCoeff = 1.0);
+    
+#if 0
+    // SpectrogramDisplay, for Ghost
+    void SetSpectrogram(BLSpectrogram4 *spectro,
+                        BL_GUI_FLOAT left, BL_GUI_FLOAT top,
+                        BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
+    SpectrogramDisplay *GetSpectrogramDisplay();
+    
+    // SpectrgramDisplayScroll, for Chroma and GhostViewer
+    void SetSpectrogramScroll(BLSpectrogram4 *spectro,
+                              BL_GUI_FLOAT left, BL_GUI_FLOAT top,
+                              BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
+    SpectrogramDisplayScroll *GetSpectrogramDisplayScroll();
+    
+    // For SpectrogramDisplayScroll2
+    void SetSpectrogramScroll2(BLSpectrogram4 *spectro,
+                               BL_GUI_FLOAT left, BL_GUI_FLOAT top,
+                               BL_GUI_FLOAT right, BL_GUI_FLOAT bottom);
+    SpectrogramDisplayScroll2 *GetSpectrogramDisplayScroll2();
+    
+    void UpdateSpectrogram(bool updateData, bool updateFullData);
+    void UpdateSpectrogramColormap(bool updateData);
+#endif
+    
+    
+    // Custom drawers
+    void AddCustomDrawer(GraphCustomDrawer *customDrawer);
+
+    void CustomDrawersPreDraw();
+    void CustomDrawersPostDraw();
+    
+    void DrawSeparatorY0();
+    
+    // Custom control
+    void AddCustomControl(GraphCustomControl *customControl);
+    
+    void OnMouseDown(float x, float y, const IMouseMod &mod) override;
+    void OnMouseUp(float x, float y, const IMouseMod &mod) override;
+    void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod) override;
+    void/*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
+    void OnMouseWheel(float x, float y, const IMouseMod &mod, float d) override;
+    bool OnKeyDown(float x, float y, const IKeyPress& key) override;
+    
+    void OnMouseOver(float x, float y, const IMouseMod &mod) override;
+    void OnMouseOut() override;
+    
+    void DBG_PrintCoords(int x, int y);
+
+    void SetBackgroundImage(IBitmap bmp);
+    void SetOverlayImage(IBitmap bmp);
+    
+    // For UST
+    void SetDisablePointOffsetHack(bool flag);
+    
+    // BUG: StereoWidth2, Reaper, Mac. Choose a mode using point rendering with quads (e.g POLAR_SAMPLE)
+    // Save and quit. When we restart, this given mode doesn't display points (only the circle graph drawer)
+    // This is because the mWhitePixImg image seems not correct
+    // If we re-create it at the beginning of each loop, we don't have the problem.
+    //
+    // Set to true to recreate the mWhitePixImg image at the beginning of each loop
+    void SetRecreateWhiteImageHack(bool flag);
+    
+#if 0
+    // Image display
+    void CreateImageDisplay(BL_GUI_FLOAT left, BL_GUI_FLOAT top,
+                            BL_GUI_FLOAT right, BL_GUI_FLOAT bottom,
+                            ImageDisplay::Mode mode = ImageDisplay::MODE_LINEAR);
+    ImageDisplay *GetImageDisplay();
+#endif
+    
+    void SetGraphTimeAxis(GraphTimeAxis4 *timeAxis);
+    
+    void SetDataChanged();
+    
+    //
+    void SetDirty(bool triggerAction = true, int valIdx = kNoValIdx) override;
+    
+    // Hack
+    bool IsDirty() override;
+    
+protected:
+    //
+    void DoDraw(IGraphics &graphics);
+    
+    void DisplayCurveDescriptions();
+    
+    /*void AddAxis(GraphAxis *axis, char *data[][2], int numData,
+                 int axisColor[4], int axisLabelColor[4],
+                 BL_GUI_FLOAT mindB, BL_GUI_FLOAT maxdB,
+                 int axisOverlayColor[4] = NULL,
+                 int axisLinesOverlayColor[4] = NULL); */
+    
+    void DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag);
+    
+    // If flag is true, we will draw only the lines
+    // If flag is false, we will draw only the labels
+    // Usefull because the curves must be drawn over the lines but under the labels
+    void DrawAxis(bool lineLabelFlag);
+    
+    void DrawCurves();
+    
+    void DrawLineCurve(GraphCurve5 *curve);
+    
+    // Fill and stroke at the same time
+    void DrawFillCurve(GraphCurve5 *curve);
+    
+    // Single value Horizontal
+    void DrawLineCurveSVH(GraphCurve5 *curve);
+    
+    void DrawFillCurveSVH(GraphCurve5 *curve);
+    
+    // Single value Vertical
+    void DrawLineCurveSVV(GraphCurve5 *curve);
+    
+    void DrawFillCurveSVV(GraphCurve5 *curve);
+    
+    // Draw points
+    void DrawPointCurve(GraphCurve5 *curve);
+    //void DrawPointCurveWeights(GraphCurve5 *curve);
+    
+    // Optimized version. Draw all points with the same color
+    void DrawPointCurveOptimSameColor(GraphCurve5 *curve);
+    
+    // TEMPORARY
+    // Draw lines, from a "middle" to each point
+    void DrawPointCurveLinesPolar(GraphCurve5 *curve);
+    
+    void DrawPointCurveLinesPolarWeights(GraphCurve5 *curve);
+    
+    // For UST
+    void DrawPointCurveLinesPolarFill(GraphCurve5 *curve);
+    
+    void DrawPointCurveLines(GraphCurve5 *curve);
+    void DrawPointCurveLinesWeights(GraphCurve5 *curve);
+    void DrawPointCurveLinesFill(GraphCurve5 *curve);
+    
+    void AutoAdjust();
+    
+    static BL_GUI_FLOAT MillisToPoints(long long int elapsed, int sampleRate, int numSamplesPoint);
+    
+#if 0 // iPlug2 / Windows
+    // Text
+    void InitFont(const char *fontPath);
+#endif
+
+    void DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y,
+                  BL_GUI_FLOAT fontSize, const char *text,
+                  int color[4], int halign, int valign,
+                  BL_GUI_FLOAT fontSizeCoeff = 1.0);
+    
+    void SetCurveDrawStyle(GraphCurve5 *curve);
+    void SetCurveDrawStyleWeight(GraphCurve5 *curve, BL_GUI_FLOAT weight);
+    
+    // Bounds
+    BL_GUI_FLOAT ConvertToBoundsX(BL_GUI_FLOAT t);
+    BL_GUI_FLOAT ConvertToBoundsY(BL_GUI_FLOAT t);
+    
+    void DrawBackgroundImage(IGraphics &graphics);
+    void DrawOverlayImage(IGraphics &graphics);
+    
+    // To check that we must draw the curve
+    // minNumValues is 1 for points, and 2 for lines
+    bool IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
+                          const WDL_TypedBuf<BL_GUI_FLOAT> &y,
+                          int minNumValues);
+
+    // No more used
+    bool NeedUpdateGUI();
+    
+    void SetVg(IGraphics &graphics);
+
+    //
+    
+    // For UST
+    bool mIsEnabled;
+    
+    BL_GUI_FLOAT mBounds[4];
+    
+    //int mNumCurveValues;
+    //int mNumCurves;
+    
+    vector<GraphCurve5 *> mCurves;
+    
+    // Auto adjust
+    bool mAutoAdjustFlag;
+    ParamSmoother mAutoAdjustParamSmoother;
+    BL_GUI_FLOAT mAutoAdjustFactor;
+    
+    BL_GUI_FLOAT mYScaleFactor;
+    
+    CurveColor mClearColor;
+    
+    // NanoVG
+    NVGcontext *mVg;
+    
+    bool mSeparatorY0;
+    BL_GUI_FLOAT mSepY0LineWidth;
+    int mSepY0Color[4];
+    
+    // X dB scale
+    bool mXdBScale;
+    BL_GUI_FLOAT mMinX;
+    BL_GUI_FLOAT mMaxX;
+
+    GraphAxis2 *mHAxis;
+    GraphAxis2 *mVAxis;
+    
+    WDL_String mFontPath;
+    
+#if 0
+    // We will use either one or the other
+    SpectrogramDisplay *mSpectrogramDisplay;
+    SpectrogramDisplayScroll *mSpectrogramDisplayScroll;
+    SpectrogramDisplayScroll2 *mSpectrogramDisplayScroll2;
+#endif
+    
+    // Custom drawers
+    vector<GraphCustomDrawer *> mCustomDrawers;
+    
+    // Custom control
+    vector<GraphCustomControl *> mCustomControls;
+    
+    // Background image
+    IBitmap mBgImage;
+    
+    // Background image
+    IBitmap mOverlayImage;
+    
+    // Dummy image of 1 white pixel
+    // for quad rendering
+    //
+    // NOTE: rendering quads with or without texture: same perfs
+    //
+    int mWhitePixImg;
+    
+    // For gui resize
+    bool mNeedResizeGraph;
+    
+    // For UST
+    bool mDisablePointOffsetHack;
+    
+    //
+    bool mRecreateWhiteImageHack;
+    
+#if 0
+    // ImageDisplay
+    ImageDisplay *mImageDisplay;
+#endif
+    
+    GraphTimeAxis4 *mGraphTimeAxis;
+    
+private:    
+	bool mFontInitialized;
+    
+    WDL_TypedBuf<float> mTmpDrawPointsCenters;
+    
+    Plugin *mPlug;
+    
+#if USE_FBO
+    NVGframebuffer *mFBO;
+    int mInitialFBO;
+    IGraphics *mGraphics;
+#endif
+    
+    // If anything has changed and the graph needs to be redrawn
+    bool mDataChanged;
+    
+#if PROFILE_GRAPH
+    BlaTimer mDebugTimer;
+    int mDebugCount;
+#endif
+    
+    WDL_Mutex mMutex;
+};
+
+#endif // IGRAPHICS_NANOVG
+
+#endif

@@ -46,10 +46,10 @@ protected:
                                  int newGUIWidth, int newGUIHeight,
                                  int *offsetX, int *offsetY);
     
-    void GUIResizePostResizeGUI(GraphControl11 *graph,
-                                int graphWidthSmall,
-                                int graphHeightSmall,
-                                int offsetX, int offsetY);
+    //void GUIResizePostResizeGUI(GraphControl11 *graph,
+    //                            int graphWidthSmall,
+    //                            int graphHeightSmall,
+    //                            int offsetX, int offsetY);
     
     //
     Plugin *mPlug;

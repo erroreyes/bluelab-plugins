@@ -1,0 +1,978 @@
+//
+//  GraphCurve.cpp
+//  EQHack
+//
+//  Created by Apple m'a Tuer on 10/09/17.
+//
+//
+
+#include <BLUtils.h>
+
+#include "GraphCurve5.h"
+
+#define CURVE_PIXEL_DENSITY 2.0
+
+GraphCurve5::GraphCurve5(int numValues)
+{
+    mDescription = NULL;
+    
+    mYdBScale = false;
+    mMinY = 0.0;
+    mMaxY = 1.0;
+    
+    SET_COLOR_FROM_INT(mColor, 0, 0, 0, 255);
+    mAlpha = 1.0;
+    
+    mXdBScale = false;
+    mMinX = 0.0;
+    mMaxX = 1.0;
+    
+    mPointStyle = false;
+    mPointsAsLinesPolar = false;
+    mPointsAsLines = false;
+    
+    mLineWidth = 1.0;
+    mPointSize = 1.0;
+    
+    mBevelFlag = false;
+    
+    mPointOverlay = false;
+    
+    mCurveFill = false;
+    mFillAlpha = FILL_CURVE_ALPHA;
+    mFillAlphaUp = 0.0;
+    mFillAlphaUpFlag = false;
+    
+    // NEW
+    SET_COLOR_FROM_INT(mFillColor, 0, 0, 0, 255);
+    mFillColorSet = false;
+    
+    mSingleValueH = false;
+    mSingleValueV = false;
+    
+    mNumValues = numValues;
+    mXValues.Resize(mNumValues);
+    mYValues.Resize(mNumValues);
+    
+    ClearValues();
+    
+    FillAllYValues(0.0);
+    
+    mPushCounter = 0;
+    mTmpPushValue = 0.0;
+    
+    mLimitToBounds = false;
+    
+    mOptimSameColor = false;
+    
+    mWeightMultAlpha = true;
+    mUseWeightTargetColor = false;
+    
+    mYScaleFactor = 1.0;
+    mAutoAdjustFactor = 1.0;
+}
+
+GraphCurve5::~GraphCurve5()
+{
+    if (mDescription != NULL)
+        delete []mDescription;
+}
+
+void
+GraphCurve5::SetRect(const IRECT &rect)
+{
+    mRECT = rect;
+}
+
+void
+GraphCurve5::SetYScaleFactor(BL_FLOAT factor)
+{
+    mYScaleFactor = factor;
+}
+
+void
+GraphCurve5::SetAutoAdjustFactor(BL_FLOAT factor)
+{
+    mAutoAdjustFactor = factor;
+}
+
+void
+GraphCurve5::SetBounds(const BL_GUI_FLOAT bounds[4])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        mBounds[i] = bounds[i];
+    }
+}
+
+void
+GraphCurve5::SetDescription(const char *description, int descrColor[4])
+{
+#define DESCRIPTION_MAX_SIZE 256
+    
+    if (mDescription != NULL)
+        delete []mDescription;
+    
+    mDescription = new char[DESCRIPTION_MAX_SIZE];
+    memset(mDescription, 0, DESCRIPTION_MAX_SIZE*sizeof(char));
+    
+    sprintf(mDescription, "%s", description);
+    
+    for (int i = 0; i < 4; i++)
+        mDescrColor[i] = descrColor[i];
+}
+
+void
+GraphCurve5::ResetNumValues(int numValues)
+{
+    mNumValues = numValues;
+    
+    mXValues.Resize(mNumValues);
+    mYValues.Resize(mNumValues);
+    
+    BLUtils::FillAllZero(&mXValues);
+    BLUtils::FillAllZero(&mYValues);
+    
+    //BLUtils::ResizeFillZeros(&mXValues, mNumValues);
+    //BLUtils::ResizeFillZeros(&mYValues, mNumValues);
+}
+
+void
+GraphCurve5::ClearValues()
+{
+    BLUtils::FillAllValue(&mXValues, (BL_GUI_FLOAT)CURVE_VALUE_UNDEFINED);
+    BLUtils::FillAllValue(&mYValues, (BL_GUI_FLOAT)CURVE_VALUE_UNDEFINED);
+}
+
+void
+GraphCurve5::SetYScale(bool dBFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY)
+{
+    mYdBScale = dBFlag;
+    mMinY = minY;
+    mMaxY = maxY;
+}
+
+void
+GraphCurve5::FillAllYValues(BL_GUI_FLOAT val)
+{
+    for (int i = 0; i < mYValues.GetSize(); i++)
+    {
+        mYValues.Get()[i] = val;
+    }
+}
+
+void
+GraphCurve5::FillAllXValues(BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
+{
+    for (int i = 0; i < mXValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(mXValues.GetSize() - 1);
+        
+        BL_GUI_FLOAT x = minX + t*(maxX - minX);
+        
+        mXValues.Get()[i] = x;
+    }
+}
+
+void
+GraphCurve5::SetYValues(const WDL_TypedBuf<BL_GUI_FLOAT> *yValues, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
+{
+    if (mYValues.GetSize() != yValues->GetSize())
+        return;
+    
+    mYValues = *yValues;
+    
+    mXValues.Resize(0);
+    for (int i = 0; i < mYValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(mYValues.GetSize() - 1);
+        
+        BL_GUI_FLOAT x = minX + t*(maxX - minX);
+    
+        mXValues.Add(x);
+    }
+}
+
+void
+GraphCurve5::SetValue(BL_GUI_FLOAT t, BL_GUI_FLOAT x, BL_GUI_FLOAT y)
+{
+    int pos = t*(mNumValues - 1);
+    
+    if ((pos  < 0) || (pos >= mNumValues))
+        return;
+    
+    mXValues.Get()[pos] = x;
+    mYValues.Get()[pos] = y;
+}
+
+void
+GraphCurve5::PushValue(BL_GUI_FLOAT x, BL_GUI_FLOAT y)
+{
+    if (mDoSmooth)
+        // Smooth Y
+    {
+        mParamSmoother.SetNewValue(y);
+        mParamSmoother.Update();
+        y = mParamSmoother.GetCurrentValue();
+    }
+    
+    mXValues.Add(x);
+    mYValues.Add(y);
+    
+    if (mYValues.GetSize() > mNumValues)
+    {
+        WDL_TypedBuf<BL_GUI_FLOAT> newXValues;
+        WDL_TypedBuf<BL_GUI_FLOAT> newYValues;
+        for (int i = 1; i < mNumValues + 1; i++)
+        {
+            BL_GUI_FLOAT x = mXValues.Get()[i];
+            BL_GUI_FLOAT y = mYValues.Get()[i];
+            
+            newXValues.Add(x);
+            newYValues.Add(y);
+        }
+        
+        mXValues = newXValues;
+        mYValues = newYValues;
+    }
+}
+
+void
+GraphCurve5::NormalizeXValues(BL_GUI_FLOAT maxXValue)
+{
+    for (int i = 0; i < mXValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(mNumValues - 1);
+        
+        mXValues.Get()[i] = t*maxXValue;
+    }
+}
+
+void
+GraphCurve5::SetXScale(bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
+{
+    mXdBScale = dbFlag;
+    mMinX = minX;
+    mMaxX = maxX;
+}
+
+void
+GraphCurve5::SetPointValues(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
+                            const WDL_TypedBuf<BL_GUI_FLOAT> &yValues)
+{
+    mXValues = xValues;
+    mYValues = yValues;
+}
+
+void
+GraphCurve5::SetLimitToBounds(bool flag)
+{
+    mLimitToBounds = flag;
+}
+
+void
+GraphCurve5::SetWeightTargetColor(int color[4])
+{
+    mUseWeightTargetColor = true;
+    
+    SET_COLOR_FROM_INT(mWeightTargetColor,
+                       color[0], color[1], color[2], color[3]);
+}
+
+void
+GraphCurve5::SetColor(int r, int g, int b)
+{
+    SET_COLOR_FROM_INT(mColor, r, g, b, 255);
+}
+
+void
+GraphCurve5::SetAlpha(BL_GUI_FLOAT alpha)
+{
+    mAlpha = alpha;
+}
+
+void
+GraphCurve5::SetLineWidth(BL_GUI_FLOAT lineWidth)
+{
+    mLineWidth = lineWidth;
+}
+
+void
+GraphCurve5::SetBevel(bool bevelFlag)
+{
+    mBevelFlag = bevelFlag;
+}
+
+void
+GraphCurve5::SetSmooth(bool flag)
+{
+    mDoSmooth = flag;
+}
+
+void
+GraphCurve5::SetFill(bool flag, BL_GUI_FLOAT originY)
+{
+    mCurveFill = flag;
+    mCurveFillOriginY = originY;
+}
+
+void
+GraphCurve5::SetFillColor(int r, int g, int b)
+{
+    SET_COLOR_FROM_INT(mFillColor, r, g, b, 255);
+    mFillColorSet = true;
+}
+
+void
+GraphCurve5::SetFillAlpha(BL_GUI_FLOAT alpha)
+{
+    mFillAlpha = alpha;
+}
+
+void
+GraphCurve5::SetFillAlphaUp(BL_GUI_FLOAT alpha)
+{
+    mFillAlphaUpFlag = true;
+    mFillAlphaUp = alpha;
+}
+
+void
+GraphCurve5::SetPointSize(BL_GUI_FLOAT pointSize)
+{
+    mPointSize = pointSize;
+}
+
+void
+GraphCurve5::SetPointOverlay(bool flag)
+{
+    mPointOverlay = flag;
+}
+
+void
+GraphCurve5::SetWeightMultAlpha(bool flag)
+{
+    mWeightMultAlpha = flag;
+}
+
+void
+GraphCurve5::SetPointStyle(bool pointFlag,
+                           bool pointsAsLinesPolar,
+                           bool pointsAsLines)
+{
+    mPointStyle = pointFlag;
+    mPointsAsLinesPolar = pointsAsLinesPolar;
+    mPointsAsLines = pointsAsLines;
+}
+
+void
+GraphCurve5::SetValuesPoint(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
+                            const WDL_TypedBuf<BL_GUI_FLOAT> &yValues)
+{
+    mPointStyle = true;
+    
+    ClearValues();
+    
+    int width = mRECT.W();
+    int height = mRECT.H();
+    
+    for (int i = 0; i < xValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT x = xValues.Get()[i];
+        
+        if (i >= yValues.GetSize())
+            // Avoids a crash
+            continue;
+        
+        BL_GUI_FLOAT y = yValues.Get()[i];
+        
+#if !OPTIM_CONVERT_XY
+        x = ConvertX(x, width);
+        y = ConvertY(y, height);
+#endif
+        
+        mXValues.Get()[i] = x;
+        mYValues.Get()[i] = y;
+    }
+    
+#if OPTIM_CONVERT_XY
+    ConvertX(&mXValues, width);
+    ConvertY(&mYValues, height);
+#endif
+}
+
+void
+GraphCurve5::SetValuesPointEx(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
+                              const WDL_TypedBuf<BL_GUI_FLOAT> &yValues,
+                              bool singleScale, bool scaleX, bool centerFlag)
+{
+    mPointStyle = true;
+    
+    ClearValues();
+    
+    int width = mRECT.W();
+    int height = mRECT.H();
+    
+    for (int i = 0; i < xValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT x = xValues.Get()[i];
+        
+        if (i >= yValues.GetSize())
+            // Avoids a crash
+            continue;
+        
+        BL_GUI_FLOAT y = yValues.Get()[i];
+        
+#if !OPTIM_CONVERT_XY
+        if (!singleScale)
+        {
+            x = ConvertX(x, width);
+            y = ConvertY(y, height);
+        }
+        else
+        {
+            if (scaleX)
+            {
+                x = ConvertX(x, width);
+                y = ConvertY(y, width);
+                
+                // TODO: test this
+                if (centerFlag)
+                    x -= (width - height)*0.5;
+            }
+            else
+            {
+                x = ConvertX(x, height);
+                y = ConvertY(y, height);
+                
+                if (centerFlag)
+                    x += (width - height)*0.5;
+            }
+        }
+#endif
+        
+        mXValues.Get()[i] = x;
+        mYValues.Get()[i] = y;
+    }
+    
+#if OPTIM_CONVERT_XY
+    if (!singleScale)
+    {
+        ConvertX(&mXValues, width);
+        ConvertY(&mYValues, height);
+    }
+    else
+    {
+        if (scaleX)
+        {
+            ConvertX(&mXValues, width);
+            ConvertY(&mYValues, width);
+            
+            // TODO: test this
+            if (centerFlag)
+            {
+                int offset = (width - height)*0.5;
+                for (int i = 0; i < mXValues.GetSize(); i++)
+                {
+                    mXValues.Get()[i] -= offset;
+                }
+            }
+        }
+        else
+        {
+            ConvertX(&mXValues, height);
+            ConvertY(&mYValues, height);
+            
+            if (centerFlag)
+            {
+                int offset = (width - height)*0.5;
+                for (int i = 0; i < mXValues.GetSize(); i++)
+                {
+                    mXValues.Get()[i] += offset;
+                }
+            }
+        }
+    }
+#endif
+}
+
+
+void
+GraphCurve5::SetValuesPointWeight(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
+                                  const WDL_TypedBuf<BL_GUI_FLOAT> &yValues,
+                                  const WDL_TypedBuf<BL_GUI_FLOAT> &weights)
+{
+    mPointStyle = true;
+    
+    ClearValues();
+    
+    int width = mRECT.W();
+    int height = mRECT.H();
+    
+    for (int i = 0; i < xValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT x = xValues.Get()[i];
+        BL_GUI_FLOAT y = yValues.Get()[i];
+        
+#if !OPTIM_CONVERT_XY
+        x = ConvertX(x, width);
+        y = ConvertY(y, height);
+#endif
+        
+        mXValues.Get()[i] = x;
+        mYValues.Get()[i] = y;
+    }
+    
+#if OPTIM_CONVERT_XY
+    ConvertX(&mXValues, width);
+    ConvertY(&mYValues, height);
+#endif
+    
+    mWeights = weights;
+}
+
+void
+GraphCurve5::SetColorWeight(const WDL_TypedBuf<BL_GUI_FLOAT> &colorWeights)
+{
+    mWeights = colorWeights;
+}
+
+void
+GraphCurve5::SetSingleValueH(bool flag)
+{
+    mSingleValueH = flag;
+}
+
+void
+GraphCurve5::SetSingleValueV(bool flag)
+{
+    mSingleValueV = flag;
+}
+
+void
+GraphCurve5::SetOptimSameColor(bool flag)
+{
+    mOptimSameColor = flag;
+}
+
+void
+GraphCurve5::Reset(BL_GUI_FLOAT val)
+{
+    FillAllXValues(mMinX, mMaxX);
+    FillAllYValues(val);
+}
+
+void
+GraphCurve5::FillAllValues(BL_GUI_FLOAT val)
+{
+    FillAllXValues(mMinX, mMaxX);
+    FillAllYValues(val);
+}
+
+void
+GraphCurve5::SetValues(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
+{
+    SetYValues(values, mMinX, mMaxX);
+}
+
+void
+GraphCurve5::SetValues2(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
+{
+    //if (values->GetSize() < mNumCurveValues)
+    //    // Something went wrong
+    //    return;
+    
+    //for (int i = 0; i < mNumCurveValues; i++)
+    for (int i = 0; i < values->GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(values->GetSize() - 1);
+        BL_GUI_FLOAT y = values->Get()[i];
+        
+        SetValue(t, y);
+    }
+}
+
+void
+GraphCurve5::SetValues3(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
+{
+    ClearValues();
+    
+    if (values->GetSize() == 0)
+        return;
+    
+    //for (int i = 0; i < mNumCurveValues; i++)
+    for (int i = 0; i < values->GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(values->GetSize() - 1);
+        BL_GUI_FLOAT y = values->Get()[i];
+        
+        SetValue(t, y);
+    }
+}
+
+void
+GraphCurve5::SetValuesDecimateSimple(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
+{
+    int width = mRECT.W();
+    
+    BL_GUI_FLOAT prevX = -1.0;
+    
+    for (int i = 0; i < values->GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(values->GetSize() - 1);
+        
+        BL_GUI_FLOAT x = t*width;
+        BL_GUI_FLOAT y = values->Get()[i];
+        
+        if (x - prevX < 1.0)
+            continue;
+        
+        prevX = x;
+        
+        SetValue(t, y);
+    }
+    
+    // Avoid last value at 0 !
+    // (would make a traversing line in the display)
+    BL_GUI_FLOAT lastValue = values->Get()[values->GetSize() - 1];
+    SetValue(1.0, lastValue);
+}
+
+
+void
+GraphCurve5::SetValuesDecimate(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
+                               bool isWaveSignal)
+{
+    int width = mRECT.W();
+    
+    BL_GUI_FLOAT prevX = -1.0;
+    BL_GUI_FLOAT maxY = -1.0;
+    
+    if (isWaveSignal)
+        maxY = (mMinY + mMaxY)/2.0;
+    
+    BL_GUI_FLOAT thrs = 1.0/CURVE_PIXEL_DENSITY;
+    for (int i = 0; i < values->GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(values->GetSize() - 1);
+        
+        BL_GUI_FLOAT x = t*width;
+        BL_GUI_FLOAT y = values->Get()[i];
+        
+        // Keep the maximum
+        // (we prefer keeping the maxima, and not discard them)
+        if (!isWaveSignal)
+        {
+            if (std::fabs(y) > maxY)
+                maxY = y;
+        }
+        else
+        {
+            if (std::fabs(y) > std::fabs(maxY))
+                maxY = y;
+        }
+        
+        if (x - prevX < thrs)
+            continue;
+        
+        prevX = x;
+        
+        SetValue(t, maxY);
+        
+        maxY = -1.0;
+        
+        if (isWaveSignal)
+            maxY = (mMinY + mMaxY)/2.0;
+    }
+}
+
+void
+GraphCurve5::SetValuesDecimate2(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
+                                BL_FLOAT decFactor,
+                                bool isWaveSignal)
+{
+    ClearValues();
+    
+    if (values->GetSize() == 0)
+        return;
+    
+    // Decimate
+    
+    //BL_GUI_FLOAT decFactor = ((BL_GUI_FLOAT)mNumCurveValues)/values->GetSize();
+    
+    WDL_TypedBuf<BL_GUI_FLOAT> decimValues;
+    if (isWaveSignal)
+        BLUtils::DecimateSamples(&decimValues, *values, decFactor);
+    else
+        BLUtils::DecimateValues(&decimValues, *values, decFactor);
+    
+    for (int i = 0; i < decimValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(decimValues.GetSize() - 1);
+        
+        BL_GUI_FLOAT y = decimValues.Get()[i];
+        
+        SetValue(t, y);
+    }
+}
+
+void
+GraphCurve5::SetValuesDecimate3(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
+                                BL_GUI_FLOAT decFactor,
+                                bool isWaveSignal)
+{
+    ClearValues();
+    
+    if (values->GetSize() == 0)
+        return;
+    
+    // Decimate
+    
+    //BL_GUI_FLOAT decFactor = ((BL_GUI_FLOAT)mNumCurveValues)/values->GetSize();
+    
+    WDL_TypedBuf<BL_GUI_FLOAT> decimValues;
+    if (isWaveSignal)
+        BLUtils::DecimateSamples2(&decimValues, *values, decFactor);
+    else
+        BLUtils::DecimateValues(&decimValues, *values, decFactor);
+    
+    for (int i = 0; i < decimValues.GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(decimValues.GetSize() - 1);
+        
+        BL_GUI_FLOAT y = decimValues.Get()[i];
+        
+        SetValue(t, y);
+    }
+}
+
+void
+GraphCurve5::SetValuesXDbDecimate(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
+                                  int nativeBufferSize, BL_GUI_FLOAT sampleRate,
+                                  BL_GUI_FLOAT decimFactor)
+{
+    int bufferSize = BLUtils::PlugComputeBufferSize(nativeBufferSize, sampleRate);
+    BL_GUI_FLOAT hzPerBin = sampleRate/bufferSize;
+    
+    BL_GUI_FLOAT minHzValue;
+    BL_GUI_FLOAT maxHzValue;
+    BLUtils::GetMinMaxFreqAxisValues(&minHzValue, &maxHzValue,
+                                     bufferSize, sampleRate);
+    
+    WDL_TypedBuf<BL_GUI_FLOAT> logSignal;
+    BLUtils::FreqsToDbNorm(&logSignal, *values, hzPerBin,
+                           minHzValue, maxHzValue);
+    
+    WDL_TypedBuf<BL_GUI_FLOAT> decimSignal;
+    BLUtils::DecimateValues(&decimSignal, logSignal, decimFactor);
+    
+    for (int i = 0; i < decimSignal.GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i) / (decimSignal.GetSize() - 1);
+        
+        SetValue(t, decimSignal.Get()[i]);
+    }
+}
+
+void
+GraphCurve5::SetValuesXDbDecimateDb(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
+                                    int nativeBufferSize, BL_GUI_FLOAT sampleRate,
+                                    BL_GUI_FLOAT decimFactor, BL_GUI_FLOAT minValueDb)
+{
+    int bufferSize = BLUtils::PlugComputeBufferSize(nativeBufferSize, sampleRate);
+    BL_GUI_FLOAT hzPerBin = sampleRate/bufferSize;
+    
+    BL_GUI_FLOAT minHzValue;
+    BL_GUI_FLOAT maxHzValue;
+    BLUtils::GetMinMaxFreqAxisValues(&minHzValue, &maxHzValue,
+                                     bufferSize, sampleRate);
+    
+    WDL_TypedBuf<BL_GUI_FLOAT> logSignal;
+    BLUtils::FreqsToDbNorm(&logSignal, *values, hzPerBin,
+                           minHzValue, maxHzValue);
+    
+    WDL_TypedBuf<BL_GUI_FLOAT> decimSignal;
+    BLUtils::DecimateValuesDb(&decimSignal, logSignal, decimFactor, minValueDb);
+    
+    for (int i = 0; i < decimSignal.GetSize(); i++)
+    {
+        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i) / (decimSignal.GetSize() - 1);
+        
+        SetValue(t, decimSignal.Get()[i]);
+    }
+}
+
+void
+GraphCurve5::SetValue(BL_GUI_FLOAT t, BL_GUI_FLOAT val)
+{
+    // Normalize, then adapt to the graph
+    int width = mRECT.W();
+    int height = mRECT.H();
+    
+    BL_GUI_FLOAT x = t;
+    
+    if (x < CURVE_VALUE_UNDEFINED) // for float
+    {
+        if (mXdBScale)
+            x = BLUtils::NormalizedXTodB(x, mMinX, mMaxX);
+        
+        // X should be already normalize in input
+        
+        // Scale for the interface
+        x = x * width;
+    }
+    
+    BL_GUI_FLOAT y = ConvertY(val, height);
+    
+    // For Ghost and mini view
+    if (mLimitToBounds)
+    {
+        if (y < (1.0 - mBounds[3])*height)
+            y = (1.0 - mBounds[3])*height;
+        
+        if (y > (1.0 - mBounds[1])*height)
+            y = (1.0 - mBounds[1])*height;
+    }
+    
+    SetValue(t, x, y);
+}
+
+void
+GraphCurve5::SetSingleValueH(BL_GUI_FLOAT val)
+{
+    SetValue(0.0, val);
+}
+
+void
+GraphCurve5::SetSingleValueV(BL_GUI_FLOAT val)
+{
+    SetValue(0.0, val);
+}
+
+void
+GraphCurve5::PushValue(BL_GUI_FLOAT val)
+{
+    int height = mRECT.H();
+    
+    val = ConvertY(val, height);
+    
+    BL_GUI_FLOAT dummyX = 1.0;
+    PushValue(dummyX, val);
+    
+    BL_GUI_FLOAT maxXValue = mRECT.W();
+    NormalizeXValues(maxXValue);
+}
+
+BL_GUI_FLOAT
+GraphCurve5::ConvertX(BL_GUI_FLOAT val, BL_GUI_FLOAT width)
+{
+    BL_GUI_FLOAT x = val;
+    if (x < CURVE_VALUE_UNDEFINED)
+    {
+        if (mXdBScale)
+        {
+            if (val > 0.0)
+                // Avoid -INF values
+                x = BLUtils::NormalizedYTodB(x, mMinX, mMaxX);
+        }
+        else
+            x = (x - mMinX)/(mMaxX - mMinX);
+        
+        x = x * width;
+    }
+    
+    return x;
+}
+
+BL_GUI_FLOAT
+GraphCurve5::ConvertY(BL_GUI_FLOAT val, BL_GUI_FLOAT height)
+{
+    BL_GUI_FLOAT y = val;
+    if (y < CURVE_VALUE_UNDEFINED)
+    {
+        if (mYdBScale)
+        {
+            if (val > 0.0)
+                // Avoid -INF values
+                y = BLUtils::NormalizedYTodB(y, mMinY, mMaxY);
+        }
+        else
+            y = (y - mMinY)/(mMaxY - mMinY);
+        
+        y = y * mAutoAdjustFactor * mYScaleFactor * height;
+    }
+    
+    return y;
+}
+
+// Optimized versions
+void
+GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
+{
+    BL_GUI_FLOAT xCoeff = width/(mMaxX - mMinX);
+    
+    for (int i = 0; i < vals->GetSize(); i++)
+    {
+        BL_GUI_FLOAT x = vals->Get()[i];
+        if (x < CURVE_VALUE_UNDEFINED)
+        {
+            if (mXdBScale)
+            {
+                if (x > 0.0)
+                {
+                    // Avoid -INF values
+                    //x = BLUtils::NormalizedYTodB(x, curve->mMinX, curve->mMaxX);
+                    
+                    if (std::fabs(x) < BL_EPS)
+                        x = mMinX;
+                    else
+                        x = BLUtils::AmpToDB(x);
+                    
+                    x = (x - mMinX)*xCoeff;
+                }
+            }
+            else
+            {
+                x = (x - mMinX)*xCoeff;
+            }
+        }
+        
+        vals->Get()[i] = x;
+    }
+}
+
+void
+GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
+                         BL_GUI_FLOAT height)
+{
+    BL_GUI_FLOAT yCoeff =
+        mAutoAdjustFactor * mYScaleFactor*height/(mMaxY - mMinY);
+    
+    for (int i = 0; i < vals->GetSize(); i++)
+    {
+        BL_GUI_FLOAT y = vals->Get()[i];
+        if (y < CURVE_VALUE_UNDEFINED)
+        {
+            if (mYdBScale)
+            {
+                if (y > 0.0)
+                {
+                    // Avoid -INF values
+                    //x = BLUtils::NormalizedYTodB(x, curve->mMinX, curve->mMaxX);
+                    
+                    if (std::fabs(y) < BL_EPS)
+                        y = mMinY;
+                    else
+                        y = BLUtils::AmpToDB(y);
+                    
+                    y = (y - mMinY)*yCoeff;
+                }
+            }
+            else
+            {
+                y = (y - mMinY)*yCoeff;
+            }
+        }
+        
+        vals->Get()[i] = y;
+    }
+}
