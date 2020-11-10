@@ -64,7 +64,7 @@ SmoothCurveDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
     
     for (int i = 0; i < avgValues.GetSize(); i++)
     {
-        BL_FLOAT t = ((BL_FLOAT)i) / (avgValues.GetSize() - 1);
+        BL_FLOAT t = ((BL_FLOAT)i)/(avgValues.GetSize() - 1);
         BL_FLOAT val = avgValues.Get()[i];
         mCurve->SetValue(t, val);
     }

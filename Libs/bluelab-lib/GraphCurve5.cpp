@@ -16,14 +16,14 @@ GraphCurve5::GraphCurve5(int numValues)
 {
     mDescription = NULL;
     
-    mYdBScale = false;
+    mYScale = Scale::LINEAR;
     mMinY = 0.0;
     mMaxY = 1.0;
     
     SET_COLOR_FROM_INT(mColor, 0, 0, 0, 255);
     mAlpha = 1.0;
     
-    mXdBScale = false;
+    mXScale = Scale::LINEAR;
     mMinX = 0.0;
     mMaxX = 1.0;
     
@@ -145,9 +145,9 @@ GraphCurve5::ClearValues()
 }
 
 void
-GraphCurve5::SetYScale(bool dBFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY)
+GraphCurve5::SetYScale(Scale::Type scale, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY)
 {
-    mYdBScale = dBFlag;
+    mYScale = scale;
     mMinY = minY;
     mMaxY = maxY;
 }
@@ -249,9 +249,9 @@ GraphCurve5::NormalizeXValues(BL_GUI_FLOAT maxXValue)
 }
 
 void
-GraphCurve5::SetXScale(bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
+GraphCurve5::SetXScale(Scale::Type scale, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
 {
-    mXdBScale = dbFlag;
+    mXScale = scale;
     mMinX = minX;
     mMaxX = maxX;
 }
@@ -800,9 +800,11 @@ GraphCurve5::SetValue(BL_GUI_FLOAT t, BL_GUI_FLOAT val)
     
     if (x < CURVE_VALUE_UNDEFINED) // for float
     {
-        if (mXdBScale)
-            x = BLUtils::NormalizedXTodB(x, mMinX, mMaxX);
-        
+        if (mXScale == Scale::DB)
+            x = Scale::NormalizedToDB(x, mMinX, mMaxX);
+        else if (mXScale == Scale::LOG)
+            x = Scale::NormalizedToLog(x, mMinX, mMaxX);
+            
         // X should be already normalize in input
         
         // Scale for the interface
@@ -856,11 +858,15 @@ GraphCurve5::ConvertX(BL_GUI_FLOAT val, BL_GUI_FLOAT width)
     BL_GUI_FLOAT x = val;
     if (x < CURVE_VALUE_UNDEFINED)
     {
-        if (mXdBScale)
+        if (mXScale == Scale::DB)
         {
-            if (val > 0.0)
-                // Avoid -INF values
-                x = BLUtils::NormalizedYTodB(x, mMinX, mMaxX);
+            //if (val > 0.0)
+            //    // Avoid -INF values
+            x = Scale::NormalizedToDB(x, mMinX, mMaxX);
+        }
+        else if (mXScale == Scale::LOG)
+        {
+            x = Scale::NormalizedToLog(x, mMinX, mMaxX);
         }
         else
             x = (x - mMinX)/(mMaxX - mMinX);
@@ -877,11 +883,15 @@ GraphCurve5::ConvertY(BL_GUI_FLOAT val, BL_GUI_FLOAT height)
     BL_GUI_FLOAT y = val;
     if (y < CURVE_VALUE_UNDEFINED)
     {
-        if (mYdBScale)
+        if (mYScale == Scale::DB)
         {
-            if (val > 0.0)
-                // Avoid -INF values
-                y = BLUtils::NormalizedYTodB(y, mMinY, mMaxY);
+            //if (val > 0.0)
+            //    // Avoid -INF values
+            y = Scale::NormalizedToDB(y, mMinY, mMaxY);
+        }
+        else if (mYScale == Scale::LOG)
+        {
+            y = Scale::NormalizedToLog(y, mMinY, mMaxY);
         }
         else
             y = (y - mMinY)/(mMaxY - mMinY);
@@ -903,7 +913,7 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
         BL_GUI_FLOAT x = vals->Get()[i];
         if (x < CURVE_VALUE_UNDEFINED)
         {
-            if (mXdBScale)
+            if (mXScale == Scale::DB)
             {
                 if (x > 0.0)
                 {
@@ -914,6 +924,11 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
                     
                     x = (x - mMinX)*xCoeff;
                 }
+            }
+            else if (mXScale == Scale::LOG)
+            {
+                // Not optimized
+                x = Scale::NormalizedToLog(x, mMinX, mMaxX);
             }
             else
             {
@@ -937,7 +952,7 @@ GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
         BL_GUI_FLOAT y = vals->Get()[i];
         if (y < CURVE_VALUE_UNDEFINED)
         {
-            if (mYdBScale)
+            if (mYScale == Scale::DB)
             {
                 if (y > 0.0)
                 {
@@ -948,6 +963,11 @@ GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
                     
                     y = (y - mMinY)*yCoeff;
                 }
+            }
+            else if (mYScale == Scale::LOG)
+            {
+                // Not optimized
+                y = Scale::NormalizedToLog(y, mMinY, mMaxY);
             }
             else
             {

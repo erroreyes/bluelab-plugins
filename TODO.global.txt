@@ -15,3 +15,6 @@ Port plugins:
 - double -> BL_FLOAT
 
 TODO: gain smother: use CParamSmooth
+
+Knobs style: see Ableton (minimalist and useful)! (but with graduations)
+https://www.youtube.com/watch?v=KUZLXAK8do4

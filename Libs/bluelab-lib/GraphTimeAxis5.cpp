@@ -9,6 +9,7 @@
 #include <GraphAxis2.h>
 #include <GUIHelper12.h>
 #include <BLUtils.h>
+#include <Scale.h>
 
 #include "GraphTimeAxis5.h"
 
@@ -76,8 +77,8 @@ GraphTimeAxis5::Init(GraphAxis2 *graphAxis,
                                      axisLabelOverlayIColor.A };
     
     // NOTE: should be InitHAxis() ?
-    mGraphAxis->InitVAxis(axisColor, axisLabelColor,
-                          false, 0.0, 1.0,
+    mGraphAxis->InitVAxis(Scale::LINEAR, 0.0, 1.0,
+                          axisColor, axisLabelColor,
                           yOffset, 0.0,
                           axisLabelOverlayColor);
 }

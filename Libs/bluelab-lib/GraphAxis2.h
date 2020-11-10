@@ -13,6 +13,8 @@
 using namespace std;
 
 #include <BLTypes.h>
+#include <GraphCurve5.h>
+#include <Scale.h>
 
 #include "IPlug_include_in_plug_hdr.h"
 
@@ -23,15 +25,17 @@ public:
     
     virtual ~GraphAxis2();
     
-    void InitHAxis(bool xDbScale,
+    void InitHAxis(Scale::Type scale,
+                   BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX,
                    int axisColor[4], int axisLabelColor[4],
                    BL_GUI_FLOAT offsetY = 0.0,
                    int axisOverlayColor[4] = NULL,
                    BL_GUI_FLOAT fontSizeCoeff = 1.0,
                    int axisLinesOverlayColor[4] = NULL);
     
-    void InitVAxis(int axisColor[4], int axisLabelColor[4],
-                   bool dbFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
+    void InitVAxis(Scale::Type scale,
+                   BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
+                   int axisColor[4], int axisLabelColor[4],
                    BL_GUI_FLOAT offset = 0.0, BL_GUI_FLOAT offsetX = 0.0,
                    int axisOverlayColor[4] = NULL,
                    BL_GUI_FLOAT fontSizeCoeff = 1.0,
@@ -39,12 +43,13 @@ public:
                    int axisLinesOverlayColor[4] = NULL,
                    bool alignRight = true);
     
+    void SetMinMaxValues(BL_GUI_FLOAT minVal, BL_GUI_FLOAT maxVal);
+    
     void SetData(char *data[][2], int numData);
     
 protected:
     void InitAxis(int axisColor[4],
                   int axisLabelColor[4],
-                  BL_GUI_FLOAT minVal, BL_GUI_FLOAT maxVal,
                   int axisLabelOverlayColor[4],
                   int axisLinesOverlayColor[4]);
     
@@ -59,6 +64,10 @@ protected:
     //
     vector<GraphAxisData> mValues;
     
+    Scale::Type mScale;
+    BL_FLOAT mMinVal;
+    BL_FLOAT mMaxVal;
+    
     int mColor[4];
     int mLabelColor[4];
     
@@ -67,7 +76,6 @@ protected:
     
     // To be able to display the axis on the right
     BL_GUI_FLOAT mOffsetX;
-    
     BL_GUI_FLOAT mOffsetY;
     
     // Overlay axis labels ?
@@ -80,11 +88,7 @@ protected:
     
     BL_GUI_FLOAT mFontSizeCoeff;
     
-    //
-    bool mXdBScale;
-    
     bool mAlignTextRight;
-    
     bool mAlignRight;
 };
 

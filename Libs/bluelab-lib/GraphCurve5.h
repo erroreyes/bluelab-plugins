@@ -10,6 +10,7 @@
 #define EQHack_GraphCurve5_h
 
 #include <BLTypes.h>
+#include <Scale.h>
 #include <ParamSmoother.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -41,7 +42,7 @@ public:
     
     void ClearValues();
     
-    void SetYScale(bool flag, BL_GUI_FLOAT minY = -120.0, BL_GUI_FLOAT maxY = 0.0);
+    void SetYScale(Scale::Type scale, BL_GUI_FLOAT minY = -120.0, BL_GUI_FLOAT maxY = 0.0);
     
     // Fill linearly
     void FillAllXValues(BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX);
@@ -59,7 +60,7 @@ public:
     void NormalizeXValues(BL_GUI_FLOAT maxXValue);
     
     // Points
-    void SetXScale(bool dBFlag,
+    void SetXScale(Scale::Type scale,
                    BL_GUI_FLOAT minX = 0.0, BL_GUI_FLOAT maxX = 1.0);
     
     void SetPointValues(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
@@ -197,7 +198,7 @@ protected:
     int mDescrColor[4];
     
     // Scale
-    bool mYdBScale;
+    Scale::Type mYScale;
     BL_GUI_FLOAT mMinY;
     BL_GUI_FLOAT mMaxY;
     
@@ -208,7 +209,7 @@ protected:
     bool mPointsAsLinesPolar;
     bool mPointsAsLines;
     
-    bool mXdBScale;
+    Scale::Type mXScale;
     BL_GUI_FLOAT mMinX;
     BL_GUI_FLOAT mMaxX;
     

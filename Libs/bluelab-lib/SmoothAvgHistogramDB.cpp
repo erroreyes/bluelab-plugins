@@ -10,7 +10,8 @@
 #include "SmoothAvgHistogramDB.h"
 
 
-SmoothAvgHistogramDB::SmoothAvgHistogramDB(int size, BL_FLOAT smoothCoeff, BL_FLOAT defaultValue,
+SmoothAvgHistogramDB::SmoothAvgHistogramDB(int size, BL_FLOAT smoothCoeff,
+                                           BL_FLOAT defaultValue,
                                            BL_FLOAT mindB, BL_FLOAT maxdB)
 {
     mData.Resize(size);

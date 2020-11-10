@@ -775,8 +775,16 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
         {
             BL_GUI_FLOAT textOffset = FONT_SIZE*0.2;
             
-            if (axis->mXdBScale)
-                t = BLUtils::NormalizedXTodB(t, mMinX, mMaxX);
+#if 0 // Useless, done somewhere else!
+            if (axis->mScale == Scale::DB)
+            {
+                t = Scale::NormalizedToDB(t, mMinX, mMaxX);
+            }
+            else if (axis->mScale == Scale::LOG)
+            {
+                t = Scale::NormalizedToLog(t, mMinX, mMaxX);
+            }
+#endif
             
             BL_GUI_FLOAT x = t*width;
             if ((i > 0) && (i < axis->mValues.size() - 1))
@@ -905,7 +913,9 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     t = BLUtils::NormalizedXTodB(t, mCurves[0]->mMinY, mCurves[0]->mMaxY);
             }
 #endif
+
             t = ConvertToBoundsY(t);
+
             
             BL_GUI_FLOAT y = t*height;
             

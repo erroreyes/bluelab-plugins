@@ -15,10 +15,12 @@
 #include "IControl.h"
 //#include "../../WDL/IPlug/Containers.h"
 
+// Normalize Y to dB internally
 class SmoothAvgHistogramDB
 {
 public:
-    SmoothAvgHistogramDB(int size, BL_FLOAT smoothCoeff, BL_FLOAT defaultValue, BL_FLOAT mindB, BL_FLOAT maxdB);
+    SmoothAvgHistogramDB(int size, BL_FLOAT smoothCoeff,
+                         BL_FLOAT defaultValue, BL_FLOAT mindB, BL_FLOAT maxdB);
     
     virtual ~SmoothAvgHistogramDB();
     

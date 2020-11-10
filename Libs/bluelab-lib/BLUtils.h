@@ -172,6 +172,7 @@ public:
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedYTodBInv(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);
     
+    //
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE AverageYDB(FLOAT_TYPE y0, FLOAT_TYPE y1, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);
     

@@ -8,6 +8,7 @@
 
 #include <BLUtils.h>
 #include <GraphSwapColor.h>
+#include <Scale.h>
 
 #include "GraphAxis2.h"
 
@@ -33,7 +34,9 @@ GraphAxis2::GraphAxis2()
     
     mFontSizeCoeff = 1.0;
     
-    mXdBScale = false;;
+    mScale = Scale::LINEAR;
+    mMinVal = 0.0;
+    mMaxVal = 1.0;
     
     mAlignTextRight = false;
     
@@ -43,7 +46,8 @@ GraphAxis2::GraphAxis2()
 GraphAxis2::~GraphAxis2() {}
 
 void
-GraphAxis2::InitHAxis(bool xDbScale,
+GraphAxis2::InitHAxis(Scale::Type scale,
+                      BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX,
                       int axisColor[4], int axisLabelColor[4],
                       BL_GUI_FLOAT offsetY,
                       int axisOverlayColor[4],
@@ -59,22 +63,21 @@ GraphAxis2::InitHAxis(bool xDbScale,
     
     mFontSizeCoeff = fontSizeCoeff;
     
-    mXdBScale = xDbScale;
+    mScale = scale;
+    mMinVal = minX;
+    mMaxVal = maxX;
     
     mAlignTextRight = false;
     mAlignRight = true;
     
-    BL_FLOAT minVal = 0.0;
-    BL_FLOAT maxVal = 1.0;
-    
     InitAxis(axisColor, axisLabelColor,
-             minVal, maxVal,
              axisOverlayColor, axisLinesOverlayColor);
 }
 
 void
-GraphAxis2::InitVAxis(int axisColor[4], int axisLabelColor[4],
-                      bool dbFlag, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
+GraphAxis2::InitVAxis(Scale::Type scale,
+                      BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
+                      int axisColor[4], int axisLabelColor[4],
                       BL_GUI_FLOAT offset, BL_GUI_FLOAT offsetX,
                       int axisOverlayColor[4],
                       BL_GUI_FLOAT fontSizeCoeff, bool alignTextRight,
@@ -89,13 +92,22 @@ GraphAxis2::InitVAxis(int axisColor[4], int axisLabelColor[4],
     
     mFontSizeCoeff = fontSizeCoeff;
     
-    mXdBScale = false;
+    mScale = scale;
+    mMinVal = minY;
+    mMaxVal = maxY;
     
     mAlignTextRight = alignTextRight;
     mAlignRight = alignRight;
     
-    InitAxis(axisColor, axisLabelColor, minY, maxY,
+    InitAxis(axisColor, axisLabelColor,
              axisOverlayColor, axisLinesOverlayColor);
+}
+
+void
+GraphAxis2::SetMinMaxValues(BL_GUI_FLOAT minVal, BL_GUI_FLOAT maxVal)
+{
+    mMinVal = minVal;
+    mMaxVal = maxVal;
 }
 
 void
@@ -103,21 +115,28 @@ GraphAxis2::SetData(char *data[][2], int numData)
 {
     mValues.clear();
     
-    BL_FLOAT minVal = 0.0;
-    BL_FLOAT maxVal = 1.0;
-    
     // Copy data
     for (int i = 0; i < numData; i++)
     {
         char *cData[2] = { data[i][0], data[i][1] };
         
-        BL_GUI_FLOAT t = atof(cData[0]);
+        BL_GUI_FLOAT val = atof(cData[0]);
+        BL_GUI_FLOAT t = (val - mMinVal)/(mMaxVal - mMinVal);
+        
+        if (mScale == Scale::DB)
+        {
+            t = Scale::NormalizedToDB(t, mMinVal, mMaxVal);
+        }
+        else if (mScale == Scale::LOG)
+        {
+            t = Scale::NormalizedToLog(t, mMinVal, mMaxVal);
+        }
         
         string text(cData[1]);
         
         // Error here, if we add an Y axis, we must not use mMinXdB
         GraphAxisData aData;
-        aData.mT = (t - minVal)/(maxVal - minVal);
+        aData.mT = t;
         aData.mText = text;
         
         mValues.push_back(aData);
@@ -125,9 +144,7 @@ GraphAxis2::SetData(char *data[][2], int numData)
 }
 
 void
-GraphAxis2::InitAxis(int axisColor[4],
-                     int axisLabelColor[4],
-                     BL_GUI_FLOAT minVal, BL_GUI_FLOAT maxVal,
+GraphAxis2::InitAxis(int axisColor[4], int axisLabelColor[4],
                      int axisLabelOverlayColor[4],
                      int axisLinesOverlayColor[4])
 {
