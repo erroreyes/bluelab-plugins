@@ -8919,13 +8919,17 @@ BLUtils::MelToFreqsNorm(WDL_TypedBuf<FLOAT_TYPE> *resultMagns,
     int magnsSize = magns.GetSize();
     FLOAT_TYPE *magnsData = magns.Get();
     
+    // OPTIM: avoid division in loop
+    BL_FLOAT coeff = (1.0/maxMel)*resultMagnsSize;
+    
     for (int i = 0; i < resultMagnsSize; i++)
     {
         FLOAT_TYPE freq = hzPerBin*i;
         FLOAT_TYPE mel = FreqToMel(freq);
         
-        FLOAT_TYPE id0 = (mel/maxMel) * resultMagnsSize;
-
+        //FLOAT_TYPE id0 = (mel/maxMel) * resultMagnsSize;
+        FLOAT_TYPE id0 = mel*coeff;
+        
         if ((int)id0 >= magnsSize)
             continue;
             

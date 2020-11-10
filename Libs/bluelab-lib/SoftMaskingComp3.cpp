@@ -63,6 +63,12 @@ SoftMaskingComp3::SetProcessingEnabled(bool flag)
     mProcessingEnabled = flag;
 }
 
+bool
+SoftMaskingComp3::IsProcessingEnabled()
+{
+    return mProcessingEnabled;
+}
+
 // Process over time
 void
 SoftMaskingComp3::Process(const WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues,

@@ -897,13 +897,14 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
         {
             BL_GUI_FLOAT textOffset = FONT_SIZE*0.2;
             
+#if 0 // TEST disable
             // Re-added dB normalization for Ghost
             if (!mCurves.empty())
             {
                 if (mCurves[0]->mYdBScale)
                     t = BLUtils::NormalizedXTodB(t, mCurves[0]->mMinY, mCurves[0]->mMaxY);
             }
-            
+#endif
             t = ConvertToBoundsY(t);
             
             BL_GUI_FLOAT y = t*height;

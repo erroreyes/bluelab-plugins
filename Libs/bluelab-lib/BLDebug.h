@@ -37,6 +37,8 @@ public:
     
     static void DumpData(const char *filename, const WDL_TypedBuf<int> &buf);
     
+    static void DumpData(const char *filename, const WDL_TypedBuf<WDL_FFT_COMPLEX> &buf);
+    
     template <typename FLOAT_TYPE>
     static void LoadData(const char *filename, FLOAT_TYPE *data, int size);
     

@@ -49,6 +49,7 @@ public:
     int GetHistorySize();
     
     void SetProcessingEnabled(bool flag);
+    bool IsProcessingEnabled();
     
     // Mixture is the full sound
     // values is the estimated sound for a given mask

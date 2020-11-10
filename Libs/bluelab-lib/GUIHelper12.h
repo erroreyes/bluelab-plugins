@@ -162,6 +162,11 @@ public:
     
     void GetValueTextColor(IColor *valueTextColor) const;
     
+    // Graph
+    void GetGraphAxisColor(IColor *color);
+    void GetGraphAxisLabelColor(IColor *color);
+    void GetGraphAxisLabelOverlayColor(IColor *color);
+    
     static void ResetParameter(Plugin *plug, int paramIdx);
     
     // Refresh all the controls, from their values
@@ -257,6 +262,11 @@ protected:
     
     float mButtonLabelTextOffsetX;
     float mButtonLabelTextOffsetY;
+    
+    //
+    IColor mGraphAxisColor;
+    IColor mGraphAxisLabelColor;
+    IColor mGraphAxisLabelOverlayColor;
 };
 
 #endif /* GUIHelper12_hpp */

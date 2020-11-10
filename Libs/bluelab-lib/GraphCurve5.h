@@ -29,7 +29,8 @@ public:
     
     virtual ~GraphCurve5();
     
-    void SetRect(const IRECT &rect);
+    void SetViewSize(BL_FLOAT width, BL_FLOAT height);
+    
     void SetBounds(const BL_GUI_FLOAT bounds[4]);
     void SetYScaleFactor(BL_FLOAT factor);
     void SetAutoAdjustFactor(BL_FLOAT factor);
@@ -264,7 +265,7 @@ protected:
     // Optimization, when all the points or lines have the same color
     bool mOptimSameColor;
     
-    IRECT mRECT;
+    BL_FLOAT mViewSize[2];
     BL_GUI_FLOAT mBounds[4];
     BL_FLOAT mYScaleFactor;
     BL_FLOAT mAutoAdjustFactor;

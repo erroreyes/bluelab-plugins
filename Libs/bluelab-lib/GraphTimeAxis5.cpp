@@ -7,6 +7,7 @@
 //
 
 #include <GraphAxis2.h>
+#include <GUIHelper12.h>
 #include <BLUtils.h>
 
 #include "GraphTimeAxis5.h"
@@ -45,7 +46,9 @@ GraphTimeAxis5::GraphTimeAxis5()
 GraphTimeAxis5::~GraphTimeAxis5() {}
 
 void
-GraphTimeAxis5::Init(GraphAxis2 *graphAxis, int bufferSize,
+GraphTimeAxis5::Init(GraphAxis2 *graphAxis,
+                     GUIHelper12 *guiHelper,
+                     int bufferSize,
                      BL_FLOAT timeDuration, BL_FLOAT spacingSeconds,
                      int yOffset)
 {
@@ -55,16 +58,28 @@ GraphTimeAxis5::Init(GraphAxis2 *graphAxis, int bufferSize,
     mTimeDuration = timeDuration;
     mSpacingSeconds = spacingSeconds;
     
-    int hAxisColor[4] = { 48, 48, 48, /*255*/0 }; // invisible vertical bars
-    // Choose maximum brightness color for labels,
-    // to see them well over clear spectrograms
-    int hAxisLabelColor[4] = { 255, 255, 255, 255 };
-    int hAxisOverlayColor[4] = { 48, 48, 48, 255 };
+    //
+    IColor axisIColor;
+    guiHelper->GetGraphAxisColor(&axisIColor);
+    int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
     
-    mGraphAxis->InitVAxis(hAxisColor, hAxisLabelColor,
+    IColor axisLabelIColor;
+    guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);
+    int axisLabelColor[4] = { axisLabelIColor.R, axisLabelIColor.G,
+                              axisLabelIColor.B, axisLabelIColor.A };
+    
+    IColor axisLabelOverlayIColor;
+    guiHelper->GetGraphAxisLabelOverlayColor(&axisLabelOverlayIColor);
+    int axisLabelOverlayColor[4] = { axisLabelOverlayIColor.R,
+                                     axisLabelOverlayIColor.G,
+                                     axisLabelOverlayIColor.B,
+                                     axisLabelOverlayIColor.A };
+    
+    // NOTE: should be InitHAxis() ?
+    mGraphAxis->InitVAxis(axisColor, axisLabelColor,
                           false, 0.0, 1.0,
                           yOffset, 0.0,
-                          hAxisOverlayColor);
+                          axisLabelOverlayColor);
 }
 
 void

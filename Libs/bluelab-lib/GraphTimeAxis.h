@@ -12,7 +12,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 class GraphControl11;
-
+class GUIHelper12;
 class GraphTimeAxis
 {
 public:
@@ -20,8 +20,8 @@ public:
     
     virtual ~GraphTimeAxis();
     
-    void Init(GraphControl11 *graph, int bufferSize,
-              BL_FLOAT timeDuration, int numLabels,
+    void Init(GraphControl11 *graph, GUIHelper12 *guiHelper,
+              int bufferSize, BL_FLOAT timeDuration, int numLabels,
               int yOffset = 0);
     
     void Reset(int bufferSize, BL_FLOAT timeDuration);

@@ -7,6 +7,7 @@
 //
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 #include <DebugGraph.h>
 
 #include <PartialTracker3.h>
@@ -20,6 +21,8 @@
 
 #define FIX_RESET 1
 
+// Soft masking only on harmo? (for perfs)
+#define DISABLE_NOISE_SOFT_MASKING 1
 
 AirProcess2::AirProcess2(int bufferSize,
                         BL_FLOAT overlapping, BL_FLOAT oversampling,
@@ -46,6 +49,11 @@ AirProcess2::AirProcess2(int bufferSize,
         mSoftMaskingComps[i] = new SoftMaskingComp3(SOFT_MASKING_HISTO_SIZE);
 #endif
     }
+    
+#if DISABLE_NOISE_SOFT_MASKING
+    if (mSoftMaskingComps[0] != NULL)
+        mSoftMaskingComps[0]->SetProcessingEnabled(false);
+#endif
     
 #if AIR_PROCESS_PROFILE
     BlaTimer::Reset(&mTimer, &mCount);
@@ -123,6 +131,8 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         mPartialTracker->GetNoiseEnvelope(&noise);
 #endif
         
+        mNoise = noise;
+        
 #if 0 // TEST: smooth noise, but remove transients
         BLUtils::GenNoise(&phases);
         BLUtils::MultValues(&phases, 2.0*M_PI);
@@ -144,6 +154,8 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         // Harmonic "envelope"
         WDL_TypedBuf<BL_FLOAT> harmo;
         mPartialTracker->GetHarmonicEnvelope(&harmo);
+        
+        mHarmo = harmo;
         
 #if 0   // TEST: try to have exactly the same signal when mix is at 0
         // => dos not give exactly the same signal with mix at 0
@@ -219,10 +231,19 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                                                   &inMask,
                                                   &outMask);
         
-            // We have a shift of the input samples in ProcessCentered(),
-            // Must update (shift) input samples to take it into account.
-            result[i] = fftSamples0;
-            BLUtils::MultValues(&result[i], outMask);
+            if (mSoftMaskingComps[i]->IsProcessingEnabled())
+            {
+                // We have a shift of the input samples in ProcessCentered(),
+                // Must update (shift) input samples to take it into account.
+                result[i] = fftSamples0;
+                BLUtils::MultValues(&result[i], outMask);
+            }
+            else // Soft masking disabled
+            {
+                // In mask, but shifted in time depending on the history of
+                // soft masking
+                result[i] = inMask;
+            }
         }
         
         // Combine the result
@@ -244,6 +265,8 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             outResult.Get()[i] = res;
         }
         
+        BLUtils::ComplexToMagn(&mSum, outResult);
+        
         // Optim: avoid reconverting to magns
         // and return early
         *ioBuffer = outResult;
@@ -253,6 +276,8 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         return;
 #endif
     }
+    
+    mSum = magns;
     
     // For noise envelope
     BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
@@ -289,6 +314,24 @@ AirProcess2::GetLatency()
 #endif
     
     return 0;
+}
+
+void
+AirProcess2::GetNoise(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+    *magns = mNoise;
+}
+
+void
+AirProcess2::GetHarmo(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+    *magns = mHarmo;
+}
+
+void
+AirProcess2::GetSum(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+    *magns = mSum;
 }
 
 void

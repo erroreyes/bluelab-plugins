@@ -9,6 +9,8 @@
 #ifndef EQHack_SmoothAvgHistogramDB_h
 #define EQHack_SmoothAvgHistogramDB_h
 
+#include <BLTypes.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 #include "IControl.h"
 //#include "../../WDL/IPlug/Containers.h"
@@ -23,6 +25,8 @@ public:
     void AddValue(int index, BL_FLOAT val);
     
     void AddValues(const WDL_TypedBuf<BL_FLOAT> &values);
+    
+    int GetNumValues();
     
     void GetValues(WDL_TypedBuf<BL_FLOAT> *values);
     

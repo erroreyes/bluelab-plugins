@@ -32,7 +32,6 @@
 
 #define DEMO_MESSAGE "[DEMO] Please consider buying if you like it!"
 
-
 GUIHelper12::GUIHelper12(Style style)
 {
     mStyle = style;
@@ -126,6 +125,13 @@ GUIHelper12::GUIHelper12(Style style)
         
         mButtonLabelTextOffsetX = 3.0;
         mButtonLabelTextOffsetY = 3.0;
+        
+        // Graph
+        mGraphAxisColor = IColor(48, 48, 48, /*255*/0); // Invisible lines
+        // Choose maximum brightness color for labels,
+        // to see them well over clear spectrograms
+        mGraphAxisLabelColor = IColor(255, 255, 255, 255);
+        mGraphAxisLabelOverlayColor = IColor(48, 48, 48, 255);
     }
 }
 
@@ -739,6 +745,24 @@ void
 GUIHelper12::GetValueTextColor(IColor *valueTextColor) const
 {
     *valueTextColor = mValueTextColor;
+}
+
+void
+GUIHelper12::GetGraphAxisColor(IColor *color)
+{
+    *color = mGraphAxisColor;
+}
+
+void
+GUIHelper12::GetGraphAxisLabelColor(IColor *color)
+{
+    *color = mGraphAxisLabelColor;
+}
+
+void
+GUIHelper12::GetGraphAxisLabelOverlayColor(IColor *color)
+{
+    *color = mGraphAxisLabelOverlayColor;
 }
 
 void

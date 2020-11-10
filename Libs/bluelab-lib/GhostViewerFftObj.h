@@ -9,7 +9,9 @@
 #ifndef __BL_GhostViewer__GhostViewerFftObj__
 #define __BL_GhostViewer__GhostViewerFftObj__
 
-#include "FftProcessObj16.h"
+#include <BLTypes.h>
+
+#include <FftProcessObj16.h>
 
 // From ChromaFftObj
 //

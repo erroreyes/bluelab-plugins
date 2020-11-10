@@ -98,6 +98,22 @@ BLDebug::DumpData(const char *filename, const WDL_TypedBuf<int> &buf)
     DumpData(filename, buf.Get(), buf.GetSize());
 }
 
+void
+BLDebug::DumpData(const char *filename, const WDL_TypedBuf<WDL_FFT_COMPLEX> &buf)
+{
+    char fullFilename[MAX_PATH];
+    sprintf(fullFilename, BASE_FILE"%s", filename);
+    
+    FILE *file = fopen(fullFilename, "w");
+    for (int i = 0; i < buf.GetSize(); i++)
+    {
+        fprintf(file, "%g ", buf.Get()[i].re);
+        fprintf(file, "%g ", buf.Get()[i].im);
+    }
+    
+    fclose(file);
+}
+
 template <typename FLOAT_TYPE>
 void
 BLDebug::LoadData(const char *filename, FLOAT_TYPE *data, int size)

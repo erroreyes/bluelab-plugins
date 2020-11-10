@@ -13,6 +13,7 @@
 // For GraphControl12
 //
 class GraphAxis2;
+class GUIHelper12;
 class GraphFreqAxis2
 {
 public:
@@ -20,7 +21,8 @@ public:
     
     virtual ~GraphFreqAxis2();
     
-    void Init(GraphAxis2 *graphAxis,
+    void Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
+              bool horizontal,
               int bufferSize, BL_FLOAT sampleRate,
               int graphWidth);
     

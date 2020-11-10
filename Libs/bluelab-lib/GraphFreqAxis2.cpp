@@ -7,6 +7,7 @@
 //
 
 #include <GraphAxis2.h>
+#include <GUIHelper12.h>
 #include <BLUtils.h>
 
 #include "GraphFreqAxis2.h"
@@ -23,7 +24,8 @@ GraphFreqAxis2::GraphFreqAxis2()
 GraphFreqAxis2::~GraphFreqAxis2() {}
 
 void
-GraphFreqAxis2::Init(GraphAxis2 *graphAxis,
+GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
+                     bool horizontal,
                      int bufferSize, BL_FLOAT sampleRate,
                      int graphWidth)
 {
@@ -32,18 +34,39 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis,
     mBufferSize = bufferSize;
     mSampleRate = sampleRate;
     
-    int axisColor[4] = { 48, 48, 48, /*255*/0 }; // invisible horizontal bars
+    //
+    IColor axisIColor;
+    guiHelper->GetGraphAxisColor(&axisIColor);
+    int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
     
-    // Choose maximum brightness color for labels,
-    // to see them well over clear spectrograms
-    int axisLabelColor[4] = { 255, 255, 255, 255 };
-    int axisOverlayColor[4] = { 48, 48, 48, 255 };
+    IColor axisLabelIColor;
+    guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);
+    int axisLabelColor[4] = { axisLabelIColor.R, axisLabelIColor.G,
+                              axisLabelIColor.B, axisLabelIColor.A };
     
-    mGraphAxis->InitVAxis(axisColor, axisLabelColor,
-                          true,
-                          0.0, 1.0,
-                          0.0, graphWidth - 40.0,
-                          axisOverlayColor);
+    IColor axisLabelOverlayIColor;
+    guiHelper->GetGraphAxisLabelOverlayColor(&axisLabelOverlayIColor);
+    int axisLabelOverlayColor[4] = { axisLabelOverlayIColor.R,
+                                     axisLabelOverlayIColor.G,
+                                     axisLabelOverlayIColor.B,
+                                     axisLabelOverlayIColor.A };
+    
+    //
+    if (horizontal)
+    {
+        mGraphAxis->InitHAxis(false, //true,
+                              axisColor, axisLabelColor,
+                              0.0,
+                              axisLabelOverlayColor);
+    }
+    else
+    {
+        mGraphAxis->InitVAxis(axisColor, axisLabelColor,
+                              true,
+                              0.0, 1.0,
+                              0.0, graphWidth - 40.0,
+                              axisLabelOverlayColor);
+    }
     
     //
     Update();
@@ -65,7 +88,7 @@ GraphFreqAxis2::Update()
     if (mGraphAxis == NULL)
         return;
     
-#define NUM_AXIS_DATA 11
+#define NUM_AXIS_DATA 12
     char *AXIS_DATA [NUM_AXIS_DATA][2];
     for (int i = 0; i < NUM_AXIS_DATA; i++)
     {
@@ -74,19 +97,20 @@ GraphFreqAxis2::Update()
     }
     
     sprintf(AXIS_DATA[0][1], "");
-    sprintf(AXIS_DATA[1][1], "100Hz");
-    sprintf(AXIS_DATA[2][1], "500Hz");
-    sprintf(AXIS_DATA[3][1], "1KHz");
-    sprintf(AXIS_DATA[4][1], "2KHz");
-    sprintf(AXIS_DATA[5][1], "5KHz");
-    sprintf(AXIS_DATA[6][1], "10KHz");
-    sprintf(AXIS_DATA[7][1], "20KHz");
-    sprintf(AXIS_DATA[8][1], "40KHz");
-    sprintf(AXIS_DATA[9][1], "80KHz");
-    sprintf(AXIS_DATA[10][1], "");
+    sprintf(AXIS_DATA[1][1], "");
+    sprintf(AXIS_DATA[2][1], "100Hz");
+    sprintf(AXIS_DATA[3][1], "500Hz");
+    sprintf(AXIS_DATA[4][1], "1KHz");
+    sprintf(AXIS_DATA[5][1], "2KHz");
+    sprintf(AXIS_DATA[6][1], "5KHz");
+    sprintf(AXIS_DATA[7][1], "10KHz");
+    sprintf(AXIS_DATA[8][1], "20KHz");
+    sprintf(AXIS_DATA[9][1], "40KHz");
+    sprintf(AXIS_DATA[10][1], "80KHz");
+    sprintf(AXIS_DATA[11][1], "");
     
     BL_FLOAT freqs[NUM_AXIS_DATA] =
-                    { 50.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0,
+                    { 25.0, 50.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0,
                       10000.0, 20000.0, 40000.0, 80000.0, 176400.0 };
 
     BL_FLOAT minHzValue;
@@ -98,6 +122,8 @@ GraphFreqAxis2::Update()
     minHzValue = 0.0;
     
     // Normalize
+    int start = 0;
+    int end = NUM_AXIS_DATA - 1;
     for (int i = 0; i < NUM_AXIS_DATA; i++)
     {
         freqs[i] = (freqs[i] - minHzValue)/(maxHzValue - minHzValue);
@@ -109,11 +135,19 @@ GraphFreqAxis2::Update()
         sprintf(AXIS_DATA[i][0], "%g", freqs[i]);
         
         // We are over the sample rate, make empty label
-        if (freqs[i] > 1.0)
+        if ((freqs[i] < 0.0) || (freqs[i] > 1.0))
             sprintf(AXIS_DATA[i][1], "");
+        
+        if (freqs[i] < 0.0)
+            start++;
+        if (freqs[i] > 1.0)
+            end--;
     }
     
-    mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA);
+    //mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA);
+    // Adjust the number of values,
+    // because the graph automatically fixes the bounds alignement
+    mGraphAxis->SetData(&AXIS_DATA[start], end - start + 1);
     
     for (int i = 0; i < NUM_AXIS_DATA; i++)
     {

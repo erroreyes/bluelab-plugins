@@ -9,6 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <GraphControl11.h>
+#include <GUIHelper12.h>
 
 #include "GraphTimeAxis.h"
 
@@ -22,7 +23,8 @@ GraphTimeAxis::GraphTimeAxis()
 GraphTimeAxis::~GraphTimeAxis() {}
 
 void
-GraphTimeAxis::Init(GraphControl11 *graph, int bufferSize,
+GraphTimeAxis::Init(GraphControl11 *graph,
+                    GUIHelper12 *guiHelper, int bufferSize,
                     BL_FLOAT timeDuration, int numLabels,
                     int yOffset)
 {
@@ -48,15 +50,28 @@ GraphTimeAxis::Init(GraphControl11 *graph, int bufferSize,
         { "1.0", "" },
     };
     
-    int hAxisColor[4] = { 48, 48, 48, /*255*/0 }; // invisible vertical bars
-    // Choose maximum brightness color for labels,
-    // to see them well over clear spectrograms
-    int hAxisLabelColor[4] = { 255, 255, 255, 255 };
-    int hAxisOverlayColor[4] = { 48, 48, 48, 255 };
+    //
+    IColor axisIColor;
+    guiHelper->GetGraphAxisColor(&axisIColor);
+    int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
     
-    mGraph->AddHAxis(HAXIS_DATA, NUM_HAXIS_DATA, false, hAxisColor, hAxisLabelColor,
+    IColor axisLabelIColor;
+    guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);
+    int axisLabelColor[4] = { axisLabelIColor.R, axisLabelIColor.G,
+                              axisLabelIColor.B, axisLabelIColor.A };
+    
+    IColor axisLabelOverlayIColor;
+    guiHelper->GetGraphAxisLabelOverlayColor(&axisLabelOverlayIColor);
+    int axisLabelOverlayColor[4] = { axisLabelOverlayIColor.R,
+                                     axisLabelOverlayIColor.G,
+                                     axisLabelOverlayIColor.B,
+                                     axisLabelOverlayIColor.A };
+    
+    //
+    mGraph->AddHAxis(HAXIS_DATA, NUM_HAXIS_DATA, false,
+                     axisColor, axisLabelColor,
                      yOffset,
-                     hAxisOverlayColor);
+                     axisLabelOverlayColor);
 }
 
 void

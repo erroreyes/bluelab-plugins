@@ -52,6 +52,10 @@ public:
     
     int GetLatency();
     
+    void GetNoise(WDL_TypedBuf<BL_FLOAT> *magns);
+    void GetHarmo(WDL_TypedBuf<BL_FLOAT> *magns);
+    void GetSum(WDL_TypedBuf<BL_FLOAT> *magns);
+    
 protected:
     void DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                         const WDL_TypedBuf<BL_FLOAT> &phases);
@@ -70,6 +74,10 @@ protected:
     
     // First is noise masking, second is harmo masking
     SoftMaskingComp3 *mSoftMaskingComps[2];
+    
+    WDL_TypedBuf<BL_FLOAT> mNoise;
+    WDL_TypedBuf<BL_FLOAT> mHarmo;
+    WDL_TypedBuf<BL_FLOAT> mSum;
     
 #if AIR_PROCESS_PROFILE
     BlaTimer mTimer;

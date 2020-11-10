@@ -69,6 +69,9 @@ GraphCurve5::GraphCurve5(int numValues)
     
     mYScaleFactor = 1.0;
     mAutoAdjustFactor = 1.0;
+    
+    mViewSize[0] = 256;
+    mViewSize[1] = 256;
 }
 
 GraphCurve5::~GraphCurve5()
@@ -78,9 +81,10 @@ GraphCurve5::~GraphCurve5()
 }
 
 void
-GraphCurve5::SetRect(const IRECT &rect)
+GraphCurve5::SetViewSize(BL_FLOAT width, BL_FLOAT height)
 {
-    mRECT = rect;
+    mViewSize[0] = width;
+    mViewSize[1] = height;
 }
 
 void
@@ -368,8 +372,8 @@ GraphCurve5::SetValuesPoint(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
     
     ClearValues();
     
-    int width = mRECT.W();
-    int height = mRECT.H();
+    int width = mViewSize[0];
+    int height = mViewSize[1];
     
     for (int i = 0; i < xValues.GetSize(); i++)
     {
@@ -405,8 +409,8 @@ GraphCurve5::SetValuesPointEx(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
     
     ClearValues();
     
-    int width = mRECT.W();
-    int height = mRECT.H();
+    int width = mViewSize[0];
+    int height = mViewSize[1];
     
     for (int i = 0; i < xValues.GetSize(); i++)
     {
@@ -501,8 +505,8 @@ GraphCurve5::SetValuesPointWeight(const WDL_TypedBuf<BL_GUI_FLOAT> &xValues,
     
     ClearValues();
     
-    int width = mRECT.W();
-    int height = mRECT.H();
+    int width = mViewSize[0];
+    int height = mViewSize[1];
     
     for (int i = 0; i < xValues.GetSize(); i++)
     {
@@ -602,7 +606,7 @@ GraphCurve5::SetValues3(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 void
 GraphCurve5::SetValuesDecimateSimple(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 {
-    int width = mRECT.W();
+    int width = mViewSize[0];
     
     BL_GUI_FLOAT prevX = -1.0;
     
@@ -632,7 +636,7 @@ void
 GraphCurve5::SetValuesDecimate(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
                                bool isWaveSignal)
 {
-    int width = mRECT.W();
+    int width = mViewSize[0];
     
     BL_GUI_FLOAT prevX = -1.0;
     BL_GUI_FLOAT maxY = -1.0;
@@ -789,8 +793,8 @@ void
 GraphCurve5::SetValue(BL_GUI_FLOAT t, BL_GUI_FLOAT val)
 {
     // Normalize, then adapt to the graph
-    int width = mRECT.W();
-    int height = mRECT.H();
+    int width = mViewSize[0];
+    int height = mViewSize[1];
     
     BL_GUI_FLOAT x = t;
     
@@ -835,14 +839,14 @@ GraphCurve5::SetSingleValueV(BL_GUI_FLOAT val)
 void
 GraphCurve5::PushValue(BL_GUI_FLOAT val)
 {
-    int height = mRECT.H();
+    int height = mViewSize[1];
     
     val = ConvertY(val, height);
     
     BL_GUI_FLOAT dummyX = 1.0;
     PushValue(dummyX, val);
     
-    BL_GUI_FLOAT maxXValue = mRECT.W();
+    BL_GUI_FLOAT maxXValue = mViewSize[0];
     NormalizeXValues(maxXValue);
 }
 
