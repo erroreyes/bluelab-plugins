@@ -32,6 +32,8 @@
 
 SamplesToSpectrogram::SamplesToSpectrogram(BL_FLOAT sampleRate)
 {
+    mSampleRate = sampleRate;
+    
     FftProcessObj16::Init();
     
     // Play objs
@@ -87,6 +89,8 @@ SamplesToSpectrogram::~SamplesToSpectrogram()
 void
 SamplesToSpectrogram::Reset(BL_FLOAT sampleRate)
 {
+    mSampleRate = sampleRate;
+    
     mFftObj->Reset(BUFFER_SIZE, OVERSAMPLING, FREQ_RES, sampleRate);
 }
 
@@ -100,7 +104,7 @@ void
 SamplesToSpectrogram::SetSamples(const WDL_TypedBuf<BL_FLOAT> &samples)
 {
     mFftObj->Reset();
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(mSampleRate);
     
     WDL_TypedBuf<BL_FLOAT> remainigSamples = samples;
     

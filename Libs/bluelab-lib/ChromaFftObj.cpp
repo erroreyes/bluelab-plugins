@@ -35,7 +35,7 @@ ChromaFftObj::ChromaFftObj(int bufferSize, int oversampling, int freqRes,
                            BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -109,7 +109,7 @@ ChromaFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT samp
     srCoeff = bl_round(srCoeff);
     numCols *= srCoeff;
     
-    mSpectrogram->Reset(mBufferSize/4, numCols);
+    mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
     
     mLineCount = 0;
     

@@ -30,10 +30,10 @@ GhostViewerFftObjSubSonic::GhostViewerFftObjSubSonic(int bufferSize,
 {
     int lastBin = ComputeLastBin(MAX_FREQ);
 
-    //mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
-    //mSpectrogram = new BLSpectrogram4(lastBin/(2*oversampling)/*4*/, -1);
-    mSpectrogram = new BLSpectrogram4(lastBin/4, -1);
-    //mSpectrogram = new BLSpectrogram4(lastBin, -1);
+    //mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
+    //mSpectrogram = new BLSpectrogram4(sampleRate, lastBin/(2*oversampling)/*4*/, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, lastBin/4, -1);
+    //mSpectrogram = new BLSpectrogram4(sampleRate, lastBin, -1);
     
     mSpectroDisplay = NULL;
     
@@ -97,10 +97,10 @@ GhostViewerFftObjSubSonic::Reset(int bufferSize, int oversampling,
     srCoeff = bl_round(srCoeff);
     numCols *= srCoeff;
     
-    //mSpectrogram->Reset(mBufferSize/4, numCols);
-    //mSpectrogram->Reset(lastBin/(2*mOverlapping)/*4*/, numCols);
-    mSpectrogram->Reset(lastBin/4, numCols);
-    //mSpectrogram->Reset(lastBin, numCols);
+    //mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
+    //mSpectrogram->Reset(mSampleRate, lastBin/(2*mOverlapping)/*4*/, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin/4, numCols);
+    //mSpectrogram->Reset(mSampleRate, lastBin, numCols);
     
     mLineCount = 0;
     

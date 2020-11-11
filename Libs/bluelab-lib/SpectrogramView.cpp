@@ -394,7 +394,8 @@ SpectrogramView::UpdateSpectrogramData(BL_FLOAT minNormX, BL_FLOAT maxNormX)
 {
     //BL_FLOAT dataZoomFactor = 1.0/mZoomFactor;
     
-    mSpectrogram->Reset();
+    BL_FLOAT sampleRate = mSpectrogram->GetSampleRate();
+    mSpectrogram->Reset(sampleRate);
     
     if ((mChannels == NULL) || mChannels->empty())
         return;
@@ -530,7 +531,7 @@ SpectrogramView::UpdateSpectrogramData(BL_FLOAT minNormX, BL_FLOAT maxNormX)
     // Empty the spectrogram
     // So here, the fft buffer is pre-filled with the previous data
     // and the spectrogram is ready
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(sampleRate);
     
     // Fill normally
     while(pos < mEndDataPos*bufferSize)

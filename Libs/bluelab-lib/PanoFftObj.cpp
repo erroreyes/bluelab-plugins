@@ -24,7 +24,7 @@ PanoFftObj::PanoFftObj(int bufferSize, int oversampling, int freqRes,
                       BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -101,7 +101,7 @@ PanoFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
     srCoeff = bl_round(srCoeff);
     numCols *= srCoeff;
     
-    mSpectrogram->Reset(mBufferSize/4, numCols);
+    mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
     
     mLineCount = 0;
     

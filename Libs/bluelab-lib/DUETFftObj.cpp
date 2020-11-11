@@ -39,7 +39,7 @@ DUETFftObj::DUETFftObj(GraphControl11 *graph,
 {
     mGraph = graph;
     
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     mImageDisplay = NULL;
@@ -130,7 +130,7 @@ DUETFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
     mFreqRes = freqRes;
     mSampleRate = sampleRate;
     
-    mSpectrogram->Reset(SPECTRO_WIDTH, SPECTRO_HEIGHT);
+    mSpectrogram->Reset(mSampleRate, SPECTRO_WIDTH, SPECTRO_HEIGHT);
     
     mLineCount = 0;
     

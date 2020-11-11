@@ -8,6 +8,8 @@
 
 //#include "ColorMap3.h"
 
+#include <BLDefs.h>
+
 #define GLSL_COLORMAP 1
 #include "ColorMap4.h"
 
@@ -106,8 +108,11 @@ DbgSpectrogram::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns)
     WDL_TypedBuf<BL_FLOAT> magns0 = magns;
     if (mYLogScale)
     {
-        //BLUtils::LogScaleX(&magns0, mYLogScaleFactor);
+#if !USE_DEFAULT_SCALE_MEL
         Scale::ApplyScale(Scale::LOG_FACTOR, &magns0);
+#else
+        Scale::ApplyScale(Scale::MEL, &magns0);
+#endif
     }
     
     if (magns0.GetSize() > mHeight)

@@ -16,11 +16,11 @@
 
 #define USE_AVG_LINES 0 //1
 
-SpectrogramFftObjEXPE::SpectrogramFftObjEXPE(int bufferSize, int oversampling, int freqRes,
-                                     BL_FLOAT sampleRate)
+SpectrogramFftObjEXPE::SpectrogramFftObjEXPE(int bufferSize, int oversampling,
+                                             int freqRes, BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
 
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
@@ -76,7 +76,7 @@ SpectrogramFftObjEXPE::SetFullData(const vector<WDL_TypedBuf<BL_FLOAT> > &magns,
 {
     mOverlapLines.clear();
     
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(mSampleRate, mSampleRate);
     
     for (int i = 0; i < magns.size(); i++)
     {
@@ -93,14 +93,14 @@ SpectrogramFftObjEXPE::SetMode(enum Mode mode)
     // Re-init
     if (mode == ACQUIRE)
     {
-        mSpectrogram->Reset(mBufferSize/4, -1);
+        mSpectrogram->Reset(mSampleRate, mBufferSize/4, -1);
         
         ProcessObj::Reset(mBufferSize, mOverlapping, mFreqRes, mSampleRate);
     }
     else if (mode == VIEW)
     {
         int numCols = mBufferSize/8;
-        mSpectrogram->Reset(mBufferSize/4, numCols);
+        mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
         
         ProcessObj::Reset(mBufferSize, mOverlapping, mFreqRes, mSampleRate);
     }

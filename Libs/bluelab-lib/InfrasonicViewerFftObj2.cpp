@@ -36,9 +36,9 @@ InfrasonicViewerFftObj2::InfrasonicViewerFftObj2(int bufferSize,
     int lastBin = ComputeLastBin(mMaxFreq);
     
 #if DECIMATE_FREQUENCIES
-    mSpectrogram = new BLSpectrogram4(lastBin/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, lastBin/4, -1);
 #else
-    mSpectrogram = new BLSpectrogram4(lastBin, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, lastBin, -1);
 #endif
     
     mSpectroDisplay = NULL;
@@ -108,9 +108,9 @@ InfrasonicViewerFftObj2::Reset(int bufferSize, int oversampling,
     
 #if DECIMATE_FREQUENCIES // ORIG
     // Values will be decimated later when added to the spectrogram
-    mSpectrogram->Reset(lastBin/4, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin/4, numCols);
 #else // More smooth but less accurate
-    mSpectrogram->Reset(lastBin, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin, numCols);
 #endif
     
     // NOTE not tested, but should be activated,
@@ -143,9 +143,9 @@ InfrasonicViewerFftObj2::Reset(int bufferSize, int oversampling,
 
 #if DECIMATE_FREQUENCIES // ORIG
     // Values will be decimated later when added to the spectrogram
-    mSpectrogram->Reset(lastBin/4, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin/4, numCols);
 #else // More smooth but less accurate
-    mSpectrogram->Reset(lastBin, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin, numCols);
 #endif
     
 #if 1 // Shoud be activated !

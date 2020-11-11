@@ -8,6 +8,8 @@
 
 #include "ColorMap4.h"
 
+#include <BLDefs.h>
+
 #include <BLTypes.h>
 #include <BLUtils.h>
 #include <BLDebug.h>
@@ -27,11 +29,13 @@
 unsigned char BLSpectrogram4::mPhasesColor[4] = { 255, 255, 255, 255 };
 
 
-BLSpectrogram4::BLSpectrogram4(int height, int maxCols,
-                               bool useGLSL)
+BLSpectrogram4::BLSpectrogram4(BL_FLOAT sampleRate,
+                               int height, int maxCols, bool useGLSL)
 {
     mHeight = height;
     mMaxCols = maxCols;
+    
+    mSampleRate = sampleRate;
     
     mRange = 0.0;
     mContrast = 0.5;
@@ -174,8 +178,10 @@ BLSpectrogram4::SetDisplayDPhases(bool flag)
 }
 
 void
-BLSpectrogram4::Reset()
+BLSpectrogram4::Reset(BL_FLOAT sampleRate)
 {
+    mSampleRate = sampleRate;
+    
     mMagns.clear();
     mPhases.clear();
     mUnwrappedPhases.clear();
@@ -189,9 +195,9 @@ BLSpectrogram4::Reset()
 }
 
 void
-BLSpectrogram4::Reset(int height, int maxCols)
+BLSpectrogram4::Reset(BL_FLOAT sampleRate, int height, int maxCols)
 {
-    Reset();
+    Reset(sampleRate);
     
     mHeight = height;
     mMaxCols = maxCols;
@@ -260,8 +266,15 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     
     if (mYLogScale)
     {
+#if !USE_DEFAULT_SCALE_MEL
         Scale::ApplyScale(Scale::LOG_FACTOR, &magns0);
         Scale::ApplyScale(Scale::LOG_FACTOR, &phases0);
+#else
+        Scale::ApplyScale(Scale::MEL, &magns0,
+                          (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+        Scale::ApplyScale(Scale::MEL, &phases0,
+                          (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+#endif
     }
     
     if ((magns0.GetSize() > mHeight) ||
@@ -624,11 +637,12 @@ BLSpectrogram4::SavePPM(const char *filename, int maxValue)
 }
 
 BLSpectrogram4 *
-BLSpectrogram4::ImageToSpectrogram(PPMFile::PPMImage *image, bool is16Bits)
+BLSpectrogram4::ImageToSpectrogram(BL_FLOAT sampleRate,
+                                   PPMFile::PPMImage *image, bool is16Bits)
 {
     BL_FLOAT ppmMultiplier = is16Bits ? 65535.0 : 255.0;
     
-    BLSpectrogram4 *result = new BLSpectrogram4(image->h);
+    BLSpectrogram4 *result = new BLSpectrogram4(sampleRate, image->h);
     for (int i = 0; i < image->w; i++)
     {
         WDL_TypedBuf<BL_FLOAT> magns;
@@ -678,10 +692,11 @@ BLSpectrogram4::ImageToSpectrogram(PPMFile::PPMImage *image, bool is16Bits)
 }
 
 BLSpectrogram4 *
-BLSpectrogram4::ImagesToSpectrogram(PPMFile::PPMImage *magnsImage,
-                                   PPMFile::PPMImage *phasesImage)
+BLSpectrogram4::ImagesToSpectrogram(BL_FLOAT sampleRate,
+                                    PPMFile::PPMImage *magnsImage,
+                                    PPMFile::PPMImage *phasesImage)
 {
-    BLSpectrogram4 *result = new BLSpectrogram4(magnsImage->h);
+    BLSpectrogram4 *result = new BLSpectrogram4(sampleRate, magnsImage->h);
     
     for (int i = 0; i < magnsImage->w; i++)
     {
@@ -891,7 +906,8 @@ BLSpectrogram4::ComputeDPhasesY(const vector<WDL_TypedBuf<BL_FLOAT> > &phasesUnW
 }
 
 BLSpectrogram4 *
-BLSpectrogram4::Load(const char *fileName)
+BLSpectrogram4::Load(BL_FLOAT sampleRate,
+                     const char *fileName)
 {
     // TODO
     return NULL;
@@ -941,14 +957,15 @@ BLSpectrogram4::Save(const char *filename)
 }
 
 BLSpectrogram4 *
-BLSpectrogram4::LoadPPM(const char *filename)
+BLSpectrogram4::LoadPPM(BL_FLOAT sampleRate,
+                        const char *filename)
 {
     char fullFilename[MAX_PATH];
     sprintf(fullFilename, "/Volumes/HDD/Share/BlueLabAudio-Debug/%s", filename);
     
     PPMFile::PPMImage *image = PPMFile::ReadPPM(fullFilename);
     
-    BLSpectrogram4 *result = ImageToSpectrogram(image, false);
+    BLSpectrogram4 *result = ImageToSpectrogram(sampleRate, image, false);
     
     return result;
 }
@@ -960,14 +977,15 @@ BLSpectrogram4::SavePPM(const char *filename)
 }
 
 BLSpectrogram4 *
-BLSpectrogram4::LoadPPM16(const char *filename)
+BLSpectrogram4::LoadPPM16(BL_FLOAT sampleRate,
+                          const char *filename)
 {
     char fullFilename[MAX_PATH];
     sprintf(fullFilename, "/Volumes/HDD/Share/BlueLabAudio-Debug/%s", filename);
     
     PPMFile::PPMImage *image = PPMFile::ReadPPM16(fullFilename);
     
-    BLSpectrogram4 *result = ImageToSpectrogram(image, true);
+    BLSpectrogram4 *result = ImageToSpectrogram(sampleRate, image, true);
     
     return result;
 }
@@ -979,7 +997,8 @@ BLSpectrogram4::SavePPM16(const char *filename)
 }
 
 BLSpectrogram4 *
-BLSpectrogram4::LoadPPM32(const char *filename)
+BLSpectrogram4::LoadPPM32(BL_FLOAT sampleRate,
+                          const char *filename)
 {
     // Magns
     char magnsFullFilename[MAX_PATH];
@@ -993,7 +1012,7 @@ BLSpectrogram4::LoadPPM32(const char *filename)
     
     PPMFile::PPMImage *phasesImage = PPMFile::ReadPPM16(phasesFullFilename);
     
-    BLSpectrogram4 *result = ImagesToSpectrogram(magnsImage, phasesImage);
+    BLSpectrogram4 *result = ImagesToSpectrogram(sampleRate, magnsImage, phasesImage);
     
     return result;
 }
@@ -1055,3 +1074,8 @@ BLSpectrogram4::GetTotalLineNum()
     return mTotalLineNum;
 }
 
+BL_FLOAT
+BLSpectrogram4::GetSampleRate()
+{
+    return mSampleRate;
+}

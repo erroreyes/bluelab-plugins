@@ -37,6 +37,8 @@ protected:
     SimpleSpectrogramFftObj *mSpectrogramFftObj;
     
     BLSpectrogram4 *mSpectrogram;
+    
+    BL_FLOAT mSampleRate;
 };
 
 #endif /* defined(__BL_Reverb__SamplesToSpectrogram__) */

@@ -13,6 +13,8 @@
 #include <deque>
 using namespace std;
 
+#include <BLTypes.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 //#include "../../WDL/IPlug/Containers.h"
 
@@ -77,7 +79,7 @@ protected:
     
     static DbgSpectrogram *ImagesToSpectrogram(PPMFile::PPMImage *magnsImage);
 
-    
+    //
     int mHeight;
     int mMaxCols;
     

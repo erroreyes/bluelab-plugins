@@ -26,13 +26,14 @@ class ColorMap4;
 class BLSpectrogram4
 {
 public:
-    BLSpectrogram4(int height, int maxCols = -1, bool useGLSL = true);
+    BLSpectrogram4(BL_FLOAT sampleRate,
+                   int height, int maxCols = -1, bool useGLSL = true);
     
     virtual ~BLSpectrogram4();
     
-    void Reset();
+    void Reset(BL_FLOAT sampleRate);
     
-    void Reset(int height, int maxCols = -1);
+    void Reset(BL_FLOAT sampleRate, int height, int maxCols = -1);
     
     void SetRange(BL_FLOAT range);
     void SetContrast(BL_FLOAT contrast);
@@ -74,24 +75,25 @@ public:
     bool GetColormapImageDataRGBA(WDL_TypedBuf<unsigned int> *colormapImageData);
     
     // Load and save
-    static BLSpectrogram4 *Load(const char *fileName);
+    static BLSpectrogram4 *Load(BL_FLOAT sampleRate, const char *fileName);
     
     void Save(const char *filename);
     
-    static BLSpectrogram4 *LoadPPM(const char *filename);
+    static BLSpectrogram4 *LoadPPM(BL_FLOAT sampleRate, const char *filename);
     
     void SavePPM(const char *filename);
     
-    static BLSpectrogram4 *LoadPPM16(const char *filename);
+    static BLSpectrogram4 *LoadPPM16(BL_FLOAT sampleRate, const char *filename);
     
     void SavePPM16(const char *filename);
     
-    static BLSpectrogram4 *LoadPPM32(const char *filename);
+    static BLSpectrogram4 *LoadPPM32(BL_FLOAT sampleRate, const char *filename);
     
     void SavePPM32(const char *filename);
     
     unsigned long long GetTotalLineNum();
     
+    BL_FLOAT GetSampleRate();
     
 protected:
     void UnwrapAllPhases(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
@@ -117,9 +119,11 @@ protected:
     
     void SavePPM(const char *filename, int maxValue);
     
-    static BLSpectrogram4 *ImageToSpectrogram(PPMFile::PPMImage *image, bool is16Bits);
+    static BLSpectrogram4 *ImageToSpectrogram(BL_FLOAT sampleRate,
+                                              PPMFile::PPMImage *image, bool is16Bits);
     
-    static BLSpectrogram4 *ImagesToSpectrogram(PPMFile::PPMImage *magnsImage,
+    static BLSpectrogram4 *ImagesToSpectrogram(BL_FLOAT sampleRate,
+                                               PPMFile::PPMImage *magnsImage,
                                                PPMFile::PPMImage *phasesImage);
 
     
@@ -137,6 +141,8 @@ protected:
     
     int mHeight;
     int mMaxCols;
+    
+    BL_FLOAT mSampleRate;
     
     BL_FLOAT mRange;
     

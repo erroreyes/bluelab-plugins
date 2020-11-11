@@ -17,7 +17,7 @@ SimpleSpectrogramFftObj::SimpleSpectrogramFftObj(int bufferSize,
                                                  BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
 
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
 }

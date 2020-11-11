@@ -130,7 +130,7 @@ DebugGraph::CreateSpectrogram(int height, int maxCols)
     if (mInstance == NULL)
         return;
     
-    mInstance->mSpectrogram = new BLSpectrogram4(height, maxCols);
+    mInstance->mSpectrogram = new BLSpectrogram4(mSampleRate, height, maxCols);
     
     // DEBUG
     mInstance->mSpectrogram->SetRange(0.97);

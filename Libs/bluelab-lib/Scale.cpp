@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include <BLUtils.h>
+#include <MelScale.h>
 
 #include "Scale.h"
 
@@ -37,6 +38,10 @@ Scale::ApplyScale(Type scaleType,
     {
         x = NormalizedToLogScale(x);
     }
+    else if (scaleType == MEL)
+    {
+        x = NormalizedToMel(x, minValue, maxValue);
+    }
     
     return x;
 }
@@ -46,15 +51,22 @@ template double Scale::ApplyScale(Type scaleType, double y, double mindB, double
 template <typename FLOAT_TYPE>
 void
 Scale::ApplyScale(Type scaleType,
-                  WDL_TypedBuf<FLOAT_TYPE> *values)
+                  WDL_TypedBuf<FLOAT_TYPE> *values,
+                  FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
 {
     if (scaleType == LOG_FACTOR)
     {
         DataToLogScale(values);
     }
+    else if (scaleType == MEL)
+    {
+        DataToMel(values, minValue, maxValue);
+    }
 }
-template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<float> *values);
-template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<double> *values);
+template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<float> *values,
+                                float minValue, float maxValue);
+template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<double> *values,
+                                double minValue, double maxValue);
 
 
 template <typename FLOAT_TYPE>
@@ -133,9 +145,12 @@ Scale::DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values)
     
     for (int i = 0; i < valuesSize; i++)
     {
-        FLOAT_TYPE t0 = LOG_SCALE2_FACTOR*((FLOAT_TYPE)i)/valuesSize;
+        FLOAT_TYPE t0 = ((FLOAT_TYPE)i)/valuesSize;
         
+        // "Inverse" process for data
+        t0 *= LOG_SCALE2_FACTOR;
         FLOAT_TYPE t = (std::exp(t0) - 1.0)/(std::exp(LOG_SCALE2_FACTOR) - 1.0);
+        
         int dstIdx = (int)(t*valuesSize);
         
         if (dstIdx < 0)
@@ -152,3 +167,67 @@ Scale::DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values)
 }
 template void Scale::DataToLogScale(WDL_TypedBuf<float> *values);
 template void Scale::DataToLogScale(WDL_TypedBuf<double> *values);
+
+template <typename FLOAT_TYPE>
+FLOAT_TYPE
+Scale::NormalizedToMel(FLOAT_TYPE x,
+                       FLOAT_TYPE minFreq,
+                       FLOAT_TYPE maxFreq)
+{
+    x = x*(maxFreq - minFreq) + minFreq;
+    
+    x = MelScale::HzToMel(x);
+    
+    FLOAT_TYPE lMin = MelScale::HzToMel(minFreq);
+    FLOAT_TYPE lMax = MelScale::HzToMel(maxFreq);
+    
+    x = (x - lMin)/(lMax - lMin);
+    
+    return x;
+}
+template float Scale::NormalizedToMel(float value,
+                                      float minFreq, float maxFreq);
+template double Scale::NormalizedToMel(double value,
+                                       double minFreq, double maxFreq);
+
+template <typename FLOAT_TYPE>
+void
+Scale::DataToMel(WDL_TypedBuf<FLOAT_TYPE> *values,
+                 FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq)
+{
+    WDL_TypedBuf<FLOAT_TYPE> origValues = *values;
+    
+    int valuesSize = values->GetSize();
+    FLOAT_TYPE *valuesData = values->Get();
+    FLOAT_TYPE *origValuesData = origValues.Get();
+    
+    FLOAT_TYPE minMel = MelScale::HzToMel(minFreq);
+    FLOAT_TYPE maxMel = MelScale::HzToMel(maxFreq);
+    
+    for (int i = 0; i < valuesSize; i++)
+    {
+        FLOAT_TYPE t0 = ((FLOAT_TYPE)i)/valuesSize;
+
+        // "Inverse" process for data
+        FLOAT_TYPE mel = minMel + t0*(maxMel - minMel);
+        FLOAT_TYPE freq = MelScale::MelToHz(mel);
+        FLOAT_TYPE t = (freq - minFreq)/(maxFreq - minFreq);
+
+        int dstIdx = (int)(t*valuesSize);
+        
+        if (dstIdx < 0)
+            // Should not happen
+            dstIdx = 0;
+        
+        if (dstIdx > valuesSize - 1)
+            // We never know...
+            dstIdx = valuesSize - 1;
+        
+        FLOAT_TYPE dstVal = origValuesData[dstIdx];
+        valuesData[i] = dstVal;
+    }
+}
+template void Scale::DataToMel(WDL_TypedBuf<float> *values,
+                               float minFreq, float maxFreq);
+template void Scale::DataToMel(WDL_TypedBuf<double> *values,
+                               double minFreq, double maxFreq);

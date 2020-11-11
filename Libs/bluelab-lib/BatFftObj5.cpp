@@ -57,7 +57,7 @@ BatFftObj5::BatFftObj5(int bufferSize, int oversampling, int freqRes,
                        BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     mImageDisplay = NULL;
@@ -151,7 +151,7 @@ BatFftObj5::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
     mFreqRes = freqRes;
     mSampleRate = sampleRate;
     
-    mSpectrogram->Reset(SPECTRO_WIDTH, SPECTRO_HEIGHT);
+    mSpectrogram->Reset(mSampleRate, SPECTRO_WIDTH, SPECTRO_HEIGHT);
     
     mLineCount = 0;
     
@@ -529,7 +529,7 @@ BatFftObj5::Process2D(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     //
     
     // Clear
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(mSampleRate);
     
     // Smooth
     TimeSmoothData(&lines);
@@ -655,7 +655,7 @@ BatFftObj5::ProcessLeftRight(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     //
     
     // Clear
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(mSampleRate);
     
     // Smooth
     TimeSmoothData(&lines);
@@ -793,7 +793,7 @@ BatFftObj5::ProcessCross(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     //
     
     // Clear
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(mSampleRate);
     
     // Smooth
     TimeSmoothData(&lines);

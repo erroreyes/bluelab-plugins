@@ -20,7 +20,8 @@ public:
         LINEAR,
         DB,
         LOG,
-        LOG_FACTOR
+        LOG_FACTOR,
+        MEL
     };
     
     // Generic
@@ -31,7 +32,9 @@ public:
                                  FLOAT_TYPE maxValue = -1.0);
     
     template <typename FLOAT_TYPE>
-    static void ApplyScale(Type scaleType, WDL_TypedBuf<FLOAT_TYPE> *values);
+    static void ApplyScale(Type scaleType, WDL_TypedBuf<FLOAT_TYPE> *values,
+                           FLOAT_TYPE minValue = -1.0,
+                           FLOAT_TYPE maxValue = -1.0);
     
 protected:
     template <typename FLOAT_TYPE>
@@ -54,6 +57,15 @@ protected:
     // Apply to spectrogram for example
     template <typename FLOAT_TYPE>
     static void DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values);
+    
+    template <typename FLOAT_TYPE>
+    static FLOAT_TYPE NormalizedToMel(FLOAT_TYPE x,
+                                      FLOAT_TYPE minFreq,
+                                      FLOAT_TYPE maxFreq);
+    
+    template <typename FLOAT_TYPE>
+    static void DataToMel(WDL_TypedBuf<FLOAT_TYPE> *values,
+                          FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
 };
 
 #endif

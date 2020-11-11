@@ -53,7 +53,7 @@ BatFftObj4::BatFftObj4(int bufferSize, int oversampling, int freqRes,
                        BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -167,7 +167,7 @@ BatFftObj4::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSampl
     //
     
     // Clear
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(mSampleRate);
     
     // Init lines
     vector<WDL_TypedBuf<BL_FLOAT> > lines;
@@ -230,7 +230,7 @@ BatFftObj4::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
     mFreqRes = freqRes;
     mSampleRate = sampleRate;
     
-    mSpectrogram->Reset(SPECTRO_WIDTH, SPECTRO_HEIGHT);
+    mSpectrogram->Reset(mSampleRate, SPECTRO_WIDTH, SPECTRO_HEIGHT);
     
     mLineCount = 0;
     

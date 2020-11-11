@@ -17,7 +17,7 @@ SpectrogramFftObj::SpectrogramFftObj(int bufferSize, int oversampling, int freqR
                                      BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
-    mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
 
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
@@ -92,7 +92,7 @@ SpectrogramFftObj::SetFullData(const vector<WDL_TypedBuf<BL_FLOAT> > &magns,
 {
     mOverlapLines.clear();
     
-    mSpectrogram->Reset();
+    mSpectrogram->Reset(mSampleRate);
     
     for (int i = 0; i < magns.size(); i++)
     {
@@ -111,7 +111,7 @@ SpectrogramFftObj::SetMode(enum Mode mode)
     // Re-init
     if (mode == ACQUIRE)
     {
-        mSpectrogram->Reset(mBufferSize/4, -1);
+        mSpectrogram->Reset(mSampleRate, mBufferSize/4, -1);
         
         ProcessObj::Reset(mBufferSize, mOverlapping, mFreqRes, mSampleRate);
     }
@@ -119,7 +119,7 @@ SpectrogramFftObj::SetMode(enum Mode mode)
     {
         int numCols = mBufferSize/8;
         
-        mSpectrogram->Reset(mBufferSize/4, numCols);
+        mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
         
         ProcessObj::Reset(mBufferSize, mOverlapping, mFreqRes, mSampleRate);
     }

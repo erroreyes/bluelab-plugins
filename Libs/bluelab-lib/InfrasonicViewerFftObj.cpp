@@ -31,10 +31,10 @@ InfrasonicViewerFftObj::InfrasonicViewerFftObj(int bufferSize,
     
     int lastBin = ComputeLastBin(mMaxFreq);
 
-    //mSpectrogram = new BLSpectrogram4(bufferSize/4, -1);
-    //mSpectrogram = new BLSpectrogram4(lastBin/(2*oversampling)/*4*/, -1);
-    mSpectrogram = new BLSpectrogram4(lastBin/4, -1);
-    //mSpectrogram = new BLSpectrogram4(lastBin, -1);
+    //mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
+    //mSpectrogram = new BLSpectrogram4(sampleRate, lastBin/(2*oversampling)/*4*/, -1);
+    mSpectrogram = new BLSpectrogram4(sampleRate, lastBin/4, -1);
+    //mSpectrogram = new BLSpectrogram4(sampleRate, lastBin, -1);
     
     mSpectroDisplay = NULL;
     
@@ -104,8 +104,8 @@ InfrasonicViewerFftObj::Reset(int bufferSize, int oversampling,
     srCoeff = bl_round(srCoeff);
     numCols *= srCoeff;
     
-    //mSpectrogram->Reset(mBufferSize/4, numCols);
-    //mSpectrogram->Reset(lastBin/(2*mOverlapping)/*4*/, numCols);
+    //mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
+    //mSpectrogram->Reset(mSampleRate, lastBin/(2*mOverlapping)/*4*/, numCols);
    
     // TEST
     //fprintf(stderr, "maxFreq: %g numCols: %d\n", mMaxFreq, numCols);
@@ -115,9 +115,9 @@ InfrasonicViewerFftObj::Reset(int bufferSize, int oversampling,
     
 #if DECIMATE_FREQUENCIES // ORIG
     // Values will be decimated later when added to the spectrogram
-    mSpectrogram->Reset(lastBin/4, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin/4, numCols);
 #else // More smooth but less accurate
-    mSpectrogram->Reset(lastBin, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin, numCols);
 #endif
     
     mLineCount = 0;
@@ -170,8 +170,8 @@ InfrasonicViewerFftObj::Reset(int bufferSize, int oversampling,
     //srCoeff = bl_round(srCoeff);
     //numCols *= srCoeff;
     
-    //mSpectrogram->Reset(mBufferSize/4, numCols);
-    //mSpectrogram->Reset(lastBin/(2*mOverlapping)/*4*/, numCols);
+    //mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
+    //mSpectrogram->Reset(mSampleRate, lastBin/(2*mOverlapping)/*4*/, numCols);
     
     // TEST
     //numCols = 32;
@@ -185,9 +185,9 @@ InfrasonicViewerFftObj::Reset(int bufferSize, int oversampling,
 
 #if DECIMATE_FREQUENCIES // ORIG
     // Values will be decimated later when added to the spectrogram
-    mSpectrogram->Reset(lastBin/4, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin/4, numCols);
 #else // More smooth but less accurate
-    mSpectrogram->Reset(lastBin, numCols);
+    mSpectrogram->Reset(mSampleRate, lastBin, numCols);
 #endif
     
     mLineCount = 0;

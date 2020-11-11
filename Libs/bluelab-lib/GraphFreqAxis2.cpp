@@ -6,6 +6,8 @@
 //
 //
 
+#include <BLDefs.h>
+
 #include <GraphAxis2.h>
 #include <GUIHelper12.h>
 #include <BLUtils.h>
@@ -57,21 +59,39 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     //
     if (horizontal)
     {
+#if !USE_DEFAULT_SCALE_MEL
         mGraphAxis->InitHAxis(Scale::LOG_FACTOR,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
                               0.0,
                               axisLabelOverlayColor);
+#else
+        mGraphAxis->InitHAxis(Scale::MEL,
+                              0.0, sampleRate*0.5,
+                              axisColor, axisLabelColor,
+                              lineWidth,
+                              0.0,
+                              axisLabelOverlayColor);
+#endif
     }
     else
     {
+#if !USE_DEFAULT_SCALE_MEL
         mGraphAxis->InitVAxis(Scale::LOG_FACTOR,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
                               0.0, graphWidth - 40.0,
                               axisLabelOverlayColor);
+#else
+        mGraphAxis->InitVAxis(Scale::MEL,
+                              0.0, sampleRate*0.5,
+                              axisColor, axisLabelColor,
+                              lineWidth,
+                              0.0, graphWidth - 40.0,
+                              axisLabelOverlayColor);
+#endif
     }
     
     //
