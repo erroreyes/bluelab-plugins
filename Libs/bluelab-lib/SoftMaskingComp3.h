@@ -58,8 +58,11 @@ public:
                  WDL_TypedBuf<WDL_FFT_COMPLEX> *softMask);
     
     // Return the centered data values in ioMixtureValues and ioValues
-    void ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues,
-                         WDL_TypedBuf<WDL_FFT_COMPLEX> *ioValues,
+    //void ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues,
+    //                     WDL_TypedBuf<WDL_FFT_COMPLEX> *ioValues,
+    //                     WDL_TypedBuf<WDL_FFT_COMPLEX> *softMask);
+    void ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
+                         WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMaskedMixture,
                          WDL_TypedBuf<WDL_FFT_COMPLEX> *softMask);
     
 protected:

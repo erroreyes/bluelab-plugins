@@ -162,18 +162,18 @@ SoftMaskingComp3::Process(const WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues,
 
 // Process over time
 void
-SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues,
-                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *ioValues,
+SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMaskedMixture,
                                   WDL_TypedBuf<WDL_FFT_COMPLEX> *softMask)
 {
 #define EPS 1e-15
     
     // We must compute the mixture, minus the sound corresponding to the mask
     // See: https://hal.inria.fr/inria-00544949/document
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mixtureValuesSub = *ioMixtureValues;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mixtureSub = *ioMixture;
     
 #if MIXTURE_SUB
-    BLUtils::SubstractValues(&mixtureValuesSub, *ioValues);
+    BLUtils::SubstractValues(&mixtureSub, *ioMaskedMixture);
 #endif
     
     // Manage the history
@@ -184,20 +184,20 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues
         // Fill the whole history with the current values
         for (int i = 0; i < mHistorySize; i++)
         {
-            mMixtureHistory.push_back(mixtureValuesSub);
-            mHistory.push_back(*ioValues);
+            mMixtureHistory.push_back(mixtureSub);
+            mHistory.push_back(*ioMaskedMixture);
         }
     }
     else
     {
-        mMixtureHistory.push_back(mixtureValuesSub);
+        mMixtureHistory.push_back(mixtureSub);
         mMixtureHistory.pop_front();
         
-        mHistory.push_back(*ioValues);
+        mHistory.push_back(*ioMaskedMixture);
         mHistory.pop_front();
     }
 #else
-    mMixtureHistory.push_back(mixtureValuesSub);
+    mMixtureHistory.push_back(mixtureSub);
     mHistory.push_back(values);
     
     while (mMixtureHistory.size() > mHistorySize)
@@ -211,8 +211,8 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues
         WDL_TypedBuf<WDL_FFT_COMPLEX> sigma2Mixture;
         ComputeSigma2(mMixtureHistory, &sigma2Mixture);
     
-        WDL_TypedBuf<WDL_FFT_COMPLEX> sigma2Values;
-        ComputeSigma2(mHistory, &sigma2Values);
+        WDL_TypedBuf<WDL_FFT_COMPLEX> sigma2MaskedMixture;
+        ComputeSigma2(mHistory, &sigma2MaskedMixture);
     
         // Create the mask
         if (mMixtureHistory.empty()) // Just in case
@@ -222,7 +222,7 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues
         for (int i = 0; i < softMask->GetSize(); i++)
         {
             WDL_FFT_COMPLEX mix = sigma2Mixture.Get()[i];
-            WDL_FFT_COMPLEX val = sigma2Values.Get()[i];
+            WDL_FFT_COMPLEX masked = sigma2MaskedMixture.Get()[i];
         
             WDL_FFT_COMPLEX maskVal;
             maskVal.re = 0.0;
@@ -233,14 +233,14 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues
         
             // This is the correct formula!
             // var == sigma^2 (standard deviation ^ 2)
-            mixSum.re += val.re;
-            mixSum.im += val.im;
+            mixSum.re += masked.re;
+            mixSum.im += masked.im;
 #endif
         
             if ((std::fabs(mixSum.re) > EPS) ||
                 (std::fabs(mixSum.im) > EPS))
             {
-                COMP_DIV(val, mixSum, maskVal);
+                COMP_DIV(masked, mixSum, maskVal);
             }
         
             BL_FLOAT maskMagn = COMP_MAGN(maskVal);
@@ -262,12 +262,12 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixtureValues
     if (!mMixtureHistory.empty())
     {
         WDL_TypedBuf<WDL_FFT_COMPLEX> mixtureValues = mMixtureHistory[mMixtureHistory.size()/2];
-        WDL_TypedBuf<WDL_FFT_COMPLEX> values = mHistory[mHistory.size()/2];
+        WDL_TypedBuf<WDL_FFT_COMPLEX> masked = mHistory[mHistory.size()/2];
         
-        BLUtils::AddValues(&mixtureValues, values);
+        BLUtils::AddValues(&mixtureValues, masked);
         
-        *ioMixtureValues = mixtureValues;
-        *ioValues = values;
+        *ioMixture = mixtureValues;
+        *ioMaskedMixture = masked;
     }
 }
 
