@@ -163,9 +163,10 @@ public:
     void GetValueTextColor(IColor *valueTextColor) const;
     
     // Graph
-    void GetGraphAxisColor(IColor *color);
-    void GetGraphAxisLabelColor(IColor *color);
-    void GetGraphAxisLabelOverlayColor(IColor *color);
+    void GetGraphAxisColor(int color[4]);
+    void GetGraphAxisLabelColor(int color[4]);
+    void GetGraphAxisLabelOverlayColor(int color[4]);
+    float GetGraphAxisLineWidth();
     
     static void ResetParameter(Plugin *plug, int paramIdx);
     
@@ -267,6 +268,7 @@ protected:
     IColor mGraphAxisColor;
     IColor mGraphAxisLabelColor;
     IColor mGraphAxisLabelOverlayColor;
+    float mGraphAxisLineWidth;
 };
 
 #endif /* GUIHelper12_hpp */

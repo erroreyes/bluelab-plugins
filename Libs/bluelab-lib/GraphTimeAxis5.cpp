@@ -60,25 +60,21 @@ GraphTimeAxis5::Init(GraphAxis2 *graphAxis,
     mSpacingSeconds = spacingSeconds;
     
     //
-    IColor axisIColor;
-    guiHelper->GetGraphAxisColor(&axisIColor);
-    int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
+    int axisColor[4];
+    guiHelper->GetGraphAxisColor(axisColor);
+  
+    int axisLabelColor[4];
+    guiHelper->GetGraphAxisLabelColor(axisLabelColor);
     
-    IColor axisLabelIColor;
-    guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);
-    int axisLabelColor[4] = { axisLabelIColor.R, axisLabelIColor.G,
-                              axisLabelIColor.B, axisLabelIColor.A };
+    int axisLabelOverlayColor[4];
+    guiHelper->GetGraphAxisLabelOverlayColor(axisLabelOverlayColor);
     
-    IColor axisLabelOverlayIColor;
-    guiHelper->GetGraphAxisLabelOverlayColor(&axisLabelOverlayIColor);
-    int axisLabelOverlayColor[4] = { axisLabelOverlayIColor.R,
-                                     axisLabelOverlayIColor.G,
-                                     axisLabelOverlayIColor.B,
-                                     axisLabelOverlayIColor.A };
+    BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidth();
     
     // NOTE: should be InitHAxis() ?
     mGraphAxis->InitVAxis(Scale::LINEAR, 0.0, 1.0,
                           axisColor, axisLabelColor,
+                          lineWidth,
                           yOffset, 0.0,
                           axisLabelOverlayColor);
 }

@@ -38,25 +38,16 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     mSampleRate = sampleRate;
     
     //
-    IColor axisIColor;
-    guiHelper->GetGraphAxisColor(&axisIColor);
-    int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
-    if (!mDisplayLines)
-    {
-        axisColor[3] = 0;
-    }
+    int axisColor[4];
+    guiHelper->GetGraphAxisColor(axisColor);
     
-    IColor axisLabelIColor;
-    guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);
-    int axisLabelColor[4] = { axisLabelIColor.R, axisLabelIColor.G,
-                              axisLabelIColor.B, axisLabelIColor.A };
+    int axisLabelColor[4];
+    guiHelper->GetGraphAxisLabelColor(axisLabelColor);
     
-    IColor axisLabelOverlayIColor;
-    guiHelper->GetGraphAxisLabelOverlayColor(&axisLabelOverlayIColor);
-    int axisLabelOverlayColor[4] = { axisLabelOverlayIColor.R,
-                                     axisLabelOverlayIColor.G,
-                                     axisLabelOverlayIColor.B,
-                                     axisLabelOverlayIColor.A };
+    int axisLabelOverlayColor[4];
+    guiHelper->GetGraphAxisLabelOverlayColor(axisLabelOverlayColor);
+    
+    BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidth();
     
     //
     if (horizontal)
@@ -64,6 +55,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
         mGraphAxis->InitHAxis(Scale::LOG_COEFF,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
+                              lineWidth,
                               0.0,
                               axisLabelOverlayColor);
     }
@@ -71,6 +63,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     {
         mGraphAxis->InitVAxis(Scale::LOG_COEFF, 0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
+                              lineWidth,
                               0.0, graphWidth - 40.0,
                               axisLabelOverlayColor);
     }

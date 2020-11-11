@@ -28,6 +28,7 @@ public:
     void InitHAxis(Scale::Type scale,
                    BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX,
                    int axisColor[4], int axisLabelColor[4],
+                   BL_GUI_FLOAT lineWidth,
                    BL_GUI_FLOAT offsetY = 0.0,
                    int axisOverlayColor[4] = NULL,
                    BL_GUI_FLOAT fontSizeCoeff = 1.0,
@@ -36,6 +37,7 @@ public:
     void InitVAxis(Scale::Type scale,
                    BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                    int axisColor[4], int axisLabelColor[4],
+                   BL_GUI_FLOAT lineWidth,
                    BL_GUI_FLOAT offset = 0.0, BL_GUI_FLOAT offsetX = 0.0,
                    int axisOverlayColor[4] = NULL,
                    BL_GUI_FLOAT fontSizeCoeff = 1.0,
@@ -51,7 +53,8 @@ protected:
     void InitAxis(int axisColor[4],
                   int axisLabelColor[4],
                   int axisLabelOverlayColor[4],
-                  int axisLinesOverlayColor[4]);
+                  int axisLinesOverlayColor[4],
+                  BL_GUI_FLOAT lineWidth);
     
     typedef struct
     {
@@ -90,6 +93,8 @@ protected:
     
     bool mAlignTextRight;
     bool mAlignRight;
+    
+    BL_GUI_FLOAT mLineWidth;
 };
 
 #endif

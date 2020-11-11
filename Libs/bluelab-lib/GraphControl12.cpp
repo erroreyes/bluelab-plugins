@@ -741,7 +741,8 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
 {
     nvgSave(mVg);
     
-    nvgStrokeWidth(mVg, 1.0);
+    nvgStrokeWidth(mVg, axis->mLineWidth);
+    //nvgStrokeWidth(mVg, 1.0); // orig
     //nvgStrokeWidth(mVg, 1.5);
     
     int axisColor[4] = { axis->mColor[0], axis->mColor[1],

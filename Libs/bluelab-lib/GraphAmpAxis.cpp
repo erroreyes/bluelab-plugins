@@ -36,25 +36,16 @@ GraphAmpAxis::Init(GraphAxis2 *graphAxis,
     
     mGraphAxis = graphAxis;
     
-    IColor axisIColor;
-    guiHelper->GetGraphAxisColor(&axisIColor);
-    int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
-    if (!mDisplayLines)
-    {
-        axisColor[3] = 0;
-    }
+    int axisColor[4];
+    guiHelper->GetGraphAxisColor(axisColor);
     
-    IColor axisLabelIColor;
-    guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);
-    int axisLabelColor[4] = { axisLabelIColor.R, axisLabelIColor.G,
-                              axisLabelIColor.B, axisLabelIColor.A };
+    int axisLabelColor[4];
+    guiHelper->GetGraphAxisLabelColor(axisLabelColor);
     
-    IColor axisLabelOverlayIColor;
-    guiHelper->GetGraphAxisLabelOverlayColor(&axisLabelOverlayIColor);
-    int axisLabelOverlayColor[4] = { axisLabelOverlayIColor.R,
-                                     axisLabelOverlayIColor.G,
-                                     axisLabelOverlayIColor.B,
-                                     axisLabelOverlayIColor.A };
+    int axisLabelOverlayColor[4];
+    guiHelper->GetGraphAxisLabelOverlayColor(axisLabelOverlayColor);
+    
+    BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidth();
     
     // NOTE: this is important to set the labels linearly
     // (the data must be set with db scale however)
@@ -62,6 +53,7 @@ GraphAmpAxis::Init(GraphAxis2 *graphAxis,
                           Scale::LINEAR,
                           minDB, maxDB,
                           axisColor, axisLabelColor,
+                          lineWidth,
                           0.0,
                           //graphWidth - 40.0, // on the right
                           4.0, //40.0, // on the left

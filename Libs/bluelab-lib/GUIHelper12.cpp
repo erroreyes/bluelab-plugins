@@ -127,12 +127,13 @@ GUIHelper12::GUIHelper12(Style style)
         mButtonLabelTextOffsetY = 3.0;
         
         // Graph
-        mGraphAxisColor = IColor(255/*0*/, 48, 48, 48); // Invisible lines?
-        //mGraphAxisColor = IColor(255/*0*/, 21, 21, 117); // Invisible lines?
+        mGraphAxisColor = IColor(255, 48, 48, 48);
+        //mGraphAxisColor = IColor(255, 21, 21, 117); // Dark blue
         // Choose maximum brightness color for labels,
         // to see them well over clear spectrograms
         mGraphAxisLabelColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
+        mGraphAxisLineWidth = 1.0;
     }
 }
 
@@ -749,21 +750,36 @@ GUIHelper12::GetValueTextColor(IColor *valueTextColor) const
 }
 
 void
-GUIHelper12::GetGraphAxisColor(IColor *color)
+GUIHelper12::GetGraphAxisColor(int color[4])
 {
-    *color = mGraphAxisColor;
+    color[0] = mGraphAxisColor.R;
+    color[1] = mGraphAxisColor.G;
+    color[2] = mGraphAxisColor.B;
+    color[3] = mGraphAxisColor.A;
 }
 
 void
-GUIHelper12::GetGraphAxisLabelColor(IColor *color)
+GUIHelper12::GetGraphAxisLabelColor(int color[4])
 {
-    *color = mGraphAxisLabelColor;
+    color[0] = mGraphAxisLabelColor.R;
+    color[1] = mGraphAxisLabelColor.G;
+    color[2] = mGraphAxisLabelColor.B;
+    color[3] = mGraphAxisLabelColor.A;
 }
 
 void
-GUIHelper12::GetGraphAxisLabelOverlayColor(IColor *color)
+GUIHelper12::GetGraphAxisLabelOverlayColor(int color[4])
 {
-    *color = mGraphAxisLabelOverlayColor;
+    color[0] = mGraphAxisLabelOverlayColor.R;
+    color[1] = mGraphAxisLabelOverlayColor.G;
+    color[2] = mGraphAxisLabelOverlayColor.B;
+    color[3] = mGraphAxisLabelOverlayColor.A;
+}
+
+float
+GUIHelper12::GetGraphAxisLineWidth()
+{
+    return mGraphAxisLineWidth;
 }
 
 void

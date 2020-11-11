@@ -51,21 +51,14 @@ GraphTimeAxis::Init(GraphControl11 *graph,
     };
     
     //
-    IColor axisIColor;
-    guiHelper->GetGraphAxisColor(&axisIColor);
-    int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
+    int axisColor[4];
+    guiHelper->GetGraphAxisColor(axisColor);
     
-    IColor axisLabelIColor;
-    guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);
-    int axisLabelColor[4] = { axisLabelIColor.R, axisLabelIColor.G,
-                              axisLabelIColor.B, axisLabelIColor.A };
+    int axisLabelColor[4];
+    guiHelper->GetGraphAxisLabelColor(axisLabelColor);
     
-    IColor axisLabelOverlayIColor;
-    guiHelper->GetGraphAxisLabelOverlayColor(&axisLabelOverlayIColor);
-    int axisLabelOverlayColor[4] = { axisLabelOverlayIColor.R,
-                                     axisLabelOverlayIColor.G,
-                                     axisLabelOverlayIColor.B,
-                                     axisLabelOverlayIColor.A };
+    int axisLabelOverlayColor[4];
+    guiHelper->GetGraphAxisLabelOverlayColor(axisLabelOverlayColor);
     
     //
     mGraph->AddHAxis(HAXIS_DATA, NUM_HAXIS_DATA, false,

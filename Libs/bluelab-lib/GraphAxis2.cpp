@@ -41,6 +41,8 @@ GraphAxis2::GraphAxis2()
     mAlignTextRight = false;
     
     mAlignRight = false;
+    
+    mLineWidth = 1.0;
 }
 
 GraphAxis2::~GraphAxis2() {}
@@ -49,6 +51,7 @@ void
 GraphAxis2::InitHAxis(Scale::Type scale,
                       BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX,
                       int axisColor[4], int axisLabelColor[4],
+                      BL_GUI_FLOAT lineWidth,
                       BL_GUI_FLOAT offsetY,
                       int axisOverlayColor[4],
                       BL_GUI_FLOAT fontSizeCoeff,
@@ -71,13 +74,14 @@ GraphAxis2::InitHAxis(Scale::Type scale,
     mAlignRight = true;
     
     InitAxis(axisColor, axisLabelColor,
-             axisOverlayColor, axisLinesOverlayColor);
+             axisOverlayColor, axisLinesOverlayColor, lineWidth);
 }
 
 void
 GraphAxis2::InitVAxis(Scale::Type scale,
                       BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                       int axisColor[4], int axisLabelColor[4],
+                      BL_GUI_FLOAT lineWidth,
                       BL_GUI_FLOAT offset, BL_GUI_FLOAT offsetX,
                       int axisOverlayColor[4],
                       BL_GUI_FLOAT fontSizeCoeff, bool alignTextRight,
@@ -100,7 +104,8 @@ GraphAxis2::InitVAxis(Scale::Type scale,
     mAlignRight = alignRight;
     
     InitAxis(axisColor, axisLabelColor,
-             axisOverlayColor, axisLinesOverlayColor);
+             axisOverlayColor, axisLinesOverlayColor,
+             lineWidth);
 }
 
 void
@@ -139,7 +144,8 @@ GraphAxis2::SetData(char *data[][2], int numData)
 void
 GraphAxis2::InitAxis(int axisColor[4], int axisLabelColor[4],
                      int axisLabelOverlayColor[4],
-                     int axisLinesOverlayColor[4])
+                     int axisLinesOverlayColor[4],
+                     BL_GUI_FLOAT lineWidth)
 {
     // Color
     int sAxisColor[4] = { axisColor[0], axisColor[1],
@@ -187,4 +193,6 @@ GraphAxis2::InitAxis(int axisColor[4], int axisLabelColor[4],
             mLinesOverlayColor[i] = sLineOverColor[i];
         }
     }
+    
+    mLineWidth = lineWidth;
 }
