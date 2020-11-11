@@ -78,7 +78,7 @@ struct NVGcontext;
 struct NVGLUframebuffer;
 
 class GraphAxis2;
-class GraphTimeAxis4;
+class GraphTimeAxis5;
 
 // Added this test to avoid redraw everything each time
 // NOTE: added for StereoWidth
@@ -216,7 +216,7 @@ public:
     // Set to true to recreate the mWhitePixImg image at the beginning of each loop
     void SetRecreateWhiteImageHack(bool flag);
     
-    void SetGraphTimeAxis(GraphTimeAxis4 *timeAxis);
+    void SetGraphTimeAxis(GraphTimeAxis5 *timeAxis);
     
     void SetDataChanged();
     
@@ -361,7 +361,7 @@ protected:
     
     bool mRecreateWhiteImageHack;
     
-    GraphTimeAxis4 *mGraphTimeAxis;
+    GraphTimeAxis5 *mGraphTimeAxis;
     
 private:    
 	bool mFontInitialized;

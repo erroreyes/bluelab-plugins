@@ -11,6 +11,8 @@
 #include <BLUtils.h>
 #include <Scale.h>
 
+#include <GraphControl12.h>
+
 #include "GraphTimeAxis5.h"
 
 #define MAX_NUM_LABELS 128
@@ -49,12 +51,15 @@ GraphTimeAxis5::GraphTimeAxis5(bool displayLines)
 GraphTimeAxis5::~GraphTimeAxis5() {}
 
 void
-GraphTimeAxis5::Init(GraphAxis2 *graphAxis,
+GraphTimeAxis5::Init(GraphControl12 *graph,
+                     GraphAxis2 *graphAxis,
                      GUIHelper12 *guiHelper,
                      int bufferSize,
                      BL_FLOAT timeDuration, BL_FLOAT spacingSeconds,
                      int yOffset)
 {
+    graph->SetGraphTimeAxis(this);
+    
     mGraphAxis = graphAxis;
     
     mBufferSize = bufferSize;

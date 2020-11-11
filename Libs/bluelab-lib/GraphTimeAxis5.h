@@ -25,6 +25,7 @@
 // - use new GraphControl12
 //
 class GUIHelper12;
+class GraphControl12;
 class GraphTimeAxis5
 {
 public:
@@ -32,7 +33,8 @@ public:
     
     virtual ~GraphTimeAxis5();
     
-    void Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
+    void Init(GraphControl12 *graph,
+              GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
               int bufferSize,
               BL_FLOAT timeDuration, BL_FLOAT spacingSeconds,
               int yOffset = 0);
