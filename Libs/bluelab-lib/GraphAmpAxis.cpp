@@ -106,43 +106,16 @@ GraphAmpAxis::Update()
                     { -160.0, -140.0, -120.0, -100.0, -80.0,
                       -60.0, -40.0, -20.0, 0.0, 20.0 };
 
-    // Normalize
-    //int start = 0;
-    //int end = NUM_AXIS_DATA - 1;
     for (int i = 0; i < NUM_AXIS_DATA; i++)
     {
-        // Normalized value
-        //amps[i] = (amps[i] - mMinDB)/(mMaxDB - mMinDB);
-        
-        //freqs[i] = BLUtils::LogScaleNormInv(freqs[i],
-        //                                    (BL_FLOAT)1.0,
-        //                                    (BL_FLOAT)Y_LOG_SCALE_FACTOR);
-        
+        // Do not normalize here, set the values as they are!
         if ((amps[i] < mMinDB) || (amps[i] > mMaxDB))
             sprintf(AXIS_DATA[i][1], "");
         
-        //amps[i] = BLUtils::DBToAmp(amps[i]);
-        
         sprintf(AXIS_DATA[i][0], "%g", amps[i]);
-        
-        //// We are outside the range, don't display label
-        ////if ((amps[i] < 0.0) || (amps[i] > 1.0))
-        //if ((amps[i] < mMinDB) || (amps[i] > mMaxDB))
-        ////if ((amps[i] <= 0.0) || (amps[i] >= 1.0))
-        //    sprintf(AXIS_DATA[i][1], "");
-        
-        //if (amps[i] < 0.0)
-        //    start++;
-        
-        //if (amps[i] > 1.0)
-        //    end--;
     }
     
     mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA);
-    
-    // Adjust the number of values,
-    // because the graph automatically fixes the bounds alignement
-    //mGraphAxis->SetData(&AXIS_DATA[start], end - start + 1);
     
     for (int i = 0; i < NUM_AXIS_DATA; i++)
     {

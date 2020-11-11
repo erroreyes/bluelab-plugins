@@ -774,17 +774,8 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
         if (horizontal)
         {
             BL_GUI_FLOAT textOffset = FONT_SIZE*0.2;
-            
-#if 0 // Useless, done somewhere else!
-            if (axis->mScale == Scale::DB)
-            {
-                t = Scale::NormalizedToDB(t, mMinX, mMaxX);
-            }
-            else if (axis->mScale == Scale::LOG)
-            {
-                t = Scale::NormalizedToLog(t, mMinX, mMaxX);
-            }
-#endif
+       
+            // Do not scale to db or log here, this is done somewhere else!
             
             BL_GUI_FLOAT x = t*width;
             if ((i > 0) && (i < axis->mValues.size() - 1))
@@ -904,19 +895,9 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
             // Vertical
         {
             BL_GUI_FLOAT textOffset = FONT_SIZE*0.2;
-            
-#if 0 // TEST disable
-            // Re-added dB normalization for Ghost
-            if (!mCurves.empty())
-            {
-                if (mCurves[0]->mYdBScale)
-                    t = BLUtils::NormalizedXTodB(t, mCurves[0]->mMinY, mCurves[0]->mMaxY);
-            }
-#endif
 
             t = ConvertToBoundsY(t);
 
-            
             BL_GUI_FLOAT y = t*height;
             
             // Hack
@@ -1226,8 +1207,8 @@ GraphControl12::DrawLineCurve(GraphCurve5 *curve)
 }
 
 #if !FILL_CURVE_HACK
-        // Bug with direct rendering
-        // It seems we have no stencil, and we can only render convex polygons
+// Bug with direct rendering
+// It seems we have no stencil, and we can only render convex polygons
 void
 GraphControl12::DrawFillCurve(GraphCurve5 *curve)
 {
@@ -1618,7 +1599,7 @@ GraphControl12::DrawFillCurveSVH(GraphCurve5 *curve)
     
     // Fill upside if necessary
     if (curve->mFillAlphaUpFlag)
-        // Fill the upper area with specific alpha
+    // Fill the upper area with specific alpha
     {
         int height = this->mRECT.H();
         
