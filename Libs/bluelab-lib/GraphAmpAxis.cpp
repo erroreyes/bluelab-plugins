@@ -13,12 +13,14 @@
 #include "GraphAmpAxis.h"
 
 
-GraphAmpAxis::GraphAmpAxis()
+GraphAmpAxis::GraphAmpAxis(bool displayLines)
 {
     mGraphAxis = NULL;
     
     mMinDB = -60.0;
     mMaxDB = 0.0;
+    
+    mDisplayLines = displayLines;
 }
 
 GraphAmpAxis::~GraphAmpAxis() {}
@@ -37,6 +39,10 @@ GraphAmpAxis::Init(GraphAxis2 *graphAxis,
     IColor axisIColor;
     guiHelper->GetGraphAxisColor(&axisIColor);
     int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
+    if (!mDisplayLines)
+    {
+        axisColor[3] = 0;
+    }
     
     IColor axisLabelIColor;
     guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);

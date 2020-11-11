@@ -127,11 +127,12 @@ GUIHelper12::GUIHelper12(Style style)
         mButtonLabelTextOffsetY = 3.0;
         
         // Graph
-        mGraphAxisColor = IColor(48, 48, 48, /*255*/0); // Invisible lines
+        mGraphAxisColor = IColor(255/*0*/, 48, 48, 48); // Invisible lines?
+        //mGraphAxisColor = IColor(255/*0*/, 21, 21, 117); // Invisible lines?
         // Choose maximum brightness color for labels,
         // to see them well over clear spectrograms
         mGraphAxisLabelColor = IColor(255, 255, 255, 255);
-        mGraphAxisLabelOverlayColor = IColor(48, 48, 48, 255);
+        mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
     }
 }
 

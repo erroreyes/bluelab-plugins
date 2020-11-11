@@ -17,7 +17,7 @@ class GUIHelper12;
 class GraphFreqAxis2
 {
 public:
-    GraphFreqAxis2();
+    GraphFreqAxis2(bool displayLines = true);
     
     virtual ~GraphFreqAxis2();
     
@@ -36,6 +36,8 @@ protected:
     
     int mBufferSize;
     BL_FLOAT mSampleRate;
+    
+    bool mDisplayLines;
 };
 
 #endif /* defined(__BL_InfrasonicViewer__GraphFreqAxis2__) */

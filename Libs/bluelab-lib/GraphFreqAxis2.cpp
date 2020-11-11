@@ -14,12 +14,14 @@
 #include "GraphFreqAxis2.h"
 
 
-GraphFreqAxis2::GraphFreqAxis2()
+GraphFreqAxis2::GraphFreqAxis2(bool displayLines)
 {
     mGraphAxis = NULL;
     
     mBufferSize = 2048;
     mSampleRate = 44100.0;
+    
+    mDisplayLines = displayLines;
 }
 
 GraphFreqAxis2::~GraphFreqAxis2() {}
@@ -39,6 +41,10 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     IColor axisIColor;
     guiHelper->GetGraphAxisColor(&axisIColor);
     int axisColor[4] = { axisIColor.R, axisIColor.G, axisIColor.B, axisIColor.A };
+    if (!mDisplayLines)
+    {
+        axisColor[3] = 0;
+    }
     
     IColor axisLabelIColor;
     guiHelper->GetGraphAxisLabelColor(&axisLabelIColor);

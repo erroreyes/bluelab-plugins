@@ -17,7 +17,7 @@ class GUIHelper12;
 class GraphAmpAxis
 {
 public:
-    GraphAmpAxis();
+    GraphAmpAxis(bool displayLines = true);
     
     virtual ~GraphAmpAxis();
     
@@ -36,6 +36,8 @@ protected:
     
     BL_FLOAT mMinDB;
     BL_FLOAT mMaxDB;
+    
+    bool mDisplayLines;
 };
 
 #endif /* defined(__BL_InfrasonicViewer__GraphAmpAxis__) */
