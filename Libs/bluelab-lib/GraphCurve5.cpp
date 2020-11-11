@@ -800,10 +800,7 @@ GraphCurve5::SetValue(BL_GUI_FLOAT t, BL_GUI_FLOAT val)
     
     if (x < CURVE_VALUE_UNDEFINED) // for float
     {
-        if (mXScale == Scale::DB)
-            x = Scale::NormalizedToDB(x, mMinX, mMaxX);
-        else if (mXScale == Scale::LOG)
-            x = Scale::NormalizedToLog(x, mMinX, mMaxX);
+        x = Scale::ApplyScale(mXScale, x, mMinX, mMaxX);
             
         // X should be already normalize in input
         
@@ -858,16 +855,8 @@ GraphCurve5::ConvertX(BL_GUI_FLOAT val, BL_GUI_FLOAT width)
     BL_GUI_FLOAT x = val;
     if (x < CURVE_VALUE_UNDEFINED)
     {
-        if (mXScale == Scale::DB)
-        {
-            //if (val > 0.0)
-            //    // Avoid -INF values
-            x = Scale::NormalizedToDB(x, mMinX, mMaxX);
-        }
-        else if (mXScale == Scale::LOG)
-        {
-            x = Scale::NormalizedToLog(x, mMinX, mMaxX);
-        }
+        if (mXScale != Scale::LINEAR)
+            x = Scale::ApplyScale(mXScale, x, mMinX, mMaxX);
         else
             x = (x - mMinX)/(mMaxX - mMinX);
         
@@ -883,16 +872,8 @@ GraphCurve5::ConvertY(BL_GUI_FLOAT val, BL_GUI_FLOAT height)
     BL_GUI_FLOAT y = val;
     if (y < CURVE_VALUE_UNDEFINED)
     {
-        if (mYScale == Scale::DB)
-        {
-            //if (val > 0.0)
-            //    // Avoid -INF values
-            y = Scale::NormalizedToDB(y, mMinY, mMaxY);
-        }
-        else if (mYScale == Scale::LOG)
-        {
-            y = Scale::NormalizedToLog(y, mMinY, mMaxY);
-        }
+        if (mYScale != Scale::LINEAR)
+            y = Scale::ApplyScale(mYScale, y, mMinY, mMaxY);
         else
             y = (y - mMinY)/(mMaxY - mMinY);
         
@@ -925,10 +906,11 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
                     x = (x - mMinX)*xCoeff;
                 }
             }
-            else if (mXScale == Scale::LOG)
+            else if ((mXScale == Scale::LOG) || (mXScale == Scale::LOG_COEFF))
             {
                 // Not optimized
-                x = Scale::NormalizedToLog(x, mMinX, mMaxX);
+                x = Scale::ApplyScale(mXScale, x, mMinX, mMaxX);
+                
             }
             else
             {
@@ -964,10 +946,10 @@ GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
                     y = (y - mMinY)*yCoeff;
                 }
             }
-            else if (mYScale == Scale::LOG)
+            else if ((mYScale == Scale::LOG) || (mYScale == Scale::LOG_COEFF))
             {
                 // Not optimized
-                y = Scale::NormalizedToLog(y, mMinY, mMaxY);
+                y = Scale::ApplyScale(mYScale, y, mMinY, mMaxY);
             }
             else
             {

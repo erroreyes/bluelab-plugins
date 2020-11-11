@@ -123,14 +123,7 @@ GraphAxis2::SetData(char *data[][2], int numData)
         BL_GUI_FLOAT val = atof(cData[0]);
         BL_GUI_FLOAT t = (val - mMinVal)/(mMaxVal - mMinVal);
         
-        if (mScale == Scale::DB)
-        {
-            t = Scale::NormalizedToDB(t, mMinVal, mMaxVal);
-        }
-        else if (mScale == Scale::LOG)
-        {
-            t = Scale::NormalizedToLog(t, mMinVal, mMaxVal);
-        }
+        t = Scale::ApplyScale(mScale, t, mMinVal, mMaxVal);
         
         string text(cData[1]);
         

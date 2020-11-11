@@ -55,7 +55,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     //
     if (horizontal)
     {
-        mGraphAxis->InitHAxis(Scale::LOG,
+        mGraphAxis->InitHAxis(Scale::LOG_COEFF,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               0.0,
@@ -63,7 +63,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     }
     else
     {
-        mGraphAxis->InitVAxis(Scale::LOG, 0.0, sampleRate*0.5,
+        mGraphAxis->InitVAxis(Scale::LOG_COEFF, 0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               0.0, graphWidth - 40.0,
                               axisLabelOverlayColor);
