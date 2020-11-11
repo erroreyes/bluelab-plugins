@@ -636,15 +636,6 @@ PartialTracker2::ExtractNoiseEnvelopeTest()
     BLUtils::FillMissingValues(&mNoiseEnvelope, false, (BL_FLOAT)0.0);
     
     //SmoothNoiseEnvelope(&mNoiseEnvelope);
-    
-#if 0
-    BLDebug::DumpData("magns.txt", mCurrentMagns);
-    BLDebug::DumpData("harmo.txt", mHarmonicEnvelope);
-    BLDebug::DumpData("noise.txt", mNoiseEnvelope);
-    
-    DBG_DumpPartials2(partials);
-    DBG_DumpPartialsBox("box.txt", partials, mBufferSize, mSampleRate);
-#endif
 }
 
 // Set to 0 until the next minimum

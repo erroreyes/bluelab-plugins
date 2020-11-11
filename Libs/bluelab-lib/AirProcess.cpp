@@ -7,6 +7,7 @@
 //
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 #include <DebugGraph.h>
 
 #include <PartialTracker3.h>

@@ -516,8 +516,6 @@ PartialTracker::ExtractNoiseEnvelopeTrack()
     BLUtils::SubstractValues(&mHarmonicEnvelope, noiseEnv);
     
     BLUtils::ClipMin(&mHarmonicEnvelope, (BL_FLOAT)0.0);
-    
-    //BLDebug::DumpData("harmo.txt", mHarmonicEnvelope);
 }
 
 #if 0

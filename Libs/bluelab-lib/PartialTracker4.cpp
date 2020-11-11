@@ -121,6 +121,7 @@ using namespace std;
 #define EXTRACT_NOISE_ENVELOPE_SIMPLE 1 // GOOD
 
 #define DEBUG_DONT_FILL_NOISE_ENV     0
+//#define DEBUG_DONT_FILL_NOISE_ENV   1 // TEST for Air
 
 // Expe
 // 1 gives good results for "Ooohoo" (method "Min")
