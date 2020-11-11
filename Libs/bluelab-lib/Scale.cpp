@@ -27,13 +27,15 @@ Scale::ApplyScale(Type scaleType,
     {
         x = NormalizedToLog(x, minValue, maxValue);
     }
+#if 0
     else if (scaleType == LOG_FACTOR)
     {
-        x = NormalizedToLogCoeff(x, minValue, maxValue);
+        x = NormalizedToLogFactor(x, minValue, maxValue);
     }
-    else if (scaleType == LOG_FACTOR2)
+#endif
+    else if (scaleType == LOG_FACTOR)
     {
-        x = NormalizedToLogScale2(x);
+        x = NormalizedToLogScale(x);
     }
     
     return x;
@@ -46,9 +48,9 @@ void
 Scale::ApplyScale(Type scaleType,
                   WDL_TypedBuf<FLOAT_TYPE> *values)
 {
-    if (scaleType == LOG_FACTOR2)
+    if (scaleType == LOG_FACTOR)
     {
-        LogScale2(values);
+        DataToLogScale(values);
     }
 }
 template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<float> *values);
@@ -89,6 +91,7 @@ Scale::NormalizedToLog(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
 template float Scale::NormalizedToLog(float x, float mindB, float maxdB);
 template double Scale::NormalizedToLog(double x, double mindB, double maxdB);
 
+#if 0 // Legacy test
 template <typename FLOAT_TYPE>
 FLOAT_TYPE
 Scale::NormalizedToLogCoeff(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
@@ -104,22 +107,23 @@ Scale::NormalizedToLogCoeff(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxVal
 }
 template float Scale::NormalizedToLogCoeff(float x, float minValue, float maxValue);
 template double Scale::NormalizedToLogCoeff(double x, double minValue, double maxValue);
+#endif
 
 template <typename FLOAT_TYPE>
 FLOAT_TYPE
-Scale::NormalizedToLogScale2(FLOAT_TYPE value)
+Scale::NormalizedToLogScale(FLOAT_TYPE value)
 {
     FLOAT_TYPE t0 =
         std::log((FLOAT_TYPE)1.0 + value*(std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR;
                         
     return t0;
 }
-template float Scale::NormalizedToLogScale2(float value);
-template double Scale::NormalizedToLogScale2(double value);
+template float Scale::NormalizedToLogScale(float value);
+template double Scale::NormalizedToLogScale(double value);
 
 template <typename FLOAT_TYPE>
 void
-Scale::LogScale2(WDL_TypedBuf<FLOAT_TYPE> *values)
+Scale::DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values)
 {
     WDL_TypedBuf<FLOAT_TYPE> origValues = *values;
     
@@ -146,5 +150,5 @@ Scale::LogScale2(WDL_TypedBuf<FLOAT_TYPE> *values)
         valuesData[i] = dstVal;
     }
 }
-template void Scale::LogScale2(WDL_TypedBuf<float> *values);
-template void Scale::LogScale2(WDL_TypedBuf<double> *values);
+template void Scale::DataToLogScale(WDL_TypedBuf<float> *values);
+template void Scale::DataToLogScale(WDL_TypedBuf<double> *values);

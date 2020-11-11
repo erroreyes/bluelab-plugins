@@ -57,7 +57,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     //
     if (horizontal)
     {
-        mGraphAxis->InitHAxis(Scale::LOG_FACTOR2,
+        mGraphAxis->InitHAxis(Scale::LOG_FACTOR,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
@@ -66,7 +66,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     }
     else
     {
-        mGraphAxis->InitVAxis(Scale::LOG_FACTOR2,
+        mGraphAxis->InitVAxis(Scale::LOG_FACTOR,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
@@ -130,33 +130,16 @@ GraphFreqAxis2::Update()
     minHzValue = 0.0;
     
     // Normalize
-    //int start = 0;
-    //int end = NUM_AXIS_DATA - 1;
     for (int i = 0; i < NUM_AXIS_DATA; i++)
     {
-        //freqs[i] = (freqs[i] - minHzValue)/(maxHzValue - minHzValue);
-        
-        //freqs[i] = BLUtils::LogScaleNormInv(freqs[i],
-        //                                    (BL_FLOAT)1.0,
-        //                                    (BL_FLOAT)Y_LOG_SCALE_FACTOR);
-        
         sprintf(AXIS_DATA[i][0], "%g", freqs[i]);
         
         // We are over the sample rate, make empty label
-        //if ((freqs[i] < 0.0) || (freqs[i] > 1.0))
         if ((freqs[i] < minHzValue) || (freqs[i] > maxHzValue))
             sprintf(AXIS_DATA[i][1], "");
-        
-        //if (freqs[i] < 0.0)
-        //    start++;
-        //if (freqs[i] > 1.0)
-        //    end--;
     }
     
     mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA);
-    // Adjust the number of values,
-    // because the graph automatically fixes the bounds alignement
-    //mGraphAxis->SetData(&AXIS_DATA[start], end - start + 1);
     
     for (int i = 0; i < NUM_AXIS_DATA; i++)
     {

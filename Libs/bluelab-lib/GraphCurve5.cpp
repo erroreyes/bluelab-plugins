@@ -911,8 +911,7 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
                 }
             }
             else if ((mXScale == Scale::LOG) ||
-                     (mXScale == Scale::LOG_FACTOR) ||
-                     (mXScale == Scale::LOG_FACTOR2))
+                     (mXScale == Scale::LOG_FACTOR))
             {
                 // Not optimized
                 x = Scale::ApplyScale(mXScale, x, mMinX, mMaxX);
@@ -953,8 +952,7 @@ GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
                 }
             }
             else if ((mYScale == Scale::LOG) ||
-                     (mYScale == Scale::LOG_FACTOR) ||
-                     (mYScale == Scale::LOG_FACTOR2))
+                     (mYScale == Scale::LOG_FACTOR))
             {
                 // Not optimized
                 y = Scale::ApplyScale(mYScale, y, mMinY, mMaxY);

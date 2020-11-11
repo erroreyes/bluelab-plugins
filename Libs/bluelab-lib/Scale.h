@@ -20,8 +20,7 @@ public:
         LINEAR,
         DB,
         LOG,
-        LOG_FACTOR,
-        LOG_FACTOR2
+        LOG_FACTOR
     };
     
     // Generic
@@ -42,17 +41,19 @@ protected:
     static FLOAT_TYPE NormalizedToLog(FLOAT_TYPE x, FLOAT_TYPE minValue,
                                       FLOAT_TYPE maxValue);
     
+#if 0 // Legacy test
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedToLogCoeff(FLOAT_TYPE x,
                                            FLOAT_TYPE minValue, FLOAT_TYPE maxValue);
+#endif
     
     // Apply to axis for example
     template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToLogScale2(FLOAT_TYPE value);
+    static FLOAT_TYPE NormalizedToLogScale(FLOAT_TYPE value);
     
     // Apply to spectrogram for example
     template <typename FLOAT_TYPE>
-    static void LogScale2(WDL_TypedBuf<FLOAT_TYPE> *values);
+    static void DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values);
 };
 
 #endif

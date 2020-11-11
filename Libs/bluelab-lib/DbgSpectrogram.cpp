@@ -107,7 +107,7 @@ DbgSpectrogram::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns)
     if (mYLogScale)
     {
         //BLUtils::LogScaleX(&magns0, mYLogScaleFactor);
-        Scale::ApplyScale(Scale::LOG_FACTOR2, &magns0);
+        Scale::ApplyScale(Scale::LOG_FACTOR, &magns0);
     }
     
     if (magns0.GetSize() > mHeight)

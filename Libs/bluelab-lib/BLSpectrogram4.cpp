@@ -39,7 +39,6 @@ BLSpectrogram4::BLSpectrogram4(int height, int maxCols,
     mDisplayMagns = true;
     
     mYLogScale = false;
-    //mYLogScaleFactor = 1.0;
     
     mDisplayPhasesX = false;
     mDisplayPhasesY = false;
@@ -123,10 +122,9 @@ BLSpectrogram4::SetDisplayMagns(bool flag)
 }
 
 void
-BLSpectrogram4::SetYLogScale(bool flag) //, BL_FLOAT factor)
+BLSpectrogram4::SetYLogScale(bool flag)
 {
     mYLogScale = flag;
-    //mYLogScaleFactor = factor;
     
 #if OPTIM_SPECTROGRAM2
     mSpectroDataChanged = true;
@@ -262,10 +260,8 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     
     if (mYLogScale)
     {
-        Scale::ApplyScale(Scale::LOG_FACTOR2, &magns0);
-        Scale::ApplyScale(Scale::LOG_FACTOR2, &phases0);
-        //BLUtils::LogScaleX(&magns0, mYLogScaleFactor);
-        //BLUtils::LogScaleX(&phases0, mYLogScaleFactor);
+        Scale::ApplyScale(Scale::LOG_FACTOR, &magns0);
+        Scale::ApplyScale(Scale::LOG_FACTOR, &phases0);
     }
     
     if ((magns0.GetSize() > mHeight) ||
