@@ -105,7 +105,7 @@ GraphFreqAxis2::Update()
     }
     
     sprintf(AXIS_DATA[0][1], "");
-    sprintf(AXIS_DATA[1][1], "50Hz");
+    sprintf(AXIS_DATA[1][1], ""); // Do not display 50Hz for Scale::LOG_FACTOR2
     sprintf(AXIS_DATA[2][1], "100Hz");
     sprintf(AXIS_DATA[3][1], "500Hz");
     sprintf(AXIS_DATA[4][1], "1KHz");
