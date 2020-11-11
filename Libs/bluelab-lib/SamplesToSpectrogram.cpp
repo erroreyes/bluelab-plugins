@@ -75,7 +75,7 @@ SamplesToSpectrogram::SamplesToSpectrogram(BL_FLOAT sampleRate)
     mSpectrogram->SetDisplayPhasesX(false);
     mSpectrogram->SetDisplayPhasesY(false);
     mSpectrogram->SetDisplayMagns(true);
-    mSpectrogram->SetYLogScale(false, 1.0);
+    mSpectrogram->SetYLogScale(false); //, 1.0);
     mSpectrogram->SetDisplayDPhases(false);
 }
 

@@ -39,7 +39,7 @@ public:
     
     void TouchColorMap();
     
-    void SetYLogScale(bool flag, BL_FLOAT factor);
+    void SetYLogScale(bool flag); //, BL_FLOAT factor);
     
     void SetDisplayMagns(bool flag);
     
@@ -143,7 +143,7 @@ protected:
     BL_FLOAT mContrast;
     
     bool mYLogScale;
-    BL_FLOAT mYLogScaleFactor;
+    //BL_FLOAT mYLogScaleFactor;
     
     bool mDisplayMagns;
     

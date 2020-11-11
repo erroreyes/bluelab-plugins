@@ -6,7 +6,7 @@
 //
 //
 
-#include "BLSpectrogram2.h"
+#include "BLSpectrogram4.h"
 
 #include "DebugGraph.h"
 
@@ -130,7 +130,7 @@ DebugGraph::CreateSpectrogram(int height, int maxCols)
     if (mInstance == NULL)
         return;
     
-    mInstance->mSpectrogram = new BLSpectrogram2(height, maxCols);
+    mInstance->mSpectrogram = new BLSpectrogram4(height, maxCols);
     
     // DEBUG
     mInstance->mSpectrogram->SetRange(0.97);

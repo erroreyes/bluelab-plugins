@@ -28,7 +28,7 @@
 
 #include "GUIHelper6.h"
 
-class BLSpectrogram2;
+class BLSpectrogram4;
 class GraphControl8;
 
 class DebugGraph
@@ -114,7 +114,7 @@ protected:
     
     GraphControl8 *mGraph;
     
-    BLSpectrogram2 *mSpectrogram;
+    BLSpectrogram4 *mSpectrogram;
     
 private:
     static DebugGraph *mInstance;

@@ -11,6 +11,8 @@
 #define GLSL_COLORMAP 1
 #include "ColorMap4.h"
 
+#include <Scale.h>
+
 #include <BLUtils.h>
 #include "PPMFile.h"
 
@@ -24,7 +26,7 @@ DbgSpectrogram::DbgSpectrogram(int height, int maxCols)
     mMaxCols = maxCols;
     
     mYLogScale = false;
-    mYLogScaleFactor = 1.0;
+    //mYLogScaleFactor = 1.0;
     
     if (mMaxCols > 0)
     {
@@ -40,10 +42,10 @@ DbgSpectrogram::DbgSpectrogram(int height, int maxCols)
 DbgSpectrogram::~DbgSpectrogram() {}
 
 void
-DbgSpectrogram::SetYLogScale(bool flag, BL_FLOAT factor)
+DbgSpectrogram::SetYLogScale(bool flag) //, BL_FLOAT factor)
 {
     mYLogScale = flag;
-    mYLogScaleFactor = factor;
+    //mYLogScaleFactor = factor;
 }
 
 void
@@ -104,7 +106,8 @@ DbgSpectrogram::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns)
     WDL_TypedBuf<BL_FLOAT> magns0 = magns;
     if (mYLogScale)
     {
-        BLUtils::LogScaleX(&magns0, mYLogScaleFactor);
+        //BLUtils::LogScaleX(&magns0, mYLogScaleFactor);
+        Scale::ApplyScale(Scale::LOG_FACTOR2, &magns0);
     }
     
     if (magns0.GetSize() > mHeight)

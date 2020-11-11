@@ -10,7 +10,8 @@
 #include <BLDebug.h>
 #include <DebugGraph.h>
 
-#include <PartialTracker3.h>
+//#include <PartialTracker3.h>
+#include <PartialTracker4.h>
 #include <SoftMaskingComp3.h>
 
 #include "AirProcess2.h"
@@ -35,7 +36,8 @@ AirProcess2::AirProcess2(int bufferSize,
     
     mSampleRate = sampleRate;
     
-    mPartialTracker = new PartialTracker3(bufferSize, sampleRate, overlapping);
+    //mPartialTracker = new PartialTracker3(bufferSize, sampleRate, overlapping);
+    mPartialTracker = new PartialTracker4(bufferSize, sampleRate, overlapping);
     
     mMix = 0.5;
     mTransientSP = 0.5;
@@ -226,17 +228,17 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             else
                 BLUtils::MultValues(&inMask, harmoRatio);
             
-            WDL_TypedBuf<WDL_FFT_COMPLEX> outMask;
+            WDL_TypedBuf<WDL_FFT_COMPLEX> softMask;
             mSoftMaskingComps[i]->ProcessCentered(&fftSamples0,
                                                   &inMask,
-                                                  &outMask);
+                                                  &softMask);
         
             if (mSoftMaskingComps[i]->IsProcessingEnabled())
             {
                 // We have a shift of the input samples in ProcessCentered(),
                 // Must update (shift) input samples to take it into account.
                 result[i] = fftSamples0;
-                BLUtils::MultValues(&result[i], outMask);
+                BLUtils::MultValues(&result[i], softMask);
             }
             else // Soft masking disabled
             {

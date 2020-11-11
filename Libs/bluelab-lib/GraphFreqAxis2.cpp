@@ -49,10 +49,15 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     
     BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidth();
     
+    if (!mDisplayLines)
+    {
+        axisColor[3] = 0;
+    }
+    
     //
     if (horizontal)
     {
-        mGraphAxis->InitHAxis(Scale::LOG_COEFF,
+        mGraphAxis->InitHAxis(Scale::LOG_FACTOR2,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
@@ -61,7 +66,8 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     }
     else
     {
-        mGraphAxis->InitVAxis(Scale::LOG_COEFF, 0.0, sampleRate*0.5,
+        mGraphAxis->InitVAxis(Scale::LOG_FACTOR2,
+                              0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
                               0.0, graphWidth - 40.0,

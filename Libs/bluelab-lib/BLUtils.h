@@ -875,12 +875,6 @@ public:
     static void ScaleNearest(WDL_TypedBuf<FLOAT_TYPE> *values, int factor);
     
     template <typename FLOAT_TYPE>
-    static void LogScaleX(WDL_TypedBuf<FLOAT_TYPE> *values, FLOAT_TYPE factor = 3.0);
-    
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE LogScale(FLOAT_TYPE value, FLOAT_TYPE factor = 3.0);
-    
-    template <typename FLOAT_TYPE>
     static FLOAT_TYPE LogScaleNorm(FLOAT_TYPE value, FLOAT_TYPE maxValue, FLOAT_TYPE factor = 3.0);
     
     template <typename FLOAT_TYPE>

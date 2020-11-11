@@ -29,7 +29,8 @@ using namespace std;
 // From AirProcess
 // - code clean (removed transient stuff)
 
-class PartialTracker3;
+//class PartialTracker3;
+class PartialTracker4;
 class SoftMaskingComp3;
 class AirProcess2 : public ProcessObj
 {
@@ -65,7 +66,8 @@ protected:
     BL_FLOAT mOversampling;
     BL_FLOAT mSampleRate;
     
-    PartialTracker3 *mPartialTracker;
+    //PartialTracker3 *mPartialTracker;
+    PartialTracker4 *mPartialTracker;
     
     BL_FLOAT mMix;
     BL_FLOAT mTransientSP;

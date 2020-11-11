@@ -30,7 +30,7 @@ public:
     
     virtual ~DbgSpectrogram();
     
-    void SetYLogScale(bool flag, BL_FLOAT factor);
+    void SetYLogScale(bool flag); //, BL_FLOAT factor);
     
     void SetAmpDb(bool flag);
     
@@ -82,7 +82,7 @@ protected:
     int mMaxCols;
     
     bool mYLogScale;
-    BL_FLOAT mYLogScaleFactor;
+    //BL_FLOAT mYLogScaleFactor;
     
     bool mAmpDb;
     

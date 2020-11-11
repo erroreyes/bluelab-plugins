@@ -33,7 +33,7 @@
 #define SQUEEZE_LAST_CROPPED_LABEL 0 //1
 
 
-GraphTimeAxis5::GraphTimeAxis5()
+GraphTimeAxis5::GraphTimeAxis5(bool displayLines)
 {
     mGraphAxis = NULL;
     
@@ -42,6 +42,8 @@ GraphTimeAxis5::GraphTimeAxis5()
     mTransportIsPlaying = false;
     mCurrentTimeTransport = 0.0;
     mTransportTimeStamp = 0;
+    
+    mDisplayLines = displayLines;
 }
 
 GraphTimeAxis5::~GraphTimeAxis5() {}
@@ -70,6 +72,11 @@ GraphTimeAxis5::Init(GraphAxis2 *graphAxis,
     guiHelper->GetGraphAxisLabelOverlayColor(axisLabelOverlayColor);
     
     BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidth();
+    
+    if (!mDisplayLines)
+    {
+        axisColor[3] = 0;
+    }
     
     // NOTE: should be InitHAxis() ?
     mGraphAxis->InitVAxis(Scale::LINEAR, 0.0, 1.0,

@@ -28,7 +28,7 @@ class GUIHelper12;
 class GraphTimeAxis5
 {
 public:
-    GraphTimeAxis5();
+    GraphTimeAxis5(bool displayLines = true);
     
     virtual ~GraphTimeAxis5();
     
@@ -66,6 +66,8 @@ protected:
     bool mTransportIsPlaying;
     BL_FLOAT mCurrentTimeTransport;
     long int mTransportTimeStamp;
+    
+    bool mDisplayLines;
 };
 
 #endif /* defined(__BL_InfrasonicViewer__GraphTimeAxis5__) */
