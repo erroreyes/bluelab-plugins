@@ -31,7 +31,11 @@ GraphCurve5::GraphCurve5(int numValues)
     mPointsAsLinesPolar = false;
     mPointsAsLines = false;
     
-    mLineWidth = 1.0;
+    // Set line width to 1.5 by default,
+    // because with 1, it is to thin and badly displayed sometimes.
+    //mLineWidth = 1.0;
+    mLineWidth = 1.5;
+    
     mPointSize = 1.0;
     
     mBevelFlag = false;

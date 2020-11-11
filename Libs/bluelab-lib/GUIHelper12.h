@@ -168,6 +168,12 @@ public:
     void GetGraphAxisLabelOverlayColor(int color[4]);
     float GetGraphAxisLineWidth();
     
+    void GetGraphCurveDescriptionColor(int color[4]);
+    void GetGraphCurveColorBlue(int color[4]);
+    void GetGraphCurveColorGreen(int color[4]);
+    void GetGraphCurveColorLightBlue(int color[4]);
+    float GetGraphCurveFillAlpha();
+    
     static void ResetParameter(Plugin *plug, int paramIdx);
     
     // Refresh all the controls, from their values
@@ -269,6 +275,12 @@ protected:
     IColor mGraphAxisLabelColor;
     IColor mGraphAxisLabelOverlayColor;
     float mGraphAxisLineWidth;
+    
+    IColor mGraphCurveDescriptionColor;
+    IColor mGraphCurveColorBlue;
+    IColor mGraphCurveColorGreen;
+    IColor mGraphCurveColorLightBlue;
+    float mGraphCurveFillAlpha;
 };
 
 #endif /* GUIHelper12_hpp */
