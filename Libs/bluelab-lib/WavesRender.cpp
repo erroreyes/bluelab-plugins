@@ -42,7 +42,8 @@
 //const char *_ORXXKey = "izwal";
 const char *_ORXXKey = "yoko";
 
-WavesRender::WavesRender(WavesPluginInterface *plug, GraphControl11 *graphControl,
+WavesRender::WavesRender(WavesPluginInterface *plug,
+                         GraphControl12 *graphControl,
                          int bufferSize, BL_FLOAT sampleRate)
 {
     mPlug = plug;
@@ -338,9 +339,9 @@ WavesRender::SetScrollDirection(LinesRender2::ScrollDirection dir)
 }
 
 void
-WavesRender::SetShowAxis(bool flag)
+WavesRender::SetShowAxes(bool flag)
 {
-    mLinesRender->SetShowAxis(flag);
+    mLinesRender->SetShowAxes(flag);
     
     //mGraph->SetDirty(true);
     mGraph->SetDataChanged();

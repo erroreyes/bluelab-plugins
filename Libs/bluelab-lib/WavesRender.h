@@ -15,7 +15,7 @@
 #include <deque>
 using namespace std;
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 
 //#include <LinesRender.h>
 #include <LinesRender2.h>
@@ -44,7 +44,7 @@ class Axis3D;
 class WavesRender : public GraphCustomControl
 {
 public:
-    WavesRender(WavesPluginInterface *plug, GraphControl11 *graphControl,
+    WavesRender(WavesPluginInterface *plug, GraphControl12 *graphControl,
                 int bufferSize, BL_FLOAT sampleRate);
     
     virtual ~WavesRender();
@@ -72,7 +72,7 @@ public:
     virtual void SetDensity(BL_FLOAT density);
     virtual void SetScale(BL_FLOAT scale);
     virtual void SetScrollDirection(LinesRender2::ScrollDirection dir);
-    virtual void SetShowAxis(bool flag);
+    virtual void SetShowAxes(bool flag);
     virtual void SetDBScale(bool flag, BL_FLOAT minDB);
 
     
@@ -101,7 +101,7 @@ protected:
     //
     WavesPluginInterface *mPlug;
     
-    GraphControl11 *mGraph;
+    GraphControl12 *mGraph;
     LinesRender2 *mLinesRender;
     
     Axis3D *mFreqsAxis;

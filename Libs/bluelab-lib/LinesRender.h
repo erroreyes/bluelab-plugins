@@ -13,7 +13,7 @@
 #include <deque>
 using namespace std;
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 #include <Axis3D.h>
 
 #define PROFILE_RENDER 0

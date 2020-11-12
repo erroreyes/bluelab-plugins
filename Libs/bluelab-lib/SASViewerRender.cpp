@@ -41,7 +41,8 @@
 // NOTE TESTED
 #define FIX_FREEZE_GUI 1
 
-SASViewerRender::SASViewerRender(SASViewerPluginInterface *plug, GraphControl11 *graphControl,
+SASViewerRender::SASViewerRender(SASViewerPluginInterface *plug,
+                                 GraphControl12 *graphControl,
                                  BL_FLOAT sampleRate, int bufferSize)
 {
     mPlug = plug;

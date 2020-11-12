@@ -15,7 +15,7 @@
 #include <deque>
 using namespace std;
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 #include <LinesRender2.h>
 #include <SASViewerPluginInterface.h>
 
@@ -23,7 +23,8 @@ class Axis3D;
 class SASViewerRender : public GraphCustomControl
 {
 public:
-    SASViewerRender(SASViewerPluginInterface *plug, GraphControl11 *graphControl,
+    SASViewerRender(SASViewerPluginInterface *plug,
+                    GraphControl12 *graphControl,
                     BL_FLOAT sampleRate, int bufferSize);
     
     virtual ~SASViewerRender();
@@ -77,7 +78,7 @@ protected:
     
     SASViewerPluginInterface *mPlug;
     
-    GraphControl11 *mGraph;
+    GraphControl12 *mGraph;
     
     
     LinesRender2 *mLinesRenderWaves;

@@ -16,6 +16,8 @@ using namespace std;
 
 #include <glm/gtx/intersect.hpp>
 
+#include <GraphSwapColor.h>
+
 #include <Axis3D.h>
 #include <BLUtils.h>
 

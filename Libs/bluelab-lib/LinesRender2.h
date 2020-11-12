@@ -15,7 +15,7 @@
 #include <deque>
 using namespace std;
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 #include <Axis3D.h>
 
 #define PROFILE_RENDER 0
@@ -141,7 +141,7 @@ public:
     void AddAxis(Axis3D *axis);
     void RemoveAxis(Axis3D *axis);
     
-    void SetShowAxis(bool flag);
+    void SetShowAxes(bool flag);
     
     void SetDBScale(bool flag, BL_FLOAT minDB);
 
@@ -279,7 +279,7 @@ protected:
     bool mDisplayAllSlices;
     
     vector<Axis3D *> mAxis;
-    bool mShowAxis;
+    bool mShowAxes;
     
     // Log scale
     bool mDBScale;

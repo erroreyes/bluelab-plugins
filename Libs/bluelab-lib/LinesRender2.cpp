@@ -16,6 +16,8 @@ using namespace std;
 
 #include <glm/gtx/intersect.hpp>
 
+#include <GraphSwapColor.h>
+
 #include <BLUtils.h>
 
 #include "LinesRender2.h"
@@ -139,7 +141,7 @@ LinesRender2::LinesRender2()
     
     mDisplayAllSlices = false;
     
-    mShowAxis = false;
+    mShowAxes = false;
     
     mShowAdditionalLines = false;
     
@@ -326,7 +328,7 @@ LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
 
     DrawAdditionalLines(vg, width, height);
     
-    if (mShowAxis)
+    if (mShowAxes)
     {
 #if USE_OWN_MUTEX
         WDL_MutexLock lock2(&mMutex);
@@ -1130,9 +1132,9 @@ LinesRender2::RemoveAxis(Axis3D *axis)
 }
 
 void
-LinesRender2::SetShowAxis(bool flag)
+LinesRender2::SetShowAxes(bool flag)
 {
-    mShowAxis = flag;
+    mShowAxes = flag;
 }
 
 void
