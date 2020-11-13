@@ -50,6 +50,8 @@ public:
     
     void PreDraw(NVGcontext *vg, int width, int height) override;
     
+    bool IsOwnedByGraph() override { return true; }
+    
     // Spectrogram
     void SetSpectrogram(BLSpectrogram4 *spectro,
                         BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom);
