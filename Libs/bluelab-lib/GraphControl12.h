@@ -106,6 +106,10 @@ public:
     
     // Draw after everything
     virtual void PostDraw(NVGcontext *vg, int width, int height) {}
+    
+    // If it is ownaed by graph, it will be delete each time
+    // the graph is deleted.
+    virtual bool IsOwnedByGraph() { return false; }
 };
 
 class GraphCustomControl

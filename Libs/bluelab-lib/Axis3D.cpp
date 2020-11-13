@@ -8,8 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-// For SWAP_COLOR
-#include <GraphControl11.h>
+#include <GraphControl12.h>
+#include <GraphSwapColor.h>
 #include <BLUtils.h>
 
 #include "Axis3D.h"
@@ -20,6 +20,8 @@
 // 1 pixel
 #define OVERLAY_OFFSET -1.0
 
+//#define FONT "font"
+#define FONT "font-bold"
 
 Axis3D::Axis3D(char *labels[], BL_FLOAT labelNormPos[], int numData,
                BL_FLOAT p0[3], BL_FLOAT p1[3])
@@ -77,6 +79,12 @@ Axis3D::UpdateLabels(char *labels[], BL_FLOAT labelNormPos[], int numData)
     {
         char *label = labels[i];
         BL_FLOAT t = labelNormPos[i];
+        
+        // Sqeeze when t > 1.
+        // It means for example that we want to display "80KHz",
+        // and the sample rate is just 44100Hz
+        if (t > 1.0)
+            continue;
         
         string text(label);
         
@@ -180,8 +188,8 @@ Axis3D::DoDraw(NVGcontext *vg,
     BL_FLOAT dir[3] = { mP1[0] - mP0[0], mP1[1] - mP0[1], mP1[2] - mP0[2] };
     
     BL_FLOAT p1Scale[3] = { mP0[0] + dir[0]*mScale,
-                          mP0[1] + dir[1]*mScale,
-                          mP0[2] + dir[2]*mScale };
+                            mP0[1] + dir[1]*mScale,
+                            mP0[2] + dir[2]*mScale };
     
     // Project
     BL_FLOAT projP0[3];
@@ -200,16 +208,16 @@ Axis3D::DoDraw(NVGcontext *vg,
             float projP1f[3];
             
             //float p0f[3] = { mP0[0], mP0[1], mP0[2] };
-	    float p0f[3];
-	    p0f[0] = mP0[0];
-	    p0f[1] = mP0[1];
-	    p0f[2] = mP0[2];
+            float p0f[3];
+            p0f[0] = mP0[0];
+            p0f[1] = mP0[1];
+            p0f[2] = mP0[2];
 	    
             //float p1Scalef[3] = { p1Scale[0], p1Scale[1], p1Scale[2] };
-	    float p1Scalef[3];
-	    p1Scalef[0] = p1Scale[0];
-	    p1Scalef[1] = p1Scale[1];
-	    p1Scalef[2] = p1Scale[2];
+            float p1Scalef[3];
+            p1Scalef[0] = p1Scale[0];
+            p1Scalef[1] = p1Scale[1];
+            p1Scalef[2] = p1Scale[2];
             
             mProjectorFloat->ProjectPoint(projP0f, p0f, width, height);
             mProjectorFloat->ProjectPoint(projP1f, p1Scalef, width, height);
@@ -288,6 +296,10 @@ Axis3D::DoDraw(NVGcontext *vg,
         BL_FLOAT x = projLabelP[0];
         BL_FLOAT y = projLabelP[1];
         
+#if GRAPH_CONTROL_FLIP_Y
+        y = height - y;
+#endif
+
         x += overlayOffset;
         y += overlayOffset;
         
@@ -309,7 +321,7 @@ Axis3D::DrawText(NVGcontext *vg, BL_FLOAT x, BL_FLOAT y, BL_FLOAT fontSize,
     nvgSave(vg);
     
     nvgFontSize(vg, fontSize);
-	nvgFontFace(vg, "font");
+	nvgFontFace(vg, FONT);
     nvgFontBlur(vg, 0);
 	nvgTextAlign(vg, halign | valign);
     

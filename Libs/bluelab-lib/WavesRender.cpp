@@ -54,8 +54,7 @@ WavesRender::WavesRender(WavesPluginInterface *plug,
     mSampleRate = sampleRate;
     
     mLinesRender = new LinesRender2();
-    mGraph->AddCustomDrawer(mLinesRender);
-    mGraph->AddCustomControl(this);
+    SetGraph(graphControl);
 
     mFreqsAxis = NULL;
     CreateFreqsAxis();
@@ -92,6 +91,18 @@ WavesRender::~WavesRender()
     
     if (mAmpsAxis != NULL)
         delete mAmpsAxis;
+}
+
+void
+WavesRender::SetGraph(GraphControl12 *graphControl)
+{
+    mGraph = graphControl;
+    
+    if (mGraph != NULL)
+    {
+        mGraph->AddCustomDrawer(mLinesRender);
+        mGraph->AddCustomControl(this);
+    }
 }
 
 void
@@ -555,16 +566,18 @@ WavesRender::CreateFreqsAxis()
     mFreqsAxis = NULL;
     
     // Create axis
-#define NUM_AXIS_DATA 9 //7 //8
+#define NUM_AXIS_DATA 11 //9 //7 //8
     char *labels[NUM_AXIS_DATA] =
     {
-        /*"1Hz",*/ "", "100Hz", "500Hz", "1KHz", "2KHz", "5KHz", "10KHz", "20KHz", ""
+        /*"1Hz",*/ "", "100Hz", "500Hz", "1KHz", "2KHz",
+        "5KHz", "10KHz", "20KHz", "40KHZ", "80KHz", ""
     };
     
     // Scale the axis normalized values
     BL_FLOAT freqs[NUM_AXIS_DATA] =
     {
-        1.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0, 10000.0, 20000.0, 40000.0
+        1.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0,
+        10000.0, 20000.0, 40000.0, 80000.0, 160000.0
     };
     
     BL_FLOAT normPos[NUM_AXIS_DATA];

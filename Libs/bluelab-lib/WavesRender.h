@@ -44,10 +44,13 @@ class Axis3D;
 class WavesRender : public GraphCustomControl
 {
 public:
-    WavesRender(WavesPluginInterface *plug, GraphControl12 *graphControl,
+    WavesRender(WavesPluginInterface *plug,
+                GraphControl12 *graphControl,
                 int bufferSize, BL_FLOAT sampleRate);
     
     virtual ~WavesRender();
+    
+    void SetGraph(GraphControl12 *graphControl);
     
     void Reset(BL_FLOAT sampleRate);
     
