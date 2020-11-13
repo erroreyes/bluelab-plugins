@@ -67,7 +67,7 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     mThreshold = -60.0;
     mHarmonicFlag = false;
     
-    mMode = TRACKING; //AMPLITUDE;
+    mMode = TRACKING;
     
     mNoiseMix = 0.0;
     
@@ -85,13 +85,6 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     
     // For additional lines
     mAddNum = 0;
-    
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::Reset(&mTimer0, &mTimerCount0);
-    BlaTimer::Reset(&mTimer1, &mTimerCount1);
-    BlaTimer::Reset(&mTimer2, &mTimerCount2);
-    BlaTimer::Reset(&mTimer3, &mTimerCount3);
-#endif
 }
 
 SASViewerProcess2::~SASViewerProcess2()
@@ -116,186 +109,17 @@ SASViewerProcess2::Reset()
 
 void
 SASViewerProcess2::Reset(int overlapping, int oversampling,
-                        BL_FLOAT sampleRate)
+                         BL_FLOAT sampleRate)
 {
     mOverlapping = overlapping;
     mOversampling = oversampling;
     
     mSampleRate = sampleRate;
     
-    //mValues.Resize(0);
-    
     mSASFrame->Reset(sampleRate);
     mScSASFrame->Reset(sampleRate);
     mMixSASFrame->Reset(sampleRate);
 }
-
-#if 0 // origin, no sidechain (WIP)
-void
-SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                                   const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
-
-{
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples;
-    
-    if (!mUseSideChain)
-        fftSamples = *ioBuffer;
-    else
-        fftSamples = *scBuffer;
-    
-    // Take half of the complexes
-    BLUtils::TakeHalf(&fftSamples);
-    
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
-    
-    mCurrentMagns = magns;
-    
-#if DEBUG_PARTIAL_TRACKING
-    if (mSASViewerRender != NULL)
-    {
-        WDL_TypedBuf<BL_FLOAT> magnsScale = magns;
-        ScaleFreqs(&magnsScale);
-        
-#if DEBUG_DISPLAY_MAGNS // Display magns
-        // Scale to dB for display
-        AmpsToDBNorm(&magnsScale);
-        
-        mSASViewerRender->AddMagns(magnsScale);
-#else
-        DisplayFrequency();
-#endif
-    }
-#endif
-    
-#if 0 // Discplay cepstrum
-#define MAGNS_COEFF 50.0
-    WDL_TypedBuf<BL_FLOAT> magnsScale = magns;
-    
-    WDL_TypedBuf<BL_FLOAT> cepstrum;
-    //FftProcessObj15::MagnsToCepstrum(magnsScale, &cepstrum);
-    
-    mSASFrame->DBG_GetCepstrum(&cepstrum);
-    
-    BLUtils::MultValues(&cepstrum, 1.0/200000.0);
-    BLUtils::MultValues(&cepstrum, 0.004);
-    magnsScale = cepstrum;
-    
-    BLUtils::MultValues(&magnsScale, MAGNS_COEFF);
-    
-    ScaleFreqs(&magnsScale);
-    
-    mSASViewerRender->AddMagns(magnsScale);
-#endif
-    
-    DetectPartials(magns, phases);
-    
-    if (mPartialTracker != NULL)
-    {
-        vector<PartialTracker5::Partial> partials;
-        mPartialTracker->GetPartials(&partials);
-        
-         // Debug
-        vector<PartialTracker5::Partial> partials0;
-        for (int i = 0; i < partials.size(); i++)
-        {
-            const PartialTracker5::Partial &partial = partials[i];
-            if (partial.mFreq < DEBUG_MAX_PARTIAL_FREQ)
-                partials0.push_back(partial);
-        }
-        partials = partials0;
-        
-#if DEBUG_PARTIAL_TRACKING
-        BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-        
-        // Display points corresponding to the peaks of the partials
-        vector<LinesRender2::Point> points;
-        for (int i = 0; i < partials.size(); i++)
-        {
-            const PartialTracker5::Partial &partial = partials[i];
-            
-            LinesRender2::Point p;
-            
-#if !PREDICTIVE
-            BL_FLOAT partialX = partial.mFreq/hzPerBin;
-#else
-            BL_FLOAT partialX = partial.mPredictedFreq/hzPerBin; // TEST
-#endif
-            partialX = bl_round(partialX);
-            
-            partialX = ScaleFreq((int)partialX);
-            p.mX = partialX/magns.GetSize() - 0.5;
-            
-            // dB for display
-            //p.mY = (partial.mAmpDB - MIN_AMP_DB)/(-MIN_AMP_DB);
-            p.mY = DBToAmp(partial.mAmpDB);
-            p.mY = AmpToDBNorm(p.mY);
-            
-            p.mZ = 0.0;
-            
-            unsigned char color[4];
-            PartialToColor(partial, color);
-            
-            p.mR = color[0];
-            p.mG = color[1];
-            p.mB = color[2];
-            p.mA = color[3];
-            
-            p.mSize = 6.0;
-            if (partial.mId == -1)
-                p.mSize = 3.0;
-            if (partial.mState == PartialTracker5::Partial::ZOMBIE)
-                p.mSize = 3.0;
-            if (partial.mState == PartialTracker5::Partial::DEAD)
-                p.mSize = 3.0;
-            
-            points.push_back(p);
-        }
-        
-        if (mSASViewerRender != NULL)
-            mSASViewerRender->AddPoints(points);
-#endif
-        
-#if SAS_VIEWER_PROCESS_PROFILE
-        BlaTimer::Start(&mTimer1);
-#endif
-        
-        // Avoid sending garbage partials to the SASFrame
-        // (would slow down a lot when many garbage partial
-        // are used to compute the SASFrame)
-        //PartialTracker5::RemoveRealDeadPartials(&partials);
-        
-        if (!mUseSideChain)
-            mSASFrame->SetPartials(partials);
-        else
-        {
-            mScSASFrame->SetPartials(partials);
-        }
-        
-#if SAS_VIEWER_PROCESS_PROFILE
-        BlaTimer::StopAndDump(&mTimer1, &mTimerCount1, "profile.txt", "sas compute: %ld"); //
-#endif
-        // Display the current data
-        Display();
-        
-#if !DEBUG_MUTE_NOISE
-      // Normal behavior
-      // Noise envelope
-        mPartialTracker->GetNoiseEnvelope(&magns);
-#endif
-        
-#if 0 // Test
-        mPartialTracker->GetHarmonicEnvelope(&magns);
-#endif
-    }
-    
-    // For noise envelope
-    BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
-    ioBuffer->Resize(ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
-}
-#endif
 
 void
 SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
@@ -352,10 +176,6 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         else
             mCurrentPartials = scPartials;
         
-#if SAS_VIEWER_PROCESS_PROFILE
-        BlaTimer::Start(&mTimer1);
-#endif
-        
         // Avoid sending garbage partials to the SASFrame
         // (would slow down a lot when many garbage partial
         // are used to compute the SASFrame)
@@ -366,9 +186,6 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
         MixFrames(mMixSASFrame, *mSASFrame, *mScSASFrame, mMix);
         
-#if SAS_VIEWER_PROCESS_PROFILE
-        BlaTimer::StopAndDump(&mTimer1, &mTimerCount1, "profile.txt", "sas compute: %ld"); //
-#endif
         // Display the current data
         Display();
         
@@ -390,10 +207,6 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             mPartialTracker->GetNoiseEnvelope(&magns);
         }
 #endif
-        
-#if 0 // Test
-        mPartialTracker->GetHarmonicEnvelope(&magns);
-#endif
     }
     
     // For noise envelope
@@ -406,8 +219,6 @@ void
 SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                        WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
-    //if (!mSASFrame->ComputeSamplesFlag())
-    //    return;
     if (!mMixSASFrame->ComputeSamplesFlag())
         return;
     
@@ -422,21 +233,11 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> samplesBuffer;
     BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
     
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::Start(&mTimer2);
-#endif
-    
     // Compute the samples from partials
-    //mSASFrame->ComputeSamples(&samplesBuffer);
     mMixSASFrame->ComputeSamples(&samplesBuffer);
-    
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::StopAndDump(&mTimer2, &mTimerCount2, "profile.txt", "sas gen: %ld"); //
-#endif
 
     // Mix
     // (the current io buffer may contain shaped noise)
-    //BLUtils::AddValues(ioBuffer, samplesBuffer);
     MixHarmoNoise(ioBuffer, samplesBuffer);
 #endif
 }
@@ -447,8 +248,6 @@ void
 SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                           const WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
-    //if (!mSASFrame->ComputeSamplesWinFlag())
-    //    return;
     if (!mMixSASFrame->ComputeSamplesWinFlag())
         return;
     
@@ -463,22 +262,11 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> samplesBuffer;
     BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
     
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::Start(&mTimer2);
-#endif
-    
     // Compute the samples from partials
-    //mSASFrame->ComputeSamplesWin(&samplesBuffer);
     mMixSASFrame->ComputeSamplesWin(&samplesBuffer);
-    
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::StopAndDump(&mTimer2, &mTimerCount2, "profile.txt", "sas gen: %ld"); //
-#endif
     
     // Mix
     // (the current io buffer may contain shaped noise)
-    //BLUtils::AddValues(ioBuffer, samplesBuffer);
-    
     MixHarmoNoise(ioBuffer, samplesBuffer);
 #endif
 }
@@ -527,7 +315,6 @@ SASViewerProcess2::SetThreshold(BL_FLOAT threshold)
 void
 SASViewerProcess2::SetPitch(BL_FLOAT pitch)
 {
-    //mSASFrame->SetPitch(pitch);
     mMixSASFrame->SetPitch(pitch);
 }
 
@@ -547,7 +334,6 @@ SASViewerProcess2::SetHarmonicSoundFlag(bool flag)
 void
 SASViewerProcess2::SetSynthMode(SASFrame3::SynthMode mode)
 {
-    //mSASFrame->SetSynthMode(mode);
     mMixSASFrame->SetSynthMode(mode);
 }
 
@@ -604,52 +390,6 @@ SASViewerProcess2::SetMixNoiseFlag(bool flag)
     mMixNoiseFlag = flag;
 }
 
-#if 0
-BL_FLOAT
-SASViewerProcess2::IdToFreq(int idx, BL_FLOAT sampleRate, int bufferSize)
-{
-    BL_FLOAT hzPerBin = sampleRate/bufferSize;
-    
-#if FREQ_MEL_SCALE
-    // Convert from Mel
-    hzPerBin *= MEL_SCALE_COEFF;
-    
-    BL_FLOAT freq = BLUtils::MelNormToFreq(idx, hzPerBin, bufferSize);
-#endif
-    
-#if FREQ_LOG_SCALE
-    // Convert from log
-    BL_FLOAT freq = BLUtils::LogNormToFreq(idx, hzPerBin, bufferSize);
-#endif
-    
-    return freq;
-}
-
-int
-SASViewerProcess2::FreqToId(BL_FLOAT freq, BL_FLOAT sampleRate, int bufferSize)
-{
-#if FREQ_MEL_SCALE
-    // Convert from Mel
-    
-    BL_FLOAT hzPerBin = sampleRate/bufferSize;
-    
-    int idx = freq / hzPerBin;
-    
-    return idx;
-#endif
-    
-#if FREQ_LOG_SCALE
-    // Convert from log
-    
-    BL_FLOAT hzPerBin = sampleRate/bufferSize;
-    
-    int idx = freq / hzPerBin;
-    
-    return idx;
-#endif
-}
-#endif
-
 BL_FLOAT
 SASViewerProcess2::AmpToDBNorm(BL_FLOAT val)
 {
@@ -689,7 +429,6 @@ SASViewerProcess2::AmpsToDBNorm(WDL_TypedBuf<BL_FLOAT> *amps)
 void
 SASViewerProcess2::Display()
 {
-#if !DEBUG_PARTIAL_TRACKING
 #if !DEBUG_DISPLAY_SCEPSTRUM
     if (mMode == TRACKING)
     {
@@ -715,7 +454,6 @@ SASViewerProcess2::Display()
     {
         DisplayWarping();
     }
-#endif
 #endif
 }
 
@@ -788,10 +526,6 @@ void
 SASViewerProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                                  const WDL_TypedBuf<BL_FLOAT> &phases)
 {
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::Start(&mTimer0);
-#endif
-
     mPartialTracker->SetData(magns, phases);
     mPartialTracker->DetectPartials();
     
@@ -800,27 +534,12 @@ SASViewerProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 #endif
     
     mPartialTracker->FilterPartials();
-    
-#if 0
-    // Debug
-    vector<PartialTracker3::Partial> partials;
-    mPartialTracker->GetPartials(&partials);
-    mPartialTracker->DBG_DumpPartials2(partials);
-#endif
-    
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::StopAndDump(&mTimer0, &mTimerCount0, "profile.txt", "tracker: %ld"); //
-#endif
 }
 
 void
 SASViewerProcess2::DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                                  const WDL_TypedBuf<BL_FLOAT> &phases)
 {
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::Start(&mTimer0);
-#endif
-    
     mScPartialTracker->SetData(magns, phases);
     mScPartialTracker->DetectPartials();
     
@@ -829,17 +548,6 @@ SASViewerProcess2::DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 #endif
     
     mScPartialTracker->FilterPartials();
-    
-#if 0
-    // Debug
-    vector<PartialTracker3::Partial> partials;
-    mPartialTracker->GetPartials(&partials);
-    mPartialTracker->DBG_DumpPartials2(partials);
-#endif
-    
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::StopAndDump(&mTimer0, &mTimerCount0, "profile.txt", "tracker: %ld"); //
-#endif
 }
 
 void
@@ -919,10 +627,6 @@ SASViewerProcess2::PartialToColor(const PartialTracker5::Partial &partial,
 void
 SASViewerProcess2::DisplayTracking()
 {
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::Start(&mTimer3);
-#endif
-    
     if (mSASViewerRender != NULL)
     {
         // Add the magnitudes
@@ -941,9 +645,6 @@ SASViewerProcess2::DisplayTracking()
         //
         BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
         
-        //
-        //vector<PartialTracker3::Partial> partials;
-        //mPartialTracker->GetPartials(&partials);
         vector<PartialTracker5::Partial> partials = mCurrentPartials;
         
         // Create blue lines from trackers
@@ -964,7 +665,6 @@ SASViewerProcess2::DisplayTracking()
                 p.mX = partialX/(mCurrentMagns.GetSize() - 1) - 0.5;
             
             // dB for display
-            //p.mY = (partial.mAmpDB - MIN_AMP_DB)/(-MIN_AMP_DB);
             p.mY = DBToAmp(partial.mAmpDB);
             p.mY = AmpToDBNorm(p.mY);
             
@@ -991,19 +691,8 @@ SASViewerProcess2::DisplayTracking()
                 
                 mPartialsPoints.pop_front();
             }
-        
-#if 0
-            //vector<vector<LinesRender2::Point> > partialLines;
-            //CreateLines(&partialLines);
-#endif
             
-#if 1 // Optim
-            CreateLines2(prevPoints);
-#endif
-            
-            //unsigned char color[4] = { 0, 0, 255, 255 };
-            //unsigned char color[4] = { 128, 128, 255, 255 };
-            //unsigned char color[4] = { 64, 64, 255, 255 };
+            CreateLines(prevPoints);
             
             // It is cool like that: lite blue with alpha
             //unsigned char color[4] = { 64, 64, 255, 128 };
@@ -1011,16 +700,11 @@ SASViewerProcess2::DisplayTracking()
             
             //BL_FLOAT lineWidth = 4.0;
             BL_FLOAT lineWidth = 1.5;
-            mSASViewerRender->SetAdditionalLines(mPartialLines/*partialLines*/,
-                                                 color, lineWidth);
+            mSASViewerRender->SetAdditionalLines(mPartialLines, color, lineWidth);
         }
         
         mSASViewerRender->ShowAdditionalLines(true);
     }
-    
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer::StopAndDump(&mTimer3, &mTimerCount3, "profile.txt", "disp tracking: %ld"); //
-#endif
 }
 
 void
@@ -1028,7 +712,6 @@ SASViewerProcess2::DisplayAmplitude()
 {
     BL_FLOAT ampDB;
     if (!mUseSideChain)
-        //ampDB = mSASFrame->GetAmplitudeDB();
         ampDB = mMixSASFrame->GetAmplitudeDB();
     else
         ampDB = mScSASFrame->GetAmplitudeDB();
@@ -1061,16 +744,12 @@ SASViewerProcess2::DisplayFrequency()
 {
     BL_FLOAT freq;
     if (!mUseSideChain)
-        //freq = mSASFrame->GetFrequency();
         freq = mMixSASFrame->GetFrequency();
     else
         freq = mScSASFrame->GetFrequency();
     
     BL_FLOAT factor = 3.0;
     freq = BLUtils::LogScaleNormInv(freq, (BL_FLOAT)44100.0, factor);
-    
-//#define Y_COEFF 0.004
-//#define Y_OFFSET -8.0
   
 #define Y_COEFF 0.002
 #define Y_OFFSET -4.0
@@ -1098,7 +777,6 @@ SASViewerProcess2::DisplayColor()
 {
     WDL_TypedBuf<BL_FLOAT> color;
     if (!mUseSideChain)
-        //mSASFrame->GetColor(&color);
         mMixSASFrame->GetColor(&color);
     else
         mScSASFrame->GetColor(&color);
@@ -1107,7 +785,6 @@ SASViewerProcess2::DisplayColor()
     
     BL_FLOAT amplitudeDB;
     if (!mUseSideChain)
-        //amplitudeDB = mSASFrame->GetAmplitudeDB();
         amplitudeDB = mMixSASFrame->GetAmplitudeDB();
     else
         amplitudeDB = mScSASFrame->GetAmplitudeDB();
@@ -1117,7 +794,7 @@ SASViewerProcess2::DisplayColor()
     BLUtils::MultValues(&color, amplitude);
     
     // Scale to dB for display
-    AmpsToDBNorm(&color); //
+    AmpsToDBNorm(&color);
     
     if (mSASViewerRender != NULL)
     {
@@ -1133,7 +810,6 @@ SASViewerProcess2::DisplayWarping()
     WDL_TypedBuf<BL_FLOAT> warping;
     
     if (!mUseSideChain)
-        //mSASFrame->GetNormWarping(&warping);
         mMixSASFrame->GetNormWarping(&warping);
     else
         mScSASFrame->GetNormWarping(&warping);
@@ -1183,109 +859,9 @@ SASViewerProcess2::FindIndex(const vector<LinesRender2::Point> &points, int idx)
     return -1;
 }
 
+// Optimized version
 void
-SASViewerProcess2::CreateLines(vector<vector<LinesRender2::Point> > *partialLines)
-{
-    if (mSASViewerRender == NULL)
-        return;
-    
-    vector<int> idsProcessed;
-    for (int i = 0; i < mPartialsPoints.size(); i++)
-    {
-        const vector<LinesRender2::Point> &line = mPartialsPoints[i];
-        for (int j = 0; j < line.size(); j++)
-        {
-            LinesRender2::Point p = line[j];
-            
-            if (p.mId == -1)
-                continue;
-            
-            int idx = FindIndex(idsProcessed, p.mId);
-            if (idx != -1)
-                // Already done
-                //break; // Buggy
-                continue; // Good
-            
-            // New partial line
-            vector<LinesRender2::Point> partialLine;
-     
-#if 1
-            int divisor = mSASViewerRender->GetNumSlices() - 1;
-            if (divisor <= 0)
-                divisor = 1;
-            
-            BL_FLOAT z = ((BL_FLOAT)i)/divisor;
-            
-            // Hack to display well blue tracking lines
-            // even when mPartialsPoints is not full
-            if (mPartialsPoints.size() < mSASViewerRender->GetNumSlices())
-            // Not fully filled
-            {
-                BL_FLOAT coeff = ((BL_FLOAT)mSASViewerRender->GetNumSlices())/mPartialsPoints.size();
-                z = 1.0 -1.0/coeff + z;
-            }
-#endif
-            
-#if 0
-            BL_FLOAT z = 0.0;
-            if (mPartialsPoints.size() > 1)
-                z = ((BL_FLOAT)i)/(mPartialsPoints.size() - 1);
-#endif
-            p.mZ = z;
-            
-            // Add the current point
-            partialLine.push_back(p);
-            
-            for (int k = i + 1; k < mPartialsPoints.size(); k++)
-            {
-                const vector<LinesRender2::Point> &line0 = mPartialsPoints[k];
-                
-                int idx0 = FindIndex(line0, p.mId);
-                if (idx0 != -1)
-                {
-                    LinesRender2::Point p0 = line0[idx0];
-                    
-#if 1
-                    int divisor = mSASViewerRender->GetNumSlices() - 1;
-                    if (divisor <= 0)
-                        divisor = 1;
-                    
-                    BL_FLOAT z = ((BL_FLOAT)k)/divisor;
-                    
-                    // Hack to display well blue tracking lines
-                    // even when mPartialsPoints is not full
-                    if (mPartialsPoints.size() < mSASViewerRender->GetNumSlices())
-                    // Not fully filled
-                    {
-                        BL_FLOAT coeff = ((BL_FLOAT)mSASViewerRender->GetNumSlices())/mPartialsPoints.size();
-                        z = 1.0 - 1.0/coeff + z;
-                    }
-#endif
-                    
-#if 0
-                    BL_FLOAT z = 0.0;
-                    if (mPartialsPoints.size() > 1)
-                        z = ((BL_FLOAT)k)/(mPartialsPoints.size() - 1);
-#endif
-                    
-                    p0.mZ = z;
-                    
-                    partialLine.push_back(p0);
-                }
-            }
-            
-            if (!partialLine.empty())
-            {
-                partialLines->push_back(partialLine);
-                idsProcessed.push_back(p.mId);
-            }
-        }
-    }
-}
-
-// Try to optim
-void
-SASViewerProcess2::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
+SASViewerProcess2::CreateLines(const vector<LinesRender2::Point> &prevPoints)
 {
     if (mSASViewerRender == NULL)
         return;
@@ -1299,14 +875,6 @@ SASViewerProcess2::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
     if (divisor <= 0)
         divisor = 1;
     BL_FLOAT incrZ = 1.0/divisor;
-    
-#if 0
-    BL_FLOAT coeff = ((BL_FLOAT)mSASViewerRender->GetNumSlices())/mPartialsPoints.size();
-    BL_FLOAT coeffInv = 0.0;
-    if (coeff > 0.0)
-        coeffInv = 1.0/coeff;
-#endif
-    
     for (int i = 0; i < mPartialLines.size(); i++)
     {
         vector<LinesRender2::Point> &line = mPartialLines[i];
@@ -1315,21 +883,10 @@ SASViewerProcess2::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
             LinesRender2::Point &p = line[j];
             
             p.mZ -= incrZ;
-            
-#if 0 // No need, z value will manage it well
-            // Hack to display well blue tracking lines
-            // even when mPartialsPoints is not full
-            if (mPartialsPoints.size() < mSASViewerRender->GetNumSlices())
-                // Not fully filled
-            {
-                p.mZ = 1.0 -coeffInv + p.mZ;
-            }
-#endif
         }
     }
     
     // Shorten the lines if they are too long
-    //
     vector<vector<LinesRender2::Point> > newLines;
     for (int i = 0; i < mPartialLines.size(); i++)
     {
@@ -1351,46 +908,7 @@ SASViewerProcess2::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
     mPartialLines = newLines;
     newLines.clear();
     
-#if 0 // No need, will suppress using z value
-    
-    // Suppress the lines that disappeared
-    //
-    
-    // Find the ids to suppress
-    vector<int> idsToSuppress;
-    const vector<LinesRender2::Point> &lastPoints = mPartialsPoints[0];
-    for (int i = 0; i < prevPoints.size(); i++)
-    {
-        const LinesRender2::Point &p = prevPoints[i];
-        
-        int idx = FindIndex(lastPoints, p.mId);
-        if (idx == -1)
-        {
-            idsToSuppress.push_back(p.mId);
-        }
-    }
-        
-    // Suppress the points from the current lines
-    for (int i = 0; i < mPartialLines.size(); i++)
-    {
-        const vector<LinesRender2::Point> &line = mPartialLines[i];
-        if (!line.empty())
-        {
-            int idx = FindIndex(idsToSuppress, line[0].mId);
-            if (idx == -1)
-            // Not found in the suppress list
-            {
-                newLines.push_back(line);
-            }
-        }
-    }
-    
-    // Update the current partial lines
-    mPartialLines = newLines;
-#endif
-    
     // Create the new lines
-    //
     const vector<LinesRender2::Point> &newPoints = mPartialsPoints[mPartialsPoints.size() - 1];
     for (int i = 0; i < newPoints.size(); i++)
     {

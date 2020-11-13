@@ -22,7 +22,6 @@ using namespace std;
 // PartialsToFreq4: keep only the structure and moved the freq diff algo
 // to a new class
 // (will be useful if need filtering frequency)
-
 class PartialTWMEstimate3;
 class PartialsToFreq5
 {
@@ -36,25 +35,19 @@ public:
     BL_FLOAT ComputeFrequency(const vector<PartialTracker5::Partial> &partials);
     
 protected:
-    //
     BL_FLOAT AdjustFreqToPartial(BL_FLOAT freq,
-                               const vector<PartialTracker5::Partial> &partials);
+                                 const vector<PartialTracker5::Partial> &partials);
 
     BL_FLOAT AdjustFreqToPartialOctave(BL_FLOAT freq,
                                      const vector<PartialTracker5::Partial> &partials);
     
-    //
     void ThresholdPartials(vector<PartialTracker5::Partial> *partials);
-
-    //
     void ThresholdPartialsRelative(vector<PartialTracker5::Partial> *partials);
 
-    
     //
     int mBufferSize;
     BL_FLOAT mSampleRate;
     
-    //PartialDiffEstimate *mEstimate;
     PartialTWMEstimate3 *mEstimate;
 };
 

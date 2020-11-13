@@ -14,11 +14,7 @@ using namespace std;
 
 #include "PartialTWMEstimate3.h"
 
-#define INF 1e15
-#define EPS 1e-15
-
 #define MIN_DB -120.0
-
 
 #define MIN_FREQ_FIND_F0 50.0
 #define MAX_FREQ_FIND_F0 10000.0
@@ -32,7 +28,6 @@ using namespace std;
 #define MAX_NUM_PARTIALS   20
 
 #define OPTIM_FIND_NEAREST 0
-
 #define OPTIM_FIND_NEAREST_PRECOMP_COEFFS 1
 
 // Optim: limit the number of loop count
@@ -60,14 +55,6 @@ using namespace std;
 // And gives good result for bell !
 #define ESTIM_MULTIRES_MIN_PRECISION 0.2
 #define ESTIM_MULTIRES_MAX_PRECISION 20.0
-
-// Debug
-#define DEBUG_NUM_LOOPS 0
-
-#if DEBUG_NUM_LOOPS
-int __NumLoops = 0;
-int __maxNumLoops = 0;
-#endif
 
 bool
 PartialTWMEstimate3::Freq::ErrorLess(const Freq &f1, const Freq &f2)
@@ -171,25 +158,6 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials)
     }
 #endif
     
-#if 0 // DEBUG
-    //PartialTracker5::DBG_DumpPartials2("partials.txt", partials0,
-    //                                   mBufferSize, mSampleRate);
-    
-    BLDebug::AppendValue("freq.txt", result);
-    BLDebug::AppendValue("error.txt", error);
-    
-    static int count = 0;
-    if (count == 41) // ok
-    {
-        int dummy = 0;
-    }
-    if (count == 42) // ko
-    {
-        int dummy = 0;
-    }
-    count++;
-#endif
-    
     return result;
 }
 
@@ -229,22 +197,9 @@ PartialTWMEstimate3::EstimateMultiRes(const vector<PartialTracker5::Partial> &pa
 #endif
     
     BL_FLOAT range = maxFreqSearch - minFreqSearch;
-    
-#if DEBUG_NUM_LOOPS
-    __NumLoops = 0;
-#endif
-    
-    BL_FLOAT range0 = range;
-    BL_FLOAT maxFreq0 = maxFreqSearch;
-    BL_FLOAT maxHarmo0 = maxFreqHarmo;
-    
     BL_FLOAT freq = 0.0;
     while(precision >= ESTIM_MULTIRES_MIN_PRECISION)
     {
-        //fprintf(stderr, "# freqs: %g, #harmo: %g\n",
-        //        range/precision,
-        //        (log(maxFreqHarmo)/log(2.0)));
-        
         freq = Estimate(partials0, precision, minFreqSearch, maxFreqSearch, maxFreqHarmo);
         
         // Increase precision / decrease interval
@@ -259,20 +214,6 @@ PartialTWMEstimate3::EstimateMultiRes(const vector<PartialTracker5::Partial> &pa
         if (maxFreqSearch > mSampleRate/2.0)
             maxFreqSearch = mSampleRate/2.0;
     }
-
-#if DEBUG_NUM_LOOPS
-    if (__NumLoops > __maxNumLoops)
-    {
-        __maxNumLoops = __NumLoops;
-        
-        fprintf(stderr, "loops: %d   partials: %ld   range: %g   max freq: %g   max harmo: %g\n",
-                __NumLoops,
-                partials0.size(),
-                (BL_FLOAT)((int)range0),
-                (BL_FLOAT)((int)maxFreq0),
-                (BL_FLOAT)((int)maxHarmo0));
-    }
-#endif
     
     return freq;
 }
@@ -309,10 +250,9 @@ PartialTWMEstimate3::EstimateOptim(const vector<PartialTracker5::Partial> &parti
     }
     
     BL_FLOAT Amax = BLUtils::DBToAmp(AmaxDB);
-    //BL_FLOAT Amax = AmaxDB - MIN_DB;
     
     BL_FLOAT AmaxInv = 0.0;
-    if (Amax > EPS)
+    if (Amax > BL_EPS)
         AmaxInv = 1.0/Amax;
     
     // Compute possible harmonics from the input partial
@@ -338,7 +278,7 @@ PartialTWMEstimate3::EstimateOptim(const vector<PartialTracker5::Partial> &parti
     BL_FLOAT maxFreq = MAX_FREQ_FIND_F0;
     
     // Algo
-    BL_FLOAT minError = INF;
+    BL_FLOAT minError = BL_INF;
     BL_FLOAT bestFreq0 = partials0[0].mFreq;
     for (int i = 0; i < candidates.size(); i++)
     {
@@ -351,40 +291,6 @@ PartialTWMEstimate3::EstimateOptim(const vector<PartialTracker5::Partial> &parti
             bestFreq0 = testFreq;
         }
     }
-    
-#if 0 // Refine ?
-    // Refine the result
-    
-    // 100 Hz
-#define MARGIN 100.0 //100.0 //100.0
-    // 10Hz
-#define PRECISION 10.0//1.0
-#define MIN_PRECISION 1.0 //0.1
-    
-    // Divide by 10 at each iteration
-#define DECREASE_COEFF 10.0
-    
-#define MAX_FREQ mSampleRate/2.0
-    
-    BL_FLOAT precision = PRECISION;
-    BL_FLOAT margin = MARGIN;
-    
-    while(precision >= MIN_PRECISION)
-    {
-        BL_FLOAT minFreq = bestFreq0 - margin;
-        if (minFreq < MIN_FREQ_FIND_F0)
-            minFreq = MIN_FREQ_FIND_F0;
-        
-        BL_FLOAT maxFreq = bestFreq0 + margin;
-        if (maxFreq > MAX_FREQ)
-            maxFreq = MAX_FREQ;
-        
-        bestFreq0 = Estimate(partials0, precision, minFreq, maxFreq);
-        
-        precision /= DECREASE_COEFF;
-        margin /= DECREASE_COEFF;
-    }
-#endif
     
     return bestFreq0;
 }
@@ -434,16 +340,15 @@ PartialTWMEstimate3::EstimateOptim2(const vector<PartialTracker5::Partial> &part
     }
     
     BL_FLOAT Amax = BLUtils::DBToAmp(AmaxDB);
-    //BL_FLOAT Amax = AmaxDB - MIN_DB;
     
     BL_FLOAT AmaxInv = 0.0;
-    if (Amax > EPS)
+    if (Amax > BL_EPS)
         AmaxInv = 1.0/Amax;
     
     BL_FLOAT maxFreq = MAX_FREQ_FIND_F0;
     
     // Algo
-    BL_FLOAT minError = INF;
+    BL_FLOAT minError = BL_INF;
     BL_FLOAT bestFreq0 = partials0[0].mFreq;
     for (int i = 0; i < intervals.size(); i++)
     {
@@ -456,56 +361,6 @@ PartialTWMEstimate3::EstimateOptim2(const vector<PartialTracker5::Partial> &part
             bestFreq0 = testFreq;
         }
     }
-    
-#if 0 // Refine ?
-    // Refine the result
-    
-    // 100 Hz
-#define MARGIN 100.0 //100.0 //100.0
-    // 10Hz
-#define PRECISION 10.0//1.0
-#define MIN_PRECISION 1.0 //0.1
-    
-    // Divide by 10 at each iteration
-#define DECREASE_COEFF 10.0
-    
-#define MAX_FREQ mSampleRate/2.0
-    
-    BL_FLOAT precision = PRECISION;
-    BL_FLOAT margin = MARGIN;
-    
-    BL_FLOAT minFreqSearch = bestFreq0 - MARGIN/2; //MIN_FREQ_FIND_F0;
-    BL_FLOAT maxFreqSearch = bestFreq0 + MARGIN/2; //FindMaxFreqSearch(partials0);
-    
-//#if OPTIM_LIMIT_FREQ
-//    if (maxFreqSearch > MAX_FREQ_PARTIAL)
-//        maxFreqSearch = MAX_FREQ_PARTIAL;
-//#endif
-    
-    BL_FLOAT maxFreqHarmo = FindMaxFreqHarmo(partials0);
-    
-#if OPTIM_LIMIT_FREQ
-    if (maxFreqHarmo > MAX_FREQ_HARMO)
-        maxFreqHarmo = MAX_FREQ_HARMO;
-#endif
-    
-    while(precision >= MIN_PRECISION)
-    {
-        BL_FLOAT minFreq = bestFreq0 - margin;
-        if (minFreq < MIN_FREQ_FIND_F0)
-            minFreq = MIN_FREQ_FIND_F0;
-        
-        BL_FLOAT maxFreq = bestFreq0 + margin;
-        if (maxFreq > MAX_FREQ)
-            maxFreq = MAX_FREQ;
-        
-        bestFreq0 = Estimate(partials0, precision, minFreqSearch,
-                             maxFreqSearch, maxFreqHarmo);
-        
-        precision /= DECREASE_COEFF;
-        margin /= DECREASE_COEFF;
-    }
-#endif
     
     return bestFreq0;
 }
@@ -549,17 +404,12 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
     }
     
     BL_FLOAT Amax = BLUtils::DBToAmp(AmaxDB);
-    //BL_FLOAT Amax = AmaxDB - MIN_DB;
     
     BL_FLOAT AmaxInv = 0.0;
-    if (Amax > EPS)
+    if (Amax > BL_EPS)
         AmaxInv = 1.0/Amax;
         
     BL_FLOAT testFreq = minFreqSearch;
-    
-    // Debug
-    //BL_FLOAT dbgBestErrorK = 0.0;
-    //BL_FLOAT dbgBestErrorN = 0.0;
     
 #if OPTIM_FIND_NEAREST_PRECOMP_COEFFS
     // Optim: pre-compute some error terms
@@ -581,8 +431,7 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
     {
         BL_FLOAT aDB = partials0[i].mAmpDB;
     
-        BL_FLOAT a = BLUtils::DBToAmp(aDB); // orig
-        //BL_FLOAT a = aDB - MIN_DB;
+        BL_FLOAT a = BLUtils::DBToAmp(aDB);
         
         BL_FLOAT aNorm = a*AmaxInv;
         
@@ -590,17 +439,12 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
     }
 #endif
     
-    BL_FLOAT minError = INF;
+    BL_FLOAT minError = BL_INF;
     BL_FLOAT bestFreq = testFreq;
     while(testFreq < maxFreqSearch)
     {
-        //vector<BL_FLOAT> dbgHarmos;
-        //BL_FLOAT dbgErrorK;
-        //BL_FLOAT dbgErrorN;
-        
 #if !OPTIM_FIND_NEAREST && !OPTIM_FIND_NEAREST_PRECOMP_COEFFS
         BL_FLOAT err = ComputeTWMError(partials0, testFreq, maxFreqHarmo, AmaxInv);
-                                     //&dbgHarmos, &dbgErrorK, &dbgErrorN);
 #endif
         
 #if OPTIM_FIND_NEAREST
@@ -609,25 +453,17 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
         
 #if OPTIM_FIND_NEAREST_PRECOMP_COEFFS
         BL_FLOAT err = ComputeTWMError3(partials0, partialFreqs, testFreq,
-                                      maxFreqHarmo, /*AmaxInv,*/ aNorms, fkps);
+                                      maxFreqHarmo, aNorms, fkps);
 #endif
 
         if (err < minError)
         {
             minError = err;
             bestFreq = testFreq;
-            
-            //DBG_DumpFreqs("harmos.txt", dbgHarmos);
-            
-            //dbgBestErrorK = dbgErrorK;
-            //dbgBestErrorN = dbgErrorN;
         }
         
         testFreq += freqAccuracy;
     }
-    
-    //BLDebug::AppendValue("error-n.txt", dbgBestErrorN);
-    //BLDebug::AppendValue("error-k.txt", dbgBestErrorK);
     
     if (error != NULL)
         *error = minError;
@@ -680,16 +516,10 @@ PartialTWMEstimate3::EstimateMulti(const vector<PartialTracker5::Partial> &parti
     //BL_FLOAT Amax = AmaxDB - MIN_DB;
     
     BL_FLOAT AmaxInv = 0.0;
-    if (Amax > EPS)
+    if (Amax > BL_EPS)
         AmaxInv = 1.0/Amax;
     
     BL_FLOAT testFreq = minFreqSearch;
-    
-    BL_FLOAT dbgBestErrorK = 0.0;
-    BL_FLOAT dbgBestErrorN = 0.0;
-    
-    BL_FLOAT minError = INF;
-    BL_FLOAT bestFreq = testFreq;
     while(testFreq < maxFreqSearch)
     {
         vector<BL_FLOAT> dbgHarmos;
@@ -750,7 +580,7 @@ PartialTWMEstimate3::ComputeTWMError(const vector<PartialTracker5::Partial> &par
         
             // Find the nearest partial
             int nearestPartialIdx = -1;
-            BL_FLOAT minDiff = INF;
+            BL_FLOAT minDiff = BL_INF;
             for (int j = 0; j < partials.size(); j++)
             {
                 const PartialTracker5::Partial &partial = partials[j];
@@ -782,7 +612,7 @@ PartialTWMEstimate3::ComputeTWMError(const vector<PartialTracker5::Partial> &par
         
         // Find the nearest harmonic
         BL_FLOAT nearestHarmo = 0.0;
-        BL_FLOAT minDiff = INF;
+        BL_FLOAT minDiff = BL_INF;
         for (int j = 0; j < harmos.size(); j++)
         {
             BL_FLOAT h = harmos[j];
@@ -800,17 +630,7 @@ PartialTWMEstimate3::ComputeTWMError(const vector<PartialTracker5::Partial> &par
     
     Ek /= partials.size();
     
-    BL_FLOAT Etotal;
-    //if (mHarmonicSoundFlag)
-    {
-        // Like in the paper
-        Etotal = En + rho*Ek;
-    }
-    //else
-    //{
-    //    // Good for bell
-    //    Etotal = Ek;
-    //}
+    BL_FLOAT Etotal = En + rho*Ek;
     
     if (dbgErrorK != NULL)
         *dbgErrorK = Ek;
@@ -918,7 +738,6 @@ PartialTWMEstimate3::ComputeErrorN(const PartialTracker5::Partial &nearestPartia
     BL_FLOAT aDB = nearestPartial.mAmpDB;
         
     BL_FLOAT a = BLUtils::DBToAmp(aDB);
-    //BL_FLOAT a = aDB - MIN_DB;
         
     err1 = (a*AmaxInv)*(q*deltaF*fnp - r);
     
@@ -948,7 +767,6 @@ PartialTWMEstimate3::ComputeErrorK(const PartialTracker5::Partial &partial,
     BL_FLOAT aDB = partial.mAmpDB;
         
     BL_FLOAT a = BLUtils::DBToAmp(aDB);
-    //BL_FLOAT a = aDB - MIN_DB;
         
     err1 = (a*AmaxInv)*(q*deltaF*fkp - r);
     
@@ -968,7 +786,6 @@ BL_FLOAT
 PartialTWMEstimate3::ComputeTWMError3(const vector<PartialTracker5::Partial> &partials,
                                       const vector<BL_FLOAT> &partialFreqs,
                                       BL_FLOAT testFreq, BL_FLOAT maxFreqHarmo,
-                                      //BL_FLOAT AmaxInv,
                                       const vector<BL_FLOAT> &aNorms,
                                       const vector<BL_FLOAT> &fkps)
 {
@@ -1001,16 +818,11 @@ PartialTWMEstimate3::ComputeTWMError3(const vector<PartialTracker5::Partial> &pa
         if (nearestPartialIdx != -1)
         {
             const PartialTracker5::Partial &nearestPartial = partials[nearestPartialIdx];
-            En += ComputeErrorN2(nearestPartial, h, aNorms[nearestPartialIdx]/*AmaxInv*//*, fnps[i]*/);
+            En += ComputeErrorN2(nearestPartial, h, aNorms[nearestPartialIdx]);
         }
-        
-#if DEBUG_NUM_LOOPS
-        __NumLoops++;
-#endif
     }
     
     En /= harmos.size();
-    
     
     // Second pass
     BL_FLOAT Ek = 0.0;
@@ -1024,12 +836,8 @@ PartialTWMEstimate3::ComputeTWMError3(const vector<PartialTracker5::Partial> &pa
         {
             BL_FLOAT nearestHarmo = harmos[nearestHarmoIdx];
             
-            Ek += ComputeErrorK2(partial, nearestHarmo, aNorms[i], /*AmaxInv,*/ fkps[i]);
+            Ek += ComputeErrorK2(partial, nearestHarmo, aNorms[i], fkps[i]);
         }
-        
-#if DEBUG_NUM_LOOPS
-        __NumLoops++;
-#endif
     }
     
     Ek /= partials.size();
@@ -1055,8 +863,7 @@ PartialTWMEstimate3::ComputeTWMError3(const vector<PartialTracker5::Partial> &pa
 // Partial
 BL_FLOAT
 PartialTWMEstimate3::ComputeErrorN2(const PartialTracker5::Partial &nearestPartial,
-                                    BL_FLOAT harmo, //BL_FLOAT AmaxInv,
-                                    BL_FLOAT aNorm)
+                                    BL_FLOAT harmo, BL_FLOAT aNorm)
 {
     // Parameters
     BL_FLOAT p = 0.5;
@@ -1070,12 +877,7 @@ PartialTWMEstimate3::ComputeErrorN2(const PartialTracker5::Partial &nearestParti
     BL_FLOAT err0 = deltaF*fnp;
     BL_FLOAT err1 = 0.0;
     
-    //BL_FLOAT aDB = nearestPartial.mAmpDB;
-    
-    //BL_FLOAT a = DBToAmp(aDB); // orig
-    //BL_FLOAT a = aDB - MIN_DB;
-    
-    err1 = /*(a*AmaxInv)*/aNorm*(q*err0/*deltaF*fnp*/ - r);
+    err1 = aNorm*(q*err0 - r);
     
     BL_FLOAT err = err0 + err1;
     
@@ -1085,7 +887,7 @@ PartialTWMEstimate3::ComputeErrorN2(const PartialTracker5::Partial &nearestParti
 // Harmo
 BL_FLOAT
 PartialTWMEstimate3::ComputeErrorK2(const PartialTracker5::Partial &partial,
-                                    BL_FLOAT nearestHarmo, //BL_FLOAT AmaxInv,
+                                    BL_FLOAT nearestHarmo,
                                     BL_FLOAT aNorm, BL_FLOAT fkp)
 {
     // Parameters
@@ -1094,148 +896,16 @@ PartialTWMEstimate3::ComputeErrorK2(const PartialTracker5::Partial &partial,
     BL_FLOAT r = 0.5;
     
     // Compute error
-    //BL_FLOAT fkp = std::pow(partial.mFreq, -p);
     BL_FLOAT deltaF = std::fabs(partial.mFreq - nearestHarmo);
     
     BL_FLOAT err0 = deltaF*fkp;
     BL_FLOAT err1 = 0.0;
     
-    
-    //BL_FLOAT aDB = partial.mAmpDB;
-    
-    //BL_FLOAT a = DBToAmp(aDB); // orig
-    //BL_FLOAT a = aDB - MIN_DB;
-    
-    err1 = aNorm/*(a*AmaxInv)**/*(q*err0 /*deltaF*fkp*/ - r);
+    err1 = aNorm*(q*err0 - r);
     
     BL_FLOAT err = err0 + err1;
     
     return err;
-}
-
-// Unused
-BL_FLOAT
-PartialTWMEstimate3::FixFreqJumps(BL_FLOAT freq0, BL_FLOAT prevFreq)
-{
-    // 100 Hz
-#define FREQ_JUMP_THRESHOLD 100.0
-    
-  BL_FLOAT diff = std::fabs(freq0 - prevFreq);
-    if (diff > FREQ_JUMP_THRESHOLD)
-    {
-        //return prevFreq;
-        
-        BL_FLOAT result = GetNearestHarmonic(freq0, prevFreq);
-        
-        return result;
-    }
-    
-    return freq0;
-}
-
-
-// Unused
-
-// Use this to avoid harmonic jumps of the fundamental frequency
-BL_FLOAT
-PartialTWMEstimate3::GetNearestOctave(BL_FLOAT freq0, BL_FLOAT refFreq)
-{
-    // 1 Hz
-#define FREQ_RES 1.0
-    
-    if (refFreq < MIN_FREQ_FIND_F0)
-        return freq0;
-    
-    BL_FLOAT result = freq0;
-    
-    BL_FLOAT currentFreq = freq0;
-    BL_FLOAT minFreqDiff = INF;
-    if (freq0 <= refFreq)
-    {
-        while(currentFreq < mSampleRate/2.0)
-        {
-	  BL_FLOAT freqDiff = std::fabs(currentFreq - refFreq);
-            if (freqDiff < minFreqDiff)
-            {
-                minFreqDiff = freqDiff;
-                
-                result = currentFreq;
-            }
-            
-            currentFreq *= 2.0;
-        }
-    }
-    else if (freq0 > refFreq)
-    {
-        while(currentFreq > FREQ_RES)
-        {
-	  BL_FLOAT freqDiff = std::fabs(currentFreq - refFreq);
-            if (freqDiff < minFreqDiff)
-            {
-                minFreqDiff = freqDiff;
-                
-                result = currentFreq;
-            }
-            
-            currentFreq /= 2.0;
-        }
-    }
-    
-    return result;
-}
-
-// Unused
-BL_FLOAT
-PartialTWMEstimate3::GetNearestHarmonic(BL_FLOAT freq0, BL_FLOAT refFreq)
-{
-    // 1 Hz
-#define FREQ_RES 1.0
-    
-    if (refFreq < MIN_FREQ_FIND_F0)
-        return freq0;
-        
-    BL_FLOAT result = freq0;
-    
-    BL_FLOAT currentFreq = freq0;
-    BL_FLOAT minFreqDiff = INF;
-    if (freq0 <= refFreq)
-    {
-        while(currentFreq < mSampleRate/2.0)
-        {
-	  BL_FLOAT freqDiff = std::fabs(currentFreq - refFreq);
-            if (freqDiff < minFreqDiff)
-            {
-                minFreqDiff = freqDiff;
-                
-                result = currentFreq;
-            }
-            
-            currentFreq += freq0;
-        }
-    }
-#if 1 // This works well with this commented (with SASViewer)
-      // (when uncommented, the freq goes near 1Hz and gets stuck)
-    else if (freq0 > refFreq)
-    {
-        int hNum = 1;
-        while(currentFreq > FREQ_RES)
-        {
-            currentFreq = freq0/hNum;
-            
-            BL_FLOAT freqDiff = std::fabs(currentFreq - refFreq);
-            if (freqDiff < minFreqDiff)
-            {
-                minFreqDiff = freqDiff;
-                
-                result = currentFreq;
-            }
-            
-            hNum++;
-        }
-    }
-#endif
-    
-    return result;
 }
 
 BL_FLOAT
@@ -1282,25 +952,6 @@ PartialTWMEstimate3::FindMaxFreqSearch(const vector<PartialTracker5::Partial> &p
     }
     
     return 0.0;
-}
-
-// Unused
-void
-PartialTWMEstimate3::PartialsRange(vector<PartialTracker5::Partial> *partials,
-                                   BL_FLOAT minFreq, BL_FLOAT maxFreq)
-{
-    vector<PartialTracker5::Partial> result;
-    
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const PartialTracker5::Partial &partial = (*partials)[i];
-        
-        if ((partial.mFreq >= minFreq) &&
-            (partial.mFreq <= maxFreq))
-            result.push_back(partial);
-    }
-    
-    *partials = result;
 }
 
 void
@@ -1388,15 +1039,7 @@ PartialTWMEstimate3::FindNearestIndex(const vector<BL_FLOAT> &freqs, BL_FLOAT fr
     // NOTE: partials freqs must be sorted
     int nearestIdx = -1;
     
-    //fprintf(stderr, "freqs: ");
-    //for (int i = 0; i < freqs.size(); i++)
-    //    fprintf(stderr, "%g ", freqs[i]);
-    //fprintf(stderr, "\n");
-    
     vector<BL_FLOAT> &freqs0 = (vector<BL_FLOAT> &)freqs;
-    
-    // NOTE: with that, the performances would have dropped
-    //vector<BL_FLOAT> freqs0 = freqs;
     
     vector<BL_FLOAT>::iterator it =
         lower_bound(freqs0.begin(), freqs0.end(), freq);
@@ -1437,50 +1080,4 @@ PartialTWMEstimate3::LimitPartialsNumber(vector<PartialTracker5::Partial> *sorte
     }
     
     *sortedPartials = result;
-}
-
-void
-PartialTWMEstimate3::DBG_DumpFreqs(const char *fileName,
-                                   const vector<BL_FLOAT> &freqs)
-{
-    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    
-    WDL_TypedBuf<BL_FLOAT> buffer;
-    BLUtils::ResizeFillValue(&buffer, mBufferSize/2, (BL_FLOAT)MIN_DB);
-    
-    for (int i = 0; i < freqs.size(); i++)
-    {
-        BL_FLOAT freq = freqs[i];
-        
-        BL_FLOAT binNum = freq/hzPerBin;
-        binNum = bl_round(binNum);
-        
-        BL_FLOAT amp = -20.0;
-        
-        buffer.Get()[(int)binNum] = amp;
-    }
-    
-    BLDebug::DumpData(fileName, buffer);
-}
-
-void
-PartialTWMEstimate3::DBG_DumpFreqs(const vector<Freq> &freqs)
-{
-    WDL_TypedBuf<BL_FLOAT> freqsBuf;
-    freqsBuf.Resize(freqs.size());
-    
-    WDL_TypedBuf<BL_FLOAT> errBuf;
-    errBuf.Resize(freqs.size());
-    
-    for (int i = 0; i < freqs.size(); i++)
-    {
-        BL_FLOAT freq = freqs[i].mFreq;
-        freqsBuf.Get()[i] = freq;
-        
-        BL_FLOAT err = freqs[i].mError;
-        errBuf.Get()[i] = err;
-    }
-    
-    BLDebug::DumpData("freqs.txt", freqsBuf);
-    BLDebug::DumpData("errors.txt", errBuf);
 }

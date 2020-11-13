@@ -10,39 +10,32 @@
 using namespace std;
 
 #include <PartialTWMEstimate3.h>
-
 #include <BLUtils.h>
 
 #include "PartialsToFreq5.h"
 
 
-#define EPS 1e-15
-#define INF 1e15
-
 #define MIN_AMP_DB -120.0
 
 
 // Threshold
-#define THRESHOLD_PARTIALS     0
+#define THRESHOLD_PARTIALS 0
 // -40 : good for "oohoo"
 // -60 : good for "bell"
-#define AMP_THRESHOLD           -60.0 //-80.0 //-40.0 //-60.0
+#define AMP_THRESHOLD -60.0 //-80.0
 
 // Threshold relative
-#define THRESHOLD_PARTIALS_RELATIVE     0
+#define THRESHOLD_PARTIALS_RELATIVE 0
 // -40 : good for "oohoo"
 // -60 : good for "bell"
-#define AMP_THRESHOLD_RELATIVE          40.0
+#define AMP_THRESHOLD_RELATIVE 40.0
 
 
 //
-#define MAX_NUM_INTERVALS  1
-
+#define MAX_NUM_INTERVALS 1
 #define NUM_OCTAVES_ADJUST 2
-
-#define NUM_HARMO_GEN      4
-
-#define NUM_OCTAVE_GEN     2
+#define NUM_HARMO_GEN 4
+#define NUM_OCTAVE_GEN 2
 
 
 PartialsToFreq5::PartialsToFreq5(int bufferSize, BL_FLOAT sampleRate)
@@ -77,7 +70,6 @@ PartialsToFreq5::ComputeFrequency(const vector<PartialTracker5::Partial> &partia
     ThresholdPartialsRelative(&partials0);
 #endif
  
-    //BL_FLOAT error = -1.0;
     if (partials0.empty())
     {
         BL_FLOAT freq = 0.0;
@@ -92,7 +84,6 @@ PartialsToFreq5::ComputeFrequency(const vector<PartialTracker5::Partial> &partia
         return freq;
     }
     
-    //BL_FLOAT freq = mEstimate->Estimate(partials0); // profile: 100/200ms
     
 #if 1 // ORIGIN
     BL_FLOAT freq = mEstimate->EstimateMultiRes(partials0); // profile: ~40ms
@@ -100,18 +91,6 @@ PartialsToFreq5::ComputeFrequency(const vector<PartialTracker5::Partial> &partia
 #if 0 // TEST
     BL_FLOAT freq = mEstimate->EstimateOptim2(partials0);
 #endif
-    
-    //BL_FLOAT freq = mEstimate->EstimateOptim(partials0); // 200ms (and false results)
-    
-    // Do we adjust the frequency found to the nearest partial ?
-    //freq = AdjustFreqToPartial(freq, partials0);
-    //freq = AdjustFreqToPartialOctave(freq, partials0);
-    
-    // Debug
-    //PartialTracker5::DBG_DumpPartials2("partials.txt", partials0,
-    //                                   mBufferSize, mSampleRate);
-    
-    //BLDebug::AppendValue("freq.txt", freq);
     
     return freq;
 }
@@ -123,7 +102,7 @@ PartialsToFreq5::AdjustFreqToPartial(BL_FLOAT freq,
                                      const vector<PartialTracker5::Partial> &partials)
 {
     BL_FLOAT bestFreq = 0.0;
-    BL_FLOAT minDiff = INF;
+    BL_FLOAT minDiff = BL_INF;
     for (int i = 0; i < partials.size(); i++)
     {
         const PartialTracker5::Partial &partial = partials[i];
@@ -146,7 +125,7 @@ PartialsToFreq5::AdjustFreqToPartialOctave(BL_FLOAT freq,
     BL_FLOAT octaveCoeff = 1.0;
     
     BL_FLOAT bestFreq = 0.0;
-    BL_FLOAT minDiff = INF;
+    BL_FLOAT minDiff = BL_INF;
     for (int j = 0; j < NUM_OCTAVES_ADJUST; j++)
     {
         for (int i = 0; i < partials.size(); i++)

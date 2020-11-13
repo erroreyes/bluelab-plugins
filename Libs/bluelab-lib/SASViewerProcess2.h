@@ -20,16 +20,7 @@ using namespace std;
 #include <PartialTracker5.h>
 #include <SASFrame3.h>
 #include <BlaTimer.h>
-
-#include "FftProcessObj16.h"
-
-
-#define SAS_VIEWER_PROCESS_PROFILE 0 //1 //0
-
-// Debug
-#define DEBUG_PARTIAL_TRACKING     0 //1 //0
-// Hide points, and do not output sound after this freq
-#define DEBUG_MAX_PARTIAL_FREQ 44100.0 //3000.0
+#include <FftProcessObj16.h>
 
 class PartialTracker5;
 class SASFrame3;
@@ -91,12 +82,6 @@ public:
     void SetMixFreqFlag(bool flag);
     void SetMixNoiseFlag(bool flag);
     
-#if 0
-    static BL_FLOAT IdToFreq(int idx, BL_FLOAT sampleRate, int bufferSize);
-    
-    static int FreqToId(BL_FLOAT freq, BL_FLOAT sampleRate, int bufferSize);
-#endif
-    
     // Amp to dB
     static BL_FLOAT AmpToDBNorm(BL_FLOAT val);
     static BL_FLOAT DBToAmpNorm(BL_FLOAT val);
@@ -127,13 +112,9 @@ protected:
     int FindIndex(const vector<int> &ids, int idx);
  
     int FindIndex(const vector<LinesRender2::Point> &points, int idx);
-
-    // Original version (slow)
-    void CreateLines(vector<vector<LinesRender2::Point> > *partialLines);
     
     // Optimized version
-    // (optim x3)
-    void CreateLines2(const vector<LinesRender2::Point> &prevPoints);
+    void CreateLines(const vector<LinesRender2::Point> &prevPoints);
     
     // Mix noise and harmonic sound
     void MixHarmoNoise(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
@@ -156,8 +137,6 @@ protected:
     BL_FLOAT mOverlapping;
     BL_FLOAT mOversampling;
     BL_FLOAT mSampleRate;
-    
-    //WDL_TypedBuf<BL_FLOAT> mValues;
     
     WDL_TypedBuf<BL_FLOAT> mCurrentMagns;
     vector<PartialTracker5::Partial> mCurrentPartials;
@@ -196,20 +175,6 @@ protected:
     // Keep an history, to avoid recomputing the whole lines each time
     // With this, we compute only the new extremity of the line
     vector<vector<LinesRender2::Point> > mPartialLines;
-    
-#if SAS_VIEWER_PROCESS_PROFILE
-    BlaTimer mTimer0;
-    long mTimerCount0;
-    
-    BlaTimer mTimer1;
-    long mTimerCount1;
-    
-    BlaTimer mTimer2;
-    long mTimerCount2;
-    
-    BlaTimer mTimer3;
-    long mTimerCount3;
-#endif
 };
 
 #endif // IGRAPHICS_NANOVG

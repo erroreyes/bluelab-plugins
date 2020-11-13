@@ -60,15 +60,6 @@ public:
     // Very good performances, but some jumps
     BL_FLOAT EstimateOptim2(const vector<PartialTracker5::Partial> &partials);
     
-    // Fix big freqs jumps (TEST)
-    BL_FLOAT FixFreqJumps(BL_FLOAT freq0, BL_FLOAT prevFreq);
-    
-    // Gest nearest hamonic from input freq, comared to reference freq
-    BL_FLOAT GetNearestOctave(BL_FLOAT freq, BL_FLOAT refFreq);
-    
-    // Gest nearest partial from input freq, comared to reference freq
-    BL_FLOAT GetNearestHarmonic(BL_FLOAT freq, BL_FLOAT refFreq);
-    
 protected:
     BL_FLOAT Estimate(const vector<PartialTracker5::Partial> &partials,
                     BL_FLOAT freqAccuracy,
@@ -102,20 +93,17 @@ protected:
     // Optimized find + coeffs precomputation
     BL_FLOAT ComputeTWMError3(const vector<PartialTracker5::Partial> &partials,
                             const vector<BL_FLOAT> &partialFreqs,
-                            BL_FLOAT testFreq, BL_FLOAT maxFreqHarmo, //BL_FLOAT AmaxInv,
+                            BL_FLOAT testFreq, BL_FLOAT maxFreqHarmo,
                             const vector<BL_FLOAT> &aNorms,
                             const vector<BL_FLOAT> &fkps);
     
     BL_FLOAT ComputeErrorK2(const PartialTracker5::Partial &partial,
-                          BL_FLOAT harmo, BL_FLOAT aNorm,//BL_FLOAT AmaxInv,
+                          BL_FLOAT harmo, BL_FLOAT aNorm,
                           BL_FLOAT fkp);
     
     BL_FLOAT ComputeErrorN2(const PartialTracker5::Partial &partial,
-                          BL_FLOAT harmo, BL_FLOAT aNorm); //BL_FLOAT AmaxInv);
-                          
-    //BL_FLOAT ComputeErrorN2(const PartialTracker3::Partial &partial,
-    //                      BL_FLOAT harmo, BL_FLOAT AmaxInv,
-    //                      BL_FLOAT fnp);
+                          BL_FLOAT harmo, BL_FLOAT aNorm);
+
     
     //
     // Max freq for harmonics generation
@@ -123,10 +111,6 @@ protected:
 
     // Max for the search range of F0
     BL_FLOAT FindMaxFreqSearch(const vector<PartialTracker5::Partial> &partials);
-
-    
-    void PartialsRange(vector<PartialTracker5::Partial> *partials,
-                       BL_FLOAT minFreq, BL_FLOAT maxFreq);
 
     //
     void SelectPartials(vector<PartialTracker5::Partial> *partials);
@@ -136,12 +120,7 @@ protected:
     
     // Optim
     int FindNearestIndex(const vector<BL_FLOAT> &freqs, BL_FLOAT freq);
-
     void LimitPartialsNumber(vector<PartialTracker5::Partial> *sortedPartials);
-    
-    // Debug
-    void DBG_DumpFreqs(const char *fileName, const vector<BL_FLOAT> &freqs);
-    void DBG_DumpFreqs(const vector<Freq> &freqs);
 
     
     //

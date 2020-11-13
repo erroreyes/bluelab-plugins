@@ -48,20 +48,18 @@ public:
     void Clear();
     
     virtual void AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns);
-    
-    // NEW
     virtual void AddPoints(const vector<LinesRender2::Point> &points);
 
     virtual void SetLineMode(LinesRender2::Mode mode);
     
     // Control
-    virtual void OnMouseDown(float x, float y, const IMouseMod &mod);
-    virtual void OnMouseUp(float x, float y, const IMouseMod &mod);
+    virtual void OnMouseDown(float x, float y, const IMouseMod &mod) override;
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod) override;
     virtual void OnMouseDrag(float x, float y, float dX, float dY,
-                             const IMouseMod &mod);
-    virtual void/*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod);
+                             const IMouseMod &mod) override;
+    virtual void OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
     virtual void OnMouseWheel(float x, float y,
-                              const IMouseMod &mod, BL_FLOAT d);
+                              const IMouseMod &mod, BL_FLOAT d) override;
     
     // Parameters
     virtual void SetSpeed(BL_FLOAT speed);
@@ -88,17 +86,13 @@ protected:
     void MagnsToPoints(vector<LinesRender2::Point> *points,
                        const WDL_TypedBuf<BL_FLOAT> &magns);
     
-    void CreateFreqsAxis();
-    
     BL_FLOAT FreqToMelNorm(BL_FLOAT freq);
     
     SASViewerPluginInterface *mPlug;
     
     GraphControl12 *mGraph;
     
-    
-    LinesRender2 *mLinesRenderWaves;
-    LinesRender2 *mLinesRenderPartials;
+    LinesRender2 *mLinesRender;
     
     Axis3D *mFreqsAxis;
     

@@ -32,10 +32,6 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 // 2x slower than 4096
 //SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 262144);
 
-
-#define EPS 1e-15
-#define INF 1e15
-
 #define MIN_AMP_DB -120.0
 
 // Synthesis
@@ -316,7 +312,6 @@ SASFrame3::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
         if (prevPartialIdx != -1)
             phase = mPrevPartials[prevPartialIdx].mPhase;
         
-        //const PartialTracker5::Partial &partial = mPartials[i]; // OLD
         for (int j = 0; j < samples->GetSize()/mOverlapping; j++)
         {
             // Get interpolated partial
@@ -336,9 +331,6 @@ SASFrame3::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
             phase += 2.0*M_PI*freq/mSampleRate;
         }
         
-        //phase = BLUtils::MapToPi(phase);
-        
-        //mPartials[i].mPhase += phase; //?????? STRANGE
         mPartials[i].mPhase = phase;
     }
 }
@@ -361,21 +353,17 @@ SASFrame3::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
     freq0 *= mPitch;
     
     // Sort partials by amplitude, in order to play the highest amplitudes ?
-    
     BL_FLOAT freq = freq0;
     int partialIndex = 0;
     while((freq < mSampleRate/2.0) && (partialIndex < SYNTH_MAX_NUM_PARTIALS))
     {
         if (freq > SYNTH_MIN_FREQ)
         {
-            //freq = ApplyNormWarping(freq);
-            //BL_FLOAT col = ApplyColor(freq);
-            
             if (mSASPartials.size() <= partialIndex)
             {
                 SASPartial newPartial;
                 newPartial.mFreq = freq;
-                newPartial.mAmpDB = AmpToDB(amp0/**col*/);
+                newPartial.mAmpDB = AmpToDB(amp0);
                 
                 mSASPartials.push_back(newPartial);
             }
@@ -383,7 +371,7 @@ SASFrame3::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
             {
                 SASPartial &partial = mSASPartials[partialIndex];
                 partial.mFreq = freq;
-                partial.mAmpDB = AmpToDB(amp0/**col*/);
+                partial.mAmpDB = AmpToDB(amp0);
             }
             
             BL_FLOAT phase = 0.0;
@@ -396,7 +384,6 @@ SASFrame3::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
                 // Get interpolated partial
                 BL_FLOAT partialT = ((BL_FLOAT)i)/(samples->GetSize()/mOverlapping);
                 GetSASPartial(&partial, partialIndex, partialT);
-                //partial = mSASPartials[partialIndex]; // OLD
                 
                 BL_FLOAT freq = partial.mFreq;
                 
@@ -427,7 +414,7 @@ SASFrame3::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
                 phase += 2.0*M_PI*freq/mSampleRate;
             }
             
-            mSASPartials[partialIndex].mPhase =/*+=*/ phase;
+            mSASPartials[partialIndex].mPhase = phase;
         }
         
         partialIndex++;
@@ -452,14 +439,11 @@ SASFrame3::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
     
     // Will be automatically interpolated
     BL_FLOAT amp0DB = GetAmplitudeDB();
-    //BL_FLOAT amp0 = DBToAmp(amp0DB);
-    
     BL_FLOAT freq0 = GetFrequency();
     
     freq0 *= mPitch;
     
     // Optim
-    //BL_FLOAT phaseCoeff = (samples->GetSize()/mOverlapping)*2.0*M_PI/mSampleRate;
     BL_FLOAT phaseCoeff = 2.0*M_PI/mSampleRate;
     
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
@@ -472,10 +456,7 @@ SASFrame3::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
     {
         if (freq > SYNTH_MIN_FREQ)
         {
-            // !!!
-            // TODO: check well that we match the partials correctly
-            // !!!
-            
+            // TODO: check well that we match the partials correctly!
             if (mSASPartials.size() <= partialIndex)
             {
                 SASPartial newPartial;
@@ -524,7 +505,7 @@ SASFrame3::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
                     
                     // Optim: if color is 0, do not compute the rest
                     // Gain: 54 => 35ms (30%)
-                    if ((col0 < EPS) && (col1 < EPS))
+                    if ((col0 < BL_EPS) && (col1 < BL_EPS))
                     {
                         phase += phaseCoeff*freq;
                         
@@ -548,12 +529,10 @@ SASFrame3::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
                 // Compute freq and partial amp
                 //
                 BL_FLOAT freq;
-                //BL_FLOAT ampDB;
                 BL_FLOAT amp;
                 if (prevPartial != NULL)
                 {
                     freq = (1.0 - t)*prevPartial->mFreq + t*partial.mFreq;
-                    //ampDB = (1.0 - t)*prevPartial->mAmpDB + t*partial.mAmpDB;
                     amp = (1.0 - t)*prevPartialAmp + t*partialAmp;
                 }
                 else
@@ -567,35 +546,25 @@ SASFrame3::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
                     if (t0 > 1.0)
                         t0 = 1.0;
                     
-                    //ampDB = t0*partial.mAmpDB;
                     amp = t0*partialAmp;
                 }
                 
-                //BL_FLOAT amp = DBToAmp(partial.mAmpDB)*col;
-                
                 freq *= w;
-                
-#if 0
-                BL_FLOAT samp = std::sin(phase);
-#else
+            
+                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
-#endif
                 
-                //samp *= amp;
                 samp *= amp*col;
-                
                 samp *= SYNTH_AMP_COEFF;
                 
                 if (freq >= SYNTH_MIN_FREQ)
                     samples->Get()[i] += samp;
                 
-                //phase += 2.0*M_PI*freq/mSampleRate;
                 phase += phaseCoeff*freq;
             }
             
             // Compute next phase
-            //phase += phaseCoeff*freq;
             mSASPartials[partialIndex].mPhase = phase;
         }
         
@@ -726,7 +695,7 @@ SASFrame3::ComputeSamplesSAS3(WDL_TypedBuf<BL_FLOAT> *samples)
 #endif
                     // Optim: if color is 0, do not compute the rest
                     // Gain: 54 => 35ms (30%)
-                    if ((col0 < EPS) && (col1 < EPS))
+                    if ((col0 < BL_EPS) && (col1 < BL_EPS))
                     {
                         phase += phaseCoeff*partialFreq;
                         
@@ -736,16 +705,11 @@ SASFrame3::ComputeSamplesSAS3(WDL_TypedBuf<BL_FLOAT> *samples)
                     col = (1.0 - t)*col0 + t*col1;
                 }
                 
-#if 0
-                BL_FLOAT samp = std::sin(phase);
-#else
+                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
-#endif
                 
-                //samp *= amp;
                 samp *= amp*col;
-                
                 samp *= SYNTH_AMP_COEFF;
                 
                 if (freq >= SYNTH_MIN_FREQ)
@@ -838,7 +802,7 @@ SASFrame3::ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples)
             
             // Loop
             BL_FLOAT t = 0.0;
-            BL_FLOAT tStep = 1.0/(samples->GetSize()/mOverlapping - 1); //-1
+            BL_FLOAT tStep = 1.0/(samples->GetSize()/mOverlapping - 1);
             for (int i = 0; i < samples->GetSize()/mOverlapping; i++)
             {
                 // OLD color
@@ -882,7 +846,7 @@ SASFrame3::ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples)
 #endif
                     // Optim: if color is 0, do not compute the rest
                     // Gain: 54 => 35ms (30%)
-                    if ((col0 < EPS) && (col1 < EPS))
+                    if ((col0 < BL_EPS) && (col1 < BL_EPS))
                     {
                         t += tStep;
                         phase += phaseCoeff*partialFreq;
@@ -892,16 +856,12 @@ SASFrame3::ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples)
                     
                     col = (1.0 - t)*col0 + t*col1;
                 }
-                
-#if 0
-                BL_FLOAT samp = std::sin(phase);
-#else
+            
+                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
-#endif
                 
                 samp *= amp*col;
-                
                 samp *= SYNTH_AMP_COEFF;
                 
                 if (freq >= SYNTH_MIN_FREQ)
@@ -938,11 +898,6 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
     samples->Resize(mBufferSize);
     
     BLUtils::FillAllZero(samples);
-    
-#if 0 // TEST
-    if (mPartials.empty())
-        return;
-#endif
     
     // First time: initialize the partials
     if (mSASPartials.empty())
@@ -1014,7 +969,7 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
             BL_FLOAT col0 = GetColor(mPrevColor, prevBinIdxc);
             BL_FLOAT col1 = GetColor(mColor, binIdxc);
             
-            if ((col0 < EPS) && (col1 < EPS))
+            if ((col0 < BL_EPS) && (col1 < BL_EPS))
                 // Color will be 0, no need to synthetize samples
             {
                 partialIndex++;
@@ -1026,11 +981,10 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
             
             // Loop
             BL_FLOAT t = 0.0;
-            BL_FLOAT tStep = 1.0/(samples->GetSize()/mOverlapping - 1); //-1
+            BL_FLOAT tStep = 1.0/(samples->GetSize()/mOverlapping - 1);
             for (int i = 0; i < samples->GetSize()/mOverlapping; i++)
             {
                 // Compute norm warping
-                //
                 BL_FLOAT w = 1.0;
                 if (binIdx < mNormWarping.GetSize() - 1)
                 {
@@ -1038,7 +992,6 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
                 }
                 
                 // Compute freq and partial amp
-                //
                 BL_FLOAT freq = (1.0 - t)*prevPartial.mFreq + t*partial.mFreq;
                 BL_FLOAT amp = (1.0 - t)*prevPartialAmp + t*partialAmp;
                 
@@ -1069,7 +1022,7 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
 #endif
                     // Optim: if color is 0, do not compute the rest
                     // Gain: 54 => 35ms (30%)
-                    if ((col0 < EPS) && (col1 < EPS))
+                    if ((col0 < BL_EPS) && (col1 < BL_EPS))
                     {
                         t += tStep;
                         phase += phaseCoeff*partialFreq;
@@ -1083,18 +1036,12 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
                 BL_FLOAT col = (1.0 - t)*col0 + t*col1;
 #endif
                 
-                
-#if 0
-                BL_FLOAT samp = std::sin(phase);
-#else
+                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
-#endif
                 
                 samp *= amp*col;
-                
                 samp *= SYNTH_AMP_COEFF;
-                
                 if (freq >= SYNTH_MIN_FREQ)
                     samples->Get()[i] += samp;
                 
@@ -1155,7 +1102,6 @@ SASFrame3::ComputeSamplesSASOverlap(WDL_TypedBuf<BL_FLOAT> *samples)
     freq0 *= mPitch;
     
     // Sort partials by amplitude, in order to play the highest amplitudes ?
-    
     BL_FLOAT freq = freq0;
     int partialIndex = 0;
     while((freq < mSampleRate/2.0) && (partialIndex < SYNTH_MAX_NUM_PARTIALS))
@@ -1198,7 +1144,6 @@ SASFrame3::ComputeSamplesSASOverlap(WDL_TypedBuf<BL_FLOAT> *samples)
                 //SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
                 
                 samp *= amp;
-                
                 samp *= SYNTH_AMP_COEFF;
                 
                 if (freq >= SYNTH_MIN_FREQ)
@@ -1250,14 +1195,11 @@ SASFrame3::ComputeFftSAS(WDL_TypedBuf<BL_FLOAT> *samples)
     {
         if (freq > SYNTH_MIN_FREQ)
         {
-            //freq = ApplyNormWarping(freq);
-            //BL_FLOAT col = ApplyColor(freq);
-            
             if (mSASPartials.size() <= partialIndex)
             {
                 SASPartial newPartial;
                 newPartial.mFreq = freq;
-                newPartial.mAmpDB = AmpToDB(amp0/**col*/);
+                newPartial.mAmpDB = AmpToDB(amp0);
                 
                 mSASPartials.push_back(newPartial);
             }
@@ -1265,7 +1207,7 @@ SASFrame3::ComputeFftSAS(WDL_TypedBuf<BL_FLOAT> *samples)
             {
                 SASPartial &partial = mSASPartials[partialIndex];
                 partial.mFreq = freq;
-                partial.mAmpDB = AmpToDB(amp0/**col*/);
+                partial.mAmpDB = AmpToDB(amp0);
             }
             
             // Freq
@@ -1285,9 +1227,6 @@ SASFrame3::ComputeFftSAS(WDL_TypedBuf<BL_FLOAT> *samples)
             // Color
             BL_FLOAT col = ApplyColor(freq);
             magn *= col;
-            
-            // ??
-            //magn *= SYNTH_AMP_COEFF;
             
             // Phase
             BL_FLOAT phase = 0.0;
@@ -1337,11 +1276,6 @@ SASFrame3::ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples)
     
     BLUtils::FillAllZero(samples);
     
-#if 0 // TEST
-    if (mPartials.empty())
-        return;
-#endif
-    
     BL_FLOAT amp0DB = GetAmplitudeDB();
     BL_FLOAT amp0 = DBToAmp(amp0DB);
     
@@ -1368,14 +1302,11 @@ SASFrame3::ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples)
     {
         if (freq > SYNTH_MIN_FREQ)
         {
-            //freq = ApplyNormWarping(freq);
-            //BL_FLOAT col = ApplyColor(freq);
-            
             if (mSASPartials.size() <= partialIndex)
             {
                 SASPartial newPartial;
                 newPartial.mFreq = freq;
-                newPartial.mAmpDB = AmpToDB(amp0/**col*/);
+                newPartial.mAmpDB = AmpToDB(amp0);
                 
                 mSASPartials.push_back(newPartial);
             }
@@ -1383,7 +1314,7 @@ SASFrame3::ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples)
             {
                 SASPartial &partial = mSASPartials[partialIndex];
                 partial.mFreq = freq;
-                partial.mAmpDB = AmpToDB(amp0/**col*/);
+                partial.mAmpDB = AmpToDB(amp0);
             }
             
             // Freq
@@ -1429,7 +1360,7 @@ SASFrame3::ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples)
             // Update the phases
             int numSamples = samples->GetSize()/mOverlapping;
             phase += numSamples*2.0*M_PI*freq/mSampleRate;
-            if (partialIndex < mSASPartials.size()) // tmp fix
+            if (partialIndex < mSASPartials.size()) // Tmp fix...
                 mSASPartials[partialIndex].mPhase = phase;
         }
         
@@ -1480,14 +1411,11 @@ SASFrame3::ComputeSamplesSASTable(WDL_TypedBuf<BL_FLOAT> *samples)
     {
         if (freq > SYNTH_MIN_FREQ)
         {
-            //freq = ApplyNormWarping(freq);
-            //BL_FLOAT col = ApplyColor(freq);
-            
             if (mSASPartials.size() <= partialIndex)
             {
                 SASPartial newPartial;
                 newPartial.mFreq = freq;
-                newPartial.mAmpDB = AmpToDB(amp0/**col*/);
+                newPartial.mAmpDB = AmpToDB(amp0);
                 
                 mSASPartials.push_back(newPartial);
             }
@@ -1495,7 +1423,7 @@ SASFrame3::ComputeSamplesSASTable(WDL_TypedBuf<BL_FLOAT> *samples)
             {
                 SASPartial &partial = mSASPartials[partialIndex];
                 partial.mFreq = freq;
-                partial.mAmpDB = AmpToDB(amp0/**col*/);
+                partial.mAmpDB = AmpToDB(amp0);
             }
             
             // Freq
@@ -1529,8 +1457,6 @@ SASFrame3::ComputeSamplesSASTable(WDL_TypedBuf<BL_FLOAT> *samples)
             {
                 WDL_TypedBuf<BL_FLOAT> freqBuffer;
                 freqBuffer.Resize(mBufferSize/mOverlapping);
-                
-                //mTableSynth->GetSamplesNearest(&freqBuffer, freq, amp);
                 mTableSynth->GetSamplesLinear(&freqBuffer, freq, amp);
                 
                 BLUtils::AddValues(samples, freqBuffer);
@@ -1578,7 +1504,7 @@ SASFrame3::ComputeSamplesSASTable2(WDL_TypedBuf<BL_FLOAT> *samples)
             {
                 SASPartial newPartial;
                 newPartial.mFreq = freq;
-                newPartial.mAmpDB = AmpToDB(amp0/**col*/);
+                newPartial.mAmpDB = AmpToDB(amp0);
                 
                 mSASPartials.push_back(newPartial);
             }
@@ -1586,7 +1512,7 @@ SASFrame3::ComputeSamplesSASTable2(WDL_TypedBuf<BL_FLOAT> *samples)
             {
                 SASPartial &partial = mSASPartials[partialIndex];
                 partial.mFreq = freq;
-                partial.mAmpDB = AmpToDB(amp0/**col*/);
+                partial.mAmpDB = AmpToDB(amp0);
             }
             
             SASPartial partial;
@@ -1610,10 +1536,6 @@ SASFrame3::ComputeSamplesSASTable2(WDL_TypedBuf<BL_FLOAT> *samples)
                 if (freq >= SYNTH_MIN_FREQ)
                 {
                     BL_FLOAT samp = mTableSynth->GetSampleNearest(i, freq, amp);
-                    
-                    // Makes wobbles with pure sine
-                    //BL_FLOAT samp = mTableSynth->GetSampleLinear(i, freq, amp);
-                    
                     samples->Get()[i] += samp;
                 }
             }
@@ -1727,7 +1649,7 @@ void
 SASFrame3::ComputeAmplitude()
 {
     mPrevAmplitudeDB = mAmplitudeDB;
-    mAmplitudeDB = MIN_AMP_DB; //0.0;
+    mAmplitudeDB = MIN_AMP_DB;
     
     BL_FLOAT amplitude = 0.0;
     for (int i = 0; i < mPartials.size(); i++)
@@ -1735,17 +1657,11 @@ SASFrame3::ComputeAmplitude()
         const PartialTracker5::Partial &p = mPartials[i];
         
         BL_FLOAT ampDB = p.mAmpDB;
-        BL_FLOAT amp = DBToAmp(ampDB); //
-        //amp = SASViewerProcess::DbToAmpNorm(amp);
-        
-        //mAmplitudeDB += (ampDB - MIN_AMP_DB);
+        BL_FLOAT amp = DBToAmp(ampDB);
         amplitude += amp;
     }
     
     mAmplitudeDB = AmpToDB(amplitude);
-    
-    //mAmplitude = AmpToDB(mAmplitude);
-    //mAmplitude = SASViewerProcess::AmpToDBNorm(mAmplitude);
 }
 
 void
@@ -1783,11 +1699,9 @@ SASFrame3::ComputeColor()
 void
 SASFrame3::ComputeColorAux()
 {
-//#define EPS 1e-8
-    
     mColor.Resize(mBufferSize/2);
     
-    if (mFrequency < EPS)
+    if (mFrequency < BL_EPS)
     {
         BLUtils::FillAllZero(&mColor);
         
@@ -1795,7 +1709,6 @@ SASFrame3::ComputeColorAux()
     }
     
     // Will interpolate values between the partials
-    
     BL_FLOAT undefinedValue = -1.0;
     BLUtils::FillAllValue(&mColor, undefinedValue);
     
@@ -1869,7 +1782,6 @@ SASFrame3::ComputeNormWarping()
     if (prevWarping.GetSize() != mNormWarping.GetSize())
         return;
     
-#if 1
     // Smooth
     for (int i = 0; i < mNormWarping.GetSize(); i++)
     {
@@ -1880,7 +1792,6 @@ SASFrame3::ComputeNormWarping()
         
         mNormWarping.Get()[i] = result;
     }
-#endif
 }
 
 void
@@ -1888,7 +1799,7 @@ SASFrame3::ComputeNormWarpingAux()
 {
     mNormWarping.Resize(mBufferSize/2);
     
-    if (mFrequency < EPS)
+    if (mFrequency < BL_EPS)
     {
         BLUtils::FillAllValue(&mNormWarping, (BL_FLOAT)1.0);
         
@@ -1896,7 +1807,6 @@ SASFrame3::ComputeNormWarpingAux()
     }
     
     // Will interpolate values between the partials
-    
     BL_FLOAT undefinedValue = -1.0;
     BLUtils::FillAllValue(&mNormWarping, undefinedValue);
     
@@ -1912,9 +1822,7 @@ SASFrame3::ComputeNormWarpingAux()
     }
     
     // Fundamental frequency
-    
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    //BL_FLOAT freq0 = mPartials[0].mFreq; // OLD
     BL_FLOAT freq0 = mFrequency;
     
     // Put the values we have
@@ -2047,75 +1955,6 @@ SASFrame3::FindPartial(BL_FLOAT freq)
     return false;
 }
 
-// Interpolate in db
-#if 0
-void
-SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
-{
-    const PartialTracker5::Partial &currentPartial = mPartials[index];
-    
-    int prevPartialIdx = FindPrevPartialIdx(index);
-    
-    *result = currentPartial;
-
-    // Manage decrease of dead partials
-    //
-    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
-         currentPartial.mWasAlive)
-    {
-        // Decrease progressively the amplitude
-        result->mAmpDB = MIN_AMP_DB;
-      
-        if (prevPartialIdx != -1)
-            // Interpolate
-        {
-            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
-            
-            BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
-            if (t0 <= 1.0)
-            {
-                result->mAmpDB = (1.0 - t0)*prevPartial.mAmpDB + t0*MIN_AMP_DB; // + t0*currentPartial.mAmp;
-            }
-        }
-    }
-    
-    // Manage interpolation of freq and amp
-    //
-#if 0 // Origin
-    if (currentPartial.mState == PartialTracker5::Partial::ALIVE)
-#else // More continuous
-    if ((currentPartial.mState != PartialTracker5::Partial::DEAD) &&
-         currentPartial.mWasAlive)
-#endif
-    {
-        if (prevPartialIdx != -1)
-        {
-            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
-            
-            if (prevPartial.mState == PartialTracker5::Partial::ALIVE)
-            {
-                result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
-                result->mAmpDB = (1.0 - t)*prevPartial.mAmpDB + t*currentPartial.mAmpDB;
-            }
-        }
-        else
-            // New partial, fade in
-        {
-            // NOTE: this avoids vertical bars in the spectrogram when a partial starts
-            
-            // Increase progressively the amplitude
-        
-            // Interpolate
-            BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
-            if (t0 > 1.0)
-                t0 = 1.0;
-            
-            result->mAmpDB = (1.0 - t0)*MIN_AMP_DB + t0*currentPartial.mAmpDB;
-        }
-    }
-}
-#endif
-
 // Interpolate in amp
 void
 SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
@@ -2143,56 +1982,48 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
             if (t0 <= 1.0)
             {
                 // Interpolate in amp
-                BL_FLOAT amp = (1.0 - t0)*DBToAmp(prevPartial.mAmpDB); // + 0.0
+                BL_FLOAT amp = (1.0 - t0)*DBToAmp(prevPartial.mAmpDB);
                 BL_FLOAT ampDB = AmpToDB(amp);
                 result->mAmpDB = ampDB;
-                
-                //result->mAmpDB = (1.0 - t0)*prevPartial.mAmpDB + t0*MIN_AMP_DB; // + t0*currentPartial.mAmp;
             }
         }
     }
     
     // Manage interpolation of freq and amp
     //
-#if 0 // Origin
-    if (currentPartial.mState == PartialTracker5::Partial::ALIVE)
-#else // More continuous
-        if ((currentPartial.mState != PartialTracker5::Partial::DEAD) &&
-            currentPartial.mWasAlive)
-#endif
+    if ((currentPartial.mState != PartialTracker5::Partial::DEAD) &&
+        currentPartial.mWasAlive)
+    {
+        if (prevPartialIdx != -1)
         {
-            if (prevPartialIdx != -1)
+            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+                
+            if (prevPartial.mState == PartialTracker5::Partial::ALIVE)
             {
-                const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+                result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
                 
-                if (prevPartial.mState == PartialTracker5::Partial::ALIVE)
-                {
-                    result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
-                    
-                    BL_FLOAT amp = (1.0 - t)*DBToAmp(prevPartial.mAmpDB) + t*DBToAmp(currentPartial.mAmpDB);
-                    result->mAmpDB = AmpToDB(amp);
-                    
-                    //result->mAmpDB = (1.0 - t)*prevPartial.mAmpDB + t*currentPartial.mAmpDB;
-                }
-            }
-            else
-                // New partial, fade in
-            {
-                // NOTE: this avoids vertical bars in the spectrogram when a partial starts
+                BL_FLOAT amp = (1.0 - t)*DBToAmp(prevPartial.mAmpDB) +
+                        t*DBToAmp(currentPartial.mAmpDB);
                 
-                // Increase progressively the amplitude
-                
-                // Interpolate
-                BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
-                if (t0 > 1.0)
-                    t0 = 1.0;
-                
-                BL_FLOAT amp = t0*DBToAmp(currentPartial.mAmpDB);
                 result->mAmpDB = AmpToDB(amp);
-                
-                //result->mAmpDB = (1.0 - t0)*MIN_AMP_DB + t0*currentPartial.mAmpDB;
             }
         }
+        else
+        // New partial, fade in
+        {
+            // NOTE: this avoids vertical bars in the spectrogram when a partial starts
+                
+            // Increase progressively the amplitude
+                
+            // Interpolate
+            BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
+            if (t0 > 1.0)
+                t0 = 1.0;
+                
+            BL_FLOAT amp = t0*DBToAmp(currentPartial.mAmpDB);
+            result->mAmpDB = AmpToDB(amp);
+        }
+    }
 }
 
 int
@@ -2224,31 +2055,7 @@ void
 SASFrame3::GetSASPartial(SASPartial *result, int index, BL_FLOAT t)
 {
     const SASPartial &currentPartial = mSASPartials[index];
-    
     *result = currentPartial;
-    
-#if 0 // TEST
-    // Manage decrease of dead partials
-    //
-    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
-         currentPartial.mWasAlive)
-    {
-        // Decrease progressively the amplitude
-        result->mAmpDB = MIN_AMP_DB;
-        
-        if (prevPartialIdx != -1)
-            // Interpolate
-        {
-            const PartialTracker5::Partial &prevPartial = mSASPrevPartials[prevPartialIdx];
-            
-            BL_FLOAT t0 = t/DEAD_PARTIAL_DECREASE;
-            if (t0 <= 1.0)
-            {
-                result->mAmp = (1.0 - t0)*prevPartial.mAmp; // + 0.0;
-            }
-        }
-    }
-#endif
     
     // Manage interpolation of freq and amp
     //

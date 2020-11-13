@@ -24,9 +24,6 @@
 // Artificially modify the coeff, to increase the spread on the grid
 #define MEL_COEFF 4.0
 
-// NOTE TESTED
-#define FIX_FREEZE_GUI 1
-
 SASViewerRender2::SASViewerRender2(SASViewerPluginInterface *plug,
                                  GraphControl12 *graphControl,
                                  BL_FLOAT sampleRate, int bufferSize)
@@ -36,30 +33,12 @@ SASViewerRender2::SASViewerRender2(SASViewerPluginInterface *plug,
     mSampleRate = sampleRate;
     mBufferSize = bufferSize;
     
-    mLinesRenderWaves = new LinesRender2();
-    mLinesRenderWaves->SetMode(LinesRender2::LINES_FREQ);
-    mLinesRenderWaves->DBG_SetDisplayAllSlices(DEBUG_PARTIAL_TRACKING);
-    
-    mLinesRenderPartials = NULL;
+    mLinesRender = new LinesRender2();
+    mLinesRender->SetMode(LinesRender2::LINES_FREQ);
+    mLinesRender->DBG_SetDisplayAllSlices(0/*DEBUG_PARTIAL_TRACKING*/);
     
     SetGraph(graphControl);
     
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials = new LinesRender2();
-    mGraph->AddCustomDrawer(mLinesRenderPartials);
-    mLinesRenderPartials->SetMode(LinesRender2::POINTS);
-    mLinesRenderPartials->SetDensePointsFlag(false);
-    
-    mLinesRenderPartials->DBG_SetDisplayAllSlices(DEBUG_PARTIAL_TRACKING);
-#endif
-    
-#if DEBUG_PARTIAL_TRACKING
-    CreateFreqsAxis();
-    
-    //mLinesRenderPartials->SetShowAxis(true);
-#endif
-    
-    //
     mMouseIsDown = false;
     mPrevDrag[0] = 0;
     mPrevDrag[1] = 0;
@@ -70,24 +49,14 @@ SASViewerRender2::SASViewerRender2(SASViewerPluginInterface *plug,
     mCamAngle0 = 0.0;
     mCamAngle1 = MIN_CAM_ANGLE_1;
     
-    mLinesRenderWaves->SetCameraAngles(mCamAngle0, mCamAngle1);
-    
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetCameraAngles(mCamAngle0, mCamAngle1);
-#endif
+    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     mAddNum = 0;
 }
 
 SASViewerRender2::~SASViewerRender2()
 {
-    delete mLinesRenderWaves;
-    
-#if DEBUG_PARTIAL_TRACKING
-    delete mLinesRenderPartials;
-    
-    delete mFreqsAxis;
-#endif
+    delete mLinesRender;
 }
 
 void
@@ -98,23 +67,16 @@ SASViewerRender2::SetGraph(GraphControl12 *graphControl)
     if (mGraph != NULL)
     {
         mGraph->AddCustomControl(this);
-        mGraph->AddCustomDrawer(mLinesRenderWaves);
+        mGraph->AddCustomDrawer(mLinesRender);
     }
 }
 
 void
 SASViewerRender2::Clear()
 {
-    mLinesRenderWaves->ClearSlices();
+    mLinesRender->ClearSlices();
 
-    // Not sure, where is called Clear() ?
-#if !FIX_FREEZE_GUI
-    mGraph->SetDirty(true);
-#else
-    //mGraph->SetDirty(false);
     mGraph->SetDataChanged();
-#endif
-
 }
 
 void
@@ -126,44 +88,27 @@ SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
     vector<LinesRender2::Point> points;
     MagnsToPoints(&points, magns);
     
-    mLinesRenderWaves->AddSlice(points);
+    mLinesRender->AddSlice(points);
     
     mAddNum++;
     
-    // Without that, the volume rendering is not displayed
-#if !FIX_FREEZE_GUI
-    mGraph->SetDirty(true);
-#else
-    //mGraph->SetDirty(false);
     mGraph->SetDataChanged();
-#endif
 }
 
 void
 SASViewerRender2::AddPoints(const vector<LinesRender2::Point> &points)
 {
-#if DEBUG_PARTIAL_TRACKING
-      // Set to 1 if displaying debug partial peaks
-    mLinesRenderPartials->AddSlice(points);
-#else
-    mLinesRenderWaves->AddSlice(points);
+    mLinesRender->AddSlice(points);
     
     mAddNum++;
-#endif
     
-    // Without that, the volume rendering is not displayed
-#if !FIX_FREEZE_GUI
-    mGraph->SetDirty(true);
-#else
-    //mGraph->SetDirty(false);
     mGraph->SetDataChanged();
-#endif
 }
 
 void
 SASViewerRender2::SetLineMode(LinesRender2::Mode mode)
 {
-    mLinesRenderWaves->SetMode(mode);
+    mLinesRender->SetMode(mode);
 }
 
 void
@@ -191,7 +136,7 @@ SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
                              const IMouseMod &mod)
 {
     if (mod.A)
-        // Alt-drag => zoom
+    // Alt-drag => zoom
     {
         if (!mPrevMouseDrag)
         {
@@ -218,7 +163,6 @@ SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
     mPrevMouseDrag = true;
     
     // Move camera
-    
     int dragX = x - mPrevDrag[0];
     int dragY = y - mPrevDrag[1];
     
@@ -239,11 +183,7 @@ SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
     if (mCamAngle1 > MAX_CAM_ANGLE_1)
         mCamAngle1 = MAX_CAM_ANGLE_1;
     
-    mLinesRenderWaves->SetCameraAngles(mCamAngle0, mCamAngle1);
-    
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetCameraAngles(mCamAngle0, mCamAngle1);
-#endif
+    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     // Camera changed
     //
@@ -255,35 +195,24 @@ SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
     mPlug->SetCameraAngles(mCamAngle0, mCamAngle1);
 }
 
-void //bool
+void
 SASViewerRender2::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     // Reset the view
     mCamAngle0 = 0.0;
     mCamAngle1 = MIN_CAM_ANGLE_1;
     
-    mLinesRenderWaves->SetCameraAngles(mCamAngle0, mCamAngle1);
-    
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetCameraAngles(mCamAngle0, mCamAngle1);
-#endif
+    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     // Reset the fov
-    mLinesRenderWaves->ResetZoom();
-    
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->ResetZoom();
-#endif
-    
-    //mGraph->SetDirty(true);
+    mLinesRender->ResetZoom();
+
     mGraph->SetDataChanged();
     
     mPlug->SetCameraAngles(mCamAngle0, mCamAngle1);
     
-    BL_FLOAT fov = mLinesRenderWaves->GetCameraFov();
+    BL_FLOAT fov = mLinesRender->GetCameraFov();
     mPlug->SetCameraFov(fov);
-    
-    //return true;
 }
 
 void
@@ -294,55 +223,35 @@ SASViewerRender2::OnMouseWheel(float x, float y,
     
     BL_FLOAT zoomChange = 1.0 + d*WHEEL_ZOOM_STEP;
     
-    mLinesRenderWaves->ZoomChanged(zoomChange);
+    mLinesRender->ZoomChanged(zoomChange);
     
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->ZoomChanged(zoomChange);
-#endif
-    
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
     
-    BL_FLOAT angle = mLinesRenderWaves->GetCameraFov();
+    BL_FLOAT angle = mLinesRender->GetCameraFov();
     mPlug->SetCameraFov(angle);
 }
 
 void
 SASViewerRender2::SetSpeed(BL_FLOAT speed)
 {
-    mLinesRenderWaves->SetSpeed(speed);
+    mLinesRender->SetSpeed(speed);
     
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetSpeed(speed);
-#endif
-    
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
 void
 SASViewerRender2::SetDensity(BL_FLOAT density)
 {
-    mLinesRenderWaves->SetDensity(density);
+    mLinesRender->SetDensity(density);
     
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetDensity(density);
-#endif
-    
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
 void
 SASViewerRender2::SetScale(BL_FLOAT scale)
 {
-    mLinesRenderWaves->SetScale(scale);
+    mLinesRender->SetScale(scale);
     
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetScale(scale);
-#endif
-    
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -351,13 +260,8 @@ SASViewerRender2::SetCamAngle0(BL_FLOAT angle)
 {
     mCamAngle0 = angle;
     
-    mLinesRenderWaves->SetCameraAngles(mCamAngle0, mCamAngle1);
+    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
     
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetCameraAngles(mCamAngle0, mCamAngle1);
-#endif
-    
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -366,33 +270,23 @@ SASViewerRender2::SetCamAngle1(BL_FLOAT angle)
 {
     mCamAngle1 = angle;
     
-    mLinesRenderWaves->SetCameraAngles(mCamAngle0, mCamAngle1);
+    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
     
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetCameraAngles(mCamAngle0, mCamAngle1);
-#endif
-    
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
 void
 SASViewerRender2::SetCamFov(BL_FLOAT angle)
 {
-    mLinesRenderWaves->SetCameraFov(angle);
- 
-#if DEBUG_PARTIAL_TRACKING
-    mLinesRenderPartials->SetCameraFov(angle);
-#endif
+    mLinesRender->SetCameraFov(angle);
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
 int
 SASViewerRender2::GetNumSlices()
 {
-    int numSlices = mLinesRenderWaves->GetNumSlices();
+    int numSlices = (int)mLinesRender->GetNumSlices();
     
     return numSlices;
 }
@@ -400,7 +294,7 @@ SASViewerRender2::GetNumSlices()
 int
 SASViewerRender2::GetSpeed()
 {
-    int speed = mLinesRenderWaves->GetSpeed();
+    int speed = mLinesRender->GetSpeed();
     
     return speed;
 }
@@ -409,19 +303,19 @@ void
 SASViewerRender2::SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lines,
                                     unsigned char color[4], BL_FLOAT lineWidth)
 {
-    mLinesRenderWaves->SetAdditionalLines(lines, color, lineWidth);
+    mLinesRender->SetAdditionalLines(lines, color, lineWidth);
 }
 
 void
 SASViewerRender2::ClearAdditionalLines()
 {
-    mLinesRenderWaves->ClearAdditionalLines();
+    mLinesRender->ClearAdditionalLines();
 }
 
 void
 SASViewerRender2::ShowAdditionalLines(bool flag)
 {
-    mLinesRenderWaves->ShowAdditionalLines(flag);
+    mLinesRender->ShowAdditionalLines(flag);
 }
 
 void
@@ -451,17 +345,7 @@ SASViewerRender2::MagnsToPoints(vector<LinesRender2::Point> *points,
         
         LinesRender2::Point &p = (*points)[i];
         
-#if 0 // Original
-        if (magns.GetSize() <= 1)
-            p.mX = ((BL_FLOAT)i)/magns.GetSize() - 0.5;
-        else
-            p.mX = ((BL_FLOAT)i)/(magns.GetSize() - 1) - 0.5;
-#endif
-        
-#if 1 // Optim
         p.mX = xCoeff*i - 0.5;
-#endif
-        
         p.mY = magn;
         
         // Fill with dummy Z (to avoid undefined value)
@@ -473,44 +357,6 @@ SASViewerRender2::MagnsToPoints(vector<LinesRender2::Point> *points,
         p.mB = 0;
         p.mA = 0;
     }
-}
-
-void
-SASViewerRender2::CreateFreqsAxis()
-{
-    // Create axis
-#define NUM_AXIS_DATA 7 //8
-    char *labels[NUM_AXIS_DATA] =
-    {
-        /*"1Hz",*/ "100Hz", "500Hz", "1KHz", "2KHz", "5KHz", "10KHz", "20KHz"
-    };
-    
-    // Scale the axis normalized values
-    BL_FLOAT freqs[NUM_AXIS_DATA] =
-    {
-        /*1.0,*/ 100.0, 500.0, 1000.0, 2000.0, 5000.0, 10000.0, 20000.0
-    };
-    
-    BL_FLOAT normPos[NUM_AXIS_DATA];
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
-    {
-        BL_FLOAT freq = freqs[i];
-        freq = FreqToMelNorm(freq);
-        
-        normPos[i] = freq;
-    }
-    
-    
-    // 3d extremities of the axis
-    BL_FLOAT p0[3] = { -0.5, 0.0, 0.5 + AXIS_OFFSET_Z };
-    BL_FLOAT p1[3] = { 0.5, 0.0, 0.5 + AXIS_OFFSET_Z };
-    
-    // Create the axis
-    mFreqsAxis = new Axis3D(labels, normPos, NUM_AXIS_DATA, p0, p1);
-    mFreqsAxis->SetDoOverlay(true);
-    mFreqsAxis->SetPointProjector(mLinesRenderPartials);
-    
-    mLinesRenderPartials->AddAxis(mFreqsAxis);
 }
 
 BL_FLOAT

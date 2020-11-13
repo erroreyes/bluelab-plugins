@@ -9,6 +9,8 @@
 #ifndef __BL_SASViewer__PartialTracker5__
 #define __BL_SASViewer__PartialTracker5__
 
+#include <SimpleKalmanFilter.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 
 #include <vector>
@@ -31,28 +33,6 @@ using namespace std;
 // - fix partial amp computation
 // (was sometimes really under the correct value for Infra, tested on
 // "Bass-065_keep-the-bass-dubby"
-
-// With predictive, we have almost the same
-// results than without
-#define PREDICTIVE 1 //0 // 1 // TEST SUNDAY: activate predict
-
-#if PREDICTIVE
-#include <SimpleKalmanFilter.h>
-
-// "How much do we expect to our measurement vary"
-//
-// 200Hz
-#define KF_E_MEA 200.0 //50.0 //200.0 // TEST SUNDAY, was 200.0
-#define KF_E_EST KF_E_MEA
-
-// "usually a small number between 0.001 and 1"
-//
-// If too low: predicted values move too slowly
-// If too high: predicted values go straight
-//
-// 0.01: "oohoo" => fails when "EEAAooaa"
-#define KF_Q 5.0 //2.0 //10.0 //10.0 //5.0 //1.0 //0.01 // TEST SUNDAY, was 1.0
-#endif
 
 // Buffer size and sample rate were not updated during Reset()
 // FIX: Infra: avoid computing wrong max frequency (500Hz),
@@ -113,11 +93,9 @@ public:
         // All-purpose field
         BL_FLOAT mCookie;
         
-#if PREDICTIVE
+
         SimpleKalmanFilter mKf;
-        
         BL_FLOAT mPredictedFreq;
-#endif
         
     protected:
         static unsigned long mCurrentId;
@@ -344,48 +322,8 @@ protected:
     void SmoothPartials(const vector<PartialTracker5::Partial> &prevPartials,
                         vector<PartialTracker5::Partial> *currentPartials);
 
-    
-    // Debug
     //
-    static void DBG_DumpPartials(const char *fileName,
-                                 const vector<Partial> &partials,
-                                 int maxNumPartials);
-    
-    static void DBG_DumpPartialsAmp(const vector<Partial> &partials,
-                                    int bufferSize, BL_FLOAT sampleRate);
-    
-    static void DBG_DumpPartialsAmp(const char *fileName,
-                                    const vector<Partial> &partials,
-                                    int bufferSize, BL_FLOAT sampleRate);
-    
-    static void DBG_DumpPartialsBox(const vector<Partial> &partials,
-                                    int bufferSize, BL_FLOAT sampleRate);
-    
-    static void DBG_DumpPartialsBox(const char *fileName,
-                                    const vector<Partial> &partials,
-                                    int bufferSize, BL_FLOAT sampleRate);
-    
-    // Dump all the partials of a single frame
-    void DBG_DumpPartials2(const vector<Partial> &partials);
-    
-    void DBG_DumpPartials2(const char *fileName,
-                           const vector<Partial> &partials);
-    
-    // Same, with mel scale
-    void DBG_DumpPartials2Mel(const vector<Partial> &partials);
-    
-    void DBG_DumpPartials2Mel(const char *fileName,
-                              const vector<Partial> &partials);
-    
-    // Same, with partial height
-    void DBG_DumpPartials2MelHeight(const vector<Partial> &partials,
-                                    const WDL_TypedBuf<BL_FLOAT> &magns);
-    
-    void DBG_DumpPartials2MelHeight(const char *fileName,
-                                    const vector<Partial> &partials,
-                                    const WDL_TypedBuf<BL_FLOAT> &magns);
-    
-    
+    //
     int mBufferSize;
     BL_FLOAT mSampleRate;
     int mOverlapping;

@@ -20,8 +20,6 @@ using namespace std;
 // frequency in a sperate object
 //
 // Use PartialToFreq2 (improved algorithm)
-//class PartialsToFreq2;
-//class PartialsToFreqCepstrum;
 class PartialsToFreq5;
 class FreqAdjustObj3;
 class WavetableSynth;
@@ -110,7 +108,6 @@ protected:
     
     // Compute steps
     //
-    
     void ComputeAmplitude();
     
     void ComputeFrequency();
@@ -177,7 +174,6 @@ protected:
     
     BL_FLOAT mPitch;
     
-    //PartialsToFreqCepstrum *mPartialsToFreq;
     PartialsToFreq5 *mPartialsToFreq;
     
     FreqAdjustObj3 *mFreqObj;
