@@ -19,6 +19,20 @@ using namespace std;
 #include <LinesRender2.h>
 #include <SASViewerPluginInterface.h>
 
+// Sides
+//#define MAX_ANGLE_0 70.0
+
+// Set to 90 for debugging
+#define MAX_CAM_ANGLE_0 90.0
+
+// Above
+#define MAX_CAM_ANGLE_1 90.0 //70.0
+
+// Below
+
+// Almost horizontal (a little above)
+#define MIN_CAM_ANGLE_1 15.0
+
 class Axis3D;
 class SASViewerRender : public GraphCustomControl
 {
@@ -28,6 +42,8 @@ public:
                     BL_FLOAT sampleRate, int bufferSize);
     
     virtual ~SASViewerRender();
+    
+    void SetGraph(GraphControl12 *graphControl);
     
     void Clear();
     

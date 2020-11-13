@@ -13,24 +13,10 @@
 
 #include <BLUtils.h>
 
-#include <SASViewerRender.h>
-
 // Include for flag for partials debug
 #include <SASViewerProcess.h>
 
-// Sides
-//#define MAX_ANGLE_0 70.0
-
-// Set to 90 for debugging
-#define MAX_CAM_ANGLE_0 90.0
-
-// Above
-#define MAX_CAM_ANGLE_1 90.0 //70.0
-
-// Below
-
-// Almost horizontal (a little above)
-#define MIN_CAM_ANGLE_1 15.0
+#include "SASViewerRender.h"
 
 // Axis drawing
 #define AXIS_OFFSET_Z 0.06
@@ -47,18 +33,16 @@ SASViewerRender::SASViewerRender(SASViewerPluginInterface *plug,
 {
     mPlug = plug;
     
-    mGraph = graphControl;
-    
     mSampleRate = sampleRate;
     mBufferSize = bufferSize;
     
     mLinesRenderWaves = new LinesRender2();
-    mGraph->AddCustomDrawer(mLinesRenderWaves);
     mLinesRenderWaves->SetMode(LinesRender2::LINES_FREQ);
-    
     mLinesRenderWaves->DBG_SetDisplayAllSlices(DEBUG_PARTIAL_TRACKING);
     
     mLinesRenderPartials = NULL;
+    
+    SetGraph(graphControl);
     
 #if DEBUG_PARTIAL_TRACKING
     mLinesRenderPartials = new LinesRender2();
@@ -68,8 +52,6 @@ SASViewerRender::SASViewerRender(SASViewerPluginInterface *plug,
     
     mLinesRenderPartials->DBG_SetDisplayAllSlices(DEBUG_PARTIAL_TRACKING);
 #endif
-    
-    mGraph->AddCustomControl(this);
     
 #if DEBUG_PARTIAL_TRACKING
     CreateFreqsAxis();
@@ -106,6 +88,18 @@ SASViewerRender::~SASViewerRender()
     
     delete mFreqsAxis;
 #endif
+}
+
+void
+SASViewerRender::SetGraph(GraphControl12 *graphControl)
+{
+    mGraph = graphControl;
+    
+    if (mGraph != NULL)
+    {
+        mGraph->AddCustomControl(this);
+        mGraph->AddCustomDrawer(mLinesRenderWaves);
+    }
 }
 
 void
