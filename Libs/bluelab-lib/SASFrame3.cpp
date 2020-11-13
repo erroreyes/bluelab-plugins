@@ -1,5 +1,5 @@
 //
-//  SASFrame2.cpp
+//  SASFrame3.cpp
 //  BL-SASViewer
 //
 //  Created by applematuer on 2/2/19.
@@ -9,7 +9,7 @@
 #include <SASViewerProcess.h>
 
 //#include <PartialsToFreqCepstrum.h>
-#include <PartialsToFreq4.h>
+#include <PartialsToFreq5.h>
 
 #include <FreqAdjustObj3.h>
 
@@ -22,7 +22,7 @@
 
 #include <BLUtils.h>
 
-#include "SASFrame2.h"
+#include "SASFrame3.h"
 
 
 // Optim: optimizes a little (~5/15%)
@@ -80,29 +80,29 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 #define OPTIM_COLOR_INTERP 1
 
 
-SASFrame2::SASPartial::SASPartial()
+SASFrame3::SASPartial::SASPartial()
 {
     mFreq = 0.0;
     mAmpDB = MIN_AMP_DB;
     mPhase = 0.0;
 }
 
-SASFrame2::SASPartial::SASPartial(const SASPartial &other)
+SASFrame3::SASPartial::SASPartial(const SASPartial &other)
 {
     mFreq = other.mFreq;
     mAmpDB = other.mAmpDB;
     mPhase = other.mPhase;
 }
 
-SASFrame2::SASPartial::~SASPartial() {}
+SASFrame3::SASPartial::~SASPartial() {}
 
 bool
-SASFrame2::SASPartial::AmpLess(const SASPartial &p1, const SASPartial &p2)
+SASFrame3::SASPartial::AmpLess(const SASPartial &p1, const SASPartial &p2)
 {
     return (p1.mAmpDB < p2.mAmpDB);
 }
 
-SASFrame2::SASFrame2(int bufferSize, BL_FLOAT sampleRate, int overlapping)
+SASFrame3::SASFrame3(int bufferSize, BL_FLOAT sampleRate, int overlapping)
 {
     SIN_LUT_INIT(SAS_FRAME_SIN_LUT);
     
@@ -121,7 +121,7 @@ SASFrame2::SASFrame2(int bufferSize, BL_FLOAT sampleRate, int overlapping)
     mPitch = 1.0;
     
     //mPartialsToFreq = new PartialsToFreqCepstrum(bufferSize, sampleRate);
-    mPartialsToFreq = new PartialsToFreq4(bufferSize, sampleRate);
+    mPartialsToFreq = new PartialsToFreq5(bufferSize, sampleRate);
     
 #if COMPUTE_SAS_FFT_FREQ_ADJUST
     int oversampling = 1;
@@ -137,7 +137,7 @@ SASFrame2::SASFrame2(int bufferSize, BL_FLOAT sampleRate, int overlapping)
 #endif
 }
 
-SASFrame2::~SASFrame2()
+SASFrame3::~SASFrame3()
 {
     delete mPartialsToFreq;
     
@@ -151,7 +151,7 @@ SASFrame2::~SASFrame2()
 }
 
 void
-SASFrame2::Reset(BL_FLOAT sampleRate)
+SASFrame3::Reset(BL_FLOAT sampleRate)
 {
     mPartials.clear();
     mPrevPartials.clear();
@@ -172,13 +172,13 @@ SASFrame2::Reset(BL_FLOAT sampleRate)
 }
 
 void
-SASFrame2::SetSynthMode(enum SynthMode mode)
+SASFrame3::SetSynthMode(enum SynthMode mode)
 {
     mSynthMode = mode;
 }
 
 void
-SASFrame2::SetPartials(const vector<PartialTracker3::Partial> &partials)
+SASFrame3::SetPartials(const vector<PartialTracker5::Partial> &partials)
 {
     mPrevPartials = mPartials;
     mPartials = partials;
@@ -186,7 +186,7 @@ SASFrame2::SetPartials(const vector<PartialTracker3::Partial> &partials)
     // FIX: sorting by freq avoids big jumps in computed frequency when
     // id of a given partial changes.
     // (at least when the id of the first partial).
-    sort(mPartials.begin(), mPartials.end(), PartialTracker3::Partial::FreqLess);
+    sort(mPartials.begin(), mPartials.end(), PartialTracker5::Partial::FreqLess);
     
     mAmplitudeDB = MIN_AMP_DB;
     mFrequency = 0.0;
@@ -195,43 +195,43 @@ SASFrame2::SetPartials(const vector<PartialTracker3::Partial> &partials)
 }
 
 BL_FLOAT
-SASFrame2::GetAmplitudeDB() const
+SASFrame3::GetAmplitudeDB() const
 {
     return mAmplitudeDB;
 }
 
 BL_FLOAT
-SASFrame2::GetFrequency() const
+SASFrame3::GetFrequency() const
 {
     return mFrequency;
 }
 
 void
-SASFrame2::GetColor(WDL_TypedBuf<BL_FLOAT> *color) const
+SASFrame3::GetColor(WDL_TypedBuf<BL_FLOAT> *color) const
 {
     *color = mColor;
 }
 
 void
-SASFrame2::GetNormWarping(WDL_TypedBuf<BL_FLOAT> *warping) const
+SASFrame3::GetNormWarping(WDL_TypedBuf<BL_FLOAT> *warping) const
 {
     *warping = mNormWarping;
 }
 
 void
-SASFrame2::SetAmplitudeDB(BL_FLOAT amp)
+SASFrame3::SetAmplitudeDB(BL_FLOAT amp)
 {
     mAmplitudeDB = amp;
 }
 
 void
-SASFrame2::SetFrequency(BL_FLOAT freq)
+SASFrame3::SetFrequency(BL_FLOAT freq)
 {
     mFrequency = freq;
 }
 
 void
-SASFrame2::SetColor(const WDL_TypedBuf<BL_FLOAT> &color)
+SASFrame3::SetColor(const WDL_TypedBuf<BL_FLOAT> &color)
 {
     mPrevColor = mColor;
     
@@ -239,7 +239,7 @@ SASFrame2::SetColor(const WDL_TypedBuf<BL_FLOAT> &color)
 }
 
 void
-SASFrame2::SetNormWarping(const WDL_TypedBuf<BL_FLOAT> &warping)
+SASFrame3::SetNormWarping(const WDL_TypedBuf<BL_FLOAT> &warping)
 {
     mPrevNormWarping = mNormWarping;
     
@@ -247,7 +247,7 @@ SASFrame2::SetNormWarping(const WDL_TypedBuf<BL_FLOAT> &warping)
 }
 
 void
-SASFrame2::ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples)
 {
 #if COMPUTE_PARTIALS_SAMPLES
     ComputeSamplesPartials(samples);
@@ -275,7 +275,7 @@ SASFrame2::ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame2::ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples)
 {
 #if COMPUTE_SAS_FFT
     ComputeFftSAS(samples);
@@ -296,7 +296,7 @@ SASFrame2::ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples)
 
 // Directly use partials provided
 void
-SASFrame2::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -309,14 +309,14 @@ SASFrame2::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
     
     for (int i = 0; i < mPartials.size(); i++)
     {
-        PartialTracker3::Partial partial;
+        PartialTracker5::Partial partial;
         
         BL_FLOAT phase = 0.0;
         int prevPartialIdx = FindPrevPartialIdx(i);
         if (prevPartialIdx != -1)
             phase = mPrevPartials[prevPartialIdx].mPhase;
         
-        //const PartialTracker3::Partial &partial = mPartials[i]; // OLD
+        //const PartialTracker5::Partial &partial = mPartials[i]; // OLD
         for (int j = 0; j < samples->GetSize()/mOverlapping; j++)
         {
             // Get interpolated partial
@@ -344,7 +344,7 @@ SASFrame2::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame2::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -441,7 +441,7 @@ SASFrame2::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
 // Optim
 // Gain (by suppressing loops): 74 => 57ms (~20%)
 void
-SASFrame2::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -613,7 +613,7 @@ SASFrame2::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
 // ComputeSamplesSAS3: avoid tiny clicks (not audible)
 //
 void
-SASFrame2::ComputeSamplesSAS3(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSAS3(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -773,7 +773,7 @@ SASFrame2::ComputeSamplesSAS3(WDL_TypedBuf<BL_FLOAT> *samples)
 //
 // ComputeSamplesSAS4: optimize more
 void
-SASFrame2::ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -933,7 +933,7 @@ SASFrame2::ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples)
 // ComputeSamplesSAS5: optimize more
 //
 void
-SASFrame2::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -1114,7 +1114,7 @@ SASFrame2::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 BL_FLOAT
-SASFrame2::GetColor(const WDL_TypedBuf<BL_FLOAT> &color,
+SASFrame3::GetColor(const WDL_TypedBuf<BL_FLOAT> &color,
                     BL_FLOAT binIdx)
 {
     BL_FLOAT col = 0.0;
@@ -1138,7 +1138,7 @@ SASFrame2::GetColor(const WDL_TypedBuf<BL_FLOAT> &color,
 }
 
 void
-SASFrame2::ComputeSamplesSASOverlap(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSASOverlap(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -1218,7 +1218,7 @@ SASFrame2::ComputeSamplesSASOverlap(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame2::ComputeFftSAS(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeFftSAS(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -1331,7 +1331,7 @@ SASFrame2::ComputeFftSAS(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame2::ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     
@@ -1458,7 +1458,7 @@ SASFrame2::ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame2::ComputeSamplesSASTable(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSASTable(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     BLUtils::FillAllZero(samples);
@@ -1552,7 +1552,7 @@ SASFrame2::ComputeSamplesSASTable(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame2::ComputeSamplesSASTable2(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesSASTable2(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     samples->Resize(mBufferSize);
     BLUtils::FillAllZero(samples);
@@ -1639,19 +1639,19 @@ SASFrame2::ComputeSamplesSASTable2(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame2::SetPitch(BL_FLOAT pitch)
+SASFrame3::SetPitch(BL_FLOAT pitch)
 {
     mPitch = pitch;
 }
 
 void
-SASFrame2::SetHarmonicSoundFlag(bool flag)
+SASFrame3::SetHarmonicSoundFlag(bool flag)
 {
     mPartialsToFreq->SetHarmonicSoundFlag(flag);
 }
 
 bool
-SASFrame2::ComputeSamplesFlag()
+SASFrame3::ComputeSamplesFlag()
 {
 #if COMPUTE_PARTIALS_SAMPLES
     return false;
@@ -1683,7 +1683,7 @@ SASFrame2::ComputeSamplesFlag()
 }
 
 bool
-SASFrame2::ComputeSamplesWinFlag()
+SASFrame3::ComputeSamplesWinFlag()
 {
 #if COMPUTE_PARTIALS_SAMPLES
     return true;
@@ -1715,7 +1715,7 @@ SASFrame2::ComputeSamplesWinFlag()
 }
 
 void
-SASFrame2::Compute()
+SASFrame3::Compute()
 {
     ComputeAmplitude();
     ComputeFrequency();
@@ -1724,7 +1724,7 @@ SASFrame2::Compute()
 }
 
 void
-SASFrame2::ComputeAmplitude()
+SASFrame3::ComputeAmplitude()
 {
     mPrevAmplitudeDB = mAmplitudeDB;
     mAmplitudeDB = MIN_AMP_DB; //0.0;
@@ -1732,7 +1732,7 @@ SASFrame2::ComputeAmplitude()
     BL_FLOAT amplitude = 0.0;
     for (int i = 0; i < mPartials.size(); i++)
     {
-        const PartialTracker3::Partial &p = mPartials[i];
+        const PartialTracker5::Partial &p = mPartials[i];
         
         BL_FLOAT ampDB = p.mAmpDB;
         BL_FLOAT amp = DBToAmp(ampDB); //
@@ -1749,7 +1749,7 @@ SASFrame2::ComputeAmplitude()
 }
 
 void
-SASFrame2::ComputeFrequency()
+SASFrame3::ComputeFrequency()
 {
     BL_FLOAT freq = mPartialsToFreq->ComputeFrequency(mPartials);
     
@@ -1757,7 +1757,7 @@ SASFrame2::ComputeFrequency()
 }
 
 void
-SASFrame2::ComputeColor()
+SASFrame3::ComputeColor()
 {
     mPrevColor = mColor;
     
@@ -1781,7 +1781,7 @@ SASFrame2::ComputeColor()
 }
 
 void
-SASFrame2::ComputeColorAux()
+SASFrame3::ComputeColorAux()
 {
 //#define EPS 1e-8
     
@@ -1808,11 +1808,11 @@ SASFrame2::ComputeColorAux()
     // Put the values we have
     for (int i = 0; i < mPartials.size(); i++)
     {
-        const PartialTracker3::Partial &p = mPartials[i];
+        const PartialTracker5::Partial &p = mPartials[i];
  
         // Dead or zombie: do not use for color enveloppe
         // (this is important !)
-        if (p.mState != PartialTracker3::Partial::ALIVE)
+        if (p.mState != PartialTracker5::Partial::ALIVE)
             continue;
         
         BL_FLOAT idx = p.mFreq/hzPerBin;
@@ -1858,7 +1858,7 @@ SASFrame2::ComputeColorAux()
 }
 
 void
-SASFrame2::ComputeNormWarping()
+SASFrame3::ComputeNormWarping()
 {
     mPrevNormWarping = mNormWarping;
     
@@ -1884,7 +1884,7 @@ SASFrame2::ComputeNormWarping()
 }
 
 void
-SASFrame2::ComputeNormWarpingAux()
+SASFrame3::ComputeNormWarpingAux()
 {
     mNormWarping.Resize(mBufferSize/2);
     
@@ -1920,10 +1920,10 @@ SASFrame2::ComputeNormWarpingAux()
     // Put the values we have
     for (int i = /*1*/0; i < mPartials.size(); i++)
     {
-        const PartialTracker3::Partial &p = mPartials[i];
+        const PartialTracker5::Partial &p = mPartials[i];
     
         // Do no add to warping if dead or zombie
-        if (p.mState != PartialTracker3::Partial::ALIVE)
+        if (p.mState != PartialTracker5::Partial::ALIVE)
             continue;
         
         BL_FLOAT idx = p.mFreq/hzPerBin;
@@ -1946,7 +1946,7 @@ SASFrame2::ComputeNormWarpingAux()
 }
 
 BL_FLOAT
-SASFrame2::ApplyNormWarping(BL_FLOAT freq)
+SASFrame3::ApplyNormWarping(BL_FLOAT freq)
 {
 #if DBG_DISABLE_WARPING
     return freq;
@@ -1969,7 +1969,7 @@ SASFrame2::ApplyNormWarping(BL_FLOAT freq)
 }
 
 BL_FLOAT
-SASFrame2::ApplyColor(BL_FLOAT freq)
+SASFrame3::ApplyColor(BL_FLOAT freq)
 {
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
     
@@ -1984,7 +1984,7 @@ SASFrame2::ApplyColor(BL_FLOAT freq)
 }
 
 BL_FLOAT
-SASFrame2::ApplyNormWarping(BL_FLOAT freq, BL_FLOAT t)
+SASFrame3::ApplyNormWarping(BL_FLOAT freq, BL_FLOAT t)
 {
 #if DBG_DISABLE_WARPING
     return freq;
@@ -2010,7 +2010,7 @@ SASFrame2::ApplyNormWarping(BL_FLOAT freq, BL_FLOAT t)
 }
 
 BL_FLOAT
-SASFrame2::ApplyColor(BL_FLOAT freq, BL_FLOAT t)
+SASFrame3::ApplyColor(BL_FLOAT freq, BL_FLOAT t)
 {
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
     
@@ -2028,7 +2028,7 @@ SASFrame2::ApplyColor(BL_FLOAT freq, BL_FLOAT t)
 }
 
 bool
-SASFrame2::FindPartial(BL_FLOAT freq)
+SASFrame3::FindPartial(BL_FLOAT freq)
 {
 #define FIND_COEFF 0.25
     
@@ -2036,7 +2036,7 @@ SASFrame2::FindPartial(BL_FLOAT freq)
     
     for (int i = 0; i < mPartials.size(); i++)
     {
-        const PartialTracker3::Partial &p = mPartials[i];
+        const PartialTracker5::Partial &p = mPartials[i];
         
         if ((freq > p.mFreq - step) &&
             (freq < p.mFreq + step))
@@ -2050,9 +2050,9 @@ SASFrame2::FindPartial(BL_FLOAT freq)
 // Interpolate in db
 #if 0
 void
-SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
+SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
 {
-    const PartialTracker3::Partial &currentPartial = mPartials[index];
+    const PartialTracker5::Partial &currentPartial = mPartials[index];
     
     int prevPartialIdx = FindPrevPartialIdx(index);
     
@@ -2060,7 +2060,7 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
 
     // Manage decrease of dead partials
     //
-    if ((currentPartial.mState == PartialTracker3::Partial::DEAD) &&
+    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
          currentPartial.mWasAlive)
     {
         // Decrease progressively the amplitude
@@ -2069,7 +2069,7 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
         if (prevPartialIdx != -1)
             // Interpolate
         {
-            const PartialTracker3::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
             
             BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
             if (t0 <= 1.0)
@@ -2082,17 +2082,17 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
     // Manage interpolation of freq and amp
     //
 #if 0 // Origin
-    if (currentPartial.mState == PartialTracker3::Partial::ALIVE)
+    if (currentPartial.mState == PartialTracker5::Partial::ALIVE)
 #else // More continuous
-    if ((currentPartial.mState != PartialTracker3::Partial::DEAD) &&
+    if ((currentPartial.mState != PartialTracker5::Partial::DEAD) &&
          currentPartial.mWasAlive)
 #endif
     {
         if (prevPartialIdx != -1)
         {
-            const PartialTracker3::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
             
-            if (prevPartial.mState == PartialTracker3::Partial::ALIVE)
+            if (prevPartial.mState == PartialTracker5::Partial::ALIVE)
             {
                 result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
                 result->mAmpDB = (1.0 - t)*prevPartial.mAmpDB + t*currentPartial.mAmpDB;
@@ -2118,9 +2118,9 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
 
 // Interpolate in amp
 void
-SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
+SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
 {
-    const PartialTracker3::Partial &currentPartial = mPartials[index];
+    const PartialTracker5::Partial &currentPartial = mPartials[index];
     
     int prevPartialIdx = FindPrevPartialIdx(index);
     
@@ -2128,7 +2128,7 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
     
     // Manage decrease of dead partials
     //
-    if ((currentPartial.mState == PartialTracker3::Partial::DEAD) &&
+    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
         currentPartial.mWasAlive)
     {
         // Decrease progressively the amplitude
@@ -2137,7 +2137,7 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
         if (prevPartialIdx != -1)
             // Interpolate
         {
-            const PartialTracker3::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
             
             BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
             if (t0 <= 1.0)
@@ -2155,17 +2155,17 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
     // Manage interpolation of freq and amp
     //
 #if 0 // Origin
-    if (currentPartial.mState == PartialTracker3::Partial::ALIVE)
+    if (currentPartial.mState == PartialTracker5::Partial::ALIVE)
 #else // More continuous
-        if ((currentPartial.mState != PartialTracker3::Partial::DEAD) &&
+        if ((currentPartial.mState != PartialTracker5::Partial::DEAD) &&
             currentPartial.mWasAlive)
 #endif
         {
             if (prevPartialIdx != -1)
             {
-                const PartialTracker3::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+                const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
                 
-                if (prevPartial.mState == PartialTracker3::Partial::ALIVE)
+                if (prevPartial.mState == PartialTracker5::Partial::ALIVE)
                 {
                     result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
                     
@@ -2196,18 +2196,18 @@ SASFrame2::GetPartial(PartialTracker3::Partial *result, int index, BL_FLOAT t)
 }
 
 int
-SASFrame2::FindPrevPartialIdx(int currentPartialIdx)
+SASFrame3::FindPrevPartialIdx(int currentPartialIdx)
 {
     if (currentPartialIdx >= mPartials.size())
         return -1;
     
-    const PartialTracker3::Partial &currentPartial = mPartials[currentPartialIdx];
+    const PartialTracker5::Partial &currentPartial = mPartials[currentPartialIdx];
     
     // Find the corresponding prev partial
     int prevPartialIdx = -1;
     for (int i = 0; i < mPrevPartials.size(); i++)
     {
-        const PartialTracker3::Partial &prevPartial = mPrevPartials[i];
+        const PartialTracker5::Partial &prevPartial = mPrevPartials[i];
         if (prevPartial.mId == currentPartial.mId)
         {
             prevPartialIdx = i;
@@ -2221,7 +2221,7 @@ SASFrame2::FindPrevPartialIdx(int currentPartialIdx)
 }
 
 void
-SASFrame2::GetSASPartial(SASPartial *result, int index, BL_FLOAT t)
+SASFrame3::GetSASPartial(SASPartial *result, int index, BL_FLOAT t)
 {
     const SASPartial &currentPartial = mSASPartials[index];
     
@@ -2230,7 +2230,7 @@ SASFrame2::GetSASPartial(SASPartial *result, int index, BL_FLOAT t)
 #if 0 // TEST
     // Manage decrease of dead partials
     //
-    if ((currentPartial.mState == PartialTracker3::Partial::DEAD) &&
+    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
          currentPartial.mWasAlive)
     {
         // Decrease progressively the amplitude
@@ -2239,7 +2239,7 @@ SASFrame2::GetSASPartial(SASPartial *result, int index, BL_FLOAT t)
         if (prevPartialIdx != -1)
             // Interpolate
         {
-            const PartialTracker3::Partial &prevPartial = mSASPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mSASPrevPartials[prevPartialIdx];
             
             BL_FLOAT t0 = t/DEAD_PARTIAL_DECREASE;
             if (t0 <= 1.0)

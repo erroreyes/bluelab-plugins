@@ -11,12 +11,12 @@
 #include <BLUtils.h>
 #include <DebugGraph.h>
 
-#include <SASViewerRender.h>
+#include <SASViewerRender2.h>
 
 #include <PartialTracker3.h>
-#include <SASFrame2.h>
+#include <SASFrame3.h>
 
-#include "SASViewerProcess.h"
+#include "SASViewerProcess2.h"
 
 
 // Scales (x and y)
@@ -44,7 +44,7 @@
 #define MIN_AGE_DISPLAY 0 //10 // 4
 
 
-SASViewerProcess::SASViewerProcess(int bufferSize,
+SASViewerProcess2::SASViewerProcess2(int bufferSize,
                                    BL_FLOAT overlapping, BL_FLOAT oversampling,
                                    BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
@@ -57,12 +57,12 @@ SASViewerProcess::SASViewerProcess(int bufferSize,
     
     mSASViewerRender = NULL;
     
-    mPartialTracker = new PartialTracker3(bufferSize, sampleRate, overlapping);
-    mScPartialTracker = new PartialTracker3(bufferSize, sampleRate, overlapping);
+    mPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
+    mScPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
     
-    mSASFrame = new SASFrame2(bufferSize, sampleRate, overlapping);
-    mScSASFrame = new SASFrame2(bufferSize, sampleRate, overlapping);
-    mMixSASFrame = new SASFrame2(bufferSize, sampleRate, overlapping);
+    mSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
+    mScSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
+    mMixSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
     
     mThreshold = -60.0;
     mHarmonicFlag = false;
@@ -94,7 +94,7 @@ SASViewerProcess::SASViewerProcess(int bufferSize,
 #endif
 }
 
-SASViewerProcess::~SASViewerProcess()
+SASViewerProcess2::~SASViewerProcess2()
 {
     delete mPartialTracker;
     delete mScPartialTracker;
@@ -105,7 +105,7 @@ SASViewerProcess::~SASViewerProcess()
 }
 
 void
-SASViewerProcess::Reset()
+SASViewerProcess2::Reset()
 {
     Reset(mOverlapping, mOversampling, mSampleRate);
     
@@ -115,7 +115,7 @@ SASViewerProcess::Reset()
 }
 
 void
-SASViewerProcess::Reset(int overlapping, int oversampling,
+SASViewerProcess2::Reset(int overlapping, int oversampling,
                         BL_FLOAT sampleRate)
 {
     mOverlapping = overlapping;
@@ -132,7 +132,7 @@ SASViewerProcess::Reset(int overlapping, int oversampling,
 
 #if 0 // origin, no sidechain (WIP)
 void
-SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                                    const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 
 {
@@ -193,14 +193,14 @@ SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
     if (mPartialTracker != NULL)
     {
-        vector<PartialTracker3::Partial> partials;
+        vector<PartialTracker5::Partial> partials;
         mPartialTracker->GetPartials(&partials);
         
          // Debug
-        vector<PartialTracker3::Partial> partials0;
+        vector<PartialTracker5::Partial> partials0;
         for (int i = 0; i < partials.size(); i++)
         {
-            const PartialTracker3::Partial &partial = partials[i];
+            const PartialTracker5::Partial &partial = partials[i];
             if (partial.mFreq < DEBUG_MAX_PARTIAL_FREQ)
                 partials0.push_back(partial);
         }
@@ -213,7 +213,7 @@ SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         vector<LinesRender2::Point> points;
         for (int i = 0; i < partials.size(); i++)
         {
-            const PartialTracker3::Partial &partial = partials[i];
+            const PartialTracker5::Partial &partial = partials[i];
             
             LinesRender2::Point p;
             
@@ -245,9 +245,9 @@ SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             p.mSize = 6.0;
             if (partial.mId == -1)
                 p.mSize = 3.0;
-            if (partial.mState == PartialTracker3::Partial::ZOMBIE)
+            if (partial.mState == PartialTracker5::Partial::ZOMBIE)
                 p.mSize = 3.0;
-            if (partial.mState == PartialTracker3::Partial::DEAD)
+            if (partial.mState == PartialTracker5::Partial::DEAD)
                 p.mSize = 3.0;
             
             points.push_back(p);
@@ -264,7 +264,7 @@ SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         // Avoid sending garbage partials to the SASFrame
         // (would slow down a lot when many garbage partial
         // are used to compute the SASFrame)
-        //PartialTracker3::RemoveRealDeadPartials(&partials);
+        //PartialTracker5::RemoveRealDeadPartials(&partials);
         
         if (!mUseSideChain)
             mSASFrame->SetPartials(partials);
@@ -298,8 +298,8 @@ SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 #endif
 
 void
-SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                                   const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
+SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+                                    const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 
 {
     WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples = *ioBuffer;
@@ -341,10 +341,10 @@ SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
     if (mPartialTracker != NULL)
     {
-        vector<PartialTracker3::Partial> partials;
+        vector<PartialTracker5::Partial> partials;
         mPartialTracker->GetPartials(&partials);
         
-        vector<PartialTracker3::Partial> scPartials;
+        vector<PartialTracker5::Partial> scPartials;
         mScPartialTracker->GetPartials(&scPartials);
         
         if (!mUseSideChain || !mSideChainProvided)
@@ -403,7 +403,7 @@ SASViewerProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 }
 
 void
-SASViewerProcess::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
+SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                        WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
     //if (!mSASFrame->ComputeSamplesFlag())
@@ -444,7 +444,7 @@ SASViewerProcess::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
 // Use this to synthetize directly 1/4 of the samples from partials
 // (without overlap in internal)
 void
-SASViewerProcess::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
+SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                           const WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
     //if (!mSASFrame->ComputeSamplesWinFlag())
@@ -484,13 +484,13 @@ SASViewerProcess::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
 }
 
 void
-SASViewerProcess::SetSASViewerRender(SASViewerRender *sasViewerRender)
+SASViewerProcess2::SetSASViewerRender(SASViewerRender2 *sasViewerRender)
 {
     mSASViewerRender = sasViewerRender;
 }
 
 void
-SASViewerProcess::SetMode(Mode mode)
+SASViewerProcess2::SetMode(Mode mode)
 {
     if (mode != mMode)
     {
@@ -518,34 +518,34 @@ SASViewerProcess::SetMode(Mode mode)
 }
 
 void
-SASViewerProcess::SetThreshold(BL_FLOAT threshold)
+SASViewerProcess2::SetThreshold(BL_FLOAT threshold)
 {
     mThreshold = threshold;
     mPartialTracker->SetThreshold(threshold);
 }
 
 void
-SASViewerProcess::SetPitch(BL_FLOAT pitch)
+SASViewerProcess2::SetPitch(BL_FLOAT pitch)
 {
     //mSASFrame->SetPitch(pitch);
     mMixSASFrame->SetPitch(pitch);
 }
 
 void
-SASViewerProcess::SetNoiseMix(BL_FLOAT mix)
+SASViewerProcess2::SetNoiseMix(BL_FLOAT mix)
 {
     mNoiseMix = mix;
 }
 
 void
-SASViewerProcess::SetHarmonicSoundFlag(bool flag)
+SASViewerProcess2::SetHarmonicSoundFlag(bool flag)
 {
     mHarmonicFlag = flag;
     mSASFrame->SetHarmonicSoundFlag(flag);
 }
 
 void
-SASViewerProcess::SetSynthMode(SASFrame2::SynthMode mode)
+SASViewerProcess2::SetSynthMode(SASFrame3::SynthMode mode)
 {
     //mSASFrame->SetSynthMode(mode);
     mMixSASFrame->SetSynthMode(mode);
@@ -555,7 +555,7 @@ SASViewerProcess::SetSynthMode(SASFrame2::SynthMode mode)
 //
 
 void
-SASViewerProcess::SetUseSideChainFlag(bool flag)
+SASViewerProcess2::SetUseSideChainFlag(bool flag)
 {
     mUseSideChain = flag;
     
@@ -570,7 +570,7 @@ SASViewerProcess::SetUseSideChainFlag(bool flag)
 }
 
 void
-SASViewerProcess::SetScThreshold(BL_FLOAT threshold)
+SASViewerProcess2::SetScThreshold(BL_FLOAT threshold)
 {
     mScThreshold = threshold;
     
@@ -578,7 +578,7 @@ SASViewerProcess::SetScThreshold(BL_FLOAT threshold)
 }
 
 void
-SASViewerProcess::SetScHarmonicSoundFlag(bool flag)
+SASViewerProcess2::SetScHarmonicSoundFlag(bool flag)
 {
     mScHarmonicFlag = flag;
     
@@ -587,26 +587,26 @@ SASViewerProcess::SetScHarmonicSoundFlag(bool flag)
 
 
 void
-SASViewerProcess::SetMix(BL_FLOAT mix)
+SASViewerProcess2::SetMix(BL_FLOAT mix)
 {
     mMix = mix;
 }
 
 void
-SASViewerProcess::SetMixFreqFlag(bool flag)
+SASViewerProcess2::SetMixFreqFlag(bool flag)
 {
     mMixFreqFlag = flag;
 }
 
 void
-SASViewerProcess::SetMixNoiseFlag(bool flag)
+SASViewerProcess2::SetMixNoiseFlag(bool flag)
 {
     mMixNoiseFlag = flag;
 }
 
 #if 0
 BL_FLOAT
-SASViewerProcess::IdToFreq(int idx, BL_FLOAT sampleRate, int bufferSize)
+SASViewerProcess2::IdToFreq(int idx, BL_FLOAT sampleRate, int bufferSize)
 {
     BL_FLOAT hzPerBin = sampleRate/bufferSize;
     
@@ -626,7 +626,7 @@ SASViewerProcess::IdToFreq(int idx, BL_FLOAT sampleRate, int bufferSize)
 }
 
 int
-SASViewerProcess::FreqToId(BL_FLOAT freq, BL_FLOAT sampleRate, int bufferSize)
+SASViewerProcess2::FreqToId(BL_FLOAT freq, BL_FLOAT sampleRate, int bufferSize)
 {
 #if FREQ_MEL_SCALE
     // Convert from Mel
@@ -651,7 +651,7 @@ SASViewerProcess::FreqToId(BL_FLOAT freq, BL_FLOAT sampleRate, int bufferSize)
 #endif
 
 BL_FLOAT
-SASViewerProcess::AmpToDBNorm(BL_FLOAT val)
+SASViewerProcess2::AmpToDBNorm(BL_FLOAT val)
 {
     BL_FLOAT result = 0.0;
     
@@ -663,7 +663,7 @@ SASViewerProcess::AmpToDBNorm(BL_FLOAT val)
 }
 
 BL_FLOAT
-SASViewerProcess::DBToAmpNorm(BL_FLOAT val)
+SASViewerProcess2::DBToAmpNorm(BL_FLOAT val)
 {
     BL_FLOAT result = 0.0;
     
@@ -675,7 +675,7 @@ SASViewerProcess::DBToAmpNorm(BL_FLOAT val)
 }
 
 void
-SASViewerProcess::AmpsToDBNorm(WDL_TypedBuf<BL_FLOAT> *amps)
+SASViewerProcess2::AmpsToDBNorm(WDL_TypedBuf<BL_FLOAT> *amps)
 {
     for (int i = 0; i < amps->GetSize(); i++)
     {
@@ -687,7 +687,7 @@ SASViewerProcess::AmpsToDBNorm(WDL_TypedBuf<BL_FLOAT> *amps)
 }
 
 void
-SASViewerProcess::Display()
+SASViewerProcess2::Display()
 {
 #if !DEBUG_PARTIAL_TRACKING
 #if !DEBUG_DISPLAY_SCEPSTRUM
@@ -720,7 +720,7 @@ SASViewerProcess::Display()
 }
 
 void
-SASViewerProcess::ScaleFreqs(WDL_TypedBuf<BL_FLOAT> *values)
+SASViewerProcess2::ScaleFreqs(WDL_TypedBuf<BL_FLOAT> *values)
 {
     WDL_TypedBuf<BL_FLOAT> valuesRescale = *values;
     
@@ -748,7 +748,7 @@ SASViewerProcess::ScaleFreqs(WDL_TypedBuf<BL_FLOAT> *values)
 }
 
 int
-SASViewerProcess::ScaleFreq(int idx)
+SASViewerProcess2::ScaleFreq(int idx)
 {
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
     
@@ -774,7 +774,7 @@ SASViewerProcess::ScaleFreq(int idx)
 }
 
 void
-SASViewerProcess::AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns)
+SASViewerProcess2::AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns)
 {
 #if MAGNS_TO_DB
     WDL_TypedBuf<BL_FLOAT> magnsDB;
@@ -785,7 +785,7 @@ SASViewerProcess::AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns)
 }
 
 void
-SASViewerProcess::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
+SASViewerProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                                  const WDL_TypedBuf<BL_FLOAT> &phases)
 {
 #if SAS_VIEWER_PROCESS_PROFILE
@@ -814,7 +814,7 @@ SASViewerProcess::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-SASViewerProcess::DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
+SASViewerProcess2::DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                                  const WDL_TypedBuf<BL_FLOAT> &phases)
 {
 #if SAS_VIEWER_PROCESS_PROFILE
@@ -843,7 +843,7 @@ SASViewerProcess::DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-SASViewerProcess::IdToColor(int idx, unsigned char color[3])
+SASViewerProcess2::IdToColor(int idx, unsigned char color[3])
 {
     if (idx == -1)
     {
@@ -864,8 +864,8 @@ SASViewerProcess::IdToColor(int idx, unsigned char color[3])
 }
 
 void
-SASViewerProcess::PartialToColor(const PartialTracker3::Partial &partial,
-                                 unsigned char color[4])
+SASViewerProcess2::PartialToColor(const PartialTracker5::Partial &partial,
+                                  unsigned char color[4])
 {
     if (partial.mId == -1)
     {
@@ -917,7 +917,7 @@ SASViewerProcess::PartialToColor(const PartialTracker3::Partial &partial,
 }
 
 void
-SASViewerProcess::DisplayTracking()
+SASViewerProcess2::DisplayTracking()
 {
 #if SAS_VIEWER_PROCESS_PROFILE
     BlaTimer::Start(&mTimer3);
@@ -944,13 +944,13 @@ SASViewerProcess::DisplayTracking()
         //
         //vector<PartialTracker3::Partial> partials;
         //mPartialTracker->GetPartials(&partials);
-        vector<PartialTracker3::Partial> partials = mCurrentPartials;
+        vector<PartialTracker5::Partial> partials = mCurrentPartials;
         
         // Create blue lines from trackers
         vector<LinesRender2::Point> line;
         for (int i = 0; i < partials.size(); i++)
         {
-            const PartialTracker3::Partial &partial = partials[i];
+            const PartialTracker5::Partial &partial = partials[i];
             
             LinesRender2::Point p;
             
@@ -1024,7 +1024,7 @@ SASViewerProcess::DisplayTracking()
 }
 
 void
-SASViewerProcess::DisplayAmplitude()
+SASViewerProcess2::DisplayAmplitude()
 {
     BL_FLOAT ampDB;
     if (!mUseSideChain)
@@ -1057,7 +1057,7 @@ SASViewerProcess::DisplayAmplitude()
 }
 
 void
-SASViewerProcess::DisplayFrequency()
+SASViewerProcess2::DisplayFrequency()
 {
     BL_FLOAT freq;
     if (!mUseSideChain)
@@ -1094,7 +1094,7 @@ SASViewerProcess::DisplayFrequency()
 }
 
 void
-SASViewerProcess::DisplayColor()
+SASViewerProcess2::DisplayColor()
 {
     WDL_TypedBuf<BL_FLOAT> color;
     if (!mUseSideChain)
@@ -1128,7 +1128,7 @@ SASViewerProcess::DisplayColor()
 }
 
 void
-SASViewerProcess::DisplayWarping()
+SASViewerProcess2::DisplayWarping()
 {
     WDL_TypedBuf<BL_FLOAT> warping;
     
@@ -1154,7 +1154,7 @@ SASViewerProcess::DisplayWarping()
 }
 
 int
-SASViewerProcess::FindIndex(const vector<int> &ids, int idx)
+SASViewerProcess2::FindIndex(const vector<int> &ids, int idx)
 {
     if (idx == -1)
         return -1;
@@ -1169,7 +1169,7 @@ SASViewerProcess::FindIndex(const vector<int> &ids, int idx)
 }
 
 int
-SASViewerProcess::FindIndex(const vector<LinesRender2::Point> &points, int idx)
+SASViewerProcess2::FindIndex(const vector<LinesRender2::Point> &points, int idx)
 {
     if (idx == -1)
         return -1;
@@ -1184,7 +1184,7 @@ SASViewerProcess::FindIndex(const vector<LinesRender2::Point> &points, int idx)
 }
 
 void
-SASViewerProcess::CreateLines(vector<vector<LinesRender2::Point> > *partialLines)
+SASViewerProcess2::CreateLines(vector<vector<LinesRender2::Point> > *partialLines)
 {
     if (mSASViewerRender == NULL)
         return;
@@ -1285,7 +1285,7 @@ SASViewerProcess::CreateLines(vector<vector<LinesRender2::Point> > *partialLines
 
 // Try to optim
 void
-SASViewerProcess::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
+SASViewerProcess2::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
 {
     if (mSASViewerRender == NULL)
         return;
@@ -1435,7 +1435,7 @@ SASViewerProcess::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
 // ioBuffer contains noise in input
 // and the result as output
 void
-SASViewerProcess::MixHarmoNoise(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
+SASViewerProcess2::MixHarmoNoise(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                 const WDL_TypedBuf<BL_FLOAT> &harmoBuffer)
 {
     BL_FLOAT noiseCoeff;
@@ -1457,9 +1457,9 @@ SASViewerProcess::MixHarmoNoise(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
 }
 
 void
-SASViewerProcess::MixFrames(SASFrame2 *result,
-                            const SASFrame2 &frame0,
-                            const SASFrame2 &frame1,
+SASViewerProcess2::MixFrames(SASFrame3 *result,
+                            const SASFrame3 &frame0,
+                            const SASFrame3 &frame1,
                             BL_FLOAT t)
 {
     // Amp

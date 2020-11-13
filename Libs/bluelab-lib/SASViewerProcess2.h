@@ -1,13 +1,13 @@
 //
-//  WavesProcess.h
+//  SASViewerProcess2.h
 //  BL-Waves
 //
 //  Created by Pan on 20/04/18.
 //
 //
 
-#ifndef __BL_SASViewer__SASViewerProcess__
-#define __BL_SASViewer__SASViewerProcess__
+#ifndef __BL_SASViewer__SASViewerProcess2__
+#define __BL_SASViewer__SASViewerProcess2__
 
 #ifdef IGRAPHICS_NANOVG
 
@@ -17,8 +17,8 @@ using namespace std;
 #include <SmoothAvgHistogram.h>
 #include <CMA2Smoother.h>
 #include <LinesRender2.h>
-#include <PartialTracker3.h>
-#include <SASFrame2.h>
+#include <PartialTracker5.h>
+#include <SASFrame3.h>
 #include <BlaTimer.h>
 
 #include "FftProcessObj16.h"
@@ -31,11 +31,10 @@ using namespace std;
 // Hide points, and do not output sound after this freq
 #define DEBUG_MAX_PARTIAL_FREQ 44100.0 //3000.0
 
-class PartialTracker3;
-class SASFrame2;
-
-class SASViewerRender;
-class SASViewerProcess : public ProcessObj
+class PartialTracker5;
+class SASFrame3;
+class SASViewerRender2;
+class SASViewerProcess2 : public ProcessObj
 {
 public:
     enum Mode
@@ -47,11 +46,11 @@ public:
         WARPING
     };
     
-    SASViewerProcess(int bufferSize,
+    SASViewerProcess2(int bufferSize,
                      BL_FLOAT overlapping, BL_FLOAT oversampling,
                      BL_FLOAT sampleRate);
     
-    virtual ~SASViewerProcess();
+    virtual ~SASViewerProcess2();
     
     void Reset();
     
@@ -68,7 +67,7 @@ public:
     void ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                  const WDL_TypedBuf<BL_FLOAT> *scBuffer);
     
-    void SetSASViewerRender(SASViewerRender *sasViewerRender);
+    void SetSASViewerRender(SASViewerRender2 *sasViewerRender);
     
     void SetMode(Mode mode);
     
@@ -80,7 +79,7 @@ public:
     
     void SetHarmonicSoundFlag(bool flag);
     
-    void SetSynthMode(SASFrame2::SynthMode mode);
+    void SetSynthMode(SASFrame3::SynthMode mode);
     
     // SideChain
     void SetUseSideChainFlag(bool flag);
@@ -121,7 +120,7 @@ protected:
     
     void IdToColor(int idx, unsigned char color[3]);
     
-    void PartialToColor(const PartialTracker3::Partial &partial,
+    void PartialToColor(const PartialTracker5::Partial &partial,
                         unsigned char color[4]);
 
     // Utils
@@ -140,9 +139,9 @@ protected:
     void MixHarmoNoise(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                        const WDL_TypedBuf<BL_FLOAT> &harmoBuffer);
 
-    void MixFrames(SASFrame2 *result,
-                   const SASFrame2 &frame0,
-                   const SASFrame2 &frame1,
+    void MixFrames(SASFrame3 *result,
+                   const SASFrame3 &frame0,
+                   const SASFrame3 &frame1,
                    BL_FLOAT t);
 
     
@@ -161,17 +160,17 @@ protected:
     //WDL_TypedBuf<BL_FLOAT> mValues;
     
     WDL_TypedBuf<BL_FLOAT> mCurrentMagns;
-    vector<PartialTracker3::Partial> mCurrentPartials;
+    vector<PartialTracker5::Partial> mCurrentPartials;
     
     // Renderer
-    SASViewerRender *mSASViewerRender;
+    SASViewerRender2 *mSASViewerRender;
     
-    PartialTracker3 *mPartialTracker;
-    PartialTracker3 *mScPartialTracker;
+    PartialTracker5 *mPartialTracker;
+    PartialTracker5 *mScPartialTracker;
     
-    SASFrame2 *mSASFrame;
-    SASFrame2 *mScSASFrame;
-    SASFrame2 *mMixSASFrame;
+    SASFrame3 *mSASFrame;
+    SASFrame3 *mScSASFrame;
+    SASFrame3 *mMixSASFrame;
     
     Mode mMode;
     BL_FLOAT mThreshold;
@@ -215,4 +214,4 @@ protected:
 
 #endif // IGRAPHICS_NANOVG
 
-#endif /* defined(__BL_SASViewer__SASViewerProcess__) */
+#endif /* defined(__BL_SASViewer__SASViewerProcess2__) */

@@ -1,5 +1,5 @@
 //
-//  WavesRender.cpp
+//  SASViewerRender2.cpp
 //  BL-Waves
 //
 //  Created by applematuer on 10/13/18.
@@ -16,7 +16,7 @@
 // Include for flag for partials debug
 #include <SASViewerProcess.h>
 
-#include "SASViewerRender.h"
+#include "SASViewerRender2.h"
 
 // Axis drawing
 #define AXIS_OFFSET_Z 0.06
@@ -27,7 +27,7 @@
 // NOTE TESTED
 #define FIX_FREEZE_GUI 1
 
-SASViewerRender::SASViewerRender(SASViewerPluginInterface *plug,
+SASViewerRender2::SASViewerRender2(SASViewerPluginInterface *plug,
                                  GraphControl12 *graphControl,
                                  BL_FLOAT sampleRate, int bufferSize)
 {
@@ -79,7 +79,7 @@ SASViewerRender::SASViewerRender(SASViewerPluginInterface *plug,
     mAddNum = 0;
 }
 
-SASViewerRender::~SASViewerRender()
+SASViewerRender2::~SASViewerRender2()
 {
     delete mLinesRenderWaves;
     
@@ -91,7 +91,7 @@ SASViewerRender::~SASViewerRender()
 }
 
 void
-SASViewerRender::SetGraph(GraphControl12 *graphControl)
+SASViewerRender2::SetGraph(GraphControl12 *graphControl)
 {
     mGraph = graphControl;
     
@@ -103,7 +103,7 @@ SASViewerRender::SetGraph(GraphControl12 *graphControl)
 }
 
 void
-SASViewerRender::Clear()
+SASViewerRender2::Clear()
 {
     mLinesRenderWaves->ClearSlices();
 
@@ -118,7 +118,7 @@ SASViewerRender::Clear()
 }
 
 void
-SASViewerRender::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
+SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
 {
     if (magns.GetSize() == 0)
         return;
@@ -140,7 +140,7 @@ SASViewerRender::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
 }
 
 void
-SASViewerRender::AddPoints(const vector<LinesRender2::Point> &points)
+SASViewerRender2::AddPoints(const vector<LinesRender2::Point> &points)
 {
 #if DEBUG_PARTIAL_TRACKING
       // Set to 1 if displaying debug partial peaks
@@ -161,13 +161,13 @@ SASViewerRender::AddPoints(const vector<LinesRender2::Point> &points)
 }
 
 void
-SASViewerRender::SetLineMode(LinesRender2::Mode mode)
+SASViewerRender2::SetLineMode(LinesRender2::Mode mode)
 {
     mLinesRenderWaves->SetMode(mode);
 }
 
 void
-SASViewerRender::OnMouseDown(float x, float y, const IMouseMod &mod)
+SASViewerRender2::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
     mMouseIsDown = true;
     
@@ -178,7 +178,7 @@ SASViewerRender::OnMouseDown(float x, float y, const IMouseMod &mod)
 }
 
 void
-SASViewerRender::OnMouseUp(float x, float y, const IMouseMod &mod)
+SASViewerRender2::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
     if (!mMouseIsDown)
         return;
@@ -187,7 +187,7 @@ SASViewerRender::OnMouseUp(float x, float y, const IMouseMod &mod)
 }
 
 void
-SASViewerRender::OnMouseDrag(float x, float y, float dX, float dY,
+SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
                              const IMouseMod &mod)
 {
     if (mod.A)
@@ -256,7 +256,7 @@ SASViewerRender::OnMouseDrag(float x, float y, float dX, float dY,
 }
 
 void //bool
-SASViewerRender::OnMouseDblClick(float x, float y, const IMouseMod &mod)
+SASViewerRender2::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     // Reset the view
     mCamAngle0 = 0.0;
@@ -287,7 +287,7 @@ SASViewerRender::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 }
 
 void
-SASViewerRender::OnMouseWheel(float x, float y,
+SASViewerRender2::OnMouseWheel(float x, float y,
                               const IMouseMod &mod, BL_FLOAT d)
 {
 #define WHEEL_ZOOM_STEP 0.025
@@ -308,7 +308,7 @@ SASViewerRender::OnMouseWheel(float x, float y,
 }
 
 void
-SASViewerRender::SetSpeed(BL_FLOAT speed)
+SASViewerRender2::SetSpeed(BL_FLOAT speed)
 {
     mLinesRenderWaves->SetSpeed(speed);
     
@@ -321,7 +321,7 @@ SASViewerRender::SetSpeed(BL_FLOAT speed)
 }
 
 void
-SASViewerRender::SetDensity(BL_FLOAT density)
+SASViewerRender2::SetDensity(BL_FLOAT density)
 {
     mLinesRenderWaves->SetDensity(density);
     
@@ -334,7 +334,7 @@ SASViewerRender::SetDensity(BL_FLOAT density)
 }
 
 void
-SASViewerRender::SetScale(BL_FLOAT scale)
+SASViewerRender2::SetScale(BL_FLOAT scale)
 {
     mLinesRenderWaves->SetScale(scale);
     
@@ -347,7 +347,7 @@ SASViewerRender::SetScale(BL_FLOAT scale)
 }
 
 void
-SASViewerRender::SetCamAngle0(BL_FLOAT angle)
+SASViewerRender2::SetCamAngle0(BL_FLOAT angle)
 {
     mCamAngle0 = angle;
     
@@ -362,7 +362,7 @@ SASViewerRender::SetCamAngle0(BL_FLOAT angle)
 }
 
 void
-SASViewerRender::SetCamAngle1(BL_FLOAT angle)
+SASViewerRender2::SetCamAngle1(BL_FLOAT angle)
 {
     mCamAngle1 = angle;
     
@@ -377,7 +377,7 @@ SASViewerRender::SetCamAngle1(BL_FLOAT angle)
 }
 
 void
-SASViewerRender::SetCamFov(BL_FLOAT angle)
+SASViewerRender2::SetCamFov(BL_FLOAT angle)
 {
     mLinesRenderWaves->SetCameraFov(angle);
  
@@ -390,7 +390,7 @@ SASViewerRender::SetCamFov(BL_FLOAT angle)
 }
 
 int
-SASViewerRender::GetNumSlices()
+SASViewerRender2::GetNumSlices()
 {
     int numSlices = mLinesRenderWaves->GetNumSlices();
     
@@ -398,7 +398,7 @@ SASViewerRender::GetNumSlices()
 }
 
 int
-SASViewerRender::GetSpeed()
+SASViewerRender2::GetSpeed()
 {
     int speed = mLinesRenderWaves->GetSpeed();
     
@@ -406,26 +406,26 @@ SASViewerRender::GetSpeed()
 }
 
 void
-SASViewerRender::SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lines,
+SASViewerRender2::SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lines,
                                     unsigned char color[4], BL_FLOAT lineWidth)
 {
     mLinesRenderWaves->SetAdditionalLines(lines, color, lineWidth);
 }
 
 void
-SASViewerRender::ClearAdditionalLines()
+SASViewerRender2::ClearAdditionalLines()
 {
     mLinesRenderWaves->ClearAdditionalLines();
 }
 
 void
-SASViewerRender::ShowAdditionalLines(bool flag)
+SASViewerRender2::ShowAdditionalLines(bool flag)
 {
     mLinesRenderWaves->ShowAdditionalLines(flag);
 }
 
 void
-SASViewerRender::MagnsToPoints(vector<LinesRender2::Point> *points,
+SASViewerRender2::MagnsToPoints(vector<LinesRender2::Point> *points,
                                const WDL_TypedBuf<BL_FLOAT> &magns)
 {
     if (magns.GetSize() == 0)
@@ -476,7 +476,7 @@ SASViewerRender::MagnsToPoints(vector<LinesRender2::Point> *points,
 }
 
 void
-SASViewerRender::CreateFreqsAxis()
+SASViewerRender2::CreateFreqsAxis()
 {
     // Create axis
 #define NUM_AXIS_DATA 7 //8
@@ -514,7 +514,7 @@ SASViewerRender::CreateFreqsAxis()
 }
 
 BL_FLOAT
-SASViewerRender::FreqToMelNorm(BL_FLOAT freq)
+SASViewerRender2::FreqToMelNorm(BL_FLOAT freq)
 {
     // Convert to Mel
     BL_FLOAT hzPerBin = mSampleRate/(mBufferSize/2.0);
