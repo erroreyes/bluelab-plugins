@@ -98,7 +98,7 @@ protected:
     
     // Selection
     bool mMouseIsDown;
-    int mPrevDrag[2];
+    float mPrevDrag[2];
     
     // Used to detect pure mouse up, without drag
     bool mPrevMouseDrag;

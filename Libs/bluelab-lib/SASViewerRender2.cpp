@@ -133,7 +133,7 @@ SASViewerRender2::OnMouseUp(float x, float y, const IMouseMod &mod)
 
 void
 SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
-                             const IMouseMod &mod)
+                              const IMouseMod &mod)
 {
     if (mod.A)
     // Alt-drag => zoom
@@ -163,8 +163,8 @@ SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
     mPrevMouseDrag = true;
     
     // Move camera
-    int dragX = x - mPrevDrag[0];
-    int dragY = y - mPrevDrag[1];
+    float dragX = x - mPrevDrag[0];
+    float dragY = y - mPrevDrag[1];
     
     mPrevDrag[0] = x;
     mPrevDrag[1] = y;
