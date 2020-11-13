@@ -1403,7 +1403,8 @@ PartialTWMEstimate2::FindNearestIndex(const vector<BL_FLOAT> &freqs, BL_FLOAT fr
     
     nearestIdx = it - freqs0.begin();
     
-    if (nearestIdx > 0)
+    if ((nearestIdx > 0) &&
+        (nearestIdx < freqs0.size())) // should not happen
     {
       BL_FLOAT diff0 = std::fabs(freqs0[nearestIdx - 1] - freq);
       BL_FLOAT diff1 = std::fabs(freqs0[nearestIdx] - freq);
