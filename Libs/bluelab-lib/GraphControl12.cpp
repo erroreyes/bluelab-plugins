@@ -2396,9 +2396,12 @@ GraphControl12::Draw(IGraphics &graphics)
         glViewport(0, 0, w, h);
     
         glScissor(0, 0, w, h);
-        glClearColor(0.f, 0.f, 0.f, 0.f);
+        
+        //glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClearColor(mClearColor[0], mClearColor[1], mClearColor[2], mClearColor[3]);
+        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    
+        
         DoDraw(graphics);
     
         nvgEndFrame(mVg);
