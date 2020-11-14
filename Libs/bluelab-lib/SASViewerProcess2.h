@@ -21,6 +21,7 @@ using namespace std;
 #include <SASFrame3.h>
 #include <BlaTimer.h>
 #include <FftProcessObj16.h>
+#include <Scale.h>
 
 class PartialTracker5;
 class SASFrame3;
@@ -82,15 +83,13 @@ public:
     void SetMixFreqFlag(bool flag);
     void SetMixNoiseFlag(bool flag);
     
-    // Amp to dB
-    static BL_FLOAT AmpToDBNorm(BL_FLOAT val);
-    static BL_FLOAT DBToAmpNorm(BL_FLOAT val);
-    
 protected:
     void Display();
     
-    void ScaleFreqs(WDL_TypedBuf<BL_FLOAT> *values);
-    void AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns);
+    void ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns);
+    void ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases);
+    
+    //void AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns);
     
     // Apply freq scale to freq id
     int ScaleFreq(int idx);
@@ -100,8 +99,6 @@ protected:
     
     void DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                           const WDL_TypedBuf<BL_FLOAT> &phases);
-    
-    void AmpsToDBNorm(WDL_TypedBuf<BL_FLOAT> *amps);
     
     void IdToColor(int idx, unsigned char color[3]);
     
@@ -175,6 +172,10 @@ protected:
     // Keep an history, to avoid recomputing the whole lines each time
     // With this, we compute only the new extremity of the line
     vector<LinesRender2::Line> mPartialLines;
+    
+    // Scales
+    Scale::Type mXScale;
+    Scale::Type mYScale;
 };
 
 #endif // IGRAPHICS_NANOVG

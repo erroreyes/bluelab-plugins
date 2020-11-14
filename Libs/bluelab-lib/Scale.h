@@ -32,7 +32,8 @@ public:
                                  FLOAT_TYPE maxValue = -1.0);
     
     template <typename FLOAT_TYPE>
-    static void ApplyScale(Type scaleType, WDL_TypedBuf<FLOAT_TYPE> *values,
+    static void ApplyScale(Type scaleType,
+                           WDL_TypedBuf<FLOAT_TYPE> *values,
                            FLOAT_TYPE minValue = -1.0,
                            FLOAT_TYPE maxValue = -1.0);
     

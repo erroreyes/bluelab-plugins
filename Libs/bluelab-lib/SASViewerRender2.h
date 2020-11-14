@@ -89,8 +89,7 @@ protected:
     void MagnsToPoints(vector<LinesRender2::Point> *points,
                        const WDL_TypedBuf<BL_FLOAT> &magns);
     
-    BL_FLOAT FreqToMelNorm(BL_FLOAT freq);
-    
+    //
     SASViewerPluginInterface *mPlug;
     
     GraphControl12 *mGraph;

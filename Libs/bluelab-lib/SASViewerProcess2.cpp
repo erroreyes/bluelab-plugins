@@ -18,21 +18,10 @@
 
 #include "SASViewerProcess2.h"
 
-
-// Scales (x and y)
-#define FREQ_MEL_SCALE 1 //0
-#define FREQ_LOG_SCALE 0 //1
-
-#define MAGNS_TO_DB    1 //0
-#define EPS_DB 1e-15
 // With -60, avoid taking background noise
 // With -80, takes more partials (but some noise)
 #define MIN_DB -60.0 //-80.0
-
 #define MIN_AMP_DB -120.0
-
-#define MEL_SCALE_COEFF 8.0 //4.0
-#define LOG_SCALE_COEFF 0.02 //0.01
 
 // Display magns or SAS param while debugging ?
 #define DEBUG_DISPLAY_MAGNS 1  //0 //1
@@ -85,6 +74,10 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     
     // For additional lines
     mAddNum = 0;
+    
+    mXScale = Scale::MEL;
+    //mYScale = Scale::LINEAR;
+    mYScale = Scale::DB;
 }
 
 SASViewerProcess2::~SASViewerProcess2()
@@ -388,42 +381,6 @@ SASViewerProcess2::SetMixNoiseFlag(bool flag)
     mMixNoiseFlag = flag;
 }
 
-BL_FLOAT
-SASViewerProcess2::AmpToDBNorm(BL_FLOAT val)
-{
-    BL_FLOAT result = 0.0;
-    
-#if MAGNS_TO_DB
-    result = BLUtils::AmpToDBNorm(val, (BL_FLOAT)EPS_DB, (BL_FLOAT)MIN_DB);
-#endif
-    
-    return result;
-}
-
-BL_FLOAT
-SASViewerProcess2::DBToAmpNorm(BL_FLOAT val)
-{
-    BL_FLOAT result = 0.0;
-    
-#if MAGNS_TO_DB
-    result = BLUtils::DBToAmpNorm(val, (BL_FLOAT)EPS_DB, (BL_FLOAT)MIN_DB);
-#endif
-    
-    return result;
-}
-
-void
-SASViewerProcess2::AmpsToDBNorm(WDL_TypedBuf<BL_FLOAT> *amps)
-{
-    for (int i = 0; i < amps->GetSize(); i++)
-    {
-        BL_FLOAT amp = amps->Get()[i];
-        amp = AmpToDBNorm(amp);
-        
-        amps->Get()[i] = amp;
-    }
-}
-
 void
 SASViewerProcess2::Display()
 {
@@ -456,68 +413,43 @@ SASViewerProcess2::Display()
 }
 
 void
-SASViewerProcess2::ScaleFreqs(WDL_TypedBuf<BL_FLOAT> *values)
+SASViewerProcess2::ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns)
 {
-    WDL_TypedBuf<BL_FLOAT> valuesRescale = *values;
-    
-    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    
-#if FREQ_MEL_SCALE
-    // Convert to Mel
-    
-    // Artificially modify the coeff, to increase the spread on the
-    hzPerBin *= MEL_SCALE_COEFF;
-    
-    BLUtils::FreqsToMelNorm(&valuesRescale, *values, hzPerBin);
-#endif
-    
-#if FREQ_LOG_SCALE
-    // Convert to log
-    
-    // Artificially modify the coeff, to increase the spread on the
-    hzPerBin *= LOG_SCALE_COEFF;
-    
-    BLUtils::FreqsToLogNorm(&valuesRescale, *values, hzPerBin);
-#endif
-    
-    *values = valuesRescale;
+    // X
+    Scale::ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+ 
+    // Y
+    for (int i = 0; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT magn = magns->Get()[i];
+        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        magns->Get()[i] = magn;
+    }
+}
+
+void
+SASViewerProcess2::ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases)
+{
+    // X
+    Scale::ApplyScale(mXScale, phases,
+                      (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 }
 
 int
 SASViewerProcess2::ScaleFreq(int idx)
 {
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
+    BL_FLOAT freq = idx*hzPerBin;
     
-#if FREQ_MEL_SCALE
-    // Convert to Mel
+    // Normalize
+    freq /= (mSampleRate*0.5);
     
-    // Artificially modify the coeff, to increase the spread on the
-    hzPerBin *= MEL_SCALE_COEFF;
+    freq = Scale::ApplyScale(mXScale, freq,
+                             (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
     
-    int result = BLUtils::FreqIdToMelNormId(idx, hzPerBin, mBufferSize);
-#endif
-    
-#if FREQ_LOG_SCALE
-    // Convert to log
-    
-    // Artificially modify the coeff, to increase the spread on the
-    hzPerBin *= LOG_SCALE_COEFF;
-    
-    int result = BLUtils::FreqIdToLogNormId(idx, hzPerBin, mBufferSize);
-#endif
-    
-    return result;
-}
+    int idx2 = freq*mBufferSize*0.5;
 
-void
-SASViewerProcess2::AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns)
-{
-#if MAGNS_TO_DB
-    WDL_TypedBuf<BL_FLOAT> magnsDB;
-    BLUtils::AmpToDBNorm(&magnsDB, *magns, (BL_FLOAT)EPS_DB, (BL_FLOAT)MIN_DB);
-    
-    *magns = magnsDB;
-#endif
+    return idx2;
 }
 
 void
@@ -590,7 +522,7 @@ SASViewerProcess2::PartialToColor(const PartialTracker5::Partial &partial,
     deadAlpha = 0;
 #endif
     
-    if (partial.mState == PartialTracker3::Partial::ZOMBIE)
+    if (partial.mState == PartialTracker5::Partial::ZOMBIE)
     {
         // Green
         color[0] = 255;
@@ -601,7 +533,7 @@ SASViewerProcess2::PartialToColor(const PartialTracker5::Partial &partial,
         return;
     }
     
-    if (partial.mState == PartialTracker3::Partial::DEAD)
+    if (partial.mState == PartialTracker5::Partial::DEAD)
     {
         // Green
         color[0] = 255;
@@ -618,7 +550,7 @@ SASViewerProcess2::PartialToColor(const PartialTracker5::Partial &partial,
         alpha = 0;
     }
     
-    IdToColor(partial.mId, color);
+    IdToColor((int)partial.mId, color);
     color[3] = alpha; //255;
 }
 
@@ -630,10 +562,7 @@ SASViewerProcess2::DisplayTracking()
         // Add the magnitudes
         //
         WDL_TypedBuf<BL_FLOAT> magnsScale = mCurrentMagns;
-        ScaleFreqs(&magnsScale);
-        
-        // Scale to dB for display
-        AmpsToDBNorm(&magnsScale);
+        ScaleMagns(&magnsScale);
         
         mSASViewerRender->AddMagns(magnsScale);
         
@@ -663,12 +592,13 @@ SASViewerProcess2::DisplayTracking()
                 p.mX = partialX/(mCurrentMagns.GetSize() - 1) - 0.5;
             
             // dB for display
-            p.mY = DBToAmp(partial.mAmpDB);
-            p.mY = AmpToDBNorm(p.mY);
+            p.mY = BLUtils::DBToAmp(partial.mAmpDB);
+            //p.mY = AmpToDBNorm(p.mY);
+            p.mY = Scale::ApplyScale(mYScale, p.mY, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
             
             p.mZ = 0.0;
             
-            p.mId = partial.mId;
+            p.mId = (int)partial.mId;
             
             line.push_back(p);
         }
@@ -693,7 +623,7 @@ SASViewerProcess2::DisplayTracking()
             CreateLines(prevPoints);
             
             // It is cool like that: lite blue with alpha
-            unsigned char color[4] = { 64, 64, 255, 255 };
+            //unsigned char color[4] = { 64, 64, 255, 255 };
             
             // Set color
             for (int j = 0; j < mPartialLines.size(); j++)
@@ -797,7 +727,7 @@ SASViewerProcess2::DisplayColor()
     else
         mScSASFrame->GetColor(&color);
     
-    ScaleFreqs(&color);
+    ScaleMagns(&color);
     
     BL_FLOAT amplitudeDB;
     if (!mUseSideChain)
@@ -810,7 +740,7 @@ SASViewerProcess2::DisplayColor()
     BLUtils::MultValues(&color, amplitude);
     
     // Scale to dB for display
-    AmpsToDBNorm(&color);
+    Scale::ApplyScale(mYScale, &color, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
     
     if (mSASViewerRender != NULL)
     {
@@ -830,7 +760,7 @@ SASViewerProcess2::DisplayWarping()
     else
         mScSASFrame->GetNormWarping(&warping);
     
-    ScaleFreqs(&warping);
+    ScaleMagns(&warping);
     
     BLUtils::AddValues(&warping, (BL_FLOAT)-1.0);
     

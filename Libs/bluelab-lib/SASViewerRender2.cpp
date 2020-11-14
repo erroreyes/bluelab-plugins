@@ -365,19 +365,4 @@ SASViewerRender2::MagnsToPoints(vector<LinesRender2::Point> *points,
     }
 }
 
-BL_FLOAT
-SASViewerRender2::FreqToMelNorm(BL_FLOAT freq)
-{
-    // Convert to Mel
-    BL_FLOAT hzPerBin = mSampleRate/(mBufferSize/2.0);
-    hzPerBin *= MEL_COEFF;
-    
-    // Hack: something is not really correct here...
-    freq *= 2.0;
-    
-    BL_FLOAT result = BLUtils::FreqToMelNorm((BL_FLOAT)(freq*MEL_COEFF), hzPerBin, mBufferSize);
-    
-    return result;
-}
-
 #endif // IGRAPHICS_NANOVG
