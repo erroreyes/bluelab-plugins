@@ -45,8 +45,8 @@
 
 
 SASViewerProcess2::SASViewerProcess2(int bufferSize,
-                                   BL_FLOAT overlapping, BL_FLOAT oversampling,
-                                   BL_FLOAT sampleRate)
+                                     BL_FLOAT overlapping, BL_FLOAT oversampling,
+                                     BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
     mBufferSize = bufferSize;
@@ -925,7 +925,8 @@ SASViewerProcess2::CreateLines(const vector<LinesRender2::Point> &prevPoints)
     newLines.clear();
     
     // Create the new lines
-    const vector<LinesRender2::Point> &newPoints = mPartialsPoints[mPartialsPoints.size() - 1];
+    const vector<LinesRender2::Point> &newPoints =
+                    mPartialsPoints[mPartialsPoints.size() - 1];
     for (int i = 0; i < newPoints.size(); i++)
     {
         LinesRender2::Point newPoint = newPoints[i];

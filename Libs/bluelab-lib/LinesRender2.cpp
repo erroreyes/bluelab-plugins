@@ -22,10 +22,6 @@ using namespace std;
 
 #include "LinesRender2.h"
 
-
-#define RESOLUTION_0 32
-#define RESOLUTION_1 512
-
 #define NEAR_PLANE 0.1f
 #define FAR_PLANE 100.0f
 
@@ -161,20 +157,16 @@ LinesRender2::LinesRender2()
     mColor1[2] = 255;
     mColor1[3] = 255;
 
-    Init();
+    mDbgForceDensityNumSlices = false;
     
-#if PROFILE_RENDER
-    BlaTimer::Reset(&mTimer0, &mCount0);
-#endif
+    Init();
 }
 
 LinesRender2::~LinesRender2() {}
 
-// #bl-iplug2
-// mutex
-
 void
-LinesRender2::ProjectPoint(BL_FLOAT projP[3], const BL_FLOAT p[3], int width, int height)
+LinesRender2::ProjectPoint(BL_FLOAT projP[3],
+                           const BL_FLOAT p[3], int width, int height)
 {
     glm::mat4 model;
     glm::mat4 proj;
@@ -259,6 +251,11 @@ LinesRender2::SetNumSlices(long numSlices)
         mNumSlices = numSlices;
     
     mMustRecomputeProj = true;
+    
+    if (mDbgForceDensityNumSlices)
+    {
+        mDensityNumSlices = mNumSlices;
+    }
 }
 
 long
@@ -278,13 +275,6 @@ LinesRender2::SetDensePointsFlag(bool flag)
 void
 LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
 {
-#if PROFILE_RENDER
-    BlaTimer::Start(&mTimer0);
-#endif
-    
-    // #bl-iplug2
-    // mutex
-    
     mViewWidth = width;
     mViewHeight = height;
     
@@ -293,9 +283,6 @@ LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
     // Make a copy of the sensitive variables, to be able to release
     // the mutex early
     deque<vector<Point> > slices = mSlices;
-    
-    // #bl-iplug2
-    // mutex
     
     if (mMustRecomputeProj)
     {
@@ -332,12 +319,6 @@ LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
             axis->Draw(vg, width, height);
         }
     }
-    
-#if PROFILE_RENDER
-    BlaTimer::StopAndDump(&mTimer0, &mCount0,
-                          "profile.txt",
-                          "full: %ld ms \n");
-#endif
 }
 
 void
@@ -1038,6 +1019,21 @@ LinesRender2::SetDensity(BL_FLOAT density)
 {
     mDensityNumSlices = (1.0 - density)*DENSITY_MIN_NUM_SLICES +
                                 density*DENSITY_MAX_NUM_SLICES;
+    
+    mMustRecomputeProj = true;
+    
+    if (mDbgForceDensityNumSlices)
+    {
+        mDensityNumSlices = mNumSlices;
+    }
+}
+
+void
+LinesRender2::DBG_ForceDensityNumSlices()
+{
+    mDbgForceDensityNumSlices = true;
+    
+    mDensityNumSlices = mNumSlices;
     
     mMustRecomputeProj = true;
 }

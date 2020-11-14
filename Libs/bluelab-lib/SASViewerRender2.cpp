@@ -318,6 +318,13 @@ SASViewerRender2::ShowAdditionalLines(bool flag)
 }
 
 void
+SASViewerRender2::DBG_SetNumSlices(int numSlices)
+{
+    mLinesRender->SetNumSlices(numSlices);
+    mLinesRender->DBG_ForceDensityNumSlices();
+}
+
+void
 SASViewerRender2::MagnsToPoints(vector<LinesRender2::Point> *points,
                                const WDL_TypedBuf<BL_FLOAT> &magns)
 {

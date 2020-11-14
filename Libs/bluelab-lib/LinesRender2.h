@@ -18,12 +18,6 @@ using namespace std;
 #include <GraphControl12.h>
 #include <Axis3D.h>
 
-#define PROFILE_RENDER 0
-
-#if PROFILE_RENDER
-#include <BlaTimer.h>
-#endif
-
 // Modified the max fov to have the axis
 // in the view when exactly in front
 #define MIN_FOV 15.0
@@ -161,6 +155,8 @@ public:
     
     void SetColors(unsigned char color0[4], unsigned char color1[4]);
     
+    void DBG_ForceDensityNumSlices();
+
 protected:
     void ProjectPoints(vector<Point> *slices, int width, int height);
     
@@ -279,10 +275,8 @@ protected:
     unsigned char mColor0[4];
     unsigned char mColor1[4];
     
-#if PROFILE_RENDER
-    BlaTimer mTimer0;
-    long mCount0;
-#endif
+    // Debug
+    bool mDbgForceDensityNumSlices;
 };
 
 #endif // IGRAPHICS_NANOVG

@@ -82,6 +82,9 @@ public:
     
     void ShowAdditionalLines(bool flag);
     
+    // For debugging
+    void DBG_SetNumSlices(int numSlices);
+    
 protected:
     void MagnsToPoints(vector<LinesRender2::Point> *points,
                        const WDL_TypedBuf<BL_FLOAT> &magns);
