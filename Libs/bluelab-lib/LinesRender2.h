@@ -32,12 +32,6 @@ using namespace std;
 //#define MAX_FOV 45.0
 #define MAX_FOV 52.0
 
-//#define MAX_FOV 90.0 // For debugging
-
-// Use mutex with more granularity
-// (to avoid locking the audio thread for a too long time)
-//#define USE_OWN_MUTEX 1
-
 // From LinesRender
 // - added points color
 //
@@ -89,12 +83,15 @@ public:
         bool mSkipDisplayZ;
     };
     
+    struct Line
+    {
+        vector<LinesRender2::Point> mPoints;
+        unsigned char mColor[4];
+    };
+    
     LinesRender2();
     
     virtual ~LinesRender2();
-    
-    // Inherited
-    //virtual bool HasOwnMutex();
     
     void ProjectPoint(BL_FLOAT projP[3], const BL_FLOAT p[3], int width, int height);
     
@@ -149,30 +146,20 @@ public:
     // Additional, unstrutured lines
     //
     // NOTE: was for PartialTracker debug
-    void SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lines,
-                            unsigned char color[4], BL_FLOAT lineWidth);
-    
+    void SetAdditionalLines(const vector<Line> &lines, BL_FLOAT lineWidth);
     void ClearAdditionalLines();
-    
     void ShowAdditionalLines(bool flag);
-    
     void DrawAdditionalLines(NVGcontext *vg, int width, int height);
-
-    void ProjectAdditionalLines(vector<vector<LinesRender2::Point> > *lines,
-                                int width, int height);
+    void ProjectAdditionalLines(vector<Line> *lines, int width, int height);
     
     // Optimized version
-    void ProjectAdditionalLines2(vector<vector<LinesRender2::Point> > *lines,
-                                 int width, int height);
+    void ProjectAdditionalLines2(vector<Line> *lines, int width, int height);
     
     // To force recomputing projection when gui size changes for example
     // and while sound is not playing
     void SetDirty();
     
     void SetColors(unsigned char color0[4], unsigned char color1[4]);
-    
-    //
-    void DBG_SetDisplayAllSlices(bool flag);
     
 protected:
     void ProjectPoints(vector<Point> *slices, int width, int height);
@@ -190,15 +177,6 @@ protected:
     void RenderLines(vector<Point> *slices, int width, int height);
     
     void DoRenderLines(vector<Point> *slices, int width, int height);
-    
-    // Disabled because it seemed unused
-#if 0
-    void UpdateSlicesZ();
-#endif
-    
-    static void DequeToVec(vector<LinesRender2::Point> *res,
-                           const deque<vector<LinesRender2::Point> > &que);
-    
     
     void DrawPoints(NVGcontext *vg, const vector<vector<Point> > &points);
 
@@ -232,6 +210,7 @@ protected:
     void OptimStraightLineZ(vector<vector<Point> > *points);
     
     
+    //
     deque<vector<Point> > mSlices;
     
     //
@@ -286,9 +265,8 @@ protected:
     BL_FLOAT mMinDB;
     
     // Additional lines
-    vector<vector<LinesRender2::Point> > mAdditionalLines;
+    vector<Line> mAdditionalLines;
     bool mShowAdditionalLines;
-    unsigned char mAdditionalLinesColor[4];
     BL_FLOAT mAdditionalLinesWidth;
     
     // NOTE: this doesn't optimize

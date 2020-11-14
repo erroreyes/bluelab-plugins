@@ -174,7 +174,7 @@ protected:
     
     // Keep an history, to avoid recomputing the whole lines each time
     // With this, we compute only the new extremity of the line
-    vector<vector<LinesRender2::Point> > mPartialLines;
+    vector<LinesRender2::Line> mPartialLines;
 };
 
 #endif // IGRAPHICS_NANOVG

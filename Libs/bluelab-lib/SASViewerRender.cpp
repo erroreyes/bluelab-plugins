@@ -38,7 +38,6 @@ SASViewerRender::SASViewerRender(SASViewerPluginInterface *plug,
     
     mLinesRenderWaves = new LinesRender2();
     mLinesRenderWaves->SetMode(LinesRender2::LINES_FREQ);
-    mLinesRenderWaves->DBG_SetDisplayAllSlices(DEBUG_PARTIAL_TRACKING);
     
     mLinesRenderPartials = NULL;
     
@@ -406,10 +405,10 @@ SASViewerRender::GetSpeed()
 }
 
 void
-SASViewerRender::SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lines,
-                                    unsigned char color[4], BL_FLOAT lineWidth)
+SASViewerRender::SetAdditionalLines(const vector<LinesRender2::Line> &lines,
+                                    BL_FLOAT lineWidth)
 {
-    mLinesRenderWaves->SetAdditionalLines(lines, color, lineWidth);
+    mLinesRenderWaves->SetAdditionalLines(lines, lineWidth);
 }
 
 void

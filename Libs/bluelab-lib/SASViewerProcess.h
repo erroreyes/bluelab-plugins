@@ -196,7 +196,7 @@ protected:
     
     // Keep an history, to avoid recomputing the whole lines each time
     // With this, we compute only the new extremity of the line
-    vector<vector<LinesRender2::Point> > mPartialLines;
+    vector<LinesRender2::Line> mPartialLines;
     
 #if SAS_VIEWER_PROCESS_PROFILE
     BlaTimer mTimer0;

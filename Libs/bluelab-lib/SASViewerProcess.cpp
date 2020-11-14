@@ -1009,10 +1009,25 @@ SASViewerProcess::DisplayTracking()
             //unsigned char color[4] = { 64, 64, 255, 128 };
             unsigned char color[4] = { 64, 64, 255, 255 };
             
+            // Set color
+            for (int j = 0; j < mPartialLines.size(); j++)
+            {
+                LinesRender2::Line &line = mPartialLines[j];
+                
+                if (!line.mPoints.empty())
+                {
+                    line.mColor[0] = color[0];
+                    line.mColor[1] = color[1];
+                    line.mColor[2] = color[2];
+                    
+                    //IdToColor(line.mPoints[0].mId, line.mColor);
+                    line.mColor[3] = 255; // alpha
+                }
+            }
+            
             //BL_FLOAT lineWidth = 4.0;
             BL_FLOAT lineWidth = 1.5;
-            mSASViewerRender->SetAdditionalLines(mPartialLines/*partialLines*/,
-                                                 color, lineWidth);
+            mSASViewerRender->SetAdditionalLines(mPartialLines, lineWidth);
         }
         
         mSASViewerRender->ShowAdditionalLines(true);
@@ -1309,10 +1324,10 @@ SASViewerProcess::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
     
     for (int i = 0; i < mPartialLines.size(); i++)
     {
-        vector<LinesRender2::Point> &line = mPartialLines[i];
-        for (int j = 0; j < line.size(); j++)
+        LinesRender2::Line &line = mPartialLines[i];
+        for (int j = 0; j < line.mPoints.size(); j++)
         {
-            LinesRender2::Point &p = line[j];
+            LinesRender2::Point &p = line.mPoints[j];
             
             p.mZ -= incrZ;
             
@@ -1330,20 +1345,20 @@ SASViewerProcess::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
     
     // Shorten the lines if they are too long
     //
-    vector<vector<LinesRender2::Point> > newLines;
+    vector<LinesRender2::Line> newLines;
     for (int i = 0; i < mPartialLines.size(); i++)
     {
-        const vector<LinesRender2::Point> &line = mPartialLines[i];
+        const LinesRender2::Line &line = mPartialLines[i];
         
-        vector<LinesRender2::Point> newLine;
-        for (int j = 0; j < line.size(); j++)
+        LinesRender2::Line newLine;
+        for (int j = 0; j < line.mPoints.size(); j++)
         {
-            const LinesRender2::Point &p = line[j];
+            const LinesRender2::Point &p = line.mPoints[j];
             if (p.mZ > 0.0)
-                newLine.push_back(p);
+                newLine.mPoints.push_back(p);
         }
         
-        if (!newLine.empty())
+        if (!newLine.mPoints.empty())
             newLines.push_back(newLine);
     }
     
@@ -1402,16 +1417,16 @@ SASViewerProcess::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
         // Search for previous lines to be continued
         for (int j = 0; j < mPartialLines.size(); j++)
         {
-            vector<LinesRender2::Point> &prevLine = mPartialLines[j];
+            LinesRender2::Line &prevLine = mPartialLines[j];
         
-            if (!prevLine.empty())
+            if (!prevLine.mPoints.empty())
             {
-                int lineIdx = prevLine[0].mId;
+                int lineIdx = prevLine.mPoints[0].mId;
                 
                 if (lineIdx == newPoint.mId)
                 {
                     // Add the point to prev line
-                    prevLine.push_back(newPoint);
+                    prevLine.mPoints.push_back(newPoint);
                     
                     // We are done
                     pointAdded = true;
@@ -1424,8 +1439,8 @@ SASViewerProcess::CreateLines2(const vector<LinesRender2::Point> &prevPoints)
         // Create a new line ?
         if (!pointAdded)
         {
-            vector<LinesRender2::Point> newLine;
-            newLine.push_back(newPoint);
+            LinesRender2::Line newLine;
+            newLine.mPoints.push_back(newPoint);
             
             mPartialLines.push_back(newLine);
         }

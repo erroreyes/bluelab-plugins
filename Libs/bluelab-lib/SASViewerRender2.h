@@ -75,8 +75,8 @@ public:
     int GetNumSlices();
     int GetSpeed();
     
-    void SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lines,
-                            unsigned char color[4], BL_FLOAT lineWidth);
+    void SetAdditionalLines(const vector<LinesRender2::Line> &lines,
+                            BL_FLOAT lineWidth);
     
     void ClearAdditionalLines();
     

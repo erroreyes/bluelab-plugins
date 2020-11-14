@@ -222,10 +222,6 @@ LinesRender2::ProjectPoint(BL_FLOAT projP[3], const BL_FLOAT p[3], int width, in
 void
 LinesRender2::Init()
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-    
     // Fill with zero values
     // To have a flat grid at the beginning
     vector<Point> points;
@@ -330,9 +326,6 @@ LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
     
     if (mShowAxes)
     {
-#if USE_OWN_MUTEX
-        WDL_MutexLock lock2(&mMutex);
-#endif
         for (int i = 0; i < mAxis.size(); i++)
         {
             Axis3D *axis = mAxis[i];
@@ -477,10 +470,6 @@ LinesRender2::DoDrawLinesFreq(NVGcontext *vg, const vector<vector<Point> > &poin
     for (int i = 0; i < points.size(); i++)
     {
         const vector<Point> &points0 = points[i];
-        
-        //int densityStepJ = points0.size()/mDensityNumSlices;
-        //if (densityStepJ == 0)
-        //    densityStepJ = 1;
         
         nvgBeginPath(vg);
         
@@ -671,10 +660,6 @@ LinesRender2::DoDrawGrid(NVGcontext *vg, const vector<vector<Point> > &points,
 void
 LinesRender2::ClearSlices()
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-
     mSlices.clear();
     
     Init();
@@ -687,10 +672,6 @@ LinesRender2::ClearSlices()
 void
 LinesRender2::AddSlice(const vector<Point> &points)
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-    
     if (!mDisplayAllSlices)
     {
         bool skipDisplay = (mAddNum++ % mSpeed != 0);
@@ -703,10 +684,6 @@ LinesRender2::AddSlice(const vector<Point> &points)
     mSlices.push_back(points0);
     while (mSlices.size() > mNumSlices)
         mSlices.pop_front();
-    
-#if 0
-    UpdateSlicesZ();
-#endif
     
     mMustRecomputeProj = true;
 }
@@ -1088,11 +1065,6 @@ void
 LinesRender2::SetScrollDirection(LinesRender2::ScrollDirection dir)
 {
     mScrollDirection = dir;
-    
-#if 0
-    // Unused
-    UpdateSlicesZ();
-#endif
 }
 
 int
@@ -1104,20 +1076,12 @@ LinesRender2::GetSpeed()
 void
 LinesRender2::AddAxis(Axis3D *axis)
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-
     mAxis.push_back(axis);
 }
 
 void
 LinesRender2::RemoveAxis(Axis3D *axis)
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-
     vector<Axis3D *> newAxes;
     for (int i = 0; i < mAxis.size(); i++)
     {
@@ -1147,17 +1111,9 @@ LinesRender2::SetDBScale(bool flag, BL_FLOAT minDB)
 }
 
 void
-LinesRender2::SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lines,
-                                 unsigned char color[4], BL_FLOAT lineWidth)
+LinesRender2::SetAdditionalLines(const vector<Line> &lines, BL_FLOAT lineWidth)
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-
     mAdditionalLines = lines;
-    
-    for (int k = 0; k < 4; k++)
-        mAdditionalLinesColor[k] = color[k];
     
     mAdditionalLinesWidth = lineWidth;
 }
@@ -1165,10 +1121,6 @@ LinesRender2::SetAdditionalLines(const vector<vector<LinesRender2::Point> > &lin
 void
 LinesRender2::ClearAdditionalLines()
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-
     mAdditionalLines.clear();
 }
 
@@ -1181,47 +1133,39 @@ LinesRender2::ShowAdditionalLines(bool flag)
 void
 LinesRender2::DrawAdditionalLines(NVGcontext *vg, int width, int height)
 {
-    // #bl-iplug2
-    // mutex
-    
     if (!mShowAdditionalLines)
         return;
     
     if (mAdditionalLines.empty())
         return;
 
-    vector<vector<LinesRender2::Point> > lines;
+    vector<Line> lines = mAdditionalLines;
     //ProjectAdditionalLines(&lines, width, height);
-    
-    // NEW
-    lines = mAdditionalLines;
-    
-    // #bl-iplug2
-    // mutex
     
     ProjectAdditionalLines2(&lines, width, height);
     
-    DoDrawLinesFreq(vg, lines,
-                     mAdditionalLinesColor, mAdditionalLinesWidth);
+    for (int i = 0; i < lines.size(); i++)
+    {
+        Line &line = lines[i];
+        vector<vector<Point> > line0;
+        line0.push_back(line.mPoints);
+        DoDrawLinesFreq(vg, line0, line.mColor,
+                        mAdditionalLinesWidth);
+    }
 }
 
 void
-LinesRender2::ProjectAdditionalLines(vector<vector<LinesRender2::Point> > *lines,
-                                     int width, int height)
+LinesRender2::ProjectAdditionalLines(vector<Line> *lines, int width, int height)
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-
     *lines = mAdditionalLines;
     
     for (int i = 0; i < lines->size(); i++)
     {
-        vector<LinesRender2::Point> &line = (*lines)[i];
+        Line &line = (*lines)[i];
         
-        for (int j = 0; j < line.size(); j++)
+        for (int j = 0; j < line.mPoints.size(); j++)
         {
-            LinesRender2::Point &p = line[j];
+            LinesRender2::Point &p = line.mPoints[j];
             
             p.mZ = 1.0 - p.mZ;
             
@@ -1241,20 +1185,13 @@ LinesRender2::ProjectAdditionalLines(vector<vector<LinesRender2::Point> > *lines
             p.mY *= mScale;
         }
         
-        ProjectPoints(&line, width, height);
+        ProjectPoints(&line.mPoints, width, height);
     }
 }
 
 void
-LinesRender2::ProjectAdditionalLines2(vector<vector<LinesRender2::Point> > *lines,
-                                      int width, int height)
+LinesRender2::ProjectAdditionalLines2(vector<Line> *lines, int width, int height)
 {
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-
-    //*lines = mAdditionalLines;
-    
     BL_FLOAT step = 1.0;
     if (mDensityNumSlices < mNumSlices)
         step = ((BL_FLOAT)mNumSlices)/mDensityNumSlices;
@@ -1264,13 +1201,14 @@ LinesRender2::ProjectAdditionalLines2(vector<vector<LinesRender2::Point> > *line
     
     for (int i = 0; i < lines->size(); i++)
     {
-        vector<LinesRender2::Point> &line = (*lines)[i];
+        Line &line = (*lines)[i];
         
-        vector<LinesRender2::Point> newLine;
-        //for (int j = 0; j < line.size(); j++)
-        for (int j = 0; j < line.size(); j += (int)step)
+        Line newLine;
+        for (int k = 0; k < 4; k++)
+            newLine.mColor[k] = line.mColor[k];
+        for (int j = 0; j < line.mPoints.size(); j += (int)step)
         {
-            LinesRender2::Point p = line[j];
+            LinesRender2::Point p = line.mPoints[j];
             
 #if 1 // For SASViewer, TRACKING mode
             p.mZ = 1.0 - p.mZ;
@@ -1292,16 +1230,16 @@ LinesRender2::ProjectAdditionalLines2(vector<vector<LinesRender2::Point> > *line
             
             p.mY *= mScale;
             
-            newLine.push_back(p);
+            newLine.mPoints.push_back(p);
         }
         
 #if 1
         // Fix the extremity of the lines at low density
         if (step >= 2.0)
         {
-            if (!line.empty())
+            if (!line.mPoints.empty())
             {
-                LinesRender2::Point p = line[line.size() - 1];
+                LinesRender2::Point p = line.mPoints[line.mPoints.size() - 1];
             
                 // Center
                 p.mZ -= 0.5;
@@ -1319,14 +1257,14 @@ LinesRender2::ProjectAdditionalLines2(vector<vector<LinesRender2::Point> > *line
                 
                 p.mY *= mScale;
             
-                newLine.push_back(p);
+                newLine.mPoints.push_back(p);
             }
         }
 #endif
         
         line = newLine;
         
-        ProjectPoints(&line, width, height);
+        ProjectPoints(&line.mPoints, width, height);
     }
 }
 
@@ -1344,102 +1282,6 @@ LinesRender2::SetColors(unsigned char color0[4], unsigned char color1[4])
     
     for (int i = 0; i < 4; i++)
         mColor1[i] = color1[i];
-}
-
-void
-LinesRender2::DBG_SetDisplayAllSlices(bool flag)
-{
-    if (flag)
-    {
-        mNumSlices = DENSITY_MAX_NUM_SLICES;
-        
-        mDisplayAllSlices = true;
-    }
-    else
-    {
-        mNumSlices = NUM_TOTAL_SLICES;
-        
-        mDisplayAllSlices = false;
-    }
-}
-
-#if 0
-// Unused
-void
-LinesRender2::UpdateSlicesZ()
-{
-#if USE_OWN_MUTEX
-    WDL_MutexLock lock(&mMutex);
-#endif
-    
-    if (mSlices.empty())
-        return;
-    
-    // Adjust z for all the history
-    for (int i = 0; i < mSlices.size(); i++)
-    {
-
-        // Compute time step
-        BL_FLOAT z = 0.0;
-        if (mScrollDirection == BACK_FRONT)
-        {
-            z = 1.0 - ((BL_FLOAT)i)/(mSlices.size() - 1);
-        }
-        else
-        {
-            z = ((BL_FLOAT)i)/(mSlices.size() - 1);
-        }
-        
-        //// Compute time step
-        //BL_FLOAT z;
-        //if (mSlices.size() <= 1)
-        //    z = 1.0 - ((BL_FLOAT)i)/mSlices.size();
-        //else
-        //    z = 1.0 - ((BL_FLOAT)i)/(mSlices.size() - 1);
-        
-        // Center
-        z -= 0.5;
-        
-        // Get the slice
-        vector<LinesRender2::Point> &points = mSlices[i];
-        
-        // Set the same time step for all the points of the slice
-        for (int j = 0; j < points.size(); j++)
-        {
-            points[j].mZ = z;
-        }
-    }
-}
-#endif
-
-// UNUSED
-
-// More verbose implementation to try to optimize
-// (but does not optimize a lot)
-void
-LinesRender2::DequeToVec(vector<LinesRender2::Point> *res,
-                        const deque<vector<LinesRender2::Point> > &que)
-{
-    long numElements = 0;
-    for (int i = 0; i < que.size(); i++)
-        numElements += que[i].size();
-    
-    res->resize(numElements);
-    
-    long elementId = 0;
-#if !REVERT_DISPLAY_ORDER
-    for (int i = 0; i < que.size(); i++)
-#else
-    for (int i = que.size() - 1; i >= 0; i--)
-#endif
-    {
-        const vector<LinesRender2::Point> &vec = que[i];
-        for (int j = 0; j < vec.size(); j++)
-        {
-            const Point &val = vec[j];
-            (*res)[elementId++] = val;
-        }
-    }
 }
 
 // Suppress points that are on a sgtraight line
@@ -1488,8 +1330,8 @@ LinesRender2::OptimStraightLineX(vector<vector<Point> > *points)
             bool skip = false;
             if ((j > 0) && (j < line.size() - 1))
             {
-	      if ((std::fabs(line[j - 1].mY - line[j].mY) < OPTIM_STRAIGHT_LINES_EPS) &&
-		  (std::fabs(line[j].mY - line[j + 1].mY) < OPTIM_STRAIGHT_LINES_EPS))
+                if ((std::fabs(line[j - 1].mY - line[j].mY) < OPTIM_STRAIGHT_LINES_EPS) &&
+                    (std::fabs(line[j].mY - line[j + 1].mY) < OPTIM_STRAIGHT_LINES_EPS))
                     // We are on a straight line
                 {
                     skip = true;
@@ -1516,8 +1358,8 @@ LinesRender2::OptimStraightLineZ(vector<vector<Point> > *points)
             bool skip = false;
             if ((i > 0) && (i < points->size() - 1))
             {
-	      if ((std::fabs((*points)[i - 1][j].mY - (*points)[i][j].mY) < OPTIM_STRAIGHT_LINES_EPS) &&
-		  (std::fabs((*points)[i][j].mY - (*points)[i + 1][j].mY) < OPTIM_STRAIGHT_LINES_EPS))
+                if ((std::fabs((*points)[i - 1][j].mY - (*points)[i][j].mY) < OPTIM_STRAIGHT_LINES_EPS) &&
+                    (std::fabs((*points)[i][j].mY - (*points)[i + 1][j].mY) < OPTIM_STRAIGHT_LINES_EPS))
                     // We are on a straight line
                 {
                     skip = true;
