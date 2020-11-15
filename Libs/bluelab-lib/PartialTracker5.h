@@ -179,12 +179,6 @@ protected:
     BL_FLOAT ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
                                   BL_FLOAT peakFreq);
     
-    // Extend the foot that is closer to the peak,
-    // to get a symetric partial box (around the peak)
-    // (avoids one foot blocked by a barb)
-    //void SymetrisePartialFoot(int peakIndex,
-    //                          int *leftIndex, int *rightIndex);
-    
     // Avoid the partial foot to leak on the left and right
     // with very small amplitudes
     void NarrowPartialFoot(const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -328,7 +322,7 @@ protected:
     void SmoothPartials(const vector<PartialTracker5::Partial> &prevPartials,
                         vector<PartialTracker5::Partial> *currentPartials);
 
-    // DEBUG
+    // Debug
     void DBG_DumpPartials(const char *fileName,
                           const vector<Partial> &partials,
                           int bufferSize);

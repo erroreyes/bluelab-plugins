@@ -19,16 +19,13 @@
 
 #include "SASViewerProcess2.h"
 
-// With -60, avoid taking background noise
-// With -80, takes more partials (but some noise)
-#define MIN_DB -60.0 //-80.0
 #define MIN_AMP_DB -120.0
 
 // Display magns or SAS param while debugging ?
-#define DEBUG_DISPLAY_MAGNS 1  //0 //1
+#define DEBUG_DISPLAY_MAGNS 1  //0
 
 #define DEBUG_MUTE_NOISE 0 //1
-#define DEBUG_MUTE_PARTIALS 0 //0 //1
+#define DEBUG_MUTE_PARTIALS 0 //1
 
 #define SHOW_ONLY_ALIVE 0 //1
 #define MIN_AGE_DISPLAY 0 //10 // 4
@@ -145,7 +142,7 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> phases;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
-    // NEW
+    // Scale before decting partials
     ScaleMagns(&magns);
     ScalePhases(&phases);
     
@@ -190,9 +187,6 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         mScSASFrame->SetPartials(scPartials);
         
         MixFrames(mMixSASFrame, *mSASFrame, *mScSASFrame, mMix);
-        
-        // Display the current data
-        //Display();
         
 #if !DEBUG_MUTE_NOISE
         // Normal behavior
@@ -344,7 +338,6 @@ SASViewerProcess2::SetSynthMode(SASFrame3::SynthMode mode)
 
 // SideChain
 //
-
 void
 SASViewerProcess2::SetUseSideChainFlag(bool flag)
 {
@@ -574,18 +567,11 @@ SASViewerProcess2::DisplayTracking()
     if (mSASViewerRender != NULL)
     {
         // Add the magnitudes
-        //
-        //WDL_TypedBuf<BL_FLOAT> magnsScale = mCurrentMagns;
-        //ScaleMagns(&magnsScale);
-        //mSASViewerRender->AddMagns(magnsScale);
         mSASViewerRender->AddMagns(mCurrentMagns);
         
         mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
         
         // Add lines corresponding to the well tracked partials
-        //
-        //BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-        
         vector<PartialTracker5::Partial> partials = mCurrentPartials;
         
         // Create blue lines from trackers
@@ -596,24 +582,10 @@ SASViewerProcess2::DisplayTracking()
             
             LinesRender2::Point p;
             
-            //BL_FLOAT partialX = partial.mFreq/hzPerBin;
-            //partialX = bl_round(partialX);
-            
             BL_FLOAT partialX = partial.mFreq;
             
-            //partialX = ScaleFreq((int)partialX);
-            /*if (mCurrentMagns.GetSize() <= 1)
-                p.mX = partialX/mCurrentMagns.GetSize() - 0.5;
-            else
-                p.mX = partialX/(mCurrentMagns.GetSize() - 1) - 0.5;
-             */
             p.mX = partialX - 0.5;
-            
-            // dB for display
-            //p.mY = BLUtils::DBToAmp(partial.mAmpDB);
-            ////p.mY = AmpToDBNorm(p.mY);
-            //p.mY = Scale::ApplyScale(mYScale, p.mY, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
-            p.mY = partial.mAmp/*DB*/;
+            p.mY = partial.mAmp;
             
             p.mZ = 0.0;
             
