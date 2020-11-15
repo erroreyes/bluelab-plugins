@@ -64,7 +64,7 @@ using namespace std;
 //
 #define THRESHOLD_MIN               0 // good (but makes "noise blur")
 #define THRESHOLD_PEAK_PROMINENCE   0 // better (but suppresses partial in case of "double head")
-#define THRESHOLD_PEAK_HEIGHT       1 // better: fixes "BL_FLOAT-heads" problem
+#define THRESHOLD_PEAK_HEIGHT       1 // better: fixes "double-heads" problem
 #define THRESHOLD_PEAK_HEIGHT_DB    0 // EXPE: not working
 #define THRESHOLD_PEAK_HEIGHT_PINK  0 // EXPE: not working
 

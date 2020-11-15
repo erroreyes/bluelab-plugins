@@ -135,17 +135,7 @@ public:
     // OPTIM PROF Infra
     void SetMaxDetectFreq(BL_FLOAT maxFreq);
     
-    // Debug
-    static void DBG_DumpPartials(const vector<Partial> &partials,
-                                 int maxNumPartials);
-    
-    static void DBG_DumpPartials2(const char *fileName,
-                                  const vector<Partial> &partials,
-                                  int bufferSize, BL_FLOAT sampleRate);
-    
-    static void DBG_DumpPartials2Mel(const char *fileName,
-                                     const vector<Partial> &partials,
-                                     int bufferSize, BL_FLOAT sampleRate);
+    void DBG_SetDbgParam(BL_FLOAT param);
     
 protected:
     // Get the partials which are alive
@@ -246,6 +236,8 @@ protected:
     void ThresholdPartialsAmpAuto(const WDL_TypedBuf<BL_FLOAT> &magns,
                                   vector<Partial> *partials);
     
+    void ThresholdFilteredPartials(vector<Partial> *partials);
+    
     // Peaks
     //
     
@@ -314,9 +306,16 @@ protected:
     
     // Associate partials
     //
+    
+    // Simple method, based on frequencies only
     void AssociatePartials(const vector<PartialTracker5::Partial> &prevPartials,
                            vector<PartialTracker5::Partial> *currentPartials,
                            vector<PartialTracker5::Partial> *remainingPartials);
+    
+    // Based on frequencies + amplitudes
+    void AssociatePartialsFreqAmp(const vector<PartialTracker5::Partial> &prevPartials,
+                                  vector<PartialTracker5::Partial> *currentPartials,
+                                  vector<PartialTracker5::Partial> *remainingPartials);
     
     // Still used ?
     void SmoothPartials(const vector<PartialTracker5::Partial> &prevPartials,
@@ -368,6 +367,9 @@ protected:
     
     //
     BL_FLOAT mMaxDetectFreq;
+    
+    // Debug
+    BL_FLOAT mDbgParam;
 };
 
 #endif /* defined(__BL_SASViewer__PartialTracker5__) */

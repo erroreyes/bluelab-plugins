@@ -83,6 +83,9 @@ public:
     void SetMixFreqFlag(bool flag);
     void SetMixNoiseFlag(bool flag);
     
+    // Debug
+    void DBG_SetDbgParam(BL_FLOAT param);
+    
 protected:
     void Display();
     

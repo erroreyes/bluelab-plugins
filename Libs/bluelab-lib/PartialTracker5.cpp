@@ -63,9 +63,11 @@ using namespace std;
 //
 #define THRESHOLD_MIN               0 // good (but makes "noise blur")
 #define THRESHOLD_PEAK_PROMINENCE   0 // better (but suppresses partial in case of "double head")
-#define THRESHOLD_PEAK_HEIGHT       1 // better: fixes "double-heads" problem
+#define THRESHOLD_PEAK_HEIGHT       1 //0 //TEST 1 // better: fixes "double-heads" problem
 #define THRESHOLD_PEAK_HEIGHT_DB    0 // EXPE: not working
 #define THRESHOLD_PEAK_HEIGHT_PINK  0 // EXPE: not working
+
+#define THRESHOLD_FILTERED_PARTIALS 0 //1 // TEST
 
 // Experimental
 #define THRESHOLD_SMOOTH          0
@@ -148,6 +150,7 @@ using namespace std;
 //
 // and: https://www.dsprelated.com/freebooks/sasp/PARSHL_Program.html#app:parshlapp
 //
+// and: https://ccrma.stanford.edu/~jos/parshl/
 
 // Since PartialTracker4, for Infra
 #define FIX_COMPUTE_PARTIAL_AMP 1
@@ -261,6 +264,8 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
 #endif
     
     mMaxDetectFreq = -1.0;
+    
+    mDbgParam = 1.0;
 }
 
 PartialTracker5::~PartialTracker5()
@@ -1267,7 +1272,7 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 bool
 PartialTracker5::GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns,
                                   vector<Partial> *partials)
-{    
+{
     vector<Partial> result;
     bool glued = false;
     
@@ -1824,6 +1829,30 @@ PartialTracker5::ThresholdPartialsPeakHeight(const WDL_TypedBuf<BL_FLOAT> &magns
 }
 
 void
+PartialTracker5::ThresholdFilteredPartials(vector<Partial> *partials)
+{
+    vector<Partial> result;
+    for (int i = 0; i < partials->size(); i++)
+    {
+        const Partial &partial = (*partials)[i];
+        
+        BL_FLOAT amp = partial.mAmp;
+        
+        // Just in case
+        if (amp < 0.0)
+            amp = 0.0;
+        
+        // Threshold
+        // TODO: Re-check this well
+        BL_FLOAT thrsNorm = -(MIN_AMP_DB - mThreshold)/(-MIN_AMP_DB);
+        if (amp >= thrsNorm)
+            result.push_back(partial);
+    }
+    
+    *partials = result;
+}
+
+void
 PartialTracker5::ThresholdPartialsPeakHeightDb(const WDL_TypedBuf<BL_FLOAT> &magns,
                                                vector<Partial> *partials)
 {
@@ -2198,6 +2227,12 @@ PartialTracker5::FilterPartials(vector<Partial> *result)
     // NOTE: new version: better (sort by amp, then assoc with threshold)
     AssociatePartials(prevPartials, &currentPartials, &remainingPartials);
     
+    //AssociatePartialsFreqAmp(prevPartials, &currentPartials, &remainingPartials);
+    
+#if THRESHOLD_FILTERED_PARTIALS
+    ThresholdFilteredPartials(&remainingPartials);
+#endif
+    
 #if FILTER_SMOOTH
     SmoothPartials(prevPartials, &currentPartials);
 #endif
@@ -2522,7 +2557,7 @@ PartialTracker5::AssociatePartials(const vector<PartialTracker5::Partial> &prevP
             
             BL_FLOAT diffFreq = std::fabs(prevPartial.mPredictedFreq - currentPartial.mFreq);
         
-            if (diffFreq < MAX_FREQ_DIFF_ASSOC)
+            if (diffFreq < MAX_FREQ_DIFF_ASSOC*mDbgParam)
             // Associated !
             {
                 currentPartial.mId = prevPartial.mId;
@@ -2557,6 +2592,103 @@ PartialTracker5::AssociatePartials(const vector<PartialTracker5::Partial> &prevP
         if (p.mId == -1)
             remainingPartials->push_back(p);
     }
+}
+
+void
+PartialTracker5::AssociatePartialsFreqAmp(const vector<PartialTracker5::Partial> &prevPartials,
+                                          vector<PartialTracker5::Partial> *currentPartials,
+                                          vector<PartialTracker5::Partial> *remainingPartials)
+{
+    // DEBUG
+    //AssociatePartials(prevPartials, currentPartials, remainingPartials);
+    //return;
+    
+    // Sort current partials and prev partials by decreasing amplitude
+    /*vector<Partial> currentPartialsSort = *currentPartials;
+    sort(currentPartialsSort.begin(), currentPartialsSort.end(), Partial::AmpLess);
+    reverse(currentPartialsSort.begin(), currentPartialsSort.end());
+    
+    vector<Partial> prevPartialsSort = prevPartials;
+    sort(prevPartialsSort.begin(), prevPartialsSort.end(), Partial::AmpLess);
+    reverse(prevPartialsSort.begin(), prevPartialsSort.end());
+    */
+    
+    // Associate
+    
+    // Associated partials, as best as possible (existing partials)
+    vector<Partial> currentPartialsAssoc;
+    for (int i = 0; i < prevPartials.size(); i++)
+    {
+        const Partial &prevPartial = prevPartials[i];
+        
+        // Find the closest (distance depend on freq and amp)
+        int idFound = -1;
+        BL_FLOAT minDist2 = BL_INF;
+        for (int j = 0; j < currentPartials->size(); j++)
+        {
+            Partial &currentPartial = (*currentPartials)[j];
+            
+            if (currentPartial.mId != -1)
+                // Already assigned
+                continue;
+            
+            //BL_FLOAT df = prevPartial.mPredictedFreq - currentPartial.mFreq;
+            BL_FLOAT df = prevPartial.mPredictedFreq - currentPartial.mFreq;
+            
+            // TODO: diminish dist as freqs increase
+            if (std::fabs(df) > MAX_FREQ_DIFF_ASSOC*mDbgParam)
+                // Too far
+                continue;
+                
+            // TODO: kalman on amps
+            BL_FLOAT da = prevPartial.mAmp - currentPartial.mAmp;
+            
+            //BL_FLOAT dist2 = std::fabs(df); // simple
+            BL_FLOAT dist2 = df*df + da*da; // freq and amp
+            //BL_FLOAT dist2 = df*df + da; // Take more amplitude
+            if (dist2 < minDist2)
+            {
+                minDist2 = dist2;
+                idFound = j;
+            }
+        }
+        
+        if (idFound != -1)
+        {
+            Partial &currentPartial = (*currentPartials)[idFound];
+            
+            currentPartial.mId = prevPartial.mId;
+            currentPartial.mState = Partial::ALIVE;
+            currentPartial.mWasAlive = true;
+                
+            currentPartial.mAge = prevPartial.mAge + 1;
+                
+            // Kalman
+            currentPartial.mKf = prevPartial.mKf;
+            currentPartial.mPredictedFreq =
+            currentPartial.mKf.updateEstimate(currentPartial.mFreq);
+                
+            currentPartialsAssoc.push_back(currentPartial);
+        }
+    }
+    
+    //sort(currentPartialsAssoc.begin(), currentPartialsAssoc.end(), Partial::IdLess);
+    //*currentPartials = currentPartialsAssoc;
+    
+    // Now manage the new partials, that can't be associated
+    //AssociatePartials(prevPartials, currentPartials, remainingPartials);
+    
+    // Add the remaining partials
+    remainingPartials->clear();
+    for (int i = 0; i < currentPartials->size(); i++)
+    {
+        const Partial &p = (*currentPartials)[i];
+        if (p.mId == -1)
+            remainingPartials->push_back(p);
+    }
+    
+    sort(currentPartialsAssoc.begin(), currentPartialsAssoc.end(), Partial::IdLess);
+    *currentPartials = currentPartialsAssoc;
 }
 
 void
@@ -2620,4 +2752,9 @@ PartialTracker5::DBG_DumpPartials(const char *fileName,
     
     BLDebug::DumpData(fileName, result);
 }
-    
+
+void
+PartialTracker5::DBG_SetDbgParam(BL_FLOAT param)
+{
+    mDbgParam = param;
+}

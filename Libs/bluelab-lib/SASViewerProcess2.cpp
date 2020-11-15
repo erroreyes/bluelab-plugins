@@ -389,6 +389,13 @@ SASViewerProcess2::SetMixNoiseFlag(bool flag)
 }
 
 void
+SASViewerProcess2::DBG_SetDbgParam(BL_FLOAT param)
+{
+    if (mPartialTracker != NULL)
+        mPartialTracker->DBG_SetDbgParam(param);
+}
+
+void
 SASViewerProcess2::Display()
 {
 #if !DEBUG_DISPLAY_SCEPSTRUM
