@@ -23,6 +23,7 @@ using namespace std;
 // BLSpectrogram4: from BLSpectrogram3
 // - use ColormapFactory
 class ColorMap4;
+class Scale;
 class BLSpectrogram4
 {
 public:
@@ -183,6 +184,8 @@ protected:
     bool mSpectroDataChanged;
     bool mColormapDataChanged;
 #endif
+    
+    Scale *mScale;
 };
 
 #endif /* defined(__Denoiser__BLSpectrogram4__) */

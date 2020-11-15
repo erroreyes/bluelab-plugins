@@ -11,6 +11,7 @@
 
 #include "IPlug_include_in_plug_hdr.h"
 
+class MelScale;
 class Scale
 {
 public:
@@ -21,8 +22,12 @@ public:
         DB,
         LOG,
         LOG_FACTOR,
-        MEL
+        MEL, // Quick Mel
+        MEL_FILTER // Mel with real filters
     };
+    
+    Scale();
+    virtual ~Scale();
     
     // Generic
     template <typename FLOAT_TYPE>
@@ -32,10 +37,10 @@ public:
                                  FLOAT_TYPE maxValue = -1.0);
     
     template <typename FLOAT_TYPE>
-    static void ApplyScale(Type scaleType,
-                           WDL_TypedBuf<FLOAT_TYPE> *values,
-                           FLOAT_TYPE minValue = -1.0,
-                           FLOAT_TYPE maxValue = -1.0);
+    void ApplyScale(Type scaleType,
+                    WDL_TypedBuf<FLOAT_TYPE> *values,
+                    FLOAT_TYPE minValue = -1.0,
+                    FLOAT_TYPE maxValue = -1.0);
     
 protected:
     template <typename FLOAT_TYPE>
@@ -67,6 +72,14 @@ protected:
     template <typename FLOAT_TYPE>
     static void DataToMel(WDL_TypedBuf<FLOAT_TYPE> *values,
                           FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
+    
+    template <typename FLOAT_TYPE>
+    void DataToMelFilter(WDL_TypedBuf<FLOAT_TYPE> *values,
+                         FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
+    
+    //
+    // Must keep the object, for precomputed filter bank
+    MelScale *mMelScale;
 };
 
 #endif

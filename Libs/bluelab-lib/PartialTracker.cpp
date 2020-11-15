@@ -332,8 +332,6 @@ PartialTracker::DetectPartials()
 {
     WDL_TypedBuf<BL_FLOAT> magns0 = mCurrentMagns;
     
-    //BLDebug::DumpData("magns0.txt", magns0);
-    
 #if MAGNS_TEMPORAL_SMOOTH
     if (mPrevMagns.GetSize() != magns0.GetSize())
     {

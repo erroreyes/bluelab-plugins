@@ -12,6 +12,7 @@
 #include <Axis3D.h>
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 // Include for flag for partials debug
 #include <SASViewerProcess.h>

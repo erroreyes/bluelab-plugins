@@ -77,8 +77,10 @@ public:
         int mLeftIndex;
         int mRightIndex;
         
+        // When detecting and filtering, mFreq and mAmp are "scaled and normalized"
+        // After processing, we can compute the real frequencies in Hz and amp in dB.
         BL_FLOAT mFreq;
-        BL_FLOAT mAmpDB;
+        BL_FLOAT mAmp;
         BL_FLOAT mPhase;
         
         long mId;
@@ -180,8 +182,8 @@ protected:
     // Extend the foot that is closer to the peak,
     // to get a symetric partial box (around the peak)
     // (avoids one foot blocked by a barb)
-    void SymetrisePartialFoot(int peakIndex,
-                              int *leftIndex, int *rightIndex);
+    //void SymetrisePartialFoot(int peakIndex,
+    //                          int *leftIndex, int *rightIndex);
     
     // Avoid the partial foot to leak on the left and right
     // with very small amplitudes
@@ -212,6 +214,10 @@ protected:
     
     void DiscardFlatPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                              vector<Partial> *partials);
+    
+    bool DiscardInvalidPeaks(const WDL_TypedBuf<BL_FLOAT> &magns,
+                             int peakIndex, int leftIndex, int rightIndex);
+
     
     // Suppress partials with zero frequencies
     void SuppressZeroFreqPartials(vector<Partial> *partials);
@@ -322,6 +328,12 @@ protected:
     void SmoothPartials(const vector<PartialTracker5::Partial> &prevPartials,
                         vector<PartialTracker5::Partial> *currentPartials);
 
+    // DEBUG
+    void DBG_DumpPartials(const char *fileName,
+                          const vector<Partial> &partials,
+                          int bufferSize);
+
+    
     //
     //
     int mBufferSize;

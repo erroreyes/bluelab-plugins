@@ -174,6 +174,7 @@ protected:
     vector<LinesRender2::Line> mPartialLines;
     
     // Scales
+    Scale *mScale;
     Scale::Type mXScale;
     Scale::Type mYScale;
 };

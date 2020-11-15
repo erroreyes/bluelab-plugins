@@ -111,7 +111,8 @@ DbgSpectrogram::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns)
 #if !USE_DEFAULT_SCALE_MEL
         Scale::ApplyScale(Scale::LOG_FACTOR, &magns0);
 #else
-        Scale::ApplyScale(Scale::MEL, &magns0);
+        Scale tmpScale;
+        tmpScale.ApplyScale(Scale::MEL, &magns0);
 #endif
     }
     

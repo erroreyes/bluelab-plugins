@@ -151,6 +151,7 @@ PartialsToFreq5::AdjustFreqToPartialOctave(BL_FLOAT freq,
 void
 PartialsToFreq5::ThresholdPartials(vector<PartialTracker5::Partial> *partials)
 {
+#if 0
     vector<PartialTracker5::Partial> result;
     
     for (int i = 0; i < partials->size(); i++)
@@ -162,11 +163,13 @@ PartialsToFreq5::ThresholdPartials(vector<PartialTracker5::Partial> *partials)
     }
     
     *partials = result;
+#endif
 }
 
 void
 PartialsToFreq5::ThresholdPartialsRelative(vector<PartialTracker5::Partial> *partials)
 {
+#if 0
     vector<PartialTracker5::Partial> result;
     
     // Find the maximum amp
@@ -191,5 +194,6 @@ PartialsToFreq5::ThresholdPartialsRelative(vector<PartialTracker5::Partial> *par
     }
     
     *partials = result;
+#endif
 }
 

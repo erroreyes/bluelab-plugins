@@ -320,7 +320,8 @@ SASFrame3::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
             
             BL_FLOAT freq = partial.mFreq;
             
-            BL_FLOAT amp = DBToAmp(partial.mAmpDB);
+            //BL_FLOAT amp = DBToAmp(partial.mAmpDB);
+            BL_FLOAT amp = partial.mAmp;
             BL_FLOAT samp = amp*std::sin(phase); // cos
             
             samp *= SYNTH_AMP_COEFF;
@@ -1656,8 +1657,9 @@ SASFrame3::ComputeAmplitude()
     {
         const PartialTracker5::Partial &p = mPartials[i];
         
-        BL_FLOAT ampDB = p.mAmpDB;
-        BL_FLOAT amp = DBToAmp(ampDB);
+        //BL_FLOAT ampDB = p.mAmpDB;
+        //BL_FLOAT amp = DBToAmp(ampDB);
+        BL_FLOAT amp = p.mAmp;
         amplitude += amp;
     }
     
@@ -1733,8 +1735,9 @@ SASFrame3::ComputeColorAux()
         // TODO: make an interpolation, it is not so good to align to bins
         idx = bl_round(idx);
         
-        BL_FLOAT ampDB = p.mAmpDB;
-        BL_FLOAT amp = DBToAmp(ampDB);
+        //BL_FLOAT ampDB = p.mAmpDB;
+        //BL_FLOAT amp = DBToAmp(ampDB);
+        BL_FLOAT amp = p.mAmp;
         
         if (((int)idx >= 0) && ((int)idx < mColor.GetSize()))
             mColor.Get()[(int)idx] = amp;
@@ -1971,7 +1974,8 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
         currentPartial.mWasAlive)
     {
         // Decrease progressively the amplitude
-        result->mAmpDB = MIN_AMP_DB;
+        //result->mAmpDB = MIN_AMP_DB;
+        result->mAmp = 0.0;
         
         if (prevPartialIdx != -1)
             // Interpolate
@@ -1982,9 +1986,11 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
             if (t0 <= 1.0)
             {
                 // Interpolate in amp
-                BL_FLOAT amp = (1.0 - t0)*DBToAmp(prevPartial.mAmpDB);
-                BL_FLOAT ampDB = AmpToDB(amp);
-                result->mAmpDB = ampDB;
+                //BL_FLOAT amp = (1.0 - t0)*DBToAmp(prevPartial.mAmpDB);
+                BL_FLOAT amp = (1.0 - t0)*DBToAmp(prevPartial.mAmp);
+                //BL_FLOAT ampDB = AmpToDB(amp);
+                //result->mAmpDB = ampDB;
+                result->mAmp = amp;
             }
         }
     }
@@ -2002,10 +2008,11 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
             {
                 result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
                 
-                BL_FLOAT amp = (1.0 - t)*DBToAmp(prevPartial.mAmpDB) +
-                        t*DBToAmp(currentPartial.mAmpDB);
-                
-                result->mAmpDB = AmpToDB(amp);
+                //BL_FLOAT amp = (1.0 - t)*DBToAmp(prevPartial.mAmpDB) +
+                //        t*DBToAmp(currentPartial.mAmpDB);
+                //result->mAmpDB = AmpToDB(amp);
+                BL_FLOAT amp = (1.0 - t)*prevPartial.mAmp + t*currentPartial.mAmp;
+                result->mAmp = amp;
             }
         }
         else
@@ -2020,8 +2027,10 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
             if (t0 > 1.0)
                 t0 = 1.0;
                 
-            BL_FLOAT amp = t0*DBToAmp(currentPartial.mAmpDB);
-            result->mAmpDB = AmpToDB(amp);
+            //BL_FLOAT amp = t0*DBToAmp(currentPartial.mAmpDB);
+            //result->mAmpDB = AmpToDB(amp);
+            BL_FLOAT amp = t0*currentPartial.mAmp;
+            result->mAmp = amp;
         }
     }
 }

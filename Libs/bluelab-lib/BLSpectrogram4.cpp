@@ -44,6 +44,8 @@ BLSpectrogram4::BLSpectrogram4(BL_FLOAT sampleRate,
     
     mYLogScale = false;
     
+    mScale = new Scale();
+    
     mDisplayPhasesX = false;
     mDisplayPhasesY = false;
     
@@ -79,6 +81,8 @@ BLSpectrogram4::~BLSpectrogram4()
     
     if (mColorMapFactory != NULL)
         delete mColorMapFactory;
+    
+    delete mScale;
 }
 
 void
@@ -267,12 +271,12 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     if (mYLogScale)
     {
 #if !USE_DEFAULT_SCALE_MEL
-        Scale::ApplyScale(Scale::LOG_FACTOR, &magns0);
-        Scale::ApplyScale(Scale::LOG_FACTOR, &phases0);
+        mScale->ApplyScale(Scale::LOG_FACTOR, &magns0);
+        mScale->ApplyScale(Scale::LOG_FACTOR, &phases0);
 #else
-        Scale::ApplyScale(Scale::MEL, &magns0,
+        mScale->ApplyScale(Scale::MEL, &magns0,
                           (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-        Scale::ApplyScale(Scale::MEL, &phases0,
+        mScale->ApplyScale(Scale::MEL, &phases0,
                           (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 #endif
     }

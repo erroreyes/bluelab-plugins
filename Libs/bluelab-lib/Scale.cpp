@@ -7,6 +7,7 @@
 
 #include <cmath>
 
+#include <BLTypes.h>
 #include <BLUtils.h>
 #include <MelScale.h>
 
@@ -14,6 +15,16 @@
 
 #define LOG_SCALE_FACTOR 0.25
 #define LOG_SCALE2_FACTOR 3.5
+
+Scale::Scale()
+{
+    mMelScale = new MelScale();
+}
+
+Scale::~Scale()
+{
+    delete mMelScale;
+}
 
 template <typename FLOAT_TYPE>
 FLOAT_TYPE
@@ -38,7 +49,7 @@ Scale::ApplyScale(Type scaleType,
     {
         x = NormalizedToLogScale(x);
     }
-    else if (scaleType == MEL)
+    else if ((scaleType == MEL) || (scaleType == MEL_FILTER))
     {
         x = NormalizedToMel(x, minValue, maxValue);
     }
@@ -62,11 +73,18 @@ Scale::ApplyScale(Type scaleType,
     {
         DataToMel(values, minValue, maxValue);
     }
+    else if (scaleType == MEL_FILTER)
+    {
+        DataToMelFilter(values, minValue, maxValue);
+    }
 }
-template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<float> *values,
-                                float minValue, float maxValue);
-template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<double> *values,
-                                double minValue, double maxValue);
+// TMP HACK
+//template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<float> *values,
+//                                float minValue, float maxValue);
+//template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<double> *values,
+//                                double minValue, double maxValue);
+template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<BL_FLOAT> *values,
+                                BL_FLOAT minValue, BL_FLOAT maxValue);
 
 
 template <typename FLOAT_TYPE>
@@ -79,6 +97,10 @@ Scale::NormalizedToDB(FLOAT_TYPE x, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
         x = BLUtils::AmpToDB(x);
     
     x = (x - mindB)/(maxdB - mindB);
+    
+    // Avoid negative values, for very low x dB
+    if (x < 0.0)
+        x = 0.0;
     
     return x;
 }
@@ -231,3 +253,22 @@ template void Scale::DataToMel(WDL_TypedBuf<float> *values,
                                float minFreq, float maxFreq);
 template void Scale::DataToMel(WDL_TypedBuf<double> *values,
                                double minFreq, double maxFreq);
+
+template <typename FLOAT_TYPE>
+void
+Scale::DataToMelFilter(WDL_TypedBuf<FLOAT_TYPE> *values,
+                       FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq)
+{
+    int numFilters = values->GetSize();
+    WDL_TypedBuf<FLOAT_TYPE> result;
+    mMelScale->HzToMelFilter(&result, *values, (FLOAT_TYPE)(maxFreq*2.0), numFilters);
+    
+    *values = result;
+}
+// TMP HACK
+//template void Scale::DataToMelFilter(WDL_TypedBuf<float> *values,
+//                                     float minFreq, float maxFreq);
+//template void Scale::DataToMelFilter(WDL_TypedBuf<double> *values,
+//                                     double minFreq, double maxFreq);
+template void Scale::DataToMelFilter(WDL_TypedBuf<BL_FLOAT> *values,
+                                     BL_FLOAT minFreq, BL_FLOAT maxFreq);

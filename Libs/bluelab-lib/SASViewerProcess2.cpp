@@ -9,6 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 #include <DebugGraph.h>
 
 #include <SASViewerRender2.h>
@@ -75,7 +76,12 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     // For additional lines
     mAddNum = 0;
     
-    mXScale = Scale::MEL;
+    mScale = new Scale();
+    
+    //mXScale = Scale::LINEAR;
+    //mXScale = Scale::MEL;
+    mXScale = Scale::MEL_FILTER;
+    
     //mYScale = Scale::LINEAR;
     mYScale = Scale::DB;
 }
@@ -88,6 +94,8 @@ SASViewerProcess2::~SASViewerProcess2()
     delete mSASFrame;
     delete mScSASFrame;
     delete mMixSASFrame;
+    
+    delete mScale;
 }
 
 void
@@ -137,6 +145,10 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> phases;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
+    // NEW
+    ScaleMagns(&magns);
+    ScalePhases(&phases);
+    
     // Sc
     BLUtils::TakeHalf(&scFftSamples);
     
@@ -167,6 +179,8 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         else
             mCurrentPartials = scPartials;
         
+        Display();
+        
         // Avoid sending garbage partials to the SASFrame
         // (would slow down a lot when many garbage partial
         // are used to compute the SASFrame)
@@ -178,7 +192,7 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         MixFrames(mMixSASFrame, *mSASFrame, *mScSASFrame, mMix);
         
         // Display the current data
-        Display();
+        //Display();
         
 #if !DEBUG_MUTE_NOISE
         // Normal behavior
@@ -416,8 +430,8 @@ void
 SASViewerProcess2::ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns)
 {
     // X
-    Scale::ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
- 
+    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    
     // Y
     for (int i = 0; i < magns->GetSize(); i++)
     {
@@ -431,8 +445,8 @@ void
 SASViewerProcess2::ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases)
 {
     // X
-    Scale::ApplyScale(mXScale, phases,
-                      (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    mScale->ApplyScale(mXScale, phases,
+                       (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 }
 
 int
@@ -454,7 +468,7 @@ SASViewerProcess2::ScaleFreq(int idx)
 
 void
 SASViewerProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                 const WDL_TypedBuf<BL_FLOAT> &phases)
+                                  const WDL_TypedBuf<BL_FLOAT> &phases)
 {
     mPartialTracker->SetData(magns, phases);
     mPartialTracker->DetectPartials();
@@ -561,16 +575,16 @@ SASViewerProcess2::DisplayTracking()
     {
         // Add the magnitudes
         //
-        WDL_TypedBuf<BL_FLOAT> magnsScale = mCurrentMagns;
-        ScaleMagns(&magnsScale);
-        
-        mSASViewerRender->AddMagns(magnsScale);
+        //WDL_TypedBuf<BL_FLOAT> magnsScale = mCurrentMagns;
+        //ScaleMagns(&magnsScale);
+        //mSASViewerRender->AddMagns(magnsScale);
+        mSASViewerRender->AddMagns(mCurrentMagns);
         
         mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
         
         // Add lines corresponding to the well tracked partials
         //
-        BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
+        //BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
         
         vector<PartialTracker5::Partial> partials = mCurrentPartials;
         
@@ -582,19 +596,24 @@ SASViewerProcess2::DisplayTracking()
             
             LinesRender2::Point p;
             
-            BL_FLOAT partialX = partial.mFreq/hzPerBin;
-            partialX = bl_round(partialX);
+            //BL_FLOAT partialX = partial.mFreq/hzPerBin;
+            //partialX = bl_round(partialX);
             
-            partialX = ScaleFreq((int)partialX);
-            if (mCurrentMagns.GetSize() <= 1)
+            BL_FLOAT partialX = partial.mFreq;
+            
+            //partialX = ScaleFreq((int)partialX);
+            /*if (mCurrentMagns.GetSize() <= 1)
                 p.mX = partialX/mCurrentMagns.GetSize() - 0.5;
             else
                 p.mX = partialX/(mCurrentMagns.GetSize() - 1) - 0.5;
+             */
+            p.mX = partialX - 0.5;
             
             // dB for display
-            p.mY = BLUtils::DBToAmp(partial.mAmpDB);
-            //p.mY = AmpToDBNorm(p.mY);
-            p.mY = Scale::ApplyScale(mYScale, p.mY, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+            //p.mY = BLUtils::DBToAmp(partial.mAmpDB);
+            ////p.mY = AmpToDBNorm(p.mY);
+            //p.mY = Scale::ApplyScale(mYScale, p.mY, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+            p.mY = partial.mAmp/*DB*/;
             
             p.mZ = 0.0;
             
@@ -727,7 +746,7 @@ SASViewerProcess2::DisplayColor()
     else
         mScSASFrame->GetColor(&color);
     
-    ScaleMagns(&color);
+    //ScaleMagns(&color);
     
     BL_FLOAT amplitudeDB;
     if (!mUseSideChain)
@@ -740,7 +759,7 @@ SASViewerProcess2::DisplayColor()
     BLUtils::MultValues(&color, amplitude);
     
     // Scale to dB for display
-    Scale::ApplyScale(mYScale, &color, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+    mScale->ApplyScale(mYScale, &color, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
     
     if (mSASViewerRender != NULL)
     {
@@ -760,7 +779,7 @@ SASViewerProcess2::DisplayWarping()
     else
         mScSASFrame->GetNormWarping(&warping);
     
-    ScaleMagns(&warping);
+    //ScaleMagns(&warping);
     
     BLUtils::AddValues(&warping, (BL_FLOAT)-1.0);
     
