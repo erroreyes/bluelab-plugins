@@ -21,7 +21,6 @@ using namespace std;
 #include <SASFrame3.h>
 #include <BlaTimer.h>
 #include <FftProcessObj16.h>
-#include <Scale.h>
 
 class PartialTracker5;
 class SASFrame3;
@@ -67,21 +66,12 @@ public:
     
     void SetPitch(BL_FLOAT pitch);
     
-    void SetNoiseMix(BL_FLOAT mix);
-    
     void SetHarmonicSoundFlag(bool flag);
     
     void SetSynthMode(SASFrame3::SynthMode mode);
-    
-    // SideChain
-    void SetUseSideChainFlag(bool flag);
-    void SetScThreshold(BL_FLOAT threshold);
-    void SetScHarmonicSoundFlag(bool flag);
-    
-    void SetMix(BL_FLOAT mix);
 
-    void SetMixFreqFlag(bool flag);
-    void SetMixNoiseFlag(bool flag);
+    void SetEnableOutHarmo(bool flag);
+    void SetEnableOutNoise(bool flag);
     
     void SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff);
     
@@ -90,9 +80,6 @@ public:
     
 protected:
     void Display();
-    
-    void ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns);
-    void ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases);
     
     //void AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns);
     
@@ -117,23 +104,6 @@ protected:
     
     // Optimized version
     void CreateLines(const vector<LinesRender2::Point> &prevPoints);
-    
-    // Mix noise and harmonic sound
-    void MixHarmoNoise(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                       const WDL_TypedBuf<BL_FLOAT> &harmoBuffer);
-
-    void MixFrames(SASFrame3 *result,
-                   const SASFrame3 &frame0,
-                   const SASFrame3 &frame1,
-                   BL_FLOAT t);
-
-    // All steps
-    void PreProcess(WDL_TypedBuf<BL_FLOAT> *magns);
-    
-    // Apply time smooth (removes the noise and make more neat peaks), very good!
-    void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns);
-    // Apply inverse A-Weighting, so the peaks at highest frequencies will not be small
-    void PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns, bool reverse = false);
 
     
     // Display
@@ -158,25 +128,13 @@ protected:
     PartialTracker5 *mScPartialTracker;
     
     SASFrame3 *mSASFrame;
-    SASFrame3 *mScSASFrame;
-    SASFrame3 *mMixSASFrame;
     
     Mode mMode;
     BL_FLOAT mThreshold;
     bool mHarmonicFlag;
     
-    BL_FLOAT mNoiseMix;
-    
-    // SideChain
-    bool mUseSideChain;
-    BL_FLOAT mScThreshold;
-    bool mScHarmonicFlag;
-    bool mSideChainProvided;
-    
-    BL_FLOAT mMix;
-    
-    bool mMixFreqFlag;
-    bool mMixNoiseFlag;
+    bool mEnableOutHarmo;
+    bool mEnableOutNoise;
     
     // For tracking display
     deque<vector<LinesRender2::Point> > mPartialsPoints;
@@ -185,14 +143,6 @@ protected:
     // Keep an history, to avoid recomputing the whole lines each time
     // With this, we compute only the new extremity of the line
     vector<LinesRender2::Line> mPartialLines;
-    
-    // Scales
-    Scale *mScale;
-    Scale::Type mXScale;
-    Scale::Type mYScale;
-    
-    BL_FLOAT mPreProcessTimeSmoothCoeff;
-    WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevMagns;
 };
 
 #endif // IGRAPHICS_NANOVG

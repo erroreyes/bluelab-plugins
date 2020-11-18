@@ -14,6 +14,8 @@ using namespace std;
 
 #include <Window.h>
 
+#include <AWeighting.h>
+
 #include <BLUtils.h>
 #include <BLDebug.h>
 
@@ -272,6 +274,18 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     
     mMaxDetectFreq = -1.0;
     
+    // Scale
+    mScale = new Scale();
+    
+    //mXScale = Scale::LINEAR;
+    //mXScale = Scale::MEL;
+    mXScale = Scale::MEL_FILTER;
+    
+    //mYScale = Scale::LINEAR;
+    mYScale = Scale::DB;
+    
+    mPreProcessTimeSmoothCoeff = 0.5;
+    
     mDbgParam = 1.0;
 }
 
@@ -279,6 +293,8 @@ PartialTracker5::~PartialTracker5()
 {
     if (mFreqObj != NULL)
         delete mFreqObj;
+    
+    delete mScale;
 }
 
 void
@@ -313,6 +329,8 @@ PartialTracker5::Reset()
     mPrevNoiseEnvelope.Resize(0);
     // For ComputeMusicalNoise()
     mPrevNoiseMasks.clear();
+    
+    mTimeSmoothPrevMagns.Resize(0);
 }
 
 #if FIX_INFRA_SAMPLERATE
@@ -338,6 +356,14 @@ PartialTracker5::SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
 {
     mCurrentMagns = magns;
     mCurrentPhases = phases;
+    
+    PreProcess(&mCurrentMagns, &mCurrentPhases);
+}
+
+void
+PartialTracker5::GetPreProcessedData(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+    *magns = mCurrentMagns;
 }
 
 void
@@ -3039,3 +3065,147 @@ PartialTracker5::GetFreqDiffCoeff(int binNum)
     
     return diffCoeff;
 }
+
+void
+PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
+                            WDL_TypedBuf<BL_FLOAT> *phases)
+{
+    PreProcessTimeSmooth(magns);
+    
+#if SQUARE_MAGNS
+    BLUtils::ComputeSquare(magns);
+#endif
+    
+    // Y
+    for (int i = 0; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT magn = magns->Get()[i];
+        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        magns->Get()[i] = magn;
+    }
+    
+    // Better tracking on high frequencies with this!
+    PreProcessAWeighting(magns, true);
+    
+    // X
+    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    
+    // Phases
+    mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+}
+
+void
+PartialTracker5::SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff)
+{
+    mPreProcessTimeSmoothCoeff = coeff;
+}
+
+// Time smooth
+void
+PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+    if (mTimeSmoothPrevMagns.GetSize() == 0)
+    {
+        mTimeSmoothPrevMagns = *magns;
+        
+        return;
+    }
+    
+    for (int i = 0; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT val = magns->Get()[i];
+        BL_FLOAT prevVal = mTimeSmoothPrevMagns.Get()[i];
+        
+        BL_FLOAT newVal = (1.0 - mPreProcessTimeSmoothCoeff)*val +
+        mPreProcessTimeSmoothCoeff*prevVal;
+        
+        magns->Get()[i] = newVal;
+    }
+    
+    mTimeSmoothPrevMagns = *magns;
+}
+
+void
+PartialTracker5::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
+                                      bool reverse)
+{
+    // Input magns are in normalized dB
+    
+    WDL_TypedBuf<BL_FLOAT> weights;
+    int numBins = magns->GetSize();
+    AWeighting::ComputeAWeights(&weights, numBins, mSampleRate);
+    
+    BL_FLOAT hzPerBin = 0.5*mSampleRate/magns->GetSize();
+    
+    // W-Weighting property: 0dB at 1000Hz!
+    BL_FLOAT zeroDbFreq = 1000.0;
+    int zeroDbBin = zeroDbFreq/hzPerBin;
+    
+    for (int i = zeroDbBin; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT a = weights.Get()[i];
+        
+        BL_FLOAT normDbMagn = magns->Get()[i];
+        BL_FLOAT dbMagn = (1.0 - normDbMagn)*MIN_AMP_DB;
+        
+        if (reverse)
+            dbMagn -= a;
+        else
+            dbMagn += a;
+        
+        normDbMagn = 1.0 - dbMagn/MIN_AMP_DB;
+        
+        if (normDbMagn < 0.0)
+            normDbMagn = 0.0;
+        if (normDbMagn > 1.0)
+            normDbMagn = 1.0;
+        
+        magns->Get()[i] = normDbMagn;
+    }
+}
+
+#if 0
+void
+PartialTracker5::ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+#if SQUARE_MAGNS
+    BLUtils::ComputeSquare(magns);
+#endif
+    
+    // X
+    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    
+    // Y
+    for (int i = 0; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT magn = magns->Get()[i];
+        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        magns->Get()[i] = magn;
+    }
+}
+
+void
+PartialTracker5::ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases)
+{
+    // X
+    mScale->ApplyScale(mXScale, phases,
+                       (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+}
+
+int
+PartialTracker5::ScaleFreq(int idx)
+{
+    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
+    BL_FLOAT freq = idx*hzPerBin;
+    
+    // Normalize
+    freq /= (mSampleRate*0.5);
+    
+    freq = Scale::ApplyScale(mXScale, freq,
+                             (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    
+    int idx2 = freq*mBufferSize*0.5;
+    
+    return idx2;
+}
+#endif

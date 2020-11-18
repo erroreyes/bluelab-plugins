@@ -17,8 +17,6 @@
 #include <PartialTracker3.h>
 #include <SASFrame3.h>
 
-#include <AWeighting.h>
-
 #include "SASViewerProcess2.h"
 
 #define MIN_AMP_DB -120.0
@@ -52,41 +50,17 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     mScPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
     
     mSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
-    mScSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
-    mMixSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
     
     mThreshold = -60.0;
     mHarmonicFlag = false;
     
     mMode = TRACKING;
     
-    mNoiseMix = 0.0;
-    
-    // SideChain
-    mUseSideChain = false;
-    mScThreshold = -60.0;
-    mScHarmonicFlag = false;
-    
-    mSideChainProvided = false;
-    
-    mMix = 0.0;
-    
-    mMixFreqFlag = true;
-    mMixNoiseFlag = true;
+    mEnableOutHarmo = true;
+    mEnableOutNoise = true;
     
     // For additional lines
     mAddNum = 0;
-    
-    mScale = new Scale();
-    
-    //mXScale = Scale::LINEAR;
-    //mXScale = Scale::MEL;
-    mXScale = Scale::MEL_FILTER;
-    
-    //mYScale = Scale::LINEAR;
-    mYScale = Scale::DB;
-    
-    mPreProcessTimeSmoothCoeff = 0.5;
 }
 
 SASViewerProcess2::~SASViewerProcess2()
@@ -95,10 +69,6 @@ SASViewerProcess2::~SASViewerProcess2()
     delete mScPartialTracker;
     
     delete mSASFrame;
-    delete mScSASFrame;
-    delete mMixSASFrame;
-    
-    delete mScale;
 }
 
 void
@@ -107,10 +77,6 @@ SASViewerProcess2::Reset()
     Reset(mOverlapping, mOversampling, mSampleRate);
     
     mSASFrame->Reset(mSampleRate);
-    mScSASFrame->Reset(mSampleRate);
-    mMixSASFrame->Reset(mSampleRate);
-    
-    mTimeSmoothPrevMagns.Resize(0);
 }
 
 void
@@ -123,10 +89,6 @@ SASViewerProcess2::Reset(int overlapping, int oversampling,
     mSampleRate = sampleRate;
     
     mSASFrame->Reset(sampleRate);
-    mScSASFrame->Reset(sampleRate);
-    mMixSASFrame->Reset(sampleRate);
-    
-    mTimeSmoothPrevMagns.Resize(0);
 }
 
 void
@@ -136,15 +98,6 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 {
     WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples = *ioBuffer;
     
-    mSideChainProvided = false;
-    WDL_TypedBuf<WDL_FFT_COMPLEX> scFftSamples;
-    if (scBuffer != NULL)
-    {
-        scFftSamples = *scBuffer;
-        
-        mSideChainProvided = true;
-    }
-    
     // Take half of the complexes
     BLUtils::TakeHalf(&fftSamples);
     
@@ -152,28 +105,15 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> phases;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
-    PreProcess(&magns);
+    mCurrentMagns = magns;
     
-    // Scale before decting partials
-    //ScaleMagns(&magns);
-    ScalePhases(&phases);
     
-    // Sc
-    BLUtils::TakeHalf(&scFftSamples);
-    
-    WDL_TypedBuf<BL_FLOAT> scMagns;
-    WDL_TypedBuf<BL_FLOAT> scPhases;
-    BLUtils::ComplexToMagnPhase(&scMagns, &scPhases, scFftSamples);
-    
-    if (!mUseSideChain || !mSideChainProvided)
-        mCurrentMagns = magns;
-    else
-        mCurrentMagns = scMagns;
-    
+    //
     DetectPartials(magns, phases);
     
-    if (mUseSideChain)
-        DetectScPartials(scMagns, scPhases);
+    //
+    if (mPartialTracker != NULL)
+        mPartialTracker->GetPreProcessedData(&mCurrentMagns);
     
     if (mPartialTracker != NULL)
     {
@@ -183,10 +123,7 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         vector<PartialTracker5::Partial> scPartials;
         mScPartialTracker->GetPartials(&scPartials);
         
-        if (!mUseSideChain || !mSideChainProvided)
-            mCurrentPartials = partials;
-        else
-            mCurrentPartials = scPartials;
+        mCurrentPartials = partials;
         
         Display();
         
@@ -196,27 +133,12 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         //PartialTracker3::RemoveRealDeadPartials(&partials);
         
         mSASFrame->SetPartials(partials);
-        mScSASFrame->SetPartials(scPartials);
-        
-        MixFrames(mMixSASFrame, *mSASFrame, *mScSASFrame, mMix);
+  
+        //MixFrames(mMixSASFrame, *mSASFrame, *mScSASFrame, mMix);
         
 #if !DEBUG_MUTE_NOISE
-        // Normal behavior
-        // Noise envelope
-        if (mMixNoiseFlag)
-        {
+        if (mEnableOutNoise)
             mPartialTracker->GetNoiseEnvelope(&magns);
-            mScPartialTracker->GetNoiseEnvelope(&scMagns);
-        
-            WDL_TypedBuf<BL_FLOAT> mixMagns = magns;
-            if (scMagns.GetSize() == magns.GetSize())
-                BLUtils::Interp(&mixMagns, &magns, &scMagns, mMix);
-            magns = mixMagns;
-        }
-        else
-        {
-            mPartialTracker->GetNoiseEnvelope(&magns);
-        }
 #endif
     }
     
@@ -230,7 +152,7 @@ void
 SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                        WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
-    if (!mMixSASFrame->ComputeSamplesFlag())
+    if (!mSASFrame->ComputeSamplesFlag())
         return;
     
 #if DEBUG_MUTE_NOISE
@@ -245,11 +167,7 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
     
     // Compute the samples from partials
-    mMixSASFrame->ComputeSamples(&samplesBuffer);
-
-    // Mix
-    // (the current io buffer may contain shaped noise)
-    MixHarmoNoise(ioBuffer, samplesBuffer);
+    mSASFrame->ComputeSamples(&samplesBuffer);
 #endif
 }
 
@@ -259,7 +177,7 @@ void
 SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                           const WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
-    if (!mMixSASFrame->ComputeSamplesWinFlag())
+    if (!mSASFrame->ComputeSamplesWinFlag())
         return;
     
 #if DEBUG_MUTE_NOISE
@@ -274,11 +192,11 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
     
     // Compute the samples from partials
-    mMixSASFrame->ComputeSamplesWin(&samplesBuffer);
+    mSASFrame->ComputeSamplesWin(&samplesBuffer);
     
     // Mix
     // (the current io buffer may contain shaped noise)
-    MixHarmoNoise(ioBuffer, samplesBuffer);
+    //MixHarmoNoise(ioBuffer, samplesBuffer);
 #endif
 }
 
@@ -326,13 +244,7 @@ SASViewerProcess2::SetThreshold(BL_FLOAT threshold)
 void
 SASViewerProcess2::SetPitch(BL_FLOAT pitch)
 {
-    mMixSASFrame->SetPitch(pitch);
-}
-
-void
-SASViewerProcess2::SetNoiseMix(BL_FLOAT mix)
-{
-    mNoiseMix = mix;
+    mSASFrame->SetPitch(pitch);
 }
 
 void
@@ -345,59 +257,19 @@ SASViewerProcess2::SetHarmonicSoundFlag(bool flag)
 void
 SASViewerProcess2::SetSynthMode(SASFrame3::SynthMode mode)
 {
-    mMixSASFrame->SetSynthMode(mode);
-}
-
-// SideChain
-//
-void
-SASViewerProcess2::SetUseSideChainFlag(bool flag)
-{
-    mUseSideChain = flag;
-    
-    if (!mUseSideChain)
-    {
-        mPartialTracker->SetThreshold(mThreshold);
-    }
-    else
-    {
-        mScPartialTracker->SetThreshold(mScThreshold);
-    }
+    mSASFrame->SetSynthMode(mode);
 }
 
 void
-SASViewerProcess2::SetScThreshold(BL_FLOAT threshold)
+SASViewerProcess2::SetEnableOutHarmo(bool flag)
 {
-    mScThreshold = threshold;
-    
-    mScPartialTracker->SetThreshold(mScThreshold);
+    mEnableOutHarmo = flag;
 }
 
 void
-SASViewerProcess2::SetScHarmonicSoundFlag(bool flag)
+SASViewerProcess2::SetEnableOutNoise(bool flag)
 {
-    mScHarmonicFlag = flag;
-    
-    mScSASFrame->SetHarmonicSoundFlag(flag);
-}
-
-
-void
-SASViewerProcess2::SetMix(BL_FLOAT mix)
-{
-    mMix = mix;
-}
-
-void
-SASViewerProcess2::SetMixFreqFlag(bool flag)
-{
-    mMixFreqFlag = flag;
-}
-
-void
-SASViewerProcess2::SetMixNoiseFlag(bool flag)
-{
-    mMixNoiseFlag = flag;
+    mEnableOutNoise = flag;
 }
 
 void
@@ -405,6 +277,13 @@ SASViewerProcess2::DBG_SetDbgParam(BL_FLOAT param)
 {
     if (mPartialTracker != NULL)
         mPartialTracker->DBG_SetDbgParam(param);
+}
+
+void
+SASViewerProcess2::SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff)
+{
+    if (mPartialTracker != NULL)
+        mPartialTracker->SetPreProcessTimeSmoothCoeff(coeff);
 }
 
 void
@@ -436,50 +315,6 @@ SASViewerProcess2::Display()
         DisplayWarping();
     }
 #endif
-}
-
-void
-SASViewerProcess2::ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns)
-{
-#if SQUARE_MAGNS
-    BLUtils::ComputeSquare(magns);
-#endif
-    
-    // X
-    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-    
-    // Y
-    for (int i = 0; i < magns->GetSize(); i++)
-    {
-        BL_FLOAT magn = magns->Get()[i];
-        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
-        magns->Get()[i] = magn;
-    }
-}
-
-void
-SASViewerProcess2::ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases)
-{
-    // X
-    mScale->ApplyScale(mXScale, phases,
-                       (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-}
-
-int
-SASViewerProcess2::ScaleFreq(int idx)
-{
-    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    BL_FLOAT freq = idx*hzPerBin;
-    
-    // Normalize
-    freq /= (mSampleRate*0.5);
-    
-    freq = Scale::ApplyScale(mXScale, freq,
-                             (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-    
-    int idx2 = freq*mBufferSize*0.5;
-
-    return idx2;
 }
 
 void
@@ -670,11 +505,7 @@ SASViewerProcess2::DisplayTracking()
 void
 SASViewerProcess2::DisplayAmplitude()
 {
-    BL_FLOAT ampDB;
-    if (!mUseSideChain)
-        ampDB = mMixSASFrame->GetAmplitudeDB();
-    else
-        ampDB = mScSASFrame->GetAmplitudeDB();
+    BL_FLOAT ampDB = mSASFrame->GetAmplitudeDB();
     
 #define Y_COEFF 20.0
 #define Y_OFFSET 0.0
@@ -702,12 +533,8 @@ SASViewerProcess2::DisplayAmplitude()
 void
 SASViewerProcess2::DisplayFrequency()
 {
-    BL_FLOAT freq;
-    if (!mUseSideChain)
-        freq = mMixSASFrame->GetFrequency();
-    else
-        freq = mScSASFrame->GetFrequency();
-    
+    BL_FLOAT freq = mSASFrame->GetFrequency();
+
     BL_FLOAT factor = 3.0;
     freq = BLUtils::LogScaleNormInv(freq, (BL_FLOAT)44100.0, factor);
   
@@ -736,25 +563,18 @@ void
 SASViewerProcess2::DisplayColor()
 {
     WDL_TypedBuf<BL_FLOAT> color;
-    if (!mUseSideChain)
-        mMixSASFrame->GetColor(&color);
-    else
-        mScSASFrame->GetColor(&color);
+    mSASFrame->GetColor(&color);
     
     //ScaleMagns(&color);
     
-    BL_FLOAT amplitudeDB;
-    if (!mUseSideChain)
-        amplitudeDB = mMixSASFrame->GetAmplitudeDB();
-    else
-        amplitudeDB = mScSASFrame->GetAmplitudeDB();
+    BL_FLOAT amplitudeDB = mSASFrame->GetAmplitudeDB();
     
     BL_FLOAT amplitude = DBToAmp(amplitudeDB);
     
     BLUtils::MultValues(&color, amplitude);
     
     // Scale to dB for display
-    mScale->ApplyScale(mYScale, &color, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+    //mScale->ApplyScale(mYScale, &color, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
     
     if (mSASViewerRender != NULL)
     {
@@ -768,11 +588,7 @@ void
 SASViewerProcess2::DisplayWarping()
 {
     WDL_TypedBuf<BL_FLOAT> warping;
-    
-    if (!mUseSideChain)
-        mMixSASFrame->GetNormWarping(&warping);
-    else
-        mScSASFrame->GetNormWarping(&warping);
+    mSASFrame->GetNormWarping(&warping);
     
     //ScaleMagns(&warping);
     
@@ -911,30 +727,7 @@ SASViewerProcess2::CreateLines(const vector<LinesRender2::Point> &prevPoints)
     }
 }
 
-// ioBuffer contains noise in input
-// and the result as output
-void
-SASViewerProcess2::MixHarmoNoise(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                                const WDL_TypedBuf<BL_FLOAT> &harmoBuffer)
-{
-    BL_FLOAT noiseCoeff;
-    BL_FLOAT harmoCoeff;
-    BLUtils::MixParamToCoeffs(mNoiseMix, &noiseCoeff, &harmoCoeff);
-    
-    WDL_TypedBuf<BL_FLOAT> newBuf;
-    newBuf.Resize(ioBuffer->GetSize());
-    for (int i = 0; i < newBuf.GetSize(); i++)
-    {
-        BL_FLOAT n = ioBuffer->Get()[i];
-        BL_FLOAT h = harmoBuffer.Get()[i];
-        
-        BL_FLOAT val = n*noiseCoeff + h*harmoCoeff;
-        newBuf.Get()[i] = val;
-    }
-    
-    *ioBuffer = newBuf;
-}
-
+#if 0
 void
 SASViewerProcess2::MixFrames(SASFrame3 *result,
                             const SASFrame3 &frame0,
@@ -986,99 +779,6 @@ SASViewerProcess2::MixFrames(SASFrame3 *result,
     
     result->SetNormWarping(resultWarping);
 }
-
-void
-SASViewerProcess2::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns)
-{
-    PreProcessTimeSmooth(magns);
-    
-#if SQUARE_MAGNS
-    BLUtils::ComputeSquare(magns);
 #endif
-    
-    // Y
-    for (int i = 0; i < magns->GetSize(); i++)
-    {
-        BL_FLOAT magn = magns->Get()[i];
-        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
-        magns->Get()[i] = magn;
-    }
-    
-    // Better tracking on high frequencies with this!
-    PreProcessAWeighting(magns, true);
-    
-    // X
-    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-}
-
-void
-SASViewerProcess2::SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff)
-{
-    mPreProcessTimeSmoothCoeff = coeff;
-}
-
-// Time smooth
-void
-SASViewerProcess2::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
-{
-    if (mTimeSmoothPrevMagns.GetSize() == 0)
-    {
-        mTimeSmoothPrevMagns = *magns;
-        
-        return;
-    }
-    
-    for (int i = 0; i < magns->GetSize(); i++)
-    {
-        BL_FLOAT val = magns->Get()[i];
-        BL_FLOAT prevVal = mTimeSmoothPrevMagns.Get()[i];
-        
-        BL_FLOAT newVal = (1.0 - mPreProcessTimeSmoothCoeff)*val +
-                            mPreProcessTimeSmoothCoeff*prevVal;
-        
-        magns->Get()[i] = newVal;
-    }
-    
-    mTimeSmoothPrevMagns = *magns;
-}
-
-void
-SASViewerProcess2::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
-                                        bool reverse)
-{
-    // Input magns are in normalized dB
-    
-    WDL_TypedBuf<BL_FLOAT> weights;
-    int numBins = magns->GetSize();
-    AWeighting::ComputeAWeights(&weights, numBins, mSampleRate);
-    
-    BL_FLOAT hzPerBin = 0.5*mSampleRate/magns->GetSize();
-
-    // W-Weighting property: 0dB at 1000Hz!
-    BL_FLOAT zeroDbFreq = 1000.0;
-    int zeroDbBin = zeroDbFreq/hzPerBin;
-    
-    for (int i = zeroDbBin; i < magns->GetSize(); i++)
-    {
-        BL_FLOAT a = weights.Get()[i];
-        
-        BL_FLOAT normDbMagn = magns->Get()[i];
-        BL_FLOAT dbMagn = (1.0 - normDbMagn)*MIN_AMP_DB;
-        
-        if (reverse)
-            dbMagn -= a;
-        else
-            dbMagn += a;
-        
-        normDbMagn = 1.0 - dbMagn/MIN_AMP_DB;
-        
-        if (normDbMagn < 0.0)
-            normDbMagn = 0.0;
-        if (normDbMagn > 1.0)
-            normDbMagn = 1.0;
-        
-        magns->Get()[i] = normDbMagn;
-    }
-}
 
 #endif // IGRAPHICS_NANOVG

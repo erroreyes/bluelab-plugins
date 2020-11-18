@@ -10,6 +10,7 @@
 #define __BL_SASViewer__PartialTracker5__
 
 #include <SimpleKalmanFilter.h>
+#include <Scale.h>
 
 #include "IPlug_include_in_plug_hdr.h"
 
@@ -119,6 +120,7 @@ public:
     
     void SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
                  const WDL_TypedBuf<BL_FLOAT> &phases);
+    void GetPreProcessedData(WDL_TypedBuf<BL_FLOAT> *magns);
     
     void DetectPartials();
     void ExtractNoiseEnvelope();
@@ -136,9 +138,23 @@ public:
     // OPTIM PROF Infra
     void SetMaxDetectFreq(BL_FLOAT maxFreq);
     
+    void SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff);
+    
     void DBG_SetDbgParam(BL_FLOAT param);
     
 protected:
+    // All steps
+    void PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
+                    WDL_TypedBuf<BL_FLOAT> *phases);
+    
+    // Apply time smooth (removes the noise and make more neat peaks), very good!
+    void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns);
+    // Apply inverse A-Weighting, so the peaks at highest frequencies will not be small
+    void PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns, bool reverse = false);
+    
+    //void ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns);
+    //void ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases);
+    
     // Get the partials which are alive
     // (this avoid getting garbage partials that would never be associated)
     bool GetAlivePartials(vector<Partial> *partials);
@@ -387,6 +403,15 @@ protected:
     
     // Debug
     BL_FLOAT mDbgParam;
+    
+    // For Pre-Process
+    BL_FLOAT mPreProcessTimeSmoothCoeff;
+    WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevMagns;
+    
+    // Scales
+    Scale *mScale;
+    Scale::Type mXScale;
+    Scale::Type mYScale;
 };
 
 #endif /* defined(__BL_SASViewer__PartialTracker5__) */
