@@ -17,6 +17,8 @@
 #include <PartialTracker3.h>
 #include <SASFrame3.h>
 
+#include <AWeighting.h>
+
 #include "SASViewerProcess2.h"
 
 #define MIN_AMP_DB -120.0
@@ -30,6 +32,8 @@
 #define SHOW_ONLY_ALIVE 0 //1
 #define MIN_AGE_DISPLAY 0 //10 // 4
 
+// As described in: https://www.dsprelated.com/freebooks/sasp/PARSHL_Program.html#app:parshlapp
+#define SQUARE_MAGNS 0 //1
 
 SASViewerProcess2::SASViewerProcess2(int bufferSize,
                                      BL_FLOAT overlapping, BL_FLOAT oversampling,
@@ -81,6 +85,8 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     
     //mYScale = Scale::LINEAR;
     mYScale = Scale::DB;
+    
+    mPreProcessTimeSmoothCoeff = 0.5;
 }
 
 SASViewerProcess2::~SASViewerProcess2()
@@ -103,6 +109,8 @@ SASViewerProcess2::Reset()
     mSASFrame->Reset(mSampleRate);
     mScSASFrame->Reset(mSampleRate);
     mMixSASFrame->Reset(mSampleRate);
+    
+    mTimeSmoothPrevMagns.Resize(0);
 }
 
 void
@@ -117,6 +125,8 @@ SASViewerProcess2::Reset(int overlapping, int oversampling,
     mSASFrame->Reset(sampleRate);
     mScSASFrame->Reset(sampleRate);
     mMixSASFrame->Reset(sampleRate);
+    
+    mTimeSmoothPrevMagns.Resize(0);
 }
 
 void
@@ -142,8 +152,10 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> phases;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
+    PreProcess(&magns);
+    
     // Scale before decting partials
-    ScaleMagns(&magns);
+    //ScaleMagns(&magns);
     ScalePhases(&phases);
     
     // Sc
@@ -429,6 +441,10 @@ SASViewerProcess2::Display()
 void
 SASViewerProcess2::ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns)
 {
+#if SQUARE_MAGNS
+    BLUtils::ComputeSquare(magns);
+#endif
+    
     // X
     mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
     
@@ -647,7 +663,7 @@ SASViewerProcess2::DisplayTracking()
             mSASViewerRender->SetAdditionalLines(mPartialLines, lineWidth);
         }
         
-        mSASViewerRender->ShowAdditionalLines(true);
+        //mSASViewerRender->ShowTrackingLines(true);
     }
 }
 
@@ -679,7 +695,7 @@ SASViewerProcess2::DisplayAmplitude()
         // WARNING: Won't benefit from straight lines optim
         mSASViewerRender->SetLineMode(LinesRender2::LINES_TIME);
         
-        mSASViewerRender->ShowAdditionalLines(false);
+        mSASViewerRender->ShowTrackingLines(false);
     }
 }
 
@@ -712,7 +728,7 @@ SASViewerProcess2::DisplayFrequency()
         // WARNING: Won't benefit from straight lines optim
         mSASViewerRender->SetLineMode(LinesRender2::LINES_TIME);
         
-        mSASViewerRender->ShowAdditionalLines(false);
+        mSASViewerRender->ShowTrackingLines(false);
     }
 }
 
@@ -744,7 +760,7 @@ SASViewerProcess2::DisplayColor()
     {
         mSASViewerRender->AddMagns(color);
         mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
-        mSASViewerRender->ShowAdditionalLines(false);
+        mSASViewerRender->ShowTrackingLines(false);
     }
 }
 
@@ -769,7 +785,7 @@ SASViewerProcess2::DisplayWarping()
     {
         mSASViewerRender->AddMagns(warping);
         mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
-        mSASViewerRender->ShowAdditionalLines(false);
+        mSASViewerRender->ShowTrackingLines(false);
     }
 }
 
@@ -969,6 +985,100 @@ SASViewerProcess2::MixFrames(SASFrame3 *result,
     BLUtils::Interp(&resultWarping, &warp0, &warp1, t);
     
     result->SetNormWarping(resultWarping);
+}
+
+void
+SASViewerProcess2::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+    PreProcessTimeSmooth(magns);
+    
+#if SQUARE_MAGNS
+    BLUtils::ComputeSquare(magns);
+#endif
+    
+    // Y
+    for (int i = 0; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT magn = magns->Get()[i];
+        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        magns->Get()[i] = magn;
+    }
+    
+    // Better tracking on high frequencies with this!
+    PreProcessAWeighting(magns, true);
+    
+    // X
+    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+}
+
+void
+SASViewerProcess2::SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff)
+{
+    mPreProcessTimeSmoothCoeff = coeff;
+}
+
+// Time smooth
+void
+SASViewerProcess2::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
+{
+    if (mTimeSmoothPrevMagns.GetSize() == 0)
+    {
+        mTimeSmoothPrevMagns = *magns;
+        
+        return;
+    }
+    
+    for (int i = 0; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT val = magns->Get()[i];
+        BL_FLOAT prevVal = mTimeSmoothPrevMagns.Get()[i];
+        
+        BL_FLOAT newVal = (1.0 - mPreProcessTimeSmoothCoeff)*val +
+                            mPreProcessTimeSmoothCoeff*prevVal;
+        
+        magns->Get()[i] = newVal;
+    }
+    
+    mTimeSmoothPrevMagns = *magns;
+}
+
+void
+SASViewerProcess2::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
+                                        bool reverse)
+{
+    // Input magns are in normalized dB
+    
+    WDL_TypedBuf<BL_FLOAT> weights;
+    int numBins = magns->GetSize();
+    AWeighting::ComputeAWeights(&weights, numBins, mSampleRate);
+    
+    BL_FLOAT hzPerBin = 0.5*mSampleRate/magns->GetSize();
+
+    // W-Weighting property: 0dB at 1000Hz!
+    BL_FLOAT zeroDbFreq = 1000.0;
+    int zeroDbBin = zeroDbFreq/hzPerBin;
+    
+    for (int i = zeroDbBin; i < magns->GetSize(); i++)
+    {
+        BL_FLOAT a = weights.Get()[i];
+        
+        BL_FLOAT normDbMagn = magns->Get()[i];
+        BL_FLOAT dbMagn = (1.0 - normDbMagn)*MIN_AMP_DB;
+        
+        if (reverse)
+            dbMagn -= a;
+        else
+            dbMagn += a;
+        
+        normDbMagn = 1.0 - dbMagn/MIN_AMP_DB;
+        
+        if (normDbMagn < 0.0)
+            normDbMagn = 0.0;
+        if (normDbMagn > 1.0)
+            normDbMagn = 1.0;
+        
+        magns->Get()[i] = normDbMagn;
+    }
 }
 
 #endif // IGRAPHICS_NANOVG

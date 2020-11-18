@@ -1030,7 +1030,7 @@ SASViewerProcess::DisplayTracking()
             mSASViewerRender->SetAdditionalLines(mPartialLines, lineWidth);
         }
         
-        mSASViewerRender->ShowAdditionalLines(true);
+        //mSASViewerRender->ShowAdditionalLines(true);
     }
     
 #if SAS_VIEWER_PROCESS_PROFILE

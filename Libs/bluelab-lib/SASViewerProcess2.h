@@ -83,6 +83,8 @@ public:
     void SetMixFreqFlag(bool flag);
     void SetMixNoiseFlag(bool flag);
     
+    void SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff);
+    
     // Debug
     void DBG_SetDbgParam(BL_FLOAT param);
     
@@ -124,6 +126,14 @@ protected:
                    const SASFrame3 &frame0,
                    const SASFrame3 &frame1,
                    BL_FLOAT t);
+
+    // All steps
+    void PreProcess(WDL_TypedBuf<BL_FLOAT> *magns);
+    
+    // Apply time smooth (removes the noise and make more neat peaks), very good!
+    void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns);
+    // Apply inverse A-Weighting, so the peaks at highest frequencies will not be small
+    void PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns, bool reverse = false);
 
     
     // Display
@@ -180,6 +190,9 @@ protected:
     Scale *mScale;
     Scale::Type mXScale;
     Scale::Type mYScale;
+    
+    BL_FLOAT mPreProcessTimeSmoothCoeff;
+    WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevMagns;
 };
 
 #endif // IGRAPHICS_NANOVG

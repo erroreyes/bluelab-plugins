@@ -313,7 +313,7 @@ SASViewerRender2::ClearAdditionalLines()
 }
 
 void
-SASViewerRender2::ShowAdditionalLines(bool flag)
+SASViewerRender2::ShowTrackingLines(bool flag)
 {
     mLinesRender->ShowAdditionalLines(flag);
 }

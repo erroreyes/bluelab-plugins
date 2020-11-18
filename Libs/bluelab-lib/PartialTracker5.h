@@ -83,6 +83,8 @@ public:
         BL_FLOAT mAmp;
         BL_FLOAT mPhase;
         
+        BL_FLOAT mPeakHeight;
+        
         long mId;
         
         enum State mState;
@@ -95,7 +97,6 @@ public:
         // All-purpose field
         BL_FLOAT mCookie;
         
-
         SimpleKalmanFilter mKf;
         BL_FLOAT mPredictedFreq;
         
@@ -153,15 +154,15 @@ protected:
     // Peak frequency computation
     //
     BL_FLOAT ComputePeakIndexAvg(const WDL_TypedBuf<BL_FLOAT> &magns,
-                               int leftIndex, int rightIndex);
+                                 int leftIndex, int rightIndex);
     
     BL_FLOAT ComputePeakIndexParabola(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                    int peakIndex);
+                                      int peakIndex);
     
     // Peak amp
     //
     BL_FLOAT ComputePeakAmpInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                BL_FLOAT peakFreq);
+                                  BL_FLOAT peakFreq);
     
     BL_FLOAT ComputePeakAmpInterpFreqObj(const WDL_TypedBuf<BL_FLOAT> &magns,
                                        BL_FLOAT peakFreq);
@@ -219,7 +220,7 @@ protected:
     void ThresholdPartialsPeakProminence(const WDL_TypedBuf<BL_FLOAT> &magns,
                                          vector<Partial> *partials);
     
-    void ThresholdPartialsPeakHeight(const WDL_TypedBuf<BL_FLOAT> &magns,
+    void ThresholdPartialsPeakHeight(/*const WDL_TypedBuf<BL_FLOAT> &magns,*/
                                      vector<Partial> *partials);
     
     void ThresholdPartialsPeakHeightDb(const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -236,18 +237,18 @@ protected:
     void ThresholdPartialsAmpAuto(const WDL_TypedBuf<BL_FLOAT> &magns,
                                   vector<Partial> *partials);
     
-    void ThresholdFilteredPartials(vector<Partial> *partials);
+    //void ThresholdFilteredPartials(vector<Partial> *partials);
     
     // Peaks
     //
     
     // Fixed
     BL_FLOAT ComputePeakProminence(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                 int peakIndex, int leftIndex, int rightIndex);
+                                   int peakIndex, int leftIndex, int rightIndex);
 
     // Inverse of prominence
     BL_FLOAT ComputePeakHeight(const WDL_TypedBuf<BL_FLOAT> &magns,
-                             int peakIndex, int leftIndex, int rightIndex);
+                               int peakIndex, int leftIndex, int rightIndex);
     
     BL_FLOAT ComputePeakHeightDb(const WDL_TypedBuf<BL_FLOAT> &magns,
                                int peakIndex, int leftIndex, int rightIndex,
@@ -257,8 +258,13 @@ protected:
                                  int leftIndex, int rightIndex);
 
     BL_FLOAT ComputePeakLowerFoot(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                int leftIndex, int rightIndex);
+                                  int leftIndex, int rightIndex);
 
+    // Compute for all peaks
+    void ComputePeaksHeights(const WDL_TypedBuf<BL_FLOAT> &magns,
+                             vector<Partial> *partials);
+
+    
     // Filter
     //
     void FilterPartials(vector<Partial> *result);
@@ -317,10 +323,21 @@ protected:
                                   vector<PartialTracker5::Partial> *currentPartials,
                                   vector<PartialTracker5::Partial> *remainingPartials);
     
+    // See: https://www.dsprelated.com/freebooks/sasp/PARSHL_Program.html#app:parshlapp
+    // "Peak Matching (Step 5)"
+    // Use fight/winner/loser
+    void AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> &prevPartials,
+                                 vector<PartialTracker5::Partial> *currentPartials,
+                                 vector<PartialTracker5::Partial> *remainingPartials);
+    
     // Still used ?
     void SmoothPartials(const vector<PartialTracker5::Partial> &prevPartials,
                         vector<PartialTracker5::Partial> *currentPartials);
 
+    // Adaptive threshold, depending on bin num;
+    BL_FLOAT GetThreshold(int binNum);
+    BL_FLOAT GetFreqDiffCoeff(int binNum);
+    
     // Debug
     void DBG_DumpPartials(const char *fileName,
                           const vector<Partial> &partials,

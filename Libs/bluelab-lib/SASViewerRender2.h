@@ -80,7 +80,7 @@ public:
     
     void ClearAdditionalLines();
     
-    void ShowAdditionalLines(bool flag);
+    void ShowTrackingLines(bool flag);
     
     // For debugging
     void DBG_SetNumSlices(int numSlices);
