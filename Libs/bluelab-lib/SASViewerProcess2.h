@@ -73,15 +73,13 @@ public:
     void SetEnableOutHarmo(bool flag);
     void SetEnableOutNoise(bool flag);
     
-    void SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff);
+    void SetTimeSmoothCoeff(BL_FLOAT coeff);
     
     // Debug
     void DBG_SetDbgParam(BL_FLOAT param);
     
 protected:
     void Display();
-    
-    //void AmpsToDb(WDL_TypedBuf<BL_FLOAT> *magns);
     
     // Apply freq scale to freq id
     int ScaleFreq(int idx);
@@ -113,11 +111,13 @@ protected:
     void DisplayColor();
     void DisplayWarping();
     
+    //
     int mBufferSize;
     BL_FLOAT mOverlapping;
     BL_FLOAT mOversampling;
     BL_FLOAT mSampleRate;
     
+    //
     WDL_TypedBuf<BL_FLOAT> mCurrentMagns;
     vector<PartialTracker5::Partial> mCurrentPartials;
     

@@ -22,28 +22,17 @@ using namespace std;
 #include "PartialTracker5.h"
 
 #define MIN_AMP_DB -120.0
-//#define MIN_NORM_AMP 0.001
 #define MIN_NORM_AMP 1e-15
 
 #define PARTIALS_HISTORY_SIZE 2
 
-// Makes wobbling frequencies
-// NOTE: not adapted at all when input magns are already scaled to mel
-#define USE_FREQ_OBJ 0
+// As described in: https://www.dsprelated.com/freebooks/sasp/PARSHL_Program.html#app:parshlapp
+#define SQUARE_MAGNS 0 //1
 
 
 // Detect partials
 //
 #define DETECT_PARTIALS_START_INDEX 2
-
-#define DETECT_PARTIALS_SMOOTH 0 // 1
-// Take odd size ! (otherwise there will be a shift on the right)
-//
-// 5: good, but very high freqs are not well detected
-// 3: detect well high frequencies, but dos not smooth enough low freqs
-//
-#define DETECT_PARTIALS_SMOOTH_SIZE 5
-
 
 // Compute simple, avg, or parabola ?
 // (Avg seems a little more smooth than parabola)
@@ -61,31 +50,9 @@ using namespace std;
 
 #define DISCARD_INVALID_PEAKS 1
 
-// Threshold partials
-//
-#define THRESHOLD_MIN               0 // good (but makes "noise blur")
-#define THRESHOLD_PEAK_PROMINENCE   0 // better (but suppresses partial in case of "double head")
-#define THRESHOLD_PEAK_HEIGHT_DB    0 // EXPE: not working
-#define THRESHOLD_PEAK_HEIGHT_PINK  0 // EXPE: not working
-
-// ORIGIN
-#define THRESHOLD_PEAK_HEIGHT       1 //0 //1 // better: fixes "double-heads" problem
-// NEW
-#define THRESHOLD_FILTERED_PARTIALS 0 //1 //0
-
-// Experimental
-#define THRESHOLD_SMOOTH          0
-#define THRESHOLD_AUTO            0 // Not working
-
-#define THRESHOLD_PARTIALS_SMOOTH_SIZE   21
-#define THRESHOLD_PARTIALS_AUTO_WIN_SIZE 21
-
 //
 #define GLUE_BARBS              1 //0
 #define GLUE_BARBS_AMP_RATIO    10.0 //4.0
-
-
-#define GLUE_TWIN_PARTIALS 0
 
 
 // Filter
@@ -94,23 +61,10 @@ using namespace std;
 // Do we filter ?
 #define FILTER_PARTIALS 1
 
-// Do we smooth when filter ?
-#define FILTER_SMOOTH       0 //1
-#define FILTER_SMOOTH_COEFF 0.9 //0.8
-
 #define MAX_ZOMBIE_AGE 2
 
 // Seems better with 200Hz (tested on "oohoo")
-#define MAX_FREQ_DIFF_ASSOC 0.01 // For normalized freqs. Around 100Hz
-// 0.01 => gives good result (avoids "tss" detected as partial)
-// 0.005 => avoids missing partials in heigh frequencies
-//#define MIN_SPACING_NORM_MEL 0.01
-//#define MIN_SPACING_NORM_MEL 0.005
-#define MIN_SPACING_NORM_MEL 0.001 // in test...
-
-// Minimum spacing between partials in bins
-#define APPLY_MIN_SPACING 0
-#define MIN_SPACING_BINS  0 //16
+#define DELTA_FREQ_ASSOC 0.01 // For normalized freqs. Around 100Hz
 
 // Kalman
 // "How much do we expect to our measurement vary"
@@ -160,9 +114,6 @@ using namespace std;
 // and: https://www.dsprelated.com/freebooks/sasp/PARSHL_Program.html#app:parshlapp
 //
 // and: https://ccrma.stanford.edu/~jos/parshl/
-
-// Since PartialTracker4, for Infra
-#define FIX_COMPUTE_PARTIAL_AMP 1
 
 
 unsigned long PartialTracker5::Partial::mCurrentId = 0;
@@ -264,14 +215,6 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     
     mThreshold = -60.0;
     
-    mFreqObj = NULL;
-    
-#if USE_FREQ_OBJ
-    int freqRes = 1;
-    mFreqObj = new FreqAdjustObj3(bufferSize, overlapping,
-                                  freqRes, sampleRate);
-#endif
-    
     mMaxDetectFreq = -1.0;
     
     // Scale
@@ -284,45 +227,28 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     //mYScale = Scale::LINEAR;
     mYScale = Scale::DB;
     
-    mPreProcessTimeSmoothCoeff = 0.5;
+    mTimeSmoothCoeff = 0.5;
     
     mDbgParam = 1.0;
 }
 
 PartialTracker5::~PartialTracker5()
 {
-    if (mFreqObj != NULL)
-        delete mFreqObj;
-    
     delete mScale;
 }
 
 void
 PartialTracker5::Reset()
 {
-    if (mFreqObj != NULL)
-    {
-        int freqRes = 1;
-        mFreqObj->Reset(mBufferSize, mOverlapping,
-                        freqRes, mSampleRate);
-    }
-    
     mPartials.clear();
     mResult.clear();
     
     mNoiseEnvelope.Resize(0);
     mHarmonicEnvelope.Resize(0);;
-    
-    mRealFreqs.Resize(0);
-    mPrevMagns.Resize(0);
 
     mCurrentMagns.Resize(0);
     mCurrentPhases.Resize(0);
     
-    mSmoothWinDetect.Resize(0);
-    mCurrentSmoothMagns.Resize(0);
-    
-    mSmoothWinThreshold.Resize(0);
     mSmoothWinNoise.Resize(0);
     
 
@@ -333,7 +259,6 @@ PartialTracker5::Reset()
     mTimeSmoothPrevMagns.Resize(0);
 }
 
-#if FIX_INFRA_SAMPLERATE
 void
 PartialTracker5::Reset(int bufferSize, BL_FLOAT sampleRate)
 {
@@ -342,7 +267,6 @@ PartialTracker5::Reset(int bufferSize, BL_FLOAT sampleRate)
     
     Reset();
 }
-#endif
 
 void
 PartialTracker5::SetThreshold(BL_FLOAT threshold)
@@ -371,12 +295,6 @@ PartialTracker5::DetectPartials()
 {
     WDL_TypedBuf<BL_FLOAT> magns0 = mCurrentMagns;
     
-    if (mFreqObj != NULL)
-    {
-        // See: http://blogs.zynaptiq.com/bernsee/pitch-shifting-using-the-ft/
-        mFreqObj->ComputeRealFrequencies(mCurrentPhases, &mRealFreqs);
-    }
-    
     vector<Partial> partials;
     DetectPartials(magns0, mCurrentPhases, &partials);
     
@@ -397,49 +315,10 @@ PartialTracker5::DetectPartials()
     DiscardFlatPartials(magns0, &partials);
 #endif
     
-    // NEW
     ComputePeaksHeights(mCurrentMagns, &partials);
     
     // Threshold
-    //
-    
-    // Remove small partials before gluing the twins
-    // => this avoids gluing many small partials together
-#if THRESHOLD_MIN
-    ThresholdPartialsAmp(&partials);
-#endif
-
-#if THRESHOLD_PEAK_PROMINENCE
-    ThresholdPartialsPeakProminence(magns0, &partials);
-#endif
-
-#if THRESHOLD_PEAK_HEIGHT
-    ThresholdPartialsPeakHeight(/*magns0,*/ &partials);
-#endif
-
-#if THRESHOLD_PEAK_HEIGHT_DB
-    ThresholdPartialsPeakHeightDb(magns0, &partials);
-#endif
-
-#if THRESHOLD_PEAK_HEIGHT_PINK
-    ThresholdPartialsPeakHeightPink(magns0, &partials);
-#endif
-
-#if THRESHOLD_SMOOTH
-    ThresholdPartialsAmpSmooth(magns0, &partials);
-#endif
-
-#if THRESHOLD_AUTO
-    ThresholdPartialsAmpAuto(magns0, &partials);
-#endif
-    
-    // "tibetan bell": avoids keeping a partial at 2KHz in the noise envelope
-    //
-    // With "bell" => we loose the first partial
-    // (glued with the second)
-#if 0
-    GlueTwinPartials(magns0, &partials);
-#endif
+    ThresholdPartialsPeakHeight(&partials);
     
     mPartials.push_front(partials);
     
@@ -559,10 +438,6 @@ PartialTracker5::ExtractNoiseEnvelopeSimple()
     
     BLUtils::ClipMin(&mNoiseEnvelope, (BL_FLOAT)0.0);
     
-    // BUG: some small spots remain ("alphabet, A")
-    // TODO: re-inject the remaining in the harmonic envelope
-    //ZeroToNextNoiseMinimum(&mNoiseEnvelope);
-    
     // Avoids interpolation from 0 to the first valid index
     // (could have made an artificial increasing slope in the low freqs)
     for (int i = 0; i < mNoiseEnvelope.GetSize(); i++)
@@ -596,9 +471,6 @@ PartialTracker5::ExtractNoiseEnvelopeSimple()
     // NOTE: good for "oohoo", not good for "alphabet A"
     BLUtils::FillMissingValues2(&mNoiseEnvelope, false, (BL_FLOAT)0.0);
 #endif
-    
-    //SmoothNoiseEnvelope(&mNoiseEnvelope);
-    //SmoothNoiseEnvelopeTime(&mNoiseEnvelope);
 }
 
 // Supress musical noise in the raw noise (not filled)
@@ -634,10 +506,6 @@ PartialTracker5::ProcessMusicalNoise(WDL_TypedBuf<BL_FLOAT> *noise)
         if (val < MUS_NOISE_EPS)
             // Zero
         {
-            // Adjust the index to the last zero value
-            //if (startIdx >= 0)
-            //    startIdx--;
-            
             break;
         }
         
@@ -1093,24 +961,6 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
     //
     WDL_TypedBuf<BL_FLOAT> smoothMagns = magns;
     
-#if DETECT_PARTIALS_SMOOTH
-    // Get a smoothed version of the magns
-    if (mSmoothWinDetect.GetSize() != DETECT_PARTIALS_SMOOTH_SIZE)
-    {
-        Window::MakeHanning(DETECT_PARTIALS_SMOOTH_SIZE, &mSmoothWinDetect);
-        
-        // Works well too
-        //
-        // See: https://en.wikipedia.org/wiki/Window_function
-        //
-        //BL_FLOAT sigma = 0.1;
-        //Window::MakeGaussian2(sigma, DETECT_PARTIALS_SMOOTH_SIZE, &mSmoothWinDetect);
-    }
-    
-    BLUtils::SmoothDataWin(&smoothMagns, magns, mSmoothWinDetect);
-    
-#endif
-    
     // prevIndex, currentIndex, nextIndex
     
     // Skip the first ones
@@ -1214,16 +1064,8 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     // Out of bounds
                     continue;
                 
-#if NARROW_PARTIAL_FOOT
-                //NarrowPartialFoot(magns, peakIndex, &leftIndex, &rightIndex);
-#endif
-                
                 bool discard = false;
-                
-#if DISCARD_FLAT_PARTIAL
-                //discard = DiscardFlatPartial(magns, peakIndex, leftIndex, rightIndex);
-#endif
-                
+    
 #if DISCARD_INVALID_PEAKS
                 if (!discard)
                 {
@@ -1276,14 +1118,10 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     // For predicted freq to be freq for the first value
                     p.mPredictedFreq = p.mFreq;
                     
-                    // Default value. will be overwritten
+                    // Default value. Will be overwritten
                     BL_FLOAT peakAmp = magns.Get()[(int)peakIndexF];
                     
-                    if (mFreqObj == NULL)
-                        peakAmp = ComputePeakAmpInterp(magns, peakFreq);
-                    else
-                        // Buggy (mel scale ?)
-                        peakAmp = ComputePeakAmpInterpFreqObj(magns, peakFreq);
+                    peakAmp = ComputePeakAmpInterp(magns, peakFreq);
                     
                     p.mAmp = peakAmp;
                     // Phase
@@ -1409,7 +1247,6 @@ PartialTracker5::GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns,
             }
         }
         
-        //
         // Glue ?
         //
         
@@ -1567,216 +1404,6 @@ PartialTracker5::DiscardInvalidPeaks(const WDL_TypedBuf<BL_FLOAT> &magns,
     return true;
 }
 
-// Works well to suppress the "tsss"
-// while keeping the low frequencies partials
-// Mel works better than linear scale
-void
-PartialTracker5::ApplyMinSpacingMel(vector<Partial> *partials)
-{
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial0 = (*partials)[i];
-        BL_FLOAT peakFreq0 = partial0.mFreq;
-        
-        bool discard = false;
-        for (int j = 0; j < partials->size(); j++)
-        {
-            if (j == i)
-                continue;
-            
-            const Partial &partial1 = (*partials)[j];
-            BL_FLOAT peakFreq1 = partial1.mFreq;
-            
-            if (std::fabs(peakFreq0 - peakFreq1) < MIN_SPACING_NORM_MEL)
-            {
-                discard = true;
-                
-                break;
-            }
-        }
-        
-        if (!discard)
-            result.push_back(partial0);
-    }
-    
-    *partials = result;
-}
-
-// For Air + keep only noise + Tibetan bowl: avoids a partial remaining at 2KHz
-void
-PartialTracker5::GlueTwinPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                  vector<Partial> *partials)
-{
-    vector<Partial> result;
-    
-    sort(partials->begin(), partials->end(), Partial::FreqLess);
-    
-    int idx = 0;
-    while(idx < partials->size())
-    {
-        Partial currentPartial = (*partials)[idx];
-        
-        vector<Partial> twinPartials;
-        twinPartials.push_back(currentPartial);
-        
-        for (int j = idx + 1; j < partials->size(); j++)
-        {
-            const Partial &other = (*partials)[j];
-            
-            if (other.mLeftIndex == currentPartial.mRightIndex)
-                // This is a twin partial
-            {
-                twinPartials.push_back(other);
-                
-                // Iterate
-                // (may glue more than 2 partials)
-                currentPartial = other;
-            }
-            else
-            {
-                // Not twin, continue over next partials
-                break;
-            }
-        }
-        
-        if (twinPartials.size() > 1)
-        {
-            // Compute glued partial
-            int leftIndex = twinPartials[0].mLeftIndex;
-            int rightIndex = twinPartials[twinPartials.size() - 1].mRightIndex;
-            
-            BL_FLOAT peakIndex = ComputePeakIndexAvg(magns, leftIndex, rightIndex);
-            
-            // For peak amp, take max amp
-            BL_FLOAT maxAmp = -BL_INF;
-            for (int k = 0; k < twinPartials.size(); k++)
-            {
-                BL_FLOAT amp = twinPartials[k].mAmp;
-                if (amp > maxAmp)
-                    maxAmp = amp;
-            }
-            
-            Partial res;
-            res.mLeftIndex = leftIndex;
-            res.mRightIndex = rightIndex;
-            
-            // Artificial peak
-            res.mPeakIndex = peakIndex;
-            
-            BL_FLOAT peakFreq = peakIndex/(mBufferSize*0.5);
-            res.mFreq = peakFreq;
-            res.mAmp = maxAmp;
-            
-            // Kalman
-            //
-            res.mKf.initEstimate(res.mFreq);
-            res.mPredictedFreq = res.mFreq;
-
-            // Do not set mPhase for now
-            result.push_back(res);
-        }
-        else
-            // Not twin, simply add the partial
-        {
-            result.push_back(twinPartials[0]);
-        }
-        
-        // 1 or more
-        idx += twinPartials.size();
-    }
-    
-    *partials = result;
-}
-
-// Other version (works less)
-// => center of partials are not correct
-// (because not ponderated by magnitudes)
-void
-PartialTracker5::GlueTwinPartials(vector<Partial> *partials)
-{
-    vector<Partial> result;
-    
-    sort(partials->begin(), partials->end(), Partial::FreqLess);
-    
-    int idx = 0;
-    while(idx < partials->size())
-    {
-        Partial currentPartial = (*partials)[idx];
-        
-        vector<Partial> twinPartials;
-        twinPartials.push_back(currentPartial);
-        
-        for (int j = idx + 1; j < partials->size(); j++)
-        {
-            const Partial &other = (*partials)[j];
-            
-            if (other.mLeftIndex == currentPartial.mRightIndex)
-                // This is a twin partial
-            {
-                twinPartials.push_back(other);
-                
-                // Iterate
-                // (may glue more than 2 partials)
-                currentPartial = other;
-            }
-            else
-            {
-                // Not twin, continue over next partials
-                break;
-            }
-        }
-        
-        if (twinPartials.size() > 1)
-        {
-            // Compute glued partial
-            int leftIndex = twinPartials[0].mLeftIndex;
-            int rightIndex = twinPartials[twinPartials.size() - 1].mRightIndex;
-            
-            int peakIndex = (leftIndex + rightIndex)/2;
-            
-            BL_FLOAT peakFreq = ((BL_FLOAT)peakIndex)/(mBufferSize*0.5);
-            
-            // For peak amp, take max amp
-            BL_FLOAT maxAmp = -BL_INF;
-            for (int k = 0; k < twinPartials.size(); k++)
-            {
-                BL_FLOAT amp = twinPartials[k].mAmp;
-                if (amp > maxAmp)
-                    maxAmp = amp;
-            }
-            
-            Partial res;
-            res.mLeftIndex = leftIndex;
-            res.mRightIndex = rightIndex;
-            
-            // Artificial peak
-            res.mPeakIndex = peakIndex;
-            
-            res.mFreq = peakFreq;
-            res.mAmp = maxAmp;
-            
-            // Kalman
-            res.mKf.initEstimate(res.mFreq);
-            res.mPredictedFreq = res.mFreq;
-            
-            // Do not set mPhase for now
-            
-            result.push_back(res);
-        }
-        else
-            // Not twin, simply add the partial
-        {
-            result.push_back(currentPartial);
-        }
-        
-        // 1 or more
-        idx += twinPartials.size();
-    }
-    
-    *partials = result;
-}
-
 void
 PartialTracker5::SuppressZeroFreqPartials(vector<Partial> *partials)
 {
@@ -1800,62 +1427,12 @@ PartialTracker5::SuppressZeroFreqPartials(vector<Partial> *partials)
 }
 
 void
-PartialTracker5::ThresholdPartialsAmp(vector<Partial> *partials)
+PartialTracker5::ThresholdPartialsPeakHeight(vector<Partial> *partials)
 {
     vector<Partial> result;
     for (int i = 0; i < partials->size(); i++)
     {
         const Partial &partial = (*partials)[i];
-    
-        BL_FLOAT peakAmp = partial.mAmp;
-        
-        // Too small amp ?
-        if (peakAmp > mThreshold)
-            result.push_back(partial);
-    }
-    
-    *partials = result;
-}
-
-void
-PartialTracker5::ThresholdPartialsPeakProminence(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                                 vector<Partial> *partials)
-{
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial = (*partials)[i];
-        
-        BL_FLOAT prominence = ComputePeakProminence(magns,
-                                                  partial.mPeakIndex,
-                                                  partial.mLeftIndex,
-                                                  partial.mRightIndex);
-        
-        // Just in case
-        if (prominence < 0.0)
-            prominence = 0.0;
-    
-        // Threshold
-        if (prominence >= -(MIN_AMP_DB - mThreshold))
-            result.push_back(partial);
-    }
-    
-    *partials = result;
-}
-
-void
-PartialTracker5::ThresholdPartialsPeakHeight(/*const WDL_TypedBuf<BL_FLOAT> &magns,*/
-                                            vector<Partial> *partials)
-{
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial = (*partials)[i];
-        
-        /*BL_FLOAT height = ComputePeakHeight(magns,
-                                            partial.mPeakIndex,
-                                            partial.mLeftIndex,
-                                            partial.mRightIndex); */
         
         BL_FLOAT height = partial.mPeakHeight;
         
@@ -1864,7 +1441,8 @@ PartialTracker5::ThresholdPartialsPeakHeight(/*const WDL_TypedBuf<BL_FLOAT> &mag
             height = 0.0;
         
         // Threshold
-        // TODO: Re-check this well
+        //
+        
         //BL_FLOAT thrsNorm = -(MIN_AMP_DB - mThreshold)/(-MIN_AMP_DB);
         
         int binNum = partial.mFreq*mBufferSize*0.5;
@@ -1877,97 +1455,7 @@ PartialTracker5::ThresholdPartialsPeakHeight(/*const WDL_TypedBuf<BL_FLOAT> &mag
     *partials = result;
 }
 
-// NOT USED ANYMORE
-#if 0
-void
-PartialTracker5::ThresholdFilteredPartials(vector<Partial> *partials)
-{
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial = (*partials)[i];
-        
-        //BL_FLOAT amp = partial.mAmp;
-        BL_FLOAT amp = partial.mPeakHeight;
-        
-        // Just in case
-        if (amp < 0.0)
-            amp = 0.0;
-        
-        //int binNum = partial.mFreq*mBufferSize*0.5;
-        //BL_FLOAT thrsNorm = GetThreshold(binNum);
-        // Threshold
-        // TODO: Re-check this well
-        BL_FLOAT thrsNorm = -(MIN_AMP_DB - mThreshold)/(-MIN_AMP_DB);
-        
-        if (amp >= thrsNorm)
-            result.push_back(partial);
-    }
-    
-    *partials = result;
-}
-#endif
-
-void
-PartialTracker5::ThresholdPartialsPeakHeightDb(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                               vector<Partial> *partials)
-{
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial = (*partials)[i];
-        
-        BL_FLOAT heightDb = ComputePeakHeightDb(magns,
-                                              partial.mPeakIndex,
-                                              partial.mLeftIndex,
-                                              partial.mRightIndex,
-                                              partial);
-        
-        // Threshold
-        if (heightDb >= mThreshold)
-            result.push_back(partial);
-    }
-    
-    *partials = result;
-}
-
-// Try to threshold with a sloped threshold
-// (to threshold musical noise in low frequencies,
-//  while keeping high frequencies not thresholded)
-// => Interesting but dos not solve the problem
-void
-PartialTracker5::ThresholdPartialsPeakHeightPink(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                                 vector<Partial> *partials)
-{
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial = (*partials)[i];
-        
-        // Height
-        BL_FLOAT height = ComputePeakHeight(magns,
-                                            partial.mPeakIndex,
-                                            partial.mLeftIndex,
-                                            partial.mRightIndex);
-        
-        // Pink scale
-        // Pink scale => threshold more the low frequencies
-        // (continuous slope in log scale)
-        BL_FLOAT threshold = mThreshold;
-        
-        // NOTE: should be fixed
-        BL_FLOAT gain = 3.0*log(partial.mFreq)/log(2.0);
-        threshold = threshold + gain - 40.0;
-        
-        // Threshold
-        if (height + MIN_AMP_DB >= threshold)
-            result.push_back(partial);
-    }
-    
-    *partials = result;
-}
-
-// Fixed version
+// Prominence
 BL_FLOAT
 PartialTracker5::ComputePeakProminence(const WDL_TypedBuf<BL_FLOAT> &magns,
                                        int peakIndex, int leftIndex, int rightIndex)
@@ -2075,144 +1563,6 @@ PartialTracker5::ComputePeaksHeights(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-PartialTracker5::ThresholdPartialsAmpSmooth(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                            vector<Partial> *partials)
-{
-    if (mSmoothWinThreshold.GetSize() != THRESHOLD_PARTIALS_SMOOTH_SIZE)
-    {
-        Window::MakeHanning(THRESHOLD_PARTIALS_SMOOTH_SIZE, &mSmoothWinThreshold);
-    }
-    
-    WDL_TypedBuf<BL_FLOAT> smoothMagns;
-    BLUtils::SmoothDataWin(&smoothMagns, mCurrentMagns, mSmoothWinThreshold);
-    
-    WDL_TypedBuf<BL_FLOAT> magnsDiff = magns;
-    BLUtils::SubstractValues(&magnsDiff, smoothMagns);
-    
-    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial = (*partials)[i];
-        
-        BL_FLOAT binNum = partial.mFreq/hzPerBin;
-        
-        // Take the nearest bin
-        binNum = bl_round(binNum);
-        
-        BL_FLOAT magn = magnsDiff.Get()[(int)binNum];
-        if (magn >= 0.0)
-            // Amp is big enough, keep the partial
-            result.push_back(partial);
-    }
-    
-    *partials = result;
-}
-
-
-// See: https://imagej.net/Auto_Local_Threshold (Phansalkar)
-//
-// NOTE: did not success to make it work
-//
-void
-PartialTracker5::ThresholdPartialsAmpAuto(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                          vector<Partial> *partials)
-{
-    int winSize = THRESHOLD_PARTIALS_AUTO_WIN_SIZE;
-    
-    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    
-    vector<Partial> result;
-    for (int i = 0; i < partials->size(); i++)
-    {
-        const Partial &partial = (*partials)[i];
-        
-        BL_FLOAT binNum = partial.mFreq/hzPerBin;
-        
-        // Take the nearest bin
-        binNum = bl_round(binNum);
-        
-        // Compute the mean
-        BL_FLOAT mean = 0.0;
-        int numValues = 0;
-        for (int j = 0; j < winSize; j++)
-        {
-            int idx = i + j - winSize/2;
-            if ((idx < 0) || (idx > magns.GetSize() - 1))
-                continue;
-            
-            BL_FLOAT val = magns.Get()[idx];
-            
-            mean += val;
-            numValues++;
-        }
-        if (numValues > 0)
-        {
-            mean /= numValues;
-        }
-        
-        // Compute the standard deviation
-        BL_FLOAT stdev = 0.0;
-        int numValues2 = 0;
-        for (int j = 0; j < winSize; j++)
-        {
-            int idx = i + j - winSize/2;
-            if ((idx < 0) || (idx > magns.GetSize() - 1))
-                continue;
-            
-            BL_FLOAT val = magns.Get()[idx];
-            
-            stdev += (val - mean)*(val - mean);
-            numValues2++;
-        }
-        if (numValues2 > 0)
-        {
-            stdev /= numValues2;
-            
-            stdev = std::sqrt(stdev);
-        }
-        
-#if 0
-        // See: https://imagej.net/Auto_Local_Threshold (Phansalkar)
-        
-        // Phansalkar parameters
-        BL_FLOAT k = 0.25; // modifiable
-        BL_FLOAT r = 0.5; // modifiable
-        
-        BL_FLOAT p = 2.0;
-        BL_FLOAT q = 10.0;
-        
-        BL_FLOAT t = mean * (1.0 + p * std::exp(-q * mean) + k * ((stdev / r) - 1.0));
-#endif
-        
-#if 0
-        // Sauvola
-        BL_FLOAT k = 0.5;
-        BL_FLOAT r = 128.0;
-        
-        BL_FLOAT t = mean*(1.0 + k*(stdev/r - 1.0));
-#endif
-        
-#if 0
-        // Mean
-        BL_FLOAT t = 1.0;
-        if (partial.mAmpDB > mean - mThreshold)
-            t = 0.0;
-#endif
-        
-#if 1 // Original
-        BL_FLOAT t = mThreshold;
-#endif
-        
-        if (partial.mAmp/*DB*/ >= t)
-            result.push_back(partial);
-    }
-    
-     *partials = result;
-}
-
-void
 PartialTracker5::SuppressBarbs(vector<Partial> *partials)
 {
 #define HEIGHT_COEFF 2.0
@@ -2268,37 +1618,18 @@ PartialTracker5::FilterPartials(vector<Partial> *result)
     if (mPartials.empty())
         return;
     
-    //SuppressNoisyPartials(&mPartials[0]);
-    
-#if 0 // Deactivated for the moment, because it made loose tracking
-      // on the lowest partial ("bell", second bell strike)
-    
-    // Suppress the barbs on the last detected series
-    // (just added by DetectPartials)
-    SuppressBarbs(&mPartials[0]);
-#endif
-    
-#if 0 // NOTE: not so good
-    //ApplyMinSpacing(&mPartials[0]);
-#endif
-    
-#if APPLY_MIN_SPACING
-    // NOTE: better
-    ApplyMinSpacingMel(&mPartials[0]);
-#endif
-    
-    // TEST
-#if 1
     if (mPartials.size() == 1)
+        // Assigne ids to the first series of partials
     {
         for (int j = 0; j < mPartials[0].size(); j++)
         {
             Partial &currentPartial = mPartials[0][j];
             currentPartial.GenNewId();
         }
+        
+        // Not enough partials to filter, need 2 series
         return;
     }
-#endif
     
     if (mPartials.size() < 2)
         return;
@@ -2309,23 +1640,7 @@ PartialTracker5::FilterPartials(vector<Partial> *result)
     // Partials that was not associated at the end
     vector<Partial> remainingPartials;
     
-    // ORIGIN
-    // NOTE: new version: better (sort by amp, then assoc with threshold)
-    //AssociatePartials(prevPartials, &currentPartials, &remainingPartials);
-    
     AssociatePartialsPARSHL(prevPartials, &currentPartials, &remainingPartials);
-    
-    // Was just a test
-    //AssociatePartialsFreqAmp(prevPartials, &currentPartials, &remainingPartials);
-    
-#if THRESHOLD_FILTERED_PARTIALS
-    //ThresholdFilteredPartials(&remainingPartials);
-    ThresholdPartialsPeakHeight(&currentPartials);
-#endif
-    
-#if FILTER_SMOOTH
-    SmoothPartials(prevPartials, &currentPartials);
-#endif
     
     // Add the new zombie and dead partials
     for (int i = 0; i < prevPartials.size(); i++)
@@ -2482,16 +1797,7 @@ BL_FLOAT
 PartialTracker5::ComputePeakAmpInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
                                       BL_FLOAT peakFreq)
 {
-    BL_FLOAT freqBin = peakFreq*mBufferSize*0.5;
-    
-    // GOOD !
-    // Bin idx must be BL_FLOAT, not int, to compute t parameter later
-    // This fixes amplitude too low values sometimes!
-#if !FIX_COMPUTE_PARTIAL_AMP
-    int bin = freqBin;
-#else
-    BL_FLOAT bin = freqBin;
-#endif
+    BL_FLOAT bin = peakFreq*mBufferSize*0.5;
     
     int prevBin = (int)bin;
     int nextBin = (int)bin + 1;
@@ -2540,66 +1846,6 @@ PartialTracker5::ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
     return peakPhase;
 }
 
-BL_FLOAT
-PartialTracker5::ComputePeakAmpInterpFreqObj(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                             BL_FLOAT peakFreq)
-{
-    int idx0 = 0;
-    for (int i = 0; i < mRealFreqs.GetSize(); i++)
-    {
-        BL_FLOAT realFreq = mRealFreqs.Get()[i];
-        
-        if (realFreq > peakFreq)
-        {
-            idx0 = i - 1;
-            if (idx0 < 0)
-                idx0 = 0;
-            
-            break;
-        }
-    }
-    
-    BL_FLOAT freq0 = mRealFreqs.Get()[idx0];
-    
-    int idx1 = idx0 + 1;
-    if (idx1 >= mRealFreqs.GetSize())
-    {
-        BL_FLOAT result = magns.Get()[idx0];
-        
-        return result;
-    }
-    
-    BL_FLOAT freq1 = mRealFreqs.Get()[idx1];
-
-    BL_FLOAT t = (peakFreq - freq0)/(freq1 - freq0);
-    
-    BL_FLOAT prevAmp = magns.Get()[idx0];
-    BL_FLOAT nextAmp = magns.Get()[idx1];
-    
-    BL_FLOAT peakAmp = (1.0 - t)*prevAmp + t*nextAmp;
-    
-    return peakAmp;
-}
-
-// TODO: check / Mel !!
-BL_FLOAT
-PartialTracker5::GetFrequency(int binIndex)
-{
-    if ((mFreqObj == NULL) || (binIndex >= mRealFreqs.GetSize()))
-    {
-        BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-        BL_FLOAT result = binIndex*hzPerBin;
-        
-        return result;
-    }
-    else
-    {
-        BL_FLOAT result = mRealFreqs.Get()[binIndex];
-        
-        return result;
-    }
-}
-
 int
 PartialTracker5::FindPartialById(const vector<PartialTracker5::Partial> &partials,
                                  int idx)
@@ -2615,6 +1861,7 @@ PartialTracker5::FindPartialById(const vector<PartialTracker5::Partial> &partial
     return -1;
 }
 
+// Use method similar to SAS
 void
 PartialTracker5::AssociatePartials(const vector<PartialTracker5::Partial> &prevPartials,
                                    vector<PartialTracker5::Partial> *currentPartials,
@@ -2652,8 +1899,8 @@ PartialTracker5::AssociatePartials(const vector<PartialTracker5::Partial> &prevP
 #endif
             
             int binNum = currentPartial.mFreq*mBufferSize*0.5;
-            BL_FLOAT diffCoeff = GetFreqDiffCoeff(binNum);
-            if (diffFreq < MAX_FREQ_DIFF_ASSOC*diffCoeff*mDbgParam)
+            BL_FLOAT diffCoeff = GetDeltaFreqCoeff(binNum);
+            if (diffFreq < DELTA_FREQ_ASSOC*diffCoeff*mDbgParam)
             // Associated !
             {
                 currentPartial.mId = prevPartial.mId;
@@ -2690,106 +1937,7 @@ PartialTracker5::AssociatePartials(const vector<PartialTracker5::Partial> &prevP
     }
 }
 
-void
-PartialTracker5::AssociatePartialsFreqAmp(const vector<PartialTracker5::Partial> &prevPartials,
-                                          vector<PartialTracker5::Partial> *currentPartials,
-                                          vector<PartialTracker5::Partial> *remainingPartials)
-{
-    // DEBUG
-    //AssociatePartials(prevPartials, currentPartials, remainingPartials);
-    //return;
-    
-    // Sort current partials and prev partials by decreasing amplitude
-    /*vector<Partial> currentPartialsSort = *currentPartials;
-    sort(currentPartialsSort.begin(), currentPartialsSort.end(), Partial::AmpLess);
-    reverse(currentPartialsSort.begin(), currentPartialsSort.end());
-    
-    vector<Partial> prevPartialsSort = prevPartials;
-    sort(prevPartialsSort.begin(), prevPartialsSort.end(), Partial::AmpLess);
-    reverse(prevPartialsSort.begin(), prevPartialsSort.end());
-    */
-    
-    // Associate
-    
-    // Associated partials, as best as possible (existing partials)
-    vector<Partial> currentPartialsAssoc;
-    for (int i = 0; i < prevPartials.size(); i++)
-    {
-        const Partial &prevPartial = prevPartials[i];
-        
-        // Find the closest (distance depend on freq and amp)
-        int idFound = -1;
-        BL_FLOAT minDist2 = BL_INF;
-        for (int j = 0; j < currentPartials->size(); j++)
-        {
-            Partial &currentPartial = (*currentPartials)[j];
-            
-            if (currentPartial.mId != -1)
-                // Already assigned
-                continue;
-  
-#if USE_KALMAN_FOR_ASSOC
-            BL_FLOAT df = prevPartial.mPredictedFreq - currentPartial.mFreq;
-#else
-            BL_FLOAT df = prevPartial.mFreq - currentPartial.mFreq;
-#endif
-
-            // TODO: diminish dist as freqs increase
-            if (std::fabs(df) > MAX_FREQ_DIFF_ASSOC*mDbgParam)
-                // Too far
-                continue;
-                
-            // TODO: kalman on amps
-            BL_FLOAT da = prevPartial.mAmp - currentPartial.mAmp;
-            
-            BL_FLOAT dist2 = std::fabs(df); // simple
-            //BL_FLOAT dist2 = df*df + da*da; // freq and amp
-            //BL_FLOAT dist2 = df*df + da; // Take more amplitude
-            if (dist2 < minDist2)
-            {
-                minDist2 = dist2;
-                idFound = j;
-            }
-        }
-        
-        if (idFound != -1)
-        {
-            Partial &currentPartial = (*currentPartials)[idFound];
-            
-            currentPartial.mId = prevPartial.mId;
-            currentPartial.mState = Partial::ALIVE;
-            currentPartial.mWasAlive = true;
-                
-            currentPartial.mAge = prevPartial.mAge + 1;
-                
-            // Kalman
-            currentPartial.mKf = prevPartial.mKf;
-            currentPartial.mPredictedFreq =
-                currentPartial.mKf.updateEstimate(currentPartial.mFreq);
-            
-            currentPartialsAssoc.push_back(currentPartial);
-        }
-    }
-    
-    //sort(currentPartialsAssoc.begin(), currentPartialsAssoc.end(), Partial::IdLess);
-    //*currentPartials = currentPartialsAssoc;
-    
-    // Now manage the new partials, that can't be associated
-    //AssociatePartials(prevPartials, currentPartials, remainingPartials);
-    
-    // Add the remaining partials
-    remainingPartials->clear();
-    for (int i = 0; i < currentPartials->size(); i++)
-    {
-        const Partial &p = (*currentPartials)[i];
-        if (p.mId == -1)
-            remainingPartials->push_back(p);
-    }
-    
-    sort(currentPartialsAssoc.begin(), currentPartialsAssoc.end(), Partial::IdLess);
-    *currentPartials = currentPartialsAssoc;
-}
-
+// Use PARSHL method
 void
 PartialTracker5::AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> &prevPartials,
                                          vector<PartialTracker5::Partial> *currentPartials,
@@ -2803,7 +1951,6 @@ PartialTracker5::AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> 
     
     // Associated partials
     bool stopFlag = true;
-    //int prevNumAssociated = 0;
     do {
         stopFlag = true;
         
@@ -2825,9 +1972,9 @@ PartialTracker5::AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> 
                     std::fabs(prevPartial.mFreq - currentPartial.mFreq);
 #endif
                 int binNum = currentPartial.mFreq*mBufferSize*0.5;
-                BL_FLOAT diffCoeff = GetFreqDiffCoeff(binNum);
+                BL_FLOAT diffCoeff = GetDeltaFreqCoeff(binNum);
             
-                if (diffFreq < MAX_FREQ_DIFF_ASSOC*diffCoeff*mDbgParam)
+                if (diffFreq < DELTA_FREQ_ASSOC*diffCoeff*mDbgParam)
                     // Associate!
                 {
                     int otherIdx =
@@ -2876,29 +2023,10 @@ PartialTracker5::AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> 
                 }
             }
         }
-        
-#if 0
-        // Check if we have associated all the prev partials
-        int numAssociated = 0;
-        for (int j = 0; j < currentPartials->size(); j++)
-        {
-            const Partial &currentPartial = (*currentPartials)[j];
-            if (currentPartial.mId != -1)
-                numAssociated++;
-        }
-        if (numAssociated >= prevPartials0.size())
-        {
-            break;
-        }
-        
-        if (numAssociated <= prevNumAssociated)
-            break;
-        prevNumAssociated = numAssociated;
-#endif
-        
     } while (!stopFlag);
     
     
+    // Update partials
     vector<PartialTracker5::Partial> newPartials;
     for (int j = 0; j < currentPartials->size(); j++)
     {
@@ -2929,42 +2057,6 @@ PartialTracker5::AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> 
     
     // Update current partials
     *currentPartials = newPartials;
-}
-
-void
-PartialTracker5::SmoothPartials(const vector<PartialTracker5::Partial> &prevPartials,
-                                vector<PartialTracker5::Partial> *currentPartials)
-{
-    for (int i = 0; i < currentPartials->size(); i++)
-    {
-        Partial &currentPartial = (*currentPartials)[i];
-        
-        int prevIdx = FindPartialById(prevPartials, currentPartial.mId);
-        
-        if (prevIdx != -1)
-        {
-            const Partial &prevPartial = prevPartials[prevIdx];
-            
-            // Smooth
-            
-            // Smooth freq
-            BL_FLOAT freq0 = prevPartial.mFreq;
-            BL_FLOAT freq1 = currentPartial.mFreq;
-            
-            BL_FLOAT newFreq = FILTER_SMOOTH_COEFF*freq0 + (1.0 - FILTER_SMOOTH_COEFF)*freq1;
-            
-            currentPartial.mFreq = newFreq;
-            
-            // Smooth amp
-            BL_FLOAT amp0 = prevPartial.mAmp;
-            BL_FLOAT amp1 = currentPartial.mAmp;
-            
-            BL_FLOAT newAmp = FILTER_SMOOTH_COEFF*amp0 +
-                                    (1.0 - FILTER_SMOOTH_COEFF)*amp1;
-            
-            currentPartial.mAmp = newAmp;
-        }
-    }
 }
 
 void
@@ -3002,62 +2094,14 @@ PartialTracker5::DBG_SetDbgParam(BL_FLOAT param)
 BL_FLOAT
 PartialTracker5::GetThreshold(int binNum)
 {
-#if 0
-    //BL_FLOAT thresholds[3] = { -48.0/*-35.0*/, -78.0, -87.0 };
-    
-    //BL_FLOAT thresholds[3] = { -56.0, -81.0/*-78.0*/, -80.0 };
-    
-    BL_FLOAT thresholds[3] = { -79.0, -100.0, -108.0 };
-    
-    BL_FLOAT t = ((BL_FLOAT)binNum)/(mBufferSize*0.5);
-    
-    BL_FLOAT thrs = 0.0;
-    if (t < 0.5)
-    {
-        t = t*2.0;
-        thrs = (1.0 - t)*thresholds[0] + t*thresholds[1];
-    }
-    else
-    {
-        t = 1.0 - (t - 0.5)*2.0;
-        thrs = (1.0 - t)*thresholds[1] + t*thresholds[2];
-    }
-    
-    thrs += mThreshold;
-    
-    //BL_FLOAT thrsNorm = -(MIN_AMP_DB - thrs)/(-MIN_AMP_DB);
-#endif
-    
     BL_FLOAT thrsNorm = -(MIN_AMP_DB - mThreshold)/(-MIN_AMP_DB);
     
     return thrsNorm;
 }
 
 BL_FLOAT
-PartialTracker5::GetFreqDiffCoeff(int binNum)
+PartialTracker5::GetDeltaFreqCoeff(int binNum)
 {
-#if 0
-    return 1.0; // DEBUG
-    
-    BL_FLOAT diffCoeffs[3] = { 2.0/*1.0*/, 0.35, 0.2 };
-    
-    BL_FLOAT t = ((BL_FLOAT)binNum)/(mBufferSize*0.5);
-    
-    BL_FLOAT diffCoeff = 0.0;
-    if (t < 0.5)
-    {
-        t = t*2.0;
-        diffCoeff = (1.0 - t)*diffCoeffs[0] + t*diffCoeffs[1];
-    }
-    else
-    {
-        t = 1.0 - (t - 0.5)*2.0;
-        diffCoeff = (1.0 - t)*diffCoeffs[1] + t*diffCoeffs[2];
-    }
-    
-    return diffCoeff;
-#endif
-    
 #define END_COEFF 0.25
     
     BL_FLOAT t = ((BL_FLOAT)binNum)/(mBufferSize*0.5);
@@ -3095,9 +2139,9 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
 }
 
 void
-PartialTracker5::SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff)
+PartialTracker5::SetTimeSmoothCoeff(BL_FLOAT coeff)
 {
-    mPreProcessTimeSmoothCoeff = coeff;
+    mTimeSmoothCoeff = coeff;
 }
 
 // Time smooth
@@ -3116,8 +2160,7 @@ PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
         BL_FLOAT val = magns->Get()[i];
         BL_FLOAT prevVal = mTimeSmoothPrevMagns.Get()[i];
         
-        BL_FLOAT newVal = (1.0 - mPreProcessTimeSmoothCoeff)*val +
-        mPreProcessTimeSmoothCoeff*prevVal;
+        BL_FLOAT newVal = (1.0 - mTimeSmoothCoeff)*val + mTimeSmoothCoeff*prevVal;
         
         magns->Get()[i] = newVal;
     }
@@ -3163,49 +2206,3 @@ PartialTracker5::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
         magns->Get()[i] = normDbMagn;
     }
 }
-
-#if 0
-void
-PartialTracker5::ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns)
-{
-#if SQUARE_MAGNS
-    BLUtils::ComputeSquare(magns);
-#endif
-    
-    // X
-    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-    
-    // Y
-    for (int i = 0; i < magns->GetSize(); i++)
-    {
-        BL_FLOAT magn = magns->Get()[i];
-        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
-        magns->Get()[i] = magn;
-    }
-}
-
-void
-PartialTracker5::ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases)
-{
-    // X
-    mScale->ApplyScale(mXScale, phases,
-                       (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-}
-
-int
-PartialTracker5::ScaleFreq(int idx)
-{
-    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    BL_FLOAT freq = idx*hzPerBin;
-    
-    // Normalize
-    freq /= (mSampleRate*0.5);
-    
-    freq = Scale::ApplyScale(mXScale, freq,
-                             (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-    
-    int idx2 = freq*mBufferSize*0.5;
-    
-    return idx2;
-}
-#endif

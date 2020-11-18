@@ -83,6 +83,11 @@ public:
     bool ComputeSamplesFlag();
     bool ComputeSamplesWinFlag();
     
+    static void MixFrames(SASFrame3 *result,
+                          const SASFrame3 &frame0,
+                          const SASFrame3 &frame1,
+                          BL_FLOAT t, bool mixFreq);
+    
 protected:
     void ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples);
     

@@ -18,6 +18,7 @@
 #include <deque>
 using namespace std;
 
+
 // PartialTracker2
 // - from PartialTracker
 //
@@ -35,17 +36,13 @@ using namespace std;
 // (was sometimes really under the correct value for Infra, tested on
 // "Bass-065_keep-the-bass-dubby"
 
-// Buffer size and sample rate were not updated during Reset()
-// FIX: Infra: avoid computing wrong max frequency (500Hz),
-// when using higher sample rates
-#define FIX_INFRA_SAMPLERATE 1
-
-
+// PartialTracker5: improvement of trakcng quality, for new SASViewer
+// NOTE: previously test FreqAdjustObj. this was not efficient (wobbling)
 class FreqAdjustObj3;
 class PartialTracker5
 {
 public:
-    // Struct Partial
+    // class Partial
     class Partial
     {
     public:
@@ -112,9 +109,7 @@ public:
     
     void Reset();
     
-#if FIX_INFRA_SAMPLERATE
     void Reset(int bufferSize, BL_FLOAT sampleRate);
-#endif
     
     void SetThreshold(BL_FLOAT threshold);
     
@@ -135,25 +130,26 @@ public:
     void GetNoiseEnvelope(WDL_TypedBuf<BL_FLOAT> *noiseEnv);
     void GetHarmonicEnvelope(WDL_TypedBuf<BL_FLOAT> *harmoEnv);
     
-    // OPTIM PROF Infra
+    // Maximum frequency we try to detect (limit for BL-Infra for example)
     void SetMaxDetectFreq(BL_FLOAT maxFreq);
     
-    void SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff);
+    // Preprocess time smoth
+    void SetTimeSmoothCoeff(BL_FLOAT coeff);
     
     void DBG_SetDbgParam(BL_FLOAT param);
     
 protected:
-    // All steps
+    // Pre process
+    //
     void PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
                     WDL_TypedBuf<BL_FLOAT> *phases);
     
     // Apply time smooth (removes the noise and make more neat peaks), very good!
     void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns);
-    // Apply inverse A-Weighting, so the peaks at highest frequencies will not be small
+    
+    // Apply A-Weighting, so the peaks at highest frequencies will not be small
     void PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns, bool reverse = false);
     
-    //void ScaleMagns(WDL_TypedBuf<BL_FLOAT> *magns);
-    //void ScalePhases(WDL_TypedBuf<BL_FLOAT> *phases);
     
     // Get the partials which are alive
     // (this avoid getting garbage partials that would never be associated)
@@ -180,9 +176,6 @@ protected:
     BL_FLOAT ComputePeakAmpInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
                                   BL_FLOAT peakFreq);
     
-    BL_FLOAT ComputePeakAmpInterpFreqObj(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                       BL_FLOAT peakFreq);
-    
     BL_FLOAT ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
                                   BL_FLOAT peakFreq);
     
@@ -202,12 +195,6 @@ protected:
     // Suppress the "barbs" (tiny partials on a side of a bigger partial)
     void SuppressBarbs(vector<Partial> *partials);
     
-    // Still used ?
-    void GlueTwinPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                          vector<Partial> *partials);
-    
-    void GlueTwinPartials(vector<Partial> *partials);
-    
     // Discard partials which are almost flat
     // (compare height of the partial, and width in the middle
     bool DiscardFlatPartial(const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -222,38 +209,8 @@ protected:
     
     // Suppress partials with zero frequencies
     void SuppressZeroFreqPartials(vector<Partial> *partials);
-
-    // Better than not mel
-    void ApplyMinSpacingMel(vector<Partial> *partials);
     
-    // Threshold
-    //
-    
-    // Suppress the too small partials
-    void ThresholdPartialsAmp(vector<Partial> *partials);
-    
-    // Suppress the too small partials
-    void ThresholdPartialsPeakProminence(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                         vector<Partial> *partials);
-    
-    void ThresholdPartialsPeakHeight(/*const WDL_TypedBuf<BL_FLOAT> &magns,*/
-                                     vector<Partial> *partials);
-    
-    void ThresholdPartialsPeakHeightDb(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                       vector<Partial> *partials);
-    
-    void ThresholdPartialsPeakHeightPink(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                         vector<Partial> *partials);
-    
-    // Should be independent of partials environment
-    void ThresholdPartialsAmpSmooth(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                    vector<Partial> *partials);
-    
-    // Should be independent of partials environment
-    void ThresholdPartialsAmpAuto(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                  vector<Partial> *partials);
-    
-    //void ThresholdFilteredPartials(vector<Partial> *partials);
+    void ThresholdPartialsPeakHeight(vector<Partial> *partials);
     
     // Peaks
     //
@@ -320,9 +277,7 @@ protected:
     void SmoothNoiseEnvelope(WDL_TypedBuf<BL_FLOAT> *noise);
     
     void SmoothNoiseEnvelopeTime(WDL_TypedBuf<BL_FLOAT> *noise);
-
-    //
-    BL_FLOAT GetFrequency(int binIndex);
+    
 
     int FindPartialById(const vector<PartialTracker5::Partial> &partials, int idx);
     
@@ -334,25 +289,16 @@ protected:
                            vector<PartialTracker5::Partial> *currentPartials,
                            vector<PartialTracker5::Partial> *remainingPartials);
     
-    // Based on frequencies + amplitudes
-    void AssociatePartialsFreqAmp(const vector<PartialTracker5::Partial> &prevPartials,
-                                  vector<PartialTracker5::Partial> *currentPartials,
-                                  vector<PartialTracker5::Partial> *remainingPartials);
-    
     // See: https://www.dsprelated.com/freebooks/sasp/PARSHL_Program.html#app:parshlapp
     // "Peak Matching (Step 5)"
     // Use fight/winner/loser
     void AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> &prevPartials,
                                  vector<PartialTracker5::Partial> *currentPartials,
                                  vector<PartialTracker5::Partial> *remainingPartials);
-    
-    // Still used ?
-    void SmoothPartials(const vector<PartialTracker5::Partial> &prevPartials,
-                        vector<PartialTracker5::Partial> *currentPartials);
 
     // Adaptive threshold, depending on bin num;
     BL_FLOAT GetThreshold(int binNum);
-    BL_FLOAT GetFreqDiffCoeff(int binNum);
+    BL_FLOAT GetDeltaFreqCoeff(int binNum);
     
     // Debug
     void DBG_DumpPartials(const char *fileName,
@@ -361,34 +307,22 @@ protected:
 
     
     //
-    //
+    
     int mBufferSize;
     BL_FLOAT mSampleRate;
     int mOverlapping;
     
     BL_FLOAT mThreshold;
     
+    //
+    WDL_TypedBuf<BL_FLOAT> mCurrentMagns;
+    WDL_TypedBuf<BL_FLOAT> mCurrentPhases;
+    
     deque<vector<Partial> > mPartials;
     
     vector<Partial> mResult;
     WDL_TypedBuf<BL_FLOAT> mNoiseEnvelope;
     WDL_TypedBuf<BL_FLOAT> mHarmonicEnvelope;
-    
-    FreqAdjustObj3 *mFreqObj;
-    WDL_TypedBuf<BL_FLOAT> mRealFreqs;
-    
-    WDL_TypedBuf<BL_FLOAT> mPrevMagns;
-    
-    //
-    WDL_TypedBuf<BL_FLOAT> mCurrentMagns;
-    WDL_TypedBuf<BL_FLOAT> mCurrentPhases;
-    
-    // Data smooth
-    //
-    WDL_TypedBuf<BL_FLOAT> mSmoothWinDetect;
-    WDL_TypedBuf<BL_FLOAT> mCurrentSmoothMagns;
-    
-    WDL_TypedBuf<BL_FLOAT> mSmoothWinThreshold;
     
     WDL_TypedBuf<BL_FLOAT> mSmoothWinNoise;
     
@@ -405,7 +339,7 @@ protected:
     BL_FLOAT mDbgParam;
     
     // For Pre-Process
-    BL_FLOAT mPreProcessTimeSmoothCoeff;
+    BL_FLOAT mTimeSmoothCoeff;
     WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevMagns;
     
     // Scales

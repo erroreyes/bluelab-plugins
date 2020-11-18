@@ -19,19 +19,11 @@
 
 #include "SASViewerProcess2.h"
 
-#define MIN_AMP_DB -120.0
-
-// Display magns or SAS param while debugging ?
-#define DEBUG_DISPLAY_MAGNS 1  //0
-
 #define DEBUG_MUTE_NOISE 0 //1
 #define DEBUG_MUTE_PARTIALS 0 //1
 
 #define SHOW_ONLY_ALIVE 0 //1
 #define MIN_AGE_DISPLAY 0 //10 // 4
-
-// As described in: https://www.dsprelated.com/freebooks/sasp/PARSHL_Program.html#app:parshlapp
-#define SQUARE_MAGNS 0 //1
 
 SASViewerProcess2::SASViewerProcess2(int bufferSize,
                                      BL_FLOAT overlapping, BL_FLOAT oversampling,
@@ -107,7 +99,6 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
     mCurrentMagns = magns;
     
-    
     //
     DetectPartials(magns, phases);
     
@@ -133,13 +124,9 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         //PartialTracker3::RemoveRealDeadPartials(&partials);
         
         mSASFrame->SetPartials(partials);
-  
-        //MixFrames(mMixSASFrame, *mSASFrame, *mScSASFrame, mMix);
         
-#if !DEBUG_MUTE_NOISE
         if (mEnableOutNoise)
             mPartialTracker->GetNoiseEnvelope(&magns);
-#endif
     }
     
     // For noise envelope
@@ -193,10 +180,6 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     
     // Compute the samples from partials
     mSASFrame->ComputeSamplesWin(&samplesBuffer);
-    
-    // Mix
-    // (the current io buffer may contain shaped noise)
-    //MixHarmoNoise(ioBuffer, samplesBuffer);
 #endif
 }
 
@@ -280,16 +263,15 @@ SASViewerProcess2::DBG_SetDbgParam(BL_FLOAT param)
 }
 
 void
-SASViewerProcess2::SetPreProcessTimeSmoothCoeff(BL_FLOAT coeff)
+SASViewerProcess2::SetTimeSmoothCoeff(BL_FLOAT coeff)
 {
     if (mPartialTracker != NULL)
-        mPartialTracker->SetPreProcessTimeSmoothCoeff(coeff);
+        mPartialTracker->SetTimeSmoothCoeff(coeff);
 }
 
 void
 SASViewerProcess2::Display()
 {
-#if !DEBUG_DISPLAY_SCEPSTRUM
     if (mMode == TRACKING)
     {
         DisplayTracking();
@@ -314,7 +296,6 @@ SASViewerProcess2::Display()
     {
         DisplayWarping();
     }
-#endif
 }
 
 void
@@ -497,8 +478,6 @@ SASViewerProcess2::DisplayTracking()
             BL_FLOAT lineWidth = 1.5;
             mSASViewerRender->SetAdditionalLines(mPartialLines, lineWidth);
         }
-        
-        //mSASViewerRender->ShowTrackingLines(true);
     }
 }
 
@@ -572,9 +551,6 @@ SASViewerProcess2::DisplayColor()
     BL_FLOAT amplitude = DBToAmp(amplitudeDB);
     
     BLUtils::MultValues(&color, amplitude);
-    
-    // Scale to dB for display
-    //mScale->ApplyScale(mYScale, &color, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
     
     if (mSASViewerRender != NULL)
     {
@@ -726,59 +702,5 @@ SASViewerProcess2::CreateLines(const vector<LinesRender2::Point> &prevPoints)
         }
     }
 }
-
-#if 0
-void
-SASViewerProcess2::MixFrames(SASFrame3 *result,
-                            const SASFrame3 &frame0,
-                            const SASFrame3 &frame1,
-                            BL_FLOAT t)
-{
-    // Amp
-    BL_FLOAT amp0 = frame0.GetAmplitudeDB();
-    BL_FLOAT amp1 = frame1.GetAmplitudeDB();
-    BL_FLOAT resultAmp = (1.0 - t)*amp0 + t*amp1;
-    result->SetAmplitudeDB(resultAmp);
-    
-    // Freq
-    if (mMixFreqFlag)
-    {
-        BL_FLOAT freq0 = frame0.GetFrequency();
-        BL_FLOAT freq1 = frame1.GetFrequency();
-        BL_FLOAT resultFreq = (1.0 - t)*freq0 + t*freq1;
-
-        result->SetFrequency(resultFreq);
-    }
-    else
-    {
-        BL_FLOAT freq0 = frame0.GetFrequency();
-        result->SetFrequency(freq0);
-    }
-    
-    // Color
-    WDL_TypedBuf<BL_FLOAT> color0;
-    frame0.GetColor(&color0);
-    
-    WDL_TypedBuf<BL_FLOAT> color1;
-    frame1.GetColor(&color1);
-    
-    WDL_TypedBuf<BL_FLOAT> resultColor;
-    BLUtils::Interp(&resultColor, &color0, &color1, t);
-    
-    result->SetColor(resultColor);
-    
-    // Warping
-    WDL_TypedBuf<BL_FLOAT> warp0;
-    frame0.GetNormWarping(&warp0);
-    
-    WDL_TypedBuf<BL_FLOAT> warp1;
-    frame1.GetNormWarping(&warp1);
-    
-    WDL_TypedBuf<BL_FLOAT> resultWarping;
-    BLUtils::Interp(&resultWarping, &warp0, &warp1, t);
-    
-    result->SetNormWarping(resultWarping);
-}
-#endif
 
 #endif // IGRAPHICS_NANOVG

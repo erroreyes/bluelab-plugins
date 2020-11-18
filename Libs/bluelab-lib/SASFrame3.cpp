@@ -2091,3 +2091,55 @@ SASFrame3::GetSASPartial(SASPartial *result, int index, BL_FLOAT t)
     }
 }
 
+void
+SASFrame3::MixFrames(SASFrame3 *result,
+                     const SASFrame3 &frame0,
+                     const SASFrame3 &frame1,
+                     BL_FLOAT t, bool mixFreq)
+{
+    // Amp
+    BL_FLOAT amp0 = frame0.GetAmplitudeDB();
+    BL_FLOAT amp1 = frame1.GetAmplitudeDB();
+    BL_FLOAT resultAmp = (1.0 - t)*amp0 + t*amp1;
+    result->SetAmplitudeDB(resultAmp);
+    
+    // Freq
+    if (mixFreq)
+    {
+        BL_FLOAT freq0 = frame0.GetFrequency();
+        BL_FLOAT freq1 = frame1.GetFrequency();
+        BL_FLOAT resultFreq = (1.0 - t)*freq0 + t*freq1;
+        
+        result->SetFrequency(resultFreq);
+    }
+    else
+    {
+        BL_FLOAT freq0 = frame0.GetFrequency();
+        result->SetFrequency(freq0);
+    }
+    
+    // Color
+    WDL_TypedBuf<BL_FLOAT> color0;
+    frame0.GetColor(&color0);
+    
+    WDL_TypedBuf<BL_FLOAT> color1;
+    frame1.GetColor(&color1);
+    
+    WDL_TypedBuf<BL_FLOAT> resultColor;
+    BLUtils::Interp(&resultColor, &color0, &color1, t);
+    
+    result->SetColor(resultColor);
+    
+    // Warping
+    WDL_TypedBuf<BL_FLOAT> warp0;
+    frame0.GetNormWarping(&warp0);
+    
+    WDL_TypedBuf<BL_FLOAT> warp1;
+    frame1.GetNormWarping(&warp1);
+    
+    WDL_TypedBuf<BL_FLOAT> resultWarping;
+    BLUtils::Interp(&resultWarping, &warp0, &warp1, t);
+    
+    result->SetNormWarping(resultWarping);
+}
+
