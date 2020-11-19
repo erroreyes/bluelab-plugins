@@ -13,6 +13,7 @@ Port plugins:
 - remove UpdateText()
 - remove MakeDefaultPReset()
 - double -> BL_FLOAT
+- remove kNumPrograms
 
 TODO: gain smother: use CParamSmooth
 
