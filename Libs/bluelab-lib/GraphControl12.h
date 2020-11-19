@@ -185,7 +185,8 @@ public:
     
     // Custom drawers
     void AddCustomDrawer(GraphCustomDrawer *customDrawer);
-
+    void RemoveCustomDrawer(GraphCustomDrawer *customDrawer);
+    
     void CustomDrawersPreDraw();
     void CustomDrawersPostDraw();
     

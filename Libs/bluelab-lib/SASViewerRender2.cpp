@@ -34,8 +34,13 @@ SASViewerRender2::SASViewerRender2(SASViewerPluginInterface *plug,
     mSampleRate = sampleRate;
     mBufferSize = bufferSize;
     
-    mLinesRender = new LinesRender2();
-    mLinesRender->SetMode(LinesRender2::LINES_FREQ);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+    {
+        mLinesRenders[i] = new LinesRender2();
+        mLinesRenders[i]->SetMode(LinesRender2::LINES_FREQ);
+    }
+    
+    mCurrentMode = SASViewerProcess2::TRACKING;
     
     SetGraph(graphControl);
     
@@ -49,14 +54,18 @@ SASViewerRender2::SASViewerRender2(SASViewerPluginInterface *plug,
     mCamAngle0 = 0.0;
     mCamAngle1 = MIN_CAM_ANGLE_1;
     
-    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+    {
+        mLinesRenders[i]->SetCameraAngles(mCamAngle0, mCamAngle1);
+    }
     
     mAddNum = 0;
 }
 
 SASViewerRender2::~SASViewerRender2()
 {
-    delete mLinesRender;
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        delete mLinesRenders[i];
 }
 
 void
@@ -67,20 +76,22 @@ SASViewerRender2::SetGraph(GraphControl12 *graphControl)
     if (mGraph != NULL)
     {
         mGraph->AddCustomControl(this);
-        mGraph->AddCustomDrawer(mLinesRender);
+        mGraph->AddCustomDrawer(mLinesRenders[(int)mCurrentMode]);
     }
 }
 
 void
 SASViewerRender2::Clear()
 {
-    mLinesRender->ClearSlices();
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->ClearSlices();
 
     mGraph->SetDataChanged();
 }
 
 void
-SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
+SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns,
+                           SASViewerProcess2::Mode mode)
 {
     if (magns.GetSize() == 0)
         return;
@@ -88,7 +99,7 @@ SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
     vector<LinesRender2::Point> points;
     MagnsToPoints(&points, magns);
     
-    mLinesRender->AddSlice(points);
+    mLinesRenders[(int)mode]->AddSlice(points);
     
     mAddNum++;
     
@@ -96,9 +107,10 @@ SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
 }
 
 void
-SASViewerRender2::AddPoints(const vector<LinesRender2::Point> &points)
+SASViewerRender2::AddPoints(const vector<LinesRender2::Point> &points,
+                            SASViewerProcess2::Mode mode)
 {
-    mLinesRender->AddSlice(points);
+    mLinesRenders[(int)mode]->AddSlice(points);
     
     mAddNum++;
     
@@ -108,7 +120,8 @@ SASViewerRender2::AddPoints(const vector<LinesRender2::Point> &points)
 void
 SASViewerRender2::SetLineMode(LinesRender2::Mode mode)
 {
-    mLinesRender->SetMode(mode);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetMode(mode);
 }
 
 void
@@ -183,7 +196,8 @@ SASViewerRender2::OnMouseDrag(float x, float y, float dX, float dY,
     if (mCamAngle1 > MAX_CAM_ANGLE_1)
         mCamAngle1 = MAX_CAM_ANGLE_1;
     
-    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     // Camera changed
     //
@@ -202,16 +216,18 @@ SASViewerRender2::OnMouseDblClick(float x, float y, const IMouseMod &mod)
     mCamAngle0 = 0.0;
     mCamAngle1 = MIN_CAM_ANGLE_1;
     
-    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+            mLinesRenders[i]->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     // Reset the fov
-    mLinesRender->ResetZoom();
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->ResetZoom();
 
     mGraph->SetDataChanged();
     
     mPlug->SetCameraAngles(mCamAngle0, mCamAngle1);
     
-    BL_FLOAT fov = mLinesRender->GetCameraFov();
+    BL_FLOAT fov = mLinesRenders[0]->GetCameraFov();
     mPlug->SetCameraFov(fov);
 }
 
@@ -223,18 +239,20 @@ SASViewerRender2::OnMouseWheel(float x, float y,
     
     BL_FLOAT zoomChange = 1.0 + d*WHEEL_ZOOM_STEP;
     
-    mLinesRender->ZoomChanged(zoomChange);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->ZoomChanged(zoomChange);
     
     mGraph->SetDataChanged();
     
-    BL_FLOAT angle = mLinesRender->GetCameraFov();
+    BL_FLOAT angle = mLinesRenders[0]->GetCameraFov();
     mPlug->SetCameraFov(angle);
 }
 
 void
 SASViewerRender2::SetSpeed(BL_FLOAT speed)
 {
-    mLinesRender->SetSpeed(speed);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetSpeed(speed);
     
     mGraph->SetDataChanged();
 }
@@ -242,7 +260,8 @@ SASViewerRender2::SetSpeed(BL_FLOAT speed)
 void
 SASViewerRender2::SetDensity(BL_FLOAT density)
 {
-    mLinesRender->SetDensity(density);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetDensity(density);
     
     mGraph->SetDataChanged();
 }
@@ -250,7 +269,8 @@ SASViewerRender2::SetDensity(BL_FLOAT density)
 void
 SASViewerRender2::SetScale(BL_FLOAT scale)
 {
-    mLinesRender->SetScale(scale);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetScale(scale);
     
     mGraph->SetDataChanged();
 }
@@ -260,7 +280,8 @@ SASViewerRender2::SetCamAngle0(BL_FLOAT angle)
 {
     mCamAngle0 = angle;
     
-    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     mGraph->SetDataChanged();
 }
@@ -270,7 +291,8 @@ SASViewerRender2::SetCamAngle1(BL_FLOAT angle)
 {
     mCamAngle1 = angle;
     
-    mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     mGraph->SetDataChanged();
 }
@@ -278,7 +300,8 @@ SASViewerRender2::SetCamAngle1(BL_FLOAT angle)
 void
 SASViewerRender2::SetCamFov(BL_FLOAT angle)
 {
-    mLinesRender->SetCameraFov(angle);
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->SetCameraFov(angle);
     
     mGraph->SetDataChanged();
 }
@@ -286,43 +309,58 @@ SASViewerRender2::SetCamFov(BL_FLOAT angle)
 int
 SASViewerRender2::GetNumSlices()
 {
-    int numSlices = (int)mLinesRender->GetNumSlices();
+    int numSlices = (int)mLinesRenders[0]->GetNumSlices();
     
     return numSlices;
+}
+
+void
+SASViewerRender2::SetMode(SASViewerProcess2::Mode mode)
+{
+    mGraph->RemoveCustomDrawer(mLinesRenders[mCurrentMode]);
+    
+    mCurrentMode = mode;
+    
+    mGraph->AddCustomDrawer(mLinesRenders[mCurrentMode]);
 }
 
 int
 SASViewerRender2::GetSpeed()
 {
-    int speed = mLinesRender->GetSpeed();
+    int speed = mLinesRenders[0]->GetSpeed();
     
     return speed;
 }
 
 void
 SASViewerRender2::SetAdditionalLines(const vector<LinesRender2::Line> &lines,
-                                     BL_FLOAT lineWidth)
+                                     BL_FLOAT lineWidth,
+                                     SASViewerProcess2::Mode mode)
 {
-    mLinesRender->SetAdditionalLines(lines, lineWidth);
+    mLinesRenders[(int)mode]->SetAdditionalLines(lines, lineWidth);
 }
 
 void
 SASViewerRender2::ClearAdditionalLines()
 {
-    mLinesRender->ClearAdditionalLines();
+    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+        mLinesRenders[i]->ClearAdditionalLines();
 }
 
 void
-SASViewerRender2::ShowTrackingLines(bool flag)
+SASViewerRender2::ShowTrackingLines(bool flag, SASViewerProcess2::Mode mode)
 {
-    mLinesRender->ShowAdditionalLines(flag);
+    mLinesRenders[(int)mode]->ShowAdditionalLines(flag);
 }
 
 void
 SASViewerRender2::DBG_SetNumSlices(int numSlices)
 {
-    mLinesRender->SetNumSlices(numSlices);
-    mLinesRender->DBG_ForceDensityNumSlices();
+     for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
+     {
+         mLinesRenders[i]->SetNumSlices(numSlices);
+         mLinesRenders[i]->DBG_ForceDensityNumSlices();
+     }
 }
 
 void

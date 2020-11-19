@@ -30,13 +30,15 @@ class SASViewerProcess2 : public ProcessObj
 public:
     enum Mode
     {
-        TRACKING,
+        TRACKING = 0,
         HARMO,
         NOISE,
         AMPLITUDE,
         FREQUENCY,
         COLOR,
-        WARPING
+        WARPING,
+        
+        NUM_MODES
     };
     
     SASViewerProcess2(int bufferSize,

@@ -18,6 +18,7 @@ using namespace std;
 #include <GraphControl12.h>
 #include <LinesRender2.h>
 #include <SASViewerPluginInterface.h>
+#include <SASViewerProcess2.h>
 
 // Sides
 //#define MAX_ANGLE_0 70.0
@@ -47,8 +48,10 @@ public:
     
     void Clear();
     
-    virtual void AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns);
-    virtual void AddPoints(const vector<LinesRender2::Point> &points);
+    virtual void AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns,
+                          SASViewerProcess2::Mode mode);
+    virtual void AddPoints(const vector<LinesRender2::Point> &points,
+                           SASViewerProcess2::Mode mode);
 
     virtual void SetLineMode(LinesRender2::Mode mode);
     
@@ -71,16 +74,20 @@ public:
     void SetCamAngle1(BL_FLOAT angle);
     void SetCamFov(BL_FLOAT angle);
     
+    //
+    void SetMode(SASViewerProcess2::Mode mode);
+    
     // Used for rendering tracked partials
     int GetNumSlices();
     int GetSpeed();
     
     void SetAdditionalLines(const vector<LinesRender2::Line> &lines,
-                            BL_FLOAT lineWidth);
+                            BL_FLOAT lineWidth,
+                            SASViewerProcess2::Mode mode);
     
     void ClearAdditionalLines();
     
-    void ShowTrackingLines(bool flag);
+    void ShowTrackingLines(bool flag, SASViewerProcess2::Mode mode);
     
     // For debugging
     void DBG_SetNumSlices(int numSlices);
@@ -94,7 +101,7 @@ protected:
     
     GraphControl12 *mGraph;
     
-    LinesRender2 *mLinesRender;
+    LinesRender2 *mLinesRenders[SASViewerProcess2::NUM_MODES];
     
     Axis3D *mFreqsAxis;
     
@@ -116,6 +123,8 @@ protected:
     
     //
     unsigned long long int mAddNum;
+    
+    SASViewerProcess2::Mode mCurrentMode;
 };
 
 #endif // IGRAPHICS_NANOVG

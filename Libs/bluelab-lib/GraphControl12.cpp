@@ -376,6 +376,24 @@ GraphControl12::AddCustomDrawer(GraphCustomDrawer *customDrawer)
 }
 
 void
+GraphControl12::RemoveCustomDrawer(GraphCustomDrawer *customDrawer)
+{
+    vector<GraphCustomDrawer *> newCustomDrawers;
+    for (int i = 0; i < mCustomDrawers.size(); i++)
+    {
+        GraphCustomDrawer *d = mCustomDrawers[i];
+        if (d != customDrawer)
+            newCustomDrawers.push_back(d);
+    }
+    
+    mCustomDrawers = newCustomDrawers;
+    
+    //
+    mDataChanged = true;
+}
+
+
+void
 GraphControl12::CustomDrawersPreDraw()
 {
     int width = this->mRECT.W();
