@@ -142,9 +142,9 @@ public:
     // NOTE: was for PartialTracker debug
     void SetAdditionalLines(const vector<Line> &lines, BL_FLOAT lineWidth);
     void ClearAdditionalLines();
-    void ShowAdditionalLines(bool flag);
     void DrawAdditionalLines(NVGcontext *vg, int width, int height);
     void ProjectAdditionalLines(vector<Line> *lines, int width, int height);
+    void ShowAdditionalLines(bool flag);
     
     // Optimized version
     void ProjectAdditionalLines2(vector<Line> *lines, int width, int height);

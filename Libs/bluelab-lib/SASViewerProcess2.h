@@ -31,6 +31,8 @@ public:
     enum Mode
     {
         TRACKING,
+        HARMO,
+        NOISE,
         AMPLITUDE,
         FREQUENCY,
         COLOR,
@@ -61,6 +63,8 @@ public:
     void SetSASViewerRender(SASViewerRender2 *sasViewerRender);
     
     void SetMode(Mode mode);
+    
+    void SetShowTrackingLines(bool flag);
     
     void SetThreshold(BL_FLOAT threshold);
     
@@ -103,6 +107,8 @@ protected:
     
     // Display
     void DisplayTracking();
+    void DisplayHarmo();
+    void DisplayNoise();
     void DisplayAmplitude();
     void DisplayFrequency();
     void DisplayColor();
@@ -139,6 +145,9 @@ protected:
     // Keep an history, to avoid recomputing the whole lines each time
     // With this, we compute only the new extremity of the line
     vector<LinesRender2::Line> mPartialLines;
+    
+    //
+    bool mShowTrackingLines;
 };
 
 #endif // IGRAPHICS_NANOVG

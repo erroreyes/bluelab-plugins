@@ -44,8 +44,9 @@ public:
         static bool AmpLess(const SASPartial &p1, const SASPartial &p2);
 
     public:
+        // Values are normalized, as provided by SASViewerProcess
         BL_FLOAT mFreq;
-        BL_FLOAT mAmpDB;
+        BL_FLOAT mAmp;
         BL_FLOAT mPhase;
     };
     
@@ -59,14 +60,17 @@ public:
     
     void SetPartials(const vector<PartialTracker5::Partial> &partials);
     
+    void SetNoiseEnvelope(const WDL_TypedBuf<BL_FLOAT> &noiseEnv);
+    void GetNoiseEnvelope(WDL_TypedBuf<BL_FLOAT> *noiseEnv) const;
+    
     // Get
-    BL_FLOAT GetAmplitudeDB() const;
+    BL_FLOAT GetAmplitude() const;
     BL_FLOAT GetFrequency() const;
     void GetColor(WDL_TypedBuf<BL_FLOAT> *color) const;
     void GetNormWarping(WDL_TypedBuf<BL_FLOAT> *warping) const;
     
     // Set
-    void SetAmplitudeDB(BL_FLOAT amp);
+    void SetAmplitude(BL_FLOAT amp);
     void SetFrequency(BL_FLOAT freq);
     void SetColor(const WDL_TypedBuf<BL_FLOAT> &color);
     void SetNormWarping(const WDL_TypedBuf<BL_FLOAT> &warping);
@@ -153,17 +157,19 @@ protected:
     SynthMode mSynthMode;
     
     // Tracked partials
-    BL_FLOAT mPrevAmplitudeDB;
+    BL_FLOAT mPrevAmplitude;
     vector<PartialTracker5::Partial> mPartials;
     vector<PartialTracker5::Partial> mPrevPartials;
     
-    BL_FLOAT mAmplitudeDB;
+    BL_FLOAT mAmplitude;
     
     BL_FLOAT mFrequency;
     
     int mBufferSize;
     BL_FLOAT mSampleRate;
     int mOverlapping;
+    
+    WDL_TypedBuf<BL_FLOAT> mNoiseEnvelope;
     
     WDL_TypedBuf<BL_FLOAT> mColor;
     WDL_TypedBuf<BL_FLOAT> mNormWarping;

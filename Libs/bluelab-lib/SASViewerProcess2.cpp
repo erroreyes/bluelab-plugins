@@ -51,6 +51,8 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     
     // For additional lines
     mAddNum = 0;
+    
+    mShowTrackingLines = false;
 }
 
 SASViewerProcess2::~SASViewerProcess2()
@@ -109,17 +111,18 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
         mCurrentPartials = partials;
         
-        Display();
-        
         // Avoid sending garbage partials to the SASFrame
         // (would slow down a lot when many garbage partial
         // are used to compute the SASFrame)
         //PartialTracker3::RemoveRealDeadPartials(&partials);
         
         mSASFrame->SetPartials(partials);
-        
         if (mEnableOutNoise)
             mPartialTracker->GetNoiseEnvelope(&magns);
+        
+        mSASFrame->SetNoiseEnvelope(magns);
+        
+        Display();
     }
     
     // For noise envelope
@@ -211,6 +214,15 @@ SASViewerProcess2::SetMode(Mode mode)
 }
 
 void
+SASViewerProcess2::SetShowTrackingLines(bool flag)
+{
+    mShowTrackingLines = flag;
+    
+    if (mSASViewerRender != NULL)
+        mSASViewerRender->ShowTrackingLines(flag);
+}
+
+void
 SASViewerProcess2::SetThreshold(BL_FLOAT threshold)
 {
     mThreshold = threshold;
@@ -268,6 +280,16 @@ SASViewerProcess2::Display()
     if (mMode == TRACKING)
     {
         DisplayTracking();
+    }
+    
+    if (mMode == HARMO)
+    {
+        DisplayHarmo();
+    }
+    
+    if (mMode == NOISE)
+    {
+        DisplayNoise();
     }
     
     if (mMode == AMPLITUDE)
@@ -384,6 +406,8 @@ SASViewerProcess2::DisplayTracking()
 {
     if (mSASViewerRender != NULL)
     {
+        mSASViewerRender->ShowTrackingLines(mShowTrackingLines);
+        
         // Add the magnitudes
         mSASViewerRender->AddMagns(mCurrentMagns);
         
@@ -461,14 +485,47 @@ SASViewerProcess2::DisplayTracking()
 }
 
 void
+SASViewerProcess2::DisplayHarmo()
+{
+    WDL_TypedBuf<BL_FLOAT> noise;
+    mSASFrame->GetNoiseEnvelope(&noise);
+    
+    WDL_TypedBuf<BL_FLOAT> harmo = mCurrentMagns;
+    BLUtils::SubstractValues(&harmo, noise);
+    
+    if (mSASViewerRender != NULL)
+    {
+        mSASViewerRender->AddMagns(harmo);
+        mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        
+        mSASViewerRender->ShowTrackingLines(false);
+    }
+}
+
+void
+SASViewerProcess2::DisplayNoise()
+{
+    WDL_TypedBuf<BL_FLOAT> noise;
+    mSASFrame->GetNoiseEnvelope(&noise);
+    
+    if (mSASViewerRender != NULL)
+    {
+        mSASViewerRender->AddMagns(noise);
+        mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        
+        mSASViewerRender->ShowTrackingLines(false);
+    }
+}
+
+void
 SASViewerProcess2::DisplayAmplitude()
 {
-    BL_FLOAT ampDB = mSASFrame->GetAmplitudeDB();
+    BL_FLOAT amp = mSASFrame->GetAmplitude();
     
 #define Y_COEFF 20.0
 #define Y_OFFSET 0.0
     
-    BL_FLOAT amp = DBToAmp(ampDB);
+    //BL_FLOAT amp = DBToAmp(ampDB);
     
     WDL_TypedBuf<BL_FLOAT> amps;
     amps.Resize(mBufferSize/2);
@@ -525,9 +582,9 @@ SASViewerProcess2::DisplayColor()
     
     //ScaleMagns(&color);
     
-    BL_FLOAT amplitudeDB = mSASFrame->GetAmplitudeDB();
+    BL_FLOAT amplitude = mSASFrame->GetAmplitude();
     
-    BL_FLOAT amplitude = DBToAmp(amplitudeDB);
+    //BL_FLOAT amplitude = DBToAmp(amplitudeDB);
     
     BLUtils::MultValues(&color, amplitude);
     
@@ -535,6 +592,7 @@ SASViewerProcess2::DisplayColor()
     {
         mSASViewerRender->AddMagns(color);
         mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        
         mSASViewerRender->ShowTrackingLines(false);
     }
 }
@@ -556,6 +614,7 @@ SASViewerProcess2::DisplayWarping()
     {
         mSASViewerRender->AddMagns(warping);
         mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        
         mSASViewerRender->ShowTrackingLines(false);
     }
 }
