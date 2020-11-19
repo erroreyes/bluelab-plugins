@@ -71,7 +71,6 @@ public:
     void SetColor(const WDL_TypedBuf<BL_FLOAT> &color);
     void SetNormWarping(const WDL_TypedBuf<BL_FLOAT> &warping);
     
-    
     void ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples);
     
     void ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples);

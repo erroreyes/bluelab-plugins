@@ -39,8 +39,6 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     mSASViewerRender = NULL;
     
     mPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
-    mScPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
-    
     mSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
     
     mThreshold = -60.0;
@@ -58,8 +56,6 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
 SASViewerProcess2::~SASViewerProcess2()
 {
     delete mPartialTracker;
-    delete mScPartialTracker;
-    
     delete mSASFrame;
 }
 
@@ -110,9 +106,6 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     {
         vector<PartialTracker5::Partial> partials;
         mPartialTracker->GetPartials(&partials);
-        
-        vector<PartialTracker5::Partial> scPartials;
-        mScPartialTracker->GetPartials(&scPartials);
         
         mCurrentPartials = partials;
         
@@ -310,20 +303,6 @@ SASViewerProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 #endif
     
     mPartialTracker->FilterPartials();
-}
-
-void
-SASViewerProcess2::DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                 const WDL_TypedBuf<BL_FLOAT> &phases)
-{
-    mScPartialTracker->SetData(magns, phases);
-    mScPartialTracker->DetectPartials();
-    
-#if !DEBUG_MUTE_NOISE
-    mScPartialTracker->ExtractNoiseEnvelope();
-#endif
-    
-    mScPartialTracker->FilterPartials();
 }
 
 void

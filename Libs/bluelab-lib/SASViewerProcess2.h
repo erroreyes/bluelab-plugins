@@ -87,9 +87,6 @@ protected:
     void DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                         const WDL_TypedBuf<BL_FLOAT> &phases);
     
-    void DetectScPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                          const WDL_TypedBuf<BL_FLOAT> &phases);
-    
     void IdToColor(int idx, unsigned char color[3]);
     
     void PartialToColor(const PartialTracker5::Partial &partial,
@@ -125,7 +122,6 @@ protected:
     SASViewerRender2 *mSASViewerRender;
     
     PartialTracker5 *mPartialTracker;
-    PartialTracker5 *mScPartialTracker;
     
     SASFrame3 *mSASFrame;
     

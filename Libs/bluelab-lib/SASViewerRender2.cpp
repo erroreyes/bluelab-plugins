@@ -327,7 +327,7 @@ SASViewerRender2::DBG_SetNumSlices(int numSlices)
 
 void
 SASViewerRender2::MagnsToPoints(vector<LinesRender2::Point> *points,
-                               const WDL_TypedBuf<BL_FLOAT> &magns)
+                                const WDL_TypedBuf<BL_FLOAT> &magns)
 {
     if (magns.GetSize() == 0)
         return;
