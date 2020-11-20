@@ -48,12 +48,13 @@ public:
     
     void Clear();
     
-    virtual void AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns,
-                          SASViewerProcess2::Mode mode);
-    virtual void AddPoints(const vector<LinesRender2::Point> &points,
-                           SASViewerProcess2::Mode mode);
+    virtual void AddMagns(SASViewerProcess2::Mode mode,
+                          const WDL_TypedBuf<BL_FLOAT> &magns);
+    virtual void AddPoints(SASViewerProcess2::Mode mode,
+                           const vector<LinesRender2::Point> &points);
 
-    virtual void SetLineMode(LinesRender2::Mode mode);
+    virtual void SetLineMode(SASViewerProcess2::Mode mode,
+                             LinesRender2::Mode lineMode);
     
     // Control
     virtual void OnMouseDown(float x, float y, const IMouseMod &mod) override;
@@ -81,13 +82,13 @@ public:
     int GetNumSlices();
     int GetSpeed();
     
-    void SetAdditionalLines(const vector<LinesRender2::Line> &lines,
-                            BL_FLOAT lineWidth,
-                            SASViewerProcess2::Mode mode);
+    void SetAdditionalLines(SASViewerProcess2::Mode mode,
+                            const vector<LinesRender2::Line> &lines,
+                            BL_FLOAT lineWidth);
     
     void ClearAdditionalLines();
     
-    void ShowTrackingLines(bool flag, SASViewerProcess2::Mode mode);
+    void ShowTrackingLines(SASViewerProcess2::Mode mode, bool flag);
     
     // For debugging
     void DBG_SetNumSlices(int numSlices);

@@ -90,8 +90,8 @@ SASViewerRender2::Clear()
 }
 
 void
-SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns,
-                           SASViewerProcess2::Mode mode)
+SASViewerRender2::AddMagns(SASViewerProcess2::Mode mode,
+                           const WDL_TypedBuf<BL_FLOAT> &magns)
 {
     if (magns.GetSize() == 0)
         return;
@@ -107,8 +107,8 @@ SASViewerRender2::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-SASViewerRender2::AddPoints(const vector<LinesRender2::Point> &points,
-                            SASViewerProcess2::Mode mode)
+SASViewerRender2::AddPoints(SASViewerProcess2::Mode mode,
+                            const vector<LinesRender2::Point> &points)
 {
     mLinesRenders[(int)mode]->AddSlice(points);
     
@@ -118,10 +118,10 @@ SASViewerRender2::AddPoints(const vector<LinesRender2::Point> &points,
 }
 
 void
-SASViewerRender2::SetLineMode(LinesRender2::Mode mode)
+SASViewerRender2::SetLineMode(SASViewerProcess2::Mode mode,
+                              LinesRender2::Mode lineMode)
 {
-    for (int i = 0; i < (int)SASViewerProcess2::NUM_MODES; i++)
-        mLinesRenders[i]->SetMode(mode);
+   mLinesRenders[(int)mode]->SetMode(lineMode);
 }
 
 void
@@ -333,9 +333,9 @@ SASViewerRender2::GetSpeed()
 }
 
 void
-SASViewerRender2::SetAdditionalLines(const vector<LinesRender2::Line> &lines,
-                                     BL_FLOAT lineWidth,
-                                     SASViewerProcess2::Mode mode)
+SASViewerRender2::SetAdditionalLines(SASViewerProcess2::Mode mode,
+                                     const vector<LinesRender2::Line> &lines,
+                                     BL_FLOAT lineWidth)
 {
     mLinesRenders[(int)mode]->SetAdditionalLines(lines, lineWidth);
 }
@@ -348,7 +348,7 @@ SASViewerRender2::ClearAdditionalLines()
 }
 
 void
-SASViewerRender2::ShowTrackingLines(bool flag, SASViewerProcess2::Mode mode)
+SASViewerRender2::ShowTrackingLines(SASViewerProcess2::Mode mode, bool flag)
 {
     mLinesRenders[(int)mode]->ShowAdditionalLines(flag);
 }

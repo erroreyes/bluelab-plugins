@@ -223,7 +223,7 @@ SASViewerProcess2::SetShowTrackingLines(bool flag)
     mShowTrackingLines = flag;
     
     if (mSASViewerRender != NULL)
-        mSASViewerRender->ShowTrackingLines(flag, TRACKING);
+        mSASViewerRender->ShowTrackingLines(TRACKING, flag);
 }
 
 void
@@ -435,12 +435,12 @@ SASViewerProcess2::DisplayTracking()
 {
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->ShowTrackingLines(mShowTrackingLines, TRACKING);
+        mSASViewerRender->ShowTrackingLines(TRACKING, mShowTrackingLines);
         
         // Add the magnitudes
-        mSASViewerRender->AddMagns(mCurrentMagns, TRACKING);
+        mSASViewerRender->AddMagns(TRACKING, mCurrentMagns);
         
-        mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        mSASViewerRender->SetLineMode(TRACKING, LinesRender2::LINES_FREQ);
         
         // Add lines corresponding to the well tracked partials
         vector<PartialTracker5::Partial> partials = mCurrentPartials;
@@ -508,7 +508,7 @@ SASViewerProcess2::DisplayTracking()
             
             //BL_FLOAT lineWidth = 4.0;
             BL_FLOAT lineWidth = 1.5;
-            mSASViewerRender->SetAdditionalLines(mPartialLines, lineWidth, TRACKING);
+            mSASViewerRender->SetAdditionalLines(TRACKING, mPartialLines, lineWidth);
         }
     }
 }
@@ -524,10 +524,10 @@ SASViewerProcess2::DisplayHarmo()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(harmo, HARMO);
-        mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        mSASViewerRender->AddMagns(HARMO, harmo);
+        mSASViewerRender->SetLineMode(HARMO, LinesRender2::LINES_FREQ);
         
-        mSASViewerRender->ShowTrackingLines(false, HARMO);
+        mSASViewerRender->ShowTrackingLines(HARMO, false);
     }
 }
 
@@ -539,10 +539,10 @@ SASViewerProcess2::DisplayNoise()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(noise, NOISE);
-        mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        mSASViewerRender->AddMagns(NOISE, noise);
+        mSASViewerRender->SetLineMode(NOISE, LinesRender2::LINES_FREQ);
         
-        mSASViewerRender->ShowTrackingLines(false, NOISE);
+        mSASViewerRender->ShowTrackingLines(NOISE, false);
     }
 }
 
@@ -551,8 +551,7 @@ SASViewerProcess2::DisplayAmplitude()
 {
     BL_FLOAT amp = mSASFrame->GetAmplitude();
     
-#define Y_COEFF 20.0
-#define Y_OFFSET 0.0
+#define AMP_Y_COEFF 0.05
     
     //BL_FLOAT amp = DBToAmp(ampDB);
     
@@ -560,17 +559,16 @@ SASViewerProcess2::DisplayAmplitude()
     amps.Resize(mBufferSize/2);
     BLUtils::FillAllValue(&amps, amp);
     
-    BLUtils::MultValues(&amps, (BL_FLOAT)Y_COEFF);
-    BLUtils::AddValues(&amps, (BL_FLOAT)Y_OFFSET);
+    BLUtils::MultValues(&amps, (BL_FLOAT)AMP_Y_COEFF);
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(amps, AMPLITUDE);
+        mSASViewerRender->AddMagns(AMPLITUDE, amps);
         
         // WARNING: Won't benefit from straight lines optim
-        mSASViewerRender->SetLineMode(LinesRender2::LINES_TIME);
+        mSASViewerRender->SetLineMode(AMPLITUDE, LinesRender2::LINES_TIME);
         
-        mSASViewerRender->ShowTrackingLines(false, AMPLITUDE);
+        mSASViewerRender->ShowTrackingLines(AMPLITUDE, false);
     }
 }
 
@@ -594,12 +592,12 @@ SASViewerProcess2::DisplayFrequency()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(freqs, FREQUENCY);
+        mSASViewerRender->AddMagns(FREQUENCY, freqs);
         
         // WARNING: Won't benefit from straight lines optim
-        mSASViewerRender->SetLineMode(LinesRender2::LINES_TIME);
+        mSASViewerRender->SetLineMode(FREQUENCY, LinesRender2::LINES_FREQ);
         
-        mSASViewerRender->ShowTrackingLines(false, FREQUENCY);
+        mSASViewerRender->ShowTrackingLines(FREQUENCY, false);
     }
 }
 
@@ -619,10 +617,10 @@ SASViewerProcess2::DisplayColor()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(color, COLOR);
-        mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        mSASViewerRender->AddMagns(COLOR, color);
+        mSASViewerRender->SetLineMode(COLOR, LinesRender2::LINES_FREQ);
         
-        mSASViewerRender->ShowTrackingLines(false, COLOR);
+        mSASViewerRender->ShowTrackingLines(COLOR, false);
     }
 }
 
@@ -641,10 +639,10 @@ SASViewerProcess2::DisplayWarping()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(warping, WARPING);
-        mSASViewerRender->SetLineMode(LinesRender2::LINES_FREQ);
+        mSASViewerRender->AddMagns(WARPING, warping);
+        mSASViewerRender->SetLineMode(WARPING, LinesRender2::LINES_FREQ);
         
-        mSASViewerRender->ShowTrackingLines(false, WARPING);
+        mSASViewerRender->ShowTrackingLines(WARPING, false);
     }
 }
 
