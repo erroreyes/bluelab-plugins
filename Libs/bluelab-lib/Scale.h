@@ -24,7 +24,8 @@ public:
         LOG_FACTOR,
         MEL, // Quick Mel
         MEL_FILTER, // Mel with real filters,
-        MEL_INV
+        MEL_INV,
+        DB_INV
     };
     
     Scale();
@@ -46,6 +47,9 @@ public:
 protected:
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedToDB(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);
+    
+    template <typename FLOAT_TYPE>
+    static FLOAT_TYPE NormalizedToDBInv(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);
     
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedToLog(FLOAT_TYPE x, FLOAT_TYPE minValue,

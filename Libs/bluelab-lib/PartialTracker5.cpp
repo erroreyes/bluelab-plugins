@@ -231,7 +231,7 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     
     //
     mXScaleInv = Scale::MEL_INV;
-    
+    mYScaleInv = Scale::DB_INV;
     
     mTimeSmoothCoeff = 0.5;
     
@@ -2121,6 +2121,24 @@ PartialTracker5::GetDeltaFreqCoeff(int binNum)
 }
 
 void
+PartialTracker5::PreProcessData(WDL_TypedBuf<BL_FLOAT> *data)
+{
+    // Y
+    for (int i = 0; i < data->GetSize(); i++)
+    {
+        BL_FLOAT d = data->Get()[i];
+        d = Scale::ApplyScale(mYScale, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        data->Get()[i] = d;
+    }
+    
+    // Better tracking on high frequencies with this!
+    PreProcessAWeighting(data, true);
+    
+    // X
+    mScale->ApplyScale(mXScale, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+}
+
+void
 PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
                             WDL_TypedBuf<BL_FLOAT> *phases)
 {
@@ -2130,19 +2148,7 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
     BLUtils::ComputeSquare(magns);
 #endif
     
-    // Y
-    for (int i = 0; i < magns->GetSize(); i++)
-    {
-        BL_FLOAT magn = magns->Get()[i];
-        magn = Scale::ApplyScale(mYScale, magn, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
-        magns->Get()[i] = magn;
-    }
-    
-    // Better tracking on high frequencies with this!
-    PreProcessAWeighting(magns, true);
-    
-    // X
-    mScale->ApplyScale(mXScale, magns, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    PreProcessData(magns);
     
     // Phases
     mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
@@ -2228,6 +2234,10 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
         // Reverse AWeighting
         int binNum = partial.mFreq/hzPerBin;
         partial.mAmp = ProcessAWeighting(binNum, mBufferSize*0.5, partial.mAmp, false);
+    
+        // Y
+        partial.mAmp = Scale::ApplyScale(mYScaleInv, partial.mAmp,
+                                         (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
     }
 }
 

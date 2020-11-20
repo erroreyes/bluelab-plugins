@@ -142,6 +142,9 @@ public:
     
     void DenormPartials(vector<PartialTracker5::Partial> *partials);
     
+    // For processing color for example, just before display
+    void PreProcessData(WDL_TypedBuf<BL_FLOAT> *data);
+    
 protected:
     // Pre process
     //
@@ -357,6 +360,7 @@ protected:
     Scale::Type mYScale;
     
     Scale::Type mXScaleInv;
+    Scale::Type mYScaleInv;
     
     // Time smooth noise
     BL_FLOAT mTimeSmoothNoiseCoeff;
