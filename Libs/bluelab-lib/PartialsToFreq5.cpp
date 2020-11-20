@@ -85,12 +85,14 @@ PartialsToFreq5::ComputeFrequency(const vector<PartialTracker5::Partial> &partia
     }
     
     
-#if 1 // ORIGIN
-    BL_FLOAT freq = mEstimate->EstimateMultiRes(partials0); // profile: ~40ms
-#endif
-#if 0 // TEST
-    BL_FLOAT freq = mEstimate->EstimateOptim2(partials0);
-#endif
+//#if 1 // ORIGIN
+//    BL_FLOAT freq = mEstimate->EstimateMultiRes(partials0); // profile: ~40ms
+//#endif
+//#if 0 // TEST
+//    BL_FLOAT freq = mEstimate->EstimateOptim2(partials0);
+//#endif
+    
+    BL_FLOAT freq = mEstimate->Estimate(partials0);
     
     return freq;
 }

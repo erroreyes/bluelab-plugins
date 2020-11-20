@@ -48,8 +48,8 @@ public:
     
     void Clear();
     
-    virtual void AddMagns(SASViewerProcess2::Mode mode,
-                          const WDL_TypedBuf<BL_FLOAT> &magns);
+    virtual void AddData(SASViewerProcess2::Mode mode,
+                          const WDL_TypedBuf<BL_FLOAT> &data);
     virtual void AddPoints(SASViewerProcess2::Mode mode,
                            const vector<LinesRender2::Point> &points);
 
@@ -94,8 +94,8 @@ public:
     void DBG_SetNumSlices(int numSlices);
     
 protected:
-    void MagnsToPoints(vector<LinesRender2::Point> *points,
-                       const WDL_TypedBuf<BL_FLOAT> &magns);
+    void DataToPoints(vector<LinesRender2::Point> *points,
+                      const WDL_TypedBuf<BL_FLOAT> &data);
     
     //
     SASViewerPluginInterface *mPlug;

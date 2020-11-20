@@ -90,14 +90,14 @@ SASViewerRender2::Clear()
 }
 
 void
-SASViewerRender2::AddMagns(SASViewerProcess2::Mode mode,
-                           const WDL_TypedBuf<BL_FLOAT> &magns)
+SASViewerRender2::AddData(SASViewerProcess2::Mode mode,
+                           const WDL_TypedBuf<BL_FLOAT> &data)
 {
-    if (magns.GetSize() == 0)
+    if (data.GetSize() == 0)
         return;
     
     vector<LinesRender2::Point> points;
-    MagnsToPoints(&points, magns);
+    DataToPoints(&points, data);
     
     mLinesRenders[(int)mode]->AddSlice(points);
     
@@ -364,29 +364,29 @@ SASViewerRender2::DBG_SetNumSlices(int numSlices)
 }
 
 void
-SASViewerRender2::MagnsToPoints(vector<LinesRender2::Point> *points,
-                                const WDL_TypedBuf<BL_FLOAT> &magns)
+SASViewerRender2::DataToPoints(vector<LinesRender2::Point> *points,
+                               const WDL_TypedBuf<BL_FLOAT> &data)
 {
-    if (magns.GetSize() == 0)
+    if (data.GetSize() == 0)
         return;
     
     // Convert to points
-    points->resize(magns.GetSize());
+    points->resize(data.GetSize());
     
     // Optim
     BL_FLOAT xCoeff = 0.0;
-    if (magns.GetSize() > 0)
+    if (data.GetSize() > 0)
     {
-        if (magns.GetSize() <= 1)
-            xCoeff = 1.0/magns.GetSize();
+        if (data.GetSize() <= 1)
+            xCoeff = 1.0/data.GetSize();
         else
-            xCoeff = 1.0/(magns.GetSize() - 1);
+            xCoeff = 1.0/(data.GetSize() - 1);
     }
     
     // Loop
-    for (int i = 0; i < magns.GetSize(); i++)
+    for (int i = 0; i < data.GetSize(); i++)
     {
-        BL_FLOAT magn = magns.Get()[i];
+        BL_FLOAT magn = data.Get()[i];
         
         LinesRender2::Point &p = (*points)[i];
         

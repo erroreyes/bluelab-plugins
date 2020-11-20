@@ -106,17 +106,21 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
     if (mPartialTracker != NULL)
     {
-        vector<PartialTracker5::Partial> partials;
-        mPartialTracker->GetPartials(&partials);
+        vector<PartialTracker5::Partial> normPartials;
+        mPartialTracker->GetPartials(&normPartials);
         
-        mCurrentPartials = partials;
+        mCurrentNormPartials = normPartials;
         
         // Avoid sending garbage partials to the SASFrame
         // (would slow down a lot when many garbage partial
         // are used to compute the SASFrame)
         //PartialTracker3::RemoveRealDeadPartials(&partials);
         
+        vector<PartialTracker5::Partial> partials = normPartials;
+        mPartialTracker->DenormPartials(&partials);
+        
         mSASFrame->SetPartials(partials);
+        
         if (mEnableOutNoise)
             mPartialTracker->GetNoiseEnvelope(&magns);
         
@@ -438,12 +442,12 @@ SASViewerProcess2::DisplayTracking()
         mSASViewerRender->ShowTrackingLines(TRACKING, mShowTrackingLines);
         
         // Add the magnitudes
-        mSASViewerRender->AddMagns(TRACKING, mCurrentMagns);
+        mSASViewerRender->AddData(TRACKING, mCurrentMagns);
         
         mSASViewerRender->SetLineMode(TRACKING, LinesRender2::LINES_FREQ);
         
         // Add lines corresponding to the well tracked partials
-        vector<PartialTracker5::Partial> partials = mCurrentPartials;
+        vector<PartialTracker5::Partial> partials = mCurrentNormPartials;
         
         // Create blue lines from trackers
         vector<LinesRender2::Point> line;
@@ -524,7 +528,7 @@ SASViewerProcess2::DisplayHarmo()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(HARMO, harmo);
+        mSASViewerRender->AddData(HARMO, harmo);
         mSASViewerRender->SetLineMode(HARMO, LinesRender2::LINES_FREQ);
         
         mSASViewerRender->ShowTrackingLines(HARMO, false);
@@ -539,7 +543,7 @@ SASViewerProcess2::DisplayNoise()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(NOISE, noise);
+        mSASViewerRender->AddData(NOISE, noise);
         mSASViewerRender->SetLineMode(NOISE, LinesRender2::LINES_FREQ);
         
         mSASViewerRender->ShowTrackingLines(NOISE, false);
@@ -549,11 +553,9 @@ SASViewerProcess2::DisplayNoise()
 void
 SASViewerProcess2::DisplayAmplitude()
 {
-    BL_FLOAT amp = mSASFrame->GetAmplitude();
-    
 #define AMP_Y_COEFF 0.05
     
-    //BL_FLOAT amp = DBToAmp(ampDB);
+    BL_FLOAT amp = mSASFrame->GetAmplitude();
     
     WDL_TypedBuf<BL_FLOAT> amps;
     amps.Resize(mBufferSize/2);
@@ -563,7 +565,7 @@ SASViewerProcess2::DisplayAmplitude()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(AMPLITUDE, amps);
+        mSASViewerRender->AddData(AMPLITUDE, amps);
         
         // WARNING: Won't benefit from straight lines optim
         mSASViewerRender->SetLineMode(AMPLITUDE, LinesRender2::LINES_TIME);
@@ -575,27 +577,24 @@ SASViewerProcess2::DisplayAmplitude()
 void
 SASViewerProcess2::DisplayFrequency()
 {
+#define FREQ_Y_COEFF 40.0 //10.0
+    
     BL_FLOAT freq = mSASFrame->GetFrequency();
-
-    BL_FLOAT factor = 3.0;
-    freq = BLUtils::LogScaleNormInv(freq, (BL_FLOAT)44100.0, factor);
   
-#define Y_COEFF 0.002
-#define Y_OFFSET -4.0
+    freq /= mSampleRate*0.5;
 
     WDL_TypedBuf<BL_FLOAT> freqs;
     freqs.Resize(mBufferSize/2);
     BLUtils::FillAllValue(&freqs, freq);
     
-    BLUtils::MultValues(&freqs, (BL_FLOAT)Y_COEFF);
-    BLUtils::AddValues(&freqs, (BL_FLOAT)Y_OFFSET);
+    BLUtils::MultValues(&freqs, (BL_FLOAT)FREQ_Y_COEFF);
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(FREQUENCY, freqs);
+        mSASViewerRender->AddData(FREQUENCY, freqs);
         
         // WARNING: Won't benefit from straight lines optim
-        mSASViewerRender->SetLineMode(FREQUENCY, LinesRender2::LINES_FREQ);
+        mSASViewerRender->SetLineMode(FREQUENCY, LinesRender2::/*LINES_FREQ*/LINES_TIME);
         
         mSASViewerRender->ShowTrackingLines(FREQUENCY, false);
     }
@@ -617,7 +616,7 @@ SASViewerProcess2::DisplayColor()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(COLOR, color);
+        mSASViewerRender->AddData(COLOR, color);
         mSASViewerRender->SetLineMode(COLOR, LinesRender2::LINES_FREQ);
         
         mSASViewerRender->ShowTrackingLines(COLOR, false);
@@ -639,7 +638,7 @@ SASViewerProcess2::DisplayWarping()
     
     if (mSASViewerRender != NULL)
     {
-        mSASViewerRender->AddMagns(WARPING, warping);
+        mSASViewerRender->AddData(WARPING, warping);
         mSASViewerRender->SetLineMode(WARPING, LinesRender2::LINES_FREQ);
         
         mSASViewerRender->ShowTrackingLines(WARPING, false);

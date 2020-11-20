@@ -58,6 +58,7 @@ public:
     
     void SetSynthMode(enum SynthMode mode);
     
+    // De-normalized partials
     void SetPartials(const vector<PartialTracker5::Partial> &partials);
     
     void SetNoiseEnvelope(const WDL_TypedBuf<BL_FLOAT> &noiseEnv);
@@ -158,6 +159,8 @@ protected:
     
     // Tracked partials
     BL_FLOAT mPrevAmplitude;
+    
+    // Not normalized
     vector<PartialTracker5::Partial> mPartials;
     vector<PartialTracker5::Partial> mPrevPartials;
     

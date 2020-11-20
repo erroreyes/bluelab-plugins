@@ -108,6 +108,8 @@ protected:
     // Optimized version
     void CreateLines(const vector<LinesRender2::Point> &prevPoints);
 
+    void DenormPartials(vector<PartialTracker5::Partial> *partials);
+
     
     // Display
     void DisplayTracking();
@@ -126,7 +128,7 @@ protected:
     
     //
     WDL_TypedBuf<BL_FLOAT> mCurrentMagns;
-    vector<PartialTracker5::Partial> mCurrentPartials;
+    vector<PartialTracker5::Partial> mCurrentNormPartials;
     
     // Renderer
     SASViewerRender2 *mSASViewerRender;

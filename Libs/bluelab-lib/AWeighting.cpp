@@ -32,6 +32,18 @@ AWeighting::ComputeAWeights(WDL_TypedBuf<BL_FLOAT> *result, int numBins, BL_FLOA
 }
 
 BL_FLOAT
+AWeighting::ComputeAWeights(int binNum, int numBins, BL_FLOAT sampleRate)
+{
+    BL_FLOAT hzPerBin = sampleRate/(numBins*2);
+    
+    BL_FLOAT freq = binNum*hzPerBin;
+        
+    BL_FLOAT a = ComputeA(freq);
+        
+    return a;
+}
+
+BL_FLOAT
 AWeighting::ComputeR(BL_FLOAT frequency)
 {
     BL_FLOAT num = std::pow(12194, 2)*pow(frequency, 4);

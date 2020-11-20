@@ -53,6 +53,10 @@ Scale::ApplyScale(Type scaleType,
     {
         x = NormalizedToMel(x, minValue, maxValue);
     }
+    else if (scaleType == MEL_INV)
+    {
+        x = NormalizedToMelInv(x, minValue, maxValue);
+    }
     
     return x;
 }
@@ -211,6 +215,28 @@ template float Scale::NormalizedToMel(float value,
                                       float minFreq, float maxFreq);
 template double Scale::NormalizedToMel(double value,
                                        double minFreq, double maxFreq);
+
+template <typename FLOAT_TYPE>
+FLOAT_TYPE
+Scale::NormalizedToMelInv(FLOAT_TYPE x,
+                          FLOAT_TYPE minFreq,
+                          FLOAT_TYPE maxFreq)
+{
+    FLOAT_TYPE minMel = MelScale::HzToMel(minFreq);
+    FLOAT_TYPE maxMel = MelScale::HzToMel(maxFreq);
+    
+    x = x*(maxMel - minMel) + minMel;
+    
+    x = MelScale::MelToHz(x);
+    
+    x = (x - minFreq)/(maxFreq - minFreq);
+    
+    return x;
+}
+template float Scale::NormalizedToMelInv(float value,
+                                         float minFreq, float maxFreq);
+template double Scale::NormalizedToMelInv(double value,
+                                          double minFreq, double maxFreq);
 
 template <typename FLOAT_TYPE>
 void

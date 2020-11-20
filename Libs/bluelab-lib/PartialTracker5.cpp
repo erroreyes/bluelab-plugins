@@ -220,12 +220,18 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     // Scale
     mScale = new Scale();
     
+    //
+    
     //mXScale = Scale::LINEAR;
     //mXScale = Scale::MEL;
     mXScale = Scale::MEL_FILTER;
     
     //mYScale = Scale::LINEAR;
     mYScale = Scale::DB;
+    
+    //
+    mXScaleInv = Scale::MEL_INV;
+    
     
     mTimeSmoothCoeff = 0.5;
     
@@ -2205,6 +2211,29 @@ PartialTracker5::TimeSmoothNoise(WDL_TypedBuf<BL_FLOAT> *noise)
 }
 
 void
+PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
+{
+    BL_FLOAT hzPerBin =  mSampleRate/mBufferSize;
+    
+    for (int i = 0; i < partials->size(); i++)
+    {
+        PartialTracker5::Partial &partial = (*partials)[i];
+        
+        // Reverse Mel
+        BL_FLOAT freq = partial.mFreq;
+        freq = Scale::ApplyScale(mXScaleInv, freq, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+        partial.mFreq = freq;
+        
+        // Comvert to real freqs
+        partial.mFreq *= mSampleRate*0.5;
+        
+        // Reverse AWeighting
+        int binNum = partial.mFreq/hzPerBin;
+        partial.mAmp = ProcessAWeighting(binNum, mBufferSize*0.5, partial.mAmp, false);
+    }
+}
+
+void
 PartialTracker5::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
                                       bool reverse)
 {
@@ -2241,4 +2270,40 @@ PartialTracker5::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
         
         magns->Get()[i] = normDbMagn;
     }
+}
+
+BL_FLOAT
+PartialTracker5::ProcessAWeighting(int binNum, int numBins,
+                                   BL_FLOAT magn, bool reverse)
+{
+    // Input magn is in normalized dB
+    
+    BL_FLOAT hzPerBin = 0.5*mSampleRate/numBins;
+    
+    // W-Weighting property: 0dB at 1000Hz!
+    BL_FLOAT zeroDbFreq = 1000.0;
+    int zeroDbBin = zeroDbFreq/hzPerBin;
+    
+    if (binNum <= zeroDbBin)
+        // Do nothing
+        return magn;
+    
+    BL_FLOAT a = AWeighting::ComputeAWeights(binNum, numBins, mSampleRate);
+    
+    BL_FLOAT normDbMagn = magn;
+    BL_FLOAT dbMagn = (1.0 - normDbMagn)*MIN_AMP_DB;
+        
+    if (reverse)
+        dbMagn -= a;
+    else
+        dbMagn += a;
+        
+    normDbMagn = 1.0 - dbMagn/MIN_AMP_DB;
+        
+    if (normDbMagn < 0.0)
+        normDbMagn = 0.0;
+    if (normDbMagn > 1.0)
+        normDbMagn = 1.0;
+        
+    return normDbMagn;
 }

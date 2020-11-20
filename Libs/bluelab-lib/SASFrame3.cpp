@@ -62,7 +62,7 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 #define COMPUTE_SAS_SAMPLES_TABLE    0 // Perf gain ~x10 compared to COMPUTE_SAS_SAMPLES (with nearest + block buffers)
 #define COMPUTE_SAS_SAMPLES_OVERLAP  0 // not very efficient (and sound is not good
 
-#define DBG_DISABLE_WARPING 1
+#define DBG_DISABLE_WARPING 0 //1
 
 // Get nearest color value, or interpolate ?
 //
@@ -182,7 +182,8 @@ SASFrame3::SetPartials(const vector<PartialTracker5::Partial> &partials)
     // FIX: sorting by freq avoids big jumps in computed frequency when
     // id of a given partial changes.
     // (at least when the id of the first partial).
-    sort(mPartials.begin(), mPartials.end(), PartialTracker5::Partial::FreqLess);
+    sort(mPartials.begin(), mPartials.end(),
+         PartialTracker5::Partial::FreqLess);
     
     mAmplitude = 0.0;
     mFrequency = 0.0;
@@ -1656,7 +1657,6 @@ SASFrame3::ComputeAmplitude()
     {
         const PartialTracker5::Partial &p = mPartials[i];
         
-        //BL_FLOAT amp = p.mAmp;
         BL_FLOAT amp = p.mAmp;
         amplitude += amp;
     }

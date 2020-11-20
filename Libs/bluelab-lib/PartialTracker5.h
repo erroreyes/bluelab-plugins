@@ -140,6 +140,8 @@ public:
     
     void SetTimeSmoothNoiseCoeff(BL_FLOAT coeff);
     
+    void DenormPartials(vector<PartialTracker5::Partial> *partials);
+    
 protected:
     // Pre process
     //
@@ -152,6 +154,9 @@ protected:
     // Apply A-Weighting, so the peaks at highest frequencies will not be small
     void PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns, bool reverse = false);
     
+    BL_FLOAT ProcessAWeighting(int binNum, int numBins,
+                               BL_FLOAT magn, bool reverse);
+
     
     // Get the partials which are alive
     // (this avoid getting garbage partials that would never be associated)
@@ -350,6 +355,8 @@ protected:
     Scale *mScale;
     Scale::Type mXScale;
     Scale::Type mYScale;
+    
+    Scale::Type mXScaleInv;
     
     // Time smooth noise
     BL_FLOAT mTimeSmoothNoiseCoeff;

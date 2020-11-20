@@ -14,13 +14,15 @@ using namespace std;
 
 #include "PartialTWMEstimate3.h"
 
-#define MIN_DB -120.0
+//#define MIN_DB -120.0
 
 #define MIN_FREQ_FIND_F0 50.0
 #define MAX_FREQ_FIND_F0 10000.0
 
 // Estimate and return all the errors and frequencies ?
-#define ESTIMATE_MULTI 1
+#define ESTIMATE_NAIVE  1 // 0 // TEST
+#define ESTIMATE_SIMPLE 0
+#define ESTIMATE_MULTI  0 //1 // ORIGIN
 
 // Limit the number of partials
 //
@@ -137,11 +139,15 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials)
     
     BL_FLOAT error = 0.0;
     BL_FLOAT result = 0.0;
-    
-#if !ESTIMATE_MULTI
+
+#if ESTIMATE_NAIVE
+    result = EstimateNaive(partials0);
+#endif
+#if ESTIMATE_SIMPLE
     // By default, estimate with 1Hz precision
     result = Estimate(partials0, 1.0, minFreqSearch, maxFreqSearch, maxFreqHarmo, &error);
-#else
+#endif
+#if ESTIMATE_MULTI
     vector<Freq> freqs;
     EstimateMulti(partials0, 1.0, minFreqSearch, maxFreqSearch,
                   maxFreqHarmo, &freqs);
@@ -370,6 +376,15 @@ PartialTWMEstimate3::EstimateOptim2(const vector<PartialTracker5::Partial> &part
 }
 
 BL_FLOAT
+PartialTWMEstimate3::EstimateNaive(const vector<PartialTracker5::Partial> &partials)
+{
+    if (partials.empty())
+        return 0.0;
+    
+    return partials[0].mFreq;
+}
+
+BL_FLOAT
 PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
                               BL_FLOAT freqAccuracy,
                               BL_FLOAT minFreqSearch, BL_FLOAT maxFreqSearch,
@@ -451,16 +466,18 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
     while(testFreq < maxFreqSearch)
     {
 #if !OPTIM_FIND_NEAREST && !OPTIM_FIND_NEAREST_PRECOMP_COEFFS
-        BL_FLOAT err = ComputeTWMError(partials0, testFreq, maxFreqHarmo, AmaxInv);
+        BL_FLOAT err = ComputeTWMError(partials0, testFreq,
+                                       maxFreqHarmo, AmaxInv);
 #endif
         
 #if OPTIM_FIND_NEAREST
-        BL_FLOAT err = ComputeTWMError2(partials0, partialFreqs, testFreq, maxFreqHarmo, AmaxInv);
+        BL_FLOAT err = ComputeTWMError2(partials0, partialFreqs,
+                                        testFreq, maxFreqHarmo, AmaxInv);
 #endif
         
 #if OPTIM_FIND_NEAREST_PRECOMP_COEFFS
         BL_FLOAT err = ComputeTWMError3(partials0, partialFreqs, testFreq,
-                                      maxFreqHarmo, aNorms, fkps);
+                                        maxFreqHarmo, aNorms, fkps);
 #endif
 
         if (err < minError)

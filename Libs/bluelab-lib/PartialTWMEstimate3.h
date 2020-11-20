@@ -42,6 +42,9 @@ public:
     
     void SetHarmonicSoundFlag(bool flag);
     
+    // Naive implementation, just for testing
+    BL_FLOAT EstimateNaive(const vector<PartialTracker5::Partial> &partials);
+    
     // Estimate the fundamental frequency from a series of partials
     BL_FLOAT Estimate(const vector<PartialTracker5::Partial> &partials);
     

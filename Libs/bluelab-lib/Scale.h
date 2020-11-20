@@ -23,7 +23,8 @@ public:
         LOG,
         LOG_FACTOR,
         MEL, // Quick Mel
-        MEL_FILTER // Mel with real filters
+        MEL_FILTER, // Mel with real filters,
+        MEL_INV
     };
     
     Scale();
@@ -68,6 +69,11 @@ protected:
     static FLOAT_TYPE NormalizedToMel(FLOAT_TYPE x,
                                       FLOAT_TYPE minFreq,
                                       FLOAT_TYPE maxFreq);
+    
+    template <typename FLOAT_TYPE>
+    static FLOAT_TYPE NormalizedToMelInv(FLOAT_TYPE x,
+                                         FLOAT_TYPE minFreq,
+                                         FLOAT_TYPE maxFreq);
     
     template <typename FLOAT_TYPE>
     static void DataToMel(WDL_TypedBuf<FLOAT_TYPE> *values,

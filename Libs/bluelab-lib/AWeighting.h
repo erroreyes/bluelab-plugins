@@ -24,7 +24,10 @@ public:
     // numBins is fftSize/2 !
     // See: http://support.ircam.fr/docs/AudioSculpt/3.0/co/FFT%20Size.html
     //
-    static void ComputeAWeights(WDL_TypedBuf<BL_FLOAT> *result, int numBins, BL_FLOAT sampleRate);
+    static void ComputeAWeights(WDL_TypedBuf<BL_FLOAT> *result,
+                                int numBins, BL_FLOAT sampleRate);
+    
+    static BL_FLOAT ComputeAWeights(int binNum, int numBins, BL_FLOAT sampleRate);
     
 protected:
     static BL_FLOAT ComputeR(BL_FLOAT frequency);
