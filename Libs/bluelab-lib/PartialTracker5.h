@@ -111,6 +111,8 @@ public:
     
     void Reset(int bufferSize, BL_FLOAT sampleRate);
     
+    BL_FLOAT GetMinAmpDB();
+    
     void SetThreshold(BL_FLOAT threshold);
     
     void SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -142,8 +144,11 @@ public:
     
     void DenormPartials(vector<PartialTracker5::Partial> *partials);
     
-    // For processing color for example, just before display
-    void PreProcessData(WDL_TypedBuf<BL_FLOAT> *data);
+    // For processing result warping for example
+    void PreProcessDataX(WDL_TypedBuf<BL_FLOAT> *data);
+    
+    // For processing result color for example, just before display
+    void PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data);
     
 protected:
     // Pre process

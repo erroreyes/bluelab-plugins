@@ -278,6 +278,12 @@ PartialTracker5::Reset(int bufferSize, BL_FLOAT sampleRate)
     Reset();
 }
 
+BL_FLOAT
+PartialTracker5::GetMinAmpDB()
+{
+    return MIN_AMP_DB;
+}
+
 void
 PartialTracker5::SetThreshold(BL_FLOAT threshold)
 {
@@ -2121,7 +2127,14 @@ PartialTracker5::GetDeltaFreqCoeff(int binNum)
 }
 
 void
-PartialTracker5::PreProcessData(WDL_TypedBuf<BL_FLOAT> *data)
+PartialTracker5::PreProcessDataX(WDL_TypedBuf<BL_FLOAT> *data)
+{
+    // X
+    mScale->ApplyScale(mXScale, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+}
+
+void
+PartialTracker5::PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data)
 {
     // Y
     for (int i = 0; i < data->GetSize(); i++)
@@ -2134,8 +2147,7 @@ PartialTracker5::PreProcessData(WDL_TypedBuf<BL_FLOAT> *data)
     // Better tracking on high frequencies with this!
     PreProcessAWeighting(data, true);
     
-    // X
-    mScale->ApplyScale(mXScale, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    PreProcessDataX(data);
 }
 
 void
@@ -2148,7 +2160,7 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
     BLUtils::ComputeSquare(magns);
 #endif
     
-    PreProcessData(magns);
+    PreProcessDataXY(magns);
     
     // Phases
     mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));

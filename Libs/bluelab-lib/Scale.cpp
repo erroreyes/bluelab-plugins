@@ -57,6 +57,10 @@ Scale::ApplyScale(Type scaleType,
     {
         x = NormalizedToMelInv(x, minValue, maxValue);
     }
+    else if (scaleType == DB_INV)
+    {
+        x = NormalizedToDBInv(x, minValue, maxValue);
+    }
     
     return x;
 }

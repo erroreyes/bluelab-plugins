@@ -22,6 +22,8 @@
 
 #include <BLUtils.h>
 
+#include <Scale.h>
+
 #include "SASFrame3.h"
 
 
@@ -73,6 +75,20 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 // Optim: 35 => 15/32ms (~25%)
 #define OPTIM_COLOR_INTERP 1
 
+// If a partial is missing, fill with zeroes around it
+//
+// At 0: low single partial => interpolated until the last frequencies
+// Real signal => more smooth
+//
+// At 1: low single partial => interpolated locally, far frequencies set to 0
+// Real signal: make some strange peaks at mid/high freqs
+//
+//#define COLOR_CUT_MISSING_PARTIALS 1 // ORIGIN
+#define COLOR_CUT_MISSING_PARTIALS 0 //1
+
+// Interpolate partials to color in DB
+// Better, for example with a single sine wave, at low freq
+#define COLOR_DB_INTERP 1
 
 SASFrame3::SASPartial::SASPartial()
 {
@@ -129,6 +145,8 @@ SASFrame3::SASFrame3(int bufferSize, BL_FLOAT sampleRate, int overlapping)
     mTableSynth = new WavetableSynth(bufferSize, overlapping,
                                      sampleRate, 1, minFreq);
 #endif
+    
+    mMinAmpDB = -120.0;
 }
 
 SASFrame3::~SASFrame3()
@@ -165,6 +183,12 @@ SASFrame3::Reset(BL_FLOAT sampleRate)
 #if COMPUTE_SAS_SAMPLES_TABLE
     mTableSynth->Reset(sampleRate);
 #endif
+}
+
+void
+SASFrame3::SetMinAmpDB(BL_FLOAT ampDB)
+{
+    mMinAmpDB = ampDB;
 }
 
 void
@@ -1720,13 +1744,17 @@ SASFrame3::ComputeColorAux()
         // TODO: make an interpolation, it is not so good to align to bins
         idx = bl_round(idx);
         
-        //BL_FLOAT amp = p.mAmp;
         BL_FLOAT amp = p.mAmp;
+        
+#if COLOR_DB_INTERP
+        amp = Scale::ApplyScale(Scale::DB, amp, mMinAmpDB, (BL_FLOAT)0.0);
+#endif
         
         if (((int)idx >= 0) && ((int)idx < mColor.GetSize()))
             mColor.Get()[(int)idx] = amp;
     }
     
+#if COLOR_CUT_MISSING_PARTIALS
     // Put some zeros when partials are missing
     BL_FLOAT freq = mFrequency;
     while(freq < mSampleRate/2.0)
@@ -1742,10 +1770,22 @@ SASFrame3::ComputeColorAux()
         
         freq += mFrequency;
     }
+#endif
     
     // Fill al the other value
     bool extendBounds = false;
     BLUtils::FillMissingValues(&mColor, extendBounds, undefinedValue);
+    
+#if COLOR_DB_INTERP
+    for (int i = 0; i < mColor.GetSize(); i++)
+    {
+        BL_FLOAT c = mColor.Get()[i];
+        
+        c = Scale::ApplyScale(Scale::DB_INV, c, mMinAmpDB, (BL_FLOAT)0.0);
+     
+        mColor.Get()[i] = c;
+    }
+#endif
     
     // Normalize the color
     BL_FLOAT amplitude = mAmplitude;

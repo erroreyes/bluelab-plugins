@@ -39,7 +39,11 @@ SASViewerProcess2::SASViewerProcess2(int bufferSize,
     mSASViewerRender = NULL;
     
     mPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
+    
+    BL_FLOAT minAmpDB = mPartialTracker->GetMinAmpDB();
+    
     mSASFrame = new SASFrame3(bufferSize, sampleRate, overlapping);
+    mSASFrame->SetMinAmpDB(minAmpDB);
     
     mThreshold = -60.0;
     mHarmonicFlag = false;
@@ -489,7 +493,7 @@ SASViewerProcess2::DisplayNoise()
 void
 SASViewerProcess2::DisplayAmplitude()
 {
-#define AMP_Y_COEFF 0.05
+#define AMP_Y_COEFF 10.0 //20.0 //1.0
     
     BL_FLOAT amp = mSASFrame->GetAmplitude();
     
@@ -546,6 +550,9 @@ SASViewerProcess2::DisplayColor()
     
     BLUtils::MultValues(&color, amplitude);
     
+    if (mPartialTracker != NULL)
+        mPartialTracker->PreProcessDataXY(&color);
+    
     if (mSASViewerRender != NULL)
     {
         mSASViewerRender->AddData(COLOR, color);
@@ -558,13 +565,17 @@ SASViewerProcess2::DisplayColor()
 void
 SASViewerProcess2::DisplayWarping()
 {
+#define WARPING_COEFF 1.0
+    
     WDL_TypedBuf<BL_FLOAT> warping;
     mSASFrame->GetNormWarping(&warping);
     
+    if (mPartialTracker != NULL)
+        mPartialTracker->PreProcessDataX(&warping);
+    
     BLUtils::AddValues(&warping, (BL_FLOAT)-1.0);
     
-#define COEFF 4.0
-    BLUtils::MultValues(&warping, (BL_FLOAT)COEFF);
+    BLUtils::MultValues(&warping, (BL_FLOAT)WARPING_COEFF);
     
     if (mSASViewerRender != NULL)
     {

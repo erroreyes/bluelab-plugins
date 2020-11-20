@@ -56,6 +56,8 @@ public:
     
     void Reset(BL_FLOAT sampleRate);
     
+    void SetMinAmpDB(BL_FLOAT ampDB);
+    
     void SetSynthMode(enum SynthMode mode);
     
     // De-normalized partials
@@ -193,6 +195,8 @@ protected:
     
     // For sample synth with table
     WavetableSynth *mTableSynth;
+    
+    BL_FLOAT mMinAmpDB;
 };
 
 #endif /* defined(__BL_SASViewer__SASFrame3__) */
