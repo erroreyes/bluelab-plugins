@@ -53,7 +53,7 @@ Scale::ApplyScale(Type scaleType,
     {
         x = NormalizedToMel(x, minValue, maxValue);
     }
-    else if (scaleType == MEL_INV)
+    else if ((scaleType == MEL_INV) || (scaleType == MEL_FILTER_INV))
     {
         x = NormalizedToMelInv(x, minValue, maxValue);
     }
@@ -84,6 +84,10 @@ Scale::ApplyScale(Type scaleType,
     else if (scaleType == MEL_FILTER)
     {
         DataToMelFilter(values, minValue, maxValue);
+    }
+    else if (scaleType == MEL_FILTER_INV)
+    {
+        DataToMelFilterInv(values, minValue, maxValue);
     }
 }
 // TMP HACK
@@ -324,3 +328,22 @@ Scale::DataToMelFilter(WDL_TypedBuf<FLOAT_TYPE> *values,
 //                                     double minFreq, double maxFreq);
 template void Scale::DataToMelFilter(WDL_TypedBuf<BL_FLOAT> *values,
                                      BL_FLOAT minFreq, BL_FLOAT maxFreq);
+
+template <typename FLOAT_TYPE>
+void
+Scale::DataToMelFilterInv(WDL_TypedBuf<FLOAT_TYPE> *values,
+                          FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq)
+{
+    int numFilters = values->GetSize();
+    WDL_TypedBuf<FLOAT_TYPE> result;
+    mMelScale->MelToHzFilter(&result, *values, (FLOAT_TYPE)(maxFreq*2.0), numFilters);
+    
+    *values = result;
+}
+// TMP HACK
+//template void Scale::DataToMelFilterInv(WDL_TypedBuf<float> *values,
+//                                        float minFreq, float maxFreq);
+//template void Scale::DataToMelFilterInv(WDL_TypedBuf<double> *values,
+//                                        double minFreq, double maxFreq);
+template void Scale::DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
+                                        BL_FLOAT minFreq, BL_FLOAT maxFreq);

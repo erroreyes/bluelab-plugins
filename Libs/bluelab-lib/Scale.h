@@ -25,6 +25,7 @@ public:
         MEL, // Quick Mel
         MEL_FILTER, // Mel with real filters,
         MEL_INV,
+        MEL_FILTER_INV,
         DB_INV
     };
     
@@ -86,6 +87,10 @@ protected:
     template <typename FLOAT_TYPE>
     void DataToMelFilter(WDL_TypedBuf<FLOAT_TYPE> *values,
                          FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
+    
+    template <typename FLOAT_TYPE>
+    void DataToMelFilterInv(WDL_TypedBuf<FLOAT_TYPE> *values,
+                            FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
     
     //
     // Must keep the object, for precomputed filter bank

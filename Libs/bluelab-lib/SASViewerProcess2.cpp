@@ -25,6 +25,10 @@
 #define SHOW_ONLY_ALIVE 0 //1
 #define MIN_AGE_DISPLAY 0 //10 // 4
 
+// 1: more smooth
+// 0: should be more correct
+#define DISPLAY_HARMO_SUBSTRACT 1
+
 SASViewerProcess2::SASViewerProcess2(int bufferSize,
                                      BL_FLOAT overlapping, BL_FLOAT oversampling,
                                      BL_FLOAT sampleRate)
@@ -108,6 +112,9 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     if (mPartialTracker != NULL)
         mPartialTracker->GetPreProcessedData(&mCurrentMagns);
     
+    // Silence
+    BLUtils::FillAllZero(&magns);
+    
     if (mPartialTracker != NULL)
     {
         vector<PartialTracker5::Partial> normPartials;
@@ -125,10 +132,17 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
         mSASFrame->SetPartials(partials);
         
-        if (mEnableOutNoise)
-            mPartialTracker->GetNoiseEnvelope(&magns);
+        WDL_TypedBuf<BL_FLOAT> noise;
+        mPartialTracker->GetNoiseEnvelope(&noise);
         
-        mSASFrame->SetNoiseEnvelope(magns);
+        mSASFrame->SetNoiseEnvelope(noise);
+        
+        if (mEnableOutNoise)
+        {
+            mPartialTracker->DenormData(&noise);
+            
+            magns = noise;
+        }
         
         Display();
     }
@@ -141,7 +155,7 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 
 void
 SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                                       WDL_TypedBuf<BL_FLOAT> *scBuffer)
+                                        WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
     if (!mSASFrame->ComputeSamplesFlag())
         return;
@@ -159,6 +173,12 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     
     // Compute the samples from partials
     mSASFrame->ComputeSamples(&samplesBuffer);
+    
+    if (mEnableOutHarmo)
+    {
+        // ioBuffer may already contain noise
+        BLUtils::AddValues(ioBuffer, samplesBuffer);
+    }
 #endif
 }
 
@@ -166,7 +186,7 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
 // (without overlap in internal)
 void
 SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                                          const WDL_TypedBuf<BL_FLOAT> *scBuffer)
+                                           const WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
     if (!mSASFrame->ComputeSamplesWinFlag())
         return;
@@ -184,6 +204,12 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     
     // Compute the samples from partials
     mSASFrame->ComputeSamplesWin(&samplesBuffer);
+    
+    if (mEnableOutHarmo)
+    {
+        // ioBuffer may already contain noise
+        BLUtils::AddValues(ioBuffer, samplesBuffer);
+    }
 #endif
 }
 
@@ -460,11 +486,20 @@ SASViewerProcess2::DisplayTracking()
 void
 SASViewerProcess2::DisplayHarmo()
 {
+#if DISPLAY_HARMO_SUBSTRACT 
+    // More smooth
     WDL_TypedBuf<BL_FLOAT> noise;
     mSASFrame->GetNoiseEnvelope(&noise);
     
     WDL_TypedBuf<BL_FLOAT> harmo = mCurrentMagns;
     BLUtils::SubstractValues(&harmo, noise);
+    
+    BLUtils::ClipMin(&harmo, (BL_FLOAT)0.0);
+#else  
+    // Should be more correct
+    WDL_TypedBuf<BL_FLOAT> harmo;
+    mPartialTracker->GetHarmonicEnvelope(&harmo);
+#endif
     
     if (mSASViewerRender != NULL)
     {
@@ -479,7 +514,8 @@ void
 SASViewerProcess2::DisplayNoise()
 {
     WDL_TypedBuf<BL_FLOAT> noise;
-    mSASFrame->GetNoiseEnvelope(&noise);
+    //mSASFrame->GetNoiseEnvelope(&noise);
+    mPartialTracker->GetNoiseEnvelope(&noise);
     
     if (mSASViewerRender != NULL)
     {

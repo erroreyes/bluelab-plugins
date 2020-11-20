@@ -142,13 +142,14 @@ public:
     
     void SetTimeSmoothNoiseCoeff(BL_FLOAT coeff);
     
-    void DenormPartials(vector<PartialTracker5::Partial> *partials);
-    
     // For processing result warping for example
     void PreProcessDataX(WDL_TypedBuf<BL_FLOAT> *data);
     
     // For processing result color for example, just before display
     void PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data);
+    
+    void DenormPartials(vector<PartialTracker5::Partial> *partials);
+    void DenormData(WDL_TypedBuf<BL_FLOAT> *data);
     
 protected:
     // Pre process

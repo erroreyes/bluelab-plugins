@@ -230,7 +230,7 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     mYScale = Scale::DB;
     
     //
-    mXScaleInv = Scale::MEL_INV;
+    mXScaleInv = Scale::MEL_FILTER_INV;
     mYScaleInv = Scale::DB_INV;
     
     mTimeSmoothCoeff = 0.5;
@@ -2250,6 +2250,24 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
         // Y
         partial.mAmp = Scale::ApplyScale(mYScaleInv, partial.mAmp,
                                          (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+    }
+}
+
+void
+PartialTracker5::DenormData(WDL_TypedBuf<BL_FLOAT> *data)
+{
+    // X
+    mScale->ApplyScale(mXScaleInv, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    
+    // A-Weighting
+    PreProcessAWeighting(data, false);
+    
+    // Y
+    for (int i = 0; i < data->GetSize(); i++)
+    {
+        BL_FLOAT d = data->Get()[i];
+        d = Scale::ApplyScale(mYScaleInv, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        data->Get()[i] = d;
     }
 }
 

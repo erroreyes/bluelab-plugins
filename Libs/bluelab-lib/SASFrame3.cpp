@@ -324,7 +324,6 @@ SASFrame3::ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples)
 #if COMPUTE_SAS_SAMPLES_OVERLAP
     ComputeSamplesSASOverlap(samples);
 #endif
-
 }
 
 // Directly use partials provided

@@ -499,7 +499,8 @@ public:
                           const WDL_TypedBuf<WDL_FFT_COMPLEX> &addBuf);
     
     template <typename FLOAT_TYPE>
-    static void SubstractValues(WDL_TypedBuf<FLOAT_TYPE> *ioBuf, const WDL_TypedBuf<FLOAT_TYPE> &subBuf);
+    static void SubstractValues(WDL_TypedBuf<FLOAT_TYPE> *ioBuf,
+                                const WDL_TypedBuf<FLOAT_TYPE> &subBuf);
     
     static void SubstractValues(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuf,
                                 const WDL_TypedBuf<WDL_FFT_COMPLEX> &subBuf);
