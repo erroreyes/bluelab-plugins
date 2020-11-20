@@ -332,9 +332,8 @@ SASFrame3::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
             GetPartial(&partial, i, partialT);
             
             BL_FLOAT freq = partial.mFreq;
-            
-            //BL_FLOAT amp = partial.mAmp;
             BL_FLOAT amp = partial.mAmp;
+            
             BL_FLOAT samp = amp*std::sin(phase); // cos
             
             samp *= SYNTH_AMP_COEFF;
@@ -412,9 +411,6 @@ SASFrame3::ComputeSamplesSAS(WDL_TypedBuf<BL_FLOAT> *samples)
                 BL_FLOAT amp = partial.mAmp*col;
                 
                 BL_FLOAT samp = std::sin(phase); // cos
-                
-                //BL_FLOAT samp;
-                //SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
                 
                 samp *= amp;
                 
@@ -563,7 +559,6 @@ SASFrame3::ComputeSamplesSAS2(WDL_TypedBuf<BL_FLOAT> *samples)
                 
                 freq *= w;
             
-                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
                 
@@ -717,7 +712,6 @@ SASFrame3::ComputeSamplesSAS3(WDL_TypedBuf<BL_FLOAT> *samples)
                     col = (1.0 - t)*col0 + t*col1;
                 }
                 
-                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
                 
@@ -869,7 +863,6 @@ SASFrame3::ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples)
                     col = (1.0 - t)*col0 + t*col1;
                 }
             
-                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
                 
@@ -916,10 +909,10 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
     {
         mSASPartials.resize(SYNTH_MAX_NUM_PARTIALS);
     }
+    
     if (mPrevSASPartials.empty())
         mPrevSASPartials = mSASPartials;
     
-    // TEST
     if (mPrevColor.GetSize() != mColor.GetSize())
         mPrevColor = mColor;
     
@@ -1048,7 +1041,6 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
                 BL_FLOAT col = (1.0 - t)*col0 + t*col1;
 #endif
                 
-                //BL_FLOAT samp = std::sin(phase);
                 BL_FLOAT samp;
                 SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
                 
@@ -1148,10 +1140,6 @@ SASFrame3::ComputeSamplesSASOverlap(WDL_TypedBuf<BL_FLOAT> *samples)
                 BL_FLOAT amp = partial.mAmp;
                 
                 BL_FLOAT samp = std::sin(phase);
-                
-                // WORKS !
-                //BL_FLOAT samp;
-                //SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
                 
                 samp *= amp;
                 samp *= SYNTH_AMP_COEFF;
@@ -1447,7 +1435,6 @@ SASFrame3::ComputeSamplesSASTable(WDL_TypedBuf<BL_FLOAT> *samples)
             BL_FLOAT col = ApplyColor(freq);
             amp *= col;
             
-            // !
             amp *= SYNTH_AMP_COEFF;
             
             // Phase
@@ -1871,7 +1858,7 @@ SASFrame3::ApplyNormWarping(BL_FLOAT freq)
     
     BL_FLOAT w = mNormWarping.Get()[(int)idx];
     
-    BL_FLOAT result = freq*w; // freq/W ??
+    BL_FLOAT result = freq*w;
     
     return result;
 }
@@ -1899,11 +1886,8 @@ SASFrame3::ApplyNormWarping(BL_FLOAT freq, BL_FLOAT t)
 #endif
     
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    
-    //int idx = freq/hzPerBin;
     BL_FLOAT idx = freq/hzPerBin;
     idx = bl_round(idx);
-    
     if (idx > mNormWarping.GetSize())
         return freq;
     
@@ -1912,7 +1896,7 @@ SASFrame3::ApplyNormWarping(BL_FLOAT freq, BL_FLOAT t)
     
     BL_FLOAT w = (1.0 - t)*w0 + t*w1;
     
-    BL_FLOAT result = freq*w; // freq/W ??
+    BL_FLOAT result = freq*w;
     
     return result;
 }
@@ -1921,9 +1905,7 @@ BL_FLOAT
 SASFrame3::ApplyColor(BL_FLOAT freq, BL_FLOAT t)
 {
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    
     int idx = freq/hzPerBin;
-    
     if (idx > mColor.GetSize())
         return 0.0;
     
@@ -1982,10 +1964,7 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
             if (t0 <= 1.0)
             {
                 // Interpolate in amp
-                //BL_FLOAT amp = (1.0 - t0)*prevPartial.mAmp;
                 BL_FLOAT amp = (1.0 - t0)*prevPartial.mAmp;
-                //BL_FLOAT amp = amp;
-                //result->mAmp = amp;
                 result->mAmp = amp;
             }
         }
@@ -2004,9 +1983,6 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
             {
                 result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
                 
-                //BL_FLOAT amp = (1.0 - t)*prevPartial.mAmp +
-                //        t*currentPartial.mAmp;
-                //result->mAmp = amp;
                 BL_FLOAT amp = (1.0 - t)*prevPartial.mAmp + t*currentPartial.mAmp;
                 result->mAmp = amp;
             }
@@ -2022,9 +1998,7 @@ SASFrame3::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
             BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
             if (t0 > 1.0)
                 t0 = 1.0;
-                
-            //BL_FLOAT amp = t0*currentPartial.mAmp;
-            //result->mAmp = amp;
+            
             BL_FLOAT amp = t0*currentPartial.mAmp;
             result->mAmp = amp;
         }

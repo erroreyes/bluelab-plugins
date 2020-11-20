@@ -516,7 +516,7 @@ PartialTracker5::ProcessMusicalNoise(WDL_TypedBuf<BL_FLOAT> *noise)
     {
         BL_FLOAT val = noise->Get()[startIdx];
         if (val < MUS_NOISE_EPS)
-            // Zero
+        // Zero
         {
             break;
         }
@@ -623,7 +623,7 @@ PartialTracker5::ThresholdNoiseIsles(WDL_TypedBuf<BL_FLOAT> *noise)
     {
         BL_FLOAT val = noise->Get()[startIdx];
         if (val < ISLE_THRS_EPS)
-            // Zero
+        // Zero
         {
             break;
         }
@@ -641,7 +641,7 @@ PartialTracker5::ThresholdNoiseIsles(WDL_TypedBuf<BL_FLOAT> *noise)
         {
             BL_FLOAT val = noise->Get()[startIdxIsle];
             if (val > ISLE_THRS_EPS)
-                // One
+            // One
             {
                 // Start of isle found
                 break;
@@ -656,7 +656,7 @@ PartialTracker5::ThresholdNoiseIsles(WDL_TypedBuf<BL_FLOAT> *noise)
         {
             BL_FLOAT val = noise->Get()[endIdxIsle];
             if (val < ISLE_THRS_EPS)
-                // Zero
+            // Zero
             {
                 // End of isle found
                 
@@ -997,7 +997,7 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
     while(currentIndex < maxDetectIndex)
     {
         if ((currentVal > prevVal) && (currentVal >= nextVal))
-            // Maximum found
+        // Maximum found
         {
             if (currentIndex - 1 >= 0)
             {
@@ -1073,7 +1073,7 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                 int peakIndex = currentIndex;
                 
                 if ((peakIndex < 0) || (peakIndex >= maxDetectIndex))
-                    // Out of bounds
+                // Out of bounds
                     continue;
                 
                 bool discard = false;
@@ -1454,8 +1454,6 @@ PartialTracker5::ThresholdPartialsPeakHeight(vector<Partial> *partials)
         
         // Threshold
         //
-        
-        //BL_FLOAT thrsNorm = -(MIN_AMP_DB - mThreshold)/(-MIN_AMP_DB);
         
         int binNum = partial.mFreq*mBufferSize*0.5;
         BL_FLOAT thrsNorm = GetThreshold(binNum);

@@ -26,8 +26,8 @@
 #define MEL_COEFF 4.0
 
 SASViewerRender2::SASViewerRender2(SASViewerPluginInterface *plug,
-                                 GraphControl12 *graphControl,
-                                 BL_FLOAT sampleRate, int bufferSize)
+                                   GraphControl12 *graphControl,
+                                   BL_FLOAT sampleRate, int bufferSize)
 {
     mPlug = plug;
     

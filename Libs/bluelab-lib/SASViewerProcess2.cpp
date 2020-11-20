@@ -192,31 +192,6 @@ SASViewerProcess2::SetSASViewerRender(SASViewerRender2 *sasViewerRender)
 void
 SASViewerProcess2::SetMode(Mode mode)
 {
-#if 0
-    if (mode != mMode)
-    {
-        mMode = mode;
-    
-        // Clear the previous data
-        //if (mSASViewerRender != NULL)
-        //    mSASViewerRender->Clear();
-    
-        mPartialsPoints.clear();
-        mPartialLines.clear();
-        
-        // Try to avoid remaining blue lines when quitting
-        // tracking mode and returning to it
-        mPartialTracker->ClearResult();
-        
-        //if (mSASViewerRender != NULL)
-        //    mSASViewerRender->ClearAdditionalLines();
-        
-        mCurrentMagns.Resize(0);
-        
-        Display();
-    }
-#endif
-    
     if (mSASViewerRender != NULL)
         mSASViewerRender->SetMode(mode);
 }
@@ -292,44 +267,6 @@ SASViewerProcess2::SetTimeSmoothNoiseCoeff(BL_FLOAT coeff)
 void
 SASViewerProcess2::Display()
 {
-#if 0
-    if (mMode == TRACKING)
-    {
-        DisplayTracking();
-    }
-    
-    if (mMode == HARMO)
-    {
-        DisplayHarmo();
-    }
-    
-    if (mMode == NOISE)
-    {
-        DisplayNoise();
-    }
-    
-    if (mMode == AMPLITUDE)
-    {
-        DisplayAmplitude();
-    }
-    
-    if (mMode == FREQUENCY)
-    {
-        DisplayFrequency();
-    }
-    
-    if (mMode == COLOR)
-    {
-        DisplayColor();
-    }
-    
-    if (mMode == WARPING)
-    {
-        DisplayWarping();
-    }
-#endif
-    
-#if 1
     DisplayTracking();
     
     DisplayHarmo();
@@ -343,7 +280,6 @@ SASViewerProcess2::Display()
     DisplayColor();
     
     DisplayWarping();
-#endif
 }
 
 void
@@ -606,11 +542,7 @@ SASViewerProcess2::DisplayColor()
     WDL_TypedBuf<BL_FLOAT> color;
     mSASFrame->GetColor(&color);
     
-    //ScaleMagns(&color);
-    
     BL_FLOAT amplitude = mSASFrame->GetAmplitude();
-    
-    //BL_FLOAT amplitude = DBToAmp(amplitudeDB);
     
     BLUtils::MultValues(&color, amplitude);
     
@@ -628,8 +560,6 @@ SASViewerProcess2::DisplayWarping()
 {
     WDL_TypedBuf<BL_FLOAT> warping;
     mSASFrame->GetNormWarping(&warping);
-    
-    //ScaleMagns(&warping);
     
     BLUtils::AddValues(&warping, (BL_FLOAT)-1.0);
     

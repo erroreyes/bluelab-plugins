@@ -14,8 +14,6 @@ using namespace std;
 
 #include "PartialTWMEstimate3.h"
 
-//#define MIN_DB -120.0
-
 #define MIN_FREQ_FIND_F0 50.0
 #define MAX_FREQ_FIND_F0 10000.0
 
@@ -247,7 +245,6 @@ PartialTWMEstimate3::EstimateOptim(const vector<PartialTracker5::Partial> &parti
     }
     
     // Compute max amplitude
-    //BL_FLOAT AmaxDB = MIN_DB;
     BL_FLOAT Amax = -BL_INF;
     for (int i = 0; i < partials0.size(); i++)
     {
@@ -255,8 +252,6 @@ PartialTWMEstimate3::EstimateOptim(const vector<PartialTracker5::Partial> &parti
         if (partial.mAmp > Amax)
             Amax = partial.mAmp;
     }
-    
-    //BL_FLOAT Amax = BLUtils::DBToAmp(AmaxDB);
     
     BL_FLOAT AmaxInv = 0.0;
     if (Amax > BL_EPS)
@@ -338,18 +333,13 @@ PartialTWMEstimate3::EstimateOptim2(const vector<PartialTracker5::Partial> &part
     }
     
     // Compute max amplitude
-    //BL_FLOAT AmaxDB = MIN_DB;
     BL_FLOAT Amax = -BL_INF;
     for (int i = 0; i < partials0.size(); i++)
     {
         const PartialTracker5::Partial &partial = partials0[i];
-        //if (partial.mAmpDB > AmaxDB)
-        //    AmaxDB = partial.mAmpDB;
         if (partial.mAmp > Amax)
             Amax = partial.mAmp;
     }
-    
-    //BL_FLOAT Amax = BLUtils::DBToAmp(AmaxDB);
     
     BL_FLOAT AmaxInv = 0.0;
     if (Amax > BL_EPS)
@@ -414,18 +404,13 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
     
     // Compute max amplitude
     // (and inverse max amplitude, for optimization)
-    //BL_FLOAT AmaxDB = MIN_DB;
     BL_FLOAT Amax = -BL_INF;
     for (int i = 0; i < partials0.size(); i++)
     {
         const PartialTracker5::Partial &partial = partials0[i];
-        //if (partial.mAmpDB > AmaxDB)
-        //    AmaxDB = partial.mAmpDB;
         if (partial.mAmp > Amax)
             Amax = partial.mAmp;
     }
-    
-    //BL_FLOAT Amax = BLUtils::DBToAmp(AmaxDB);
     
     BL_FLOAT AmaxInv = 0.0;
     if (Amax > BL_EPS)
@@ -451,8 +436,6 @@ PartialTWMEstimate3::Estimate(const vector<PartialTracker5::Partial> &partials,
     vector<BL_FLOAT> aNorms;
     for (int i = 0; i < partials0.size(); i++)
     {
-        //BL_FLOAT aDB = partials0[i].mAmpDB;
-        //BL_FLOAT a = BLUtils::DBToAmp(aDB);
         BL_FLOAT a = partials0[i].mAmp;
         
         BL_FLOAT aNorm = a*AmaxInv;
@@ -528,19 +511,13 @@ PartialTWMEstimate3::EstimateMulti(const vector<PartialTracker5::Partial> &parti
     
     // Compute max amplitude
     // (and inverse max amplitude, for optimization)
-    //BL_FLOAT AmaxDB = MIN_DB;
     BL_FLOAT Amax = -BL_INF;
     for (int i = 0; i < partials0.size(); i++)
     {
         const PartialTracker5::Partial &partial = partials0[i];
-        //if (partial.mAmpDB > AmaxDB)
-        //    AmaxDB = partial.mAmpDB;
         if (partial.mAmp > Amax)
             Amax = partial.mAmp;
     }
-    
-    //BL_FLOAT Amax = BLUtils::DBToAmp(AmaxDB);
-    ////BL_FLOAT Amax = AmaxDB - MIN_DB;
     
     BL_FLOAT AmaxInv = 0.0;
     if (Amax > BL_EPS)
@@ -711,7 +688,6 @@ PartialTWMEstimate3::ComputeTWMError2(const vector<PartialTracker5::Partial> &pa
     
     En /= harmos.size();
     
-    
     // Second pass
     BL_FLOAT Ek = 0.0;
     for (int i = 0; i < partials.size(); i++)
@@ -762,8 +738,6 @@ PartialTWMEstimate3::ComputeErrorN(const PartialTracker5::Partial &nearestPartia
     BL_FLOAT err0 = deltaF*fnp;
     BL_FLOAT err1 = 0.0;
     
-    //BL_FLOAT aDB = nearestPartial.mAmpDB;
-    //BL_FLOAT a = BLUtils::DBToAmp(aDB);
     BL_FLOAT a = nearestPartial.mAmp;
     
     err1 = (a*AmaxInv)*(q*deltaF*fnp - r);
@@ -790,9 +764,6 @@ PartialTWMEstimate3::ComputeErrorK(const PartialTracker5::Partial &partial,
     BL_FLOAT err0 = deltaF*fkp;
     BL_FLOAT err1 = 0.0;
     
-    
-    //BL_FLOAT aDB = partial.mAmpDB;
-    //BL_FLOAT a = BLUtils::DBToAmp(aDB);
     BL_FLOAT a = partial.mAmp;
     
     err1 = (a*AmaxInv)*(q*deltaF*fkp - r);
@@ -1033,7 +1004,7 @@ PartialTWMEstimate3::SuppressNewPartials(vector<PartialTracker5::Partial> *parti
     {
         const PartialTracker5::Partial &p = partials0[i];
         
-        bool found = FindPartialById(mPrevPartials, p.mId);
+        bool found = FindPartialById(mPrevPartials, (int)p.mId);
         if (found)
         {
             partials->push_back(p);
@@ -1071,7 +1042,7 @@ PartialTWMEstimate3::FindNearestIndex(const vector<BL_FLOAT> &freqs, BL_FLOAT fr
     vector<BL_FLOAT>::iterator it =
         lower_bound(freqs0.begin(), freqs0.end(), freq);
     
-    nearestIdx = it - freqs0.begin();
+    nearestIdx = (int)(it - freqs0.begin());
     
     if ((nearestIdx > 0) &&
         (nearestIdx < freqs0.size())) // should not happen
@@ -1086,7 +1057,7 @@ PartialTWMEstimate3::FindNearestIndex(const vector<BL_FLOAT> &freqs, BL_FLOAT fr
     // Index is at the end
     {
         // The nearest freq is the last one, because they are no more freqs after
-        nearestIdx = freqs0.size() - 1;
+        nearestIdx = (int)freqs0.size() - 1;
     }
     
     return nearestIdx;
