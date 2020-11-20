@@ -229,6 +229,8 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     
     mTimeSmoothCoeff = 0.5;
     
+    mTimeSmoothNoiseCoeff = 0.5;
+    
     mDbgParam = 1.0;
 }
 
@@ -257,6 +259,8 @@ PartialTracker5::Reset()
     mPrevNoiseMasks.clear();
     
     mTimeSmoothPrevMagns.Resize(0);
+    
+    mTimeSmoothPrevNoise.Resize(0);
 }
 
 void
@@ -342,6 +346,8 @@ PartialTracker5::ExtractNoiseEnvelope()
 #if EXTRACT_NOISE_ENVELOPE_SIMPLE
     ExtractNoiseEnvelopeSimple();
 #endif
+    
+    TimeSmoothNoise(&mNoiseEnvelope);
 }
 
 void
@@ -2144,6 +2150,12 @@ PartialTracker5::SetTimeSmoothCoeff(BL_FLOAT coeff)
     mTimeSmoothCoeff = coeff;
 }
 
+void
+PartialTracker5::SetTimeSmoothNoiseCoeff(BL_FLOAT coeff)
+{
+    mTimeSmoothNoiseCoeff = coeff;
+}
+
 // Time smooth
 void
 PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
@@ -2166,6 +2178,30 @@ PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
     }
     
     mTimeSmoothPrevMagns = *magns;
+}
+
+// Time smooth noise
+void
+PartialTracker5::TimeSmoothNoise(WDL_TypedBuf<BL_FLOAT> *noise)
+{
+    if (mTimeSmoothPrevNoise.GetSize() == 0)
+    {
+        mTimeSmoothPrevNoise = *noise;
+        
+        return;
+    }
+    
+    for (int i = 0; i < noise->GetSize(); i++)
+    {
+        BL_FLOAT val = noise->Get()[i];
+        BL_FLOAT prevVal = mTimeSmoothPrevNoise.Get()[i];
+        
+        BL_FLOAT newVal = (1.0 - mTimeSmoothNoiseCoeff)*val + mTimeSmoothNoiseCoeff*prevVal;
+        
+        noise->Get()[i] = newVal;
+    }
+    
+    mTimeSmoothPrevNoise = *noise;
 }
 
 void

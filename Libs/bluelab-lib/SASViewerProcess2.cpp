@@ -279,6 +279,13 @@ SASViewerProcess2::SetTimeSmoothCoeff(BL_FLOAT coeff)
 }
 
 void
+SASViewerProcess2::SetTimeSmoothNoiseCoeff(BL_FLOAT coeff)
+{
+    if (mPartialTracker != NULL)
+        mPartialTracker->SetTimeSmoothNoiseCoeff(coeff);
+}
+
+void
 SASViewerProcess2::Display()
 {
 #if 0

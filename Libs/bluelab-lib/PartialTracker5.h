@@ -138,6 +138,8 @@ public:
     
     void DBG_SetDbgParam(BL_FLOAT param);
     
+    void SetTimeSmoothNoiseCoeff(BL_FLOAT coeff);
+    
 protected:
     // Pre process
     //
@@ -211,6 +213,8 @@ protected:
     void SuppressZeroFreqPartials(vector<Partial> *partials);
     
     void ThresholdPartialsPeakHeight(vector<Partial> *partials);
+    
+    void TimeSmoothNoise(WDL_TypedBuf<BL_FLOAT> *noise);
     
     // Peaks
     //
@@ -346,6 +350,10 @@ protected:
     Scale *mScale;
     Scale::Type mXScale;
     Scale::Type mYScale;
+    
+    // Time smooth noise
+    BL_FLOAT mTimeSmoothNoiseCoeff;
+    WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevNoise;
 };
 
 #endif /* defined(__BL_SASViewer__PartialTracker5__) */

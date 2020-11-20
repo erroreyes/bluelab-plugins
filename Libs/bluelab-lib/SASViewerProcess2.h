@@ -84,6 +84,8 @@ public:
     // Debug
     void DBG_SetDbgParam(BL_FLOAT param);
     
+    void SetTimeSmoothNoiseCoeff(BL_FLOAT coeff);
+    
 protected:
     void Display();
     
