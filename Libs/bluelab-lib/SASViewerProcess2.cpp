@@ -104,21 +104,24 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     // Take half of the complexes
     BLUtils::TakeHalf(&fftSamples);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
+    //WDL_TypedBuf<BL_FLOAT> magns;
+    //WDL_TypedBuf<BL_FLOAT> phases;
+    //BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
-    mCurrentMagns = magns;
+    //mCurrentMagns = magns;
     
     // DetectPartials
-    mPartialTracker->SetData(magns, phases);
+    //mPartialTracker->SetData(magns, phases);
+    mPartialTracker->SetData(fftSamples);
     mPartialTracker->DetectPartials();
     mPartialTracker->ExtractNoiseEnvelope();
     mPartialTracker->FilterPartials();
     
     //
-    if (mPartialTracker != NULL)
-        mPartialTracker->GetPreProcessedData(&mCurrentMagns);
+    //mPartialTracker->GetPreProcessedMagns(&mCurrentMagns);
+    WDL_TypedBuf<BL_FLOAT> magns;
+    mPartialTracker->GetPreProcessedMagns(&magns);
+    mCurrentMagns = magns;
     
     // Silence
     BLUtils::FillAllZero(&magns);
@@ -165,6 +168,10 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
         Display();
     }
+    
+    // Origin phases
+    WDL_TypedBuf<BL_FLOAT> phases;
+    BLUtils::ComplexToPhase(&phases, fftSamples);
     
     // For noise envelope
     BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);

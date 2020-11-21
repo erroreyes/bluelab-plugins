@@ -305,7 +305,13 @@ PartialTracker5::SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-PartialTracker5::GetPreProcessedData(WDL_TypedBuf<BL_FLOAT> *magns)
+PartialTracker5::SetData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &comp)
+{
+    PreProcessData(comp, &mCurrentMagns, &mCurrentPhases);
+}
+
+void
+PartialTracker5::GetPreProcessedMagns(WDL_TypedBuf<BL_FLOAT> *magns)
 {
     *magns = mCurrentMagns;
 }
@@ -980,9 +986,6 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 {
     outPartials->clear();
     
-    //
-    WDL_TypedBuf<BL_FLOAT> smoothMagns = magns;
-    
     // prevIndex, currentIndex, nextIndex
     
     // Skip the first ones
@@ -994,17 +997,17 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
     BL_FLOAT nextVal = 0.0;
     BL_FLOAT currentVal = 0.0;
     
-    int maxDetectIndex = smoothMagns.GetSize();
+    int maxDetectIndex = magns.GetSize() - 1;
     
     if (mMaxDetectFreq > 0.0)
     {
         maxDetectIndex = mMaxDetectFreq*mBufferSize*0.5;
     }
     
-    if (maxDetectIndex > smoothMagns.GetSize())
-        maxDetectIndex = smoothMagns.GetSize();
+    if (maxDetectIndex > magns.GetSize() - 1)
+        maxDetectIndex = magns.GetSize() - 1;
     
-    while(currentIndex < maxDetectIndex)
+    while(currentIndex </*=*/ maxDetectIndex)
     {
         if ((currentVal > prevVal) && (currentVal >= nextVal))
         // Maximum found
@@ -1019,12 +1022,12 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                 int leftIndex = currentIndex;
                 if (leftIndex > 0)
                 {
-                    BL_FLOAT prevLeftVal = smoothMagns.Get()[leftIndex];
+                    BL_FLOAT prevLeftVal = magns.Get()[leftIndex];
                     while(leftIndex > 0)
                     {
                         leftIndex--;
                         
-                        BL_FLOAT leftVal = smoothMagns.Get()[leftIndex];
+                        BL_FLOAT leftVal = magns.Get()[leftIndex];
                         
                         // Stop if we reach 0 or if it goes up again
                         if ((leftVal < MIN_NORM_AMP) || (leftVal > prevLeftVal))
@@ -1036,8 +1039,8 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                             if (leftIndex < 0)
                                 leftIndex = 0;
                             
-                            if (leftIndex >= maxDetectIndex)
-                                leftIndex = maxDetectIndex - 1;
+                            if (leftIndex > maxDetectIndex)
+                                leftIndex = maxDetectIndex;
                             
                             break;
                         }
@@ -1049,31 +1052,31 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                 // Right
                 int rightIndex = currentIndex;
                 
-                if (rightIndex < maxDetectIndex)
+                if (rightIndex <= maxDetectIndex)
                 {
-                    BL_FLOAT prevRightVal = smoothMagns.Get()[rightIndex];
+                    BL_FLOAT prevRightVal = magns.Get()[rightIndex];
                     
-                    while(rightIndex < maxDetectIndex - 1)
+                    while(rightIndex < maxDetectIndex)
                     {
                         rightIndex++;
                                 
-                        BL_FLOAT rightVal = smoothMagns.Get()[rightIndex];
+                        BL_FLOAT rightVal = magns.Get()[rightIndex];
                                 
                         // Stop if we reach 0 or if it goes up again
                         if ((rightVal < MIN_NORM_AMP) || (rightVal > prevRightVal))
-                            {
-                                if (rightVal >= prevRightVal)
-                                    rightIndex--;
+                        {
+                            if (rightVal >= prevRightVal)
+                                rightIndex--;
                                     
-                                // Check bounds
-                                if (rightIndex < 0)
-                                    rightIndex = 0;
+                            // Check bounds
+                            if (rightIndex < 0)
+                                rightIndex = 0;
                                     
-                                if (rightIndex >= maxDetectIndex)
-                                    rightIndex = maxDetectIndex - 1;
+                            if (rightIndex > maxDetectIndex)
+                                rightIndex = maxDetectIndex;
                                     
-                                break;
-                            }
+                            break;
+                        }
                                 
                         prevRightVal = rightVal;
                     }
@@ -1082,7 +1085,7 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                 // Take the max (better than taking the middle)
                 int peakIndex = currentIndex;
                 
-                if ((peakIndex < 0) || (peakIndex >= maxDetectIndex))
+                if ((peakIndex < 0) || (peakIndex > maxDetectIndex))
                 // Out of bounds
                     continue;
                 
@@ -1125,8 +1128,8 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     if (p.mPeakIndex < 0)
                         p.mPeakIndex = 0;
                     
-                    if (p.mPeakIndex > maxDetectIndex - 1)
-                        p.mPeakIndex = maxDetectIndex - 1;
+                    if (p.mPeakIndex > maxDetectIndex)
+                        p.mPeakIndex = maxDetectIndex;
 
                     BL_FLOAT peakFreq = peakIndexF/(mBufferSize*0.5);
                     p.mFreq = peakFreq;
@@ -1141,7 +1144,7 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     p.mPredictedFreq = p.mFreq;
                     
                     // Default value. Will be overwritten
-                    BL_FLOAT peakAmp = magns.Get()[(int)peakIndexF];
+                    //BL_FLOAT peakAmp = magns.Get()[(int)peakIndexF];
                     
 #if !INTERPOLATE_PHASES
                     // Magn
@@ -1166,12 +1169,12 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
             currentIndex++;
         
         // Update the values
-        currentVal = smoothMagns.Get()[currentIndex];
+        currentVal = magns.Get()[currentIndex];
         
         if (currentIndex - 1 >= 0)
             prevVal = magns.Get()[currentIndex - 1];
         
-        if (currentIndex + 1 < maxDetectIndex)
+        if (currentIndex + 1 <= maxDetectIndex)
             nextVal = magns.Get()[currentIndex + 1];
     }
 }
@@ -2196,6 +2199,48 @@ PartialTracker5::PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data)
     PreProcessAWeighting(data, true);
     
     PreProcessDataX(data);
+}
+
+void
+PartialTracker5::PreProcessData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &data,
+                                WDL_TypedBuf<BL_FLOAT> *resultMagns,
+                                WDL_TypedBuf<BL_FLOAT> *resultPhases)
+{
+    // Extract magns, to be able to apply dB and A-Weighting
+    // And will use phases for re-synthetizing complex
+    WDL_TypedBuf<BL_FLOAT> magns0;
+    WDL_TypedBuf<BL_FLOAT> phases0;
+    BLUtils::ComplexToMagnPhase(&magns0, &phases0, data);
+    
+    // Y: apply dB
+    for (int i = 0; i < magns0.GetSize(); i++)
+    {
+        BL_FLOAT d = magns0.Get()[i];
+        d = Scale::ApplyScale(mYScale, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        magns0.Get()[i] = d;
+    }
+    
+    // Better tracking on high frequencies with this!
+    PreProcessAWeighting(&magns0, true);
+    
+    // Re-create complex
+    WDL_TypedBuf<WDL_FFT_COMPLEX> comp0;
+    BLUtils::MagnPhaseToComplex(&comp0, magns0, phases0);
+    
+    // Separate re and im from complex
+    WDL_TypedBuf<BL_FLOAT> re;
+    WDL_TypedBuf<BL_FLOAT> im;
+    BLUtils::ComplexToReIm(&re, &im, comp0);
+    
+    // Scale re and im with mel etc.
+    PreProcessDataX(&re);
+    PreProcessDataX(&im);
+    
+    // Re-assemble complex
+    BLUtils::ReImToComplex(&comp0, re, im);
+    
+    // Separate to magn and phase
+    BLUtils::ComplexToMagnPhase(resultMagns, resultPhases, comp0);
 }
 
 void

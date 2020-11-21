@@ -9,15 +9,16 @@
 #ifndef __BL_SASViewer__PartialTracker5__
 #define __BL_SASViewer__PartialTracker5__
 
+#include <vector>
+#include <deque>
+using namespace std;
+
 #include <SimpleKalmanFilter.h>
 #include <Scale.h>
 
 #include "IPlug_include_in_plug_hdr.h"
 
-#include <vector>
-#include <deque>
-using namespace std;
-
+#include "../../WDL/fft.h"
 
 // PartialTracker2
 // - from PartialTracker
@@ -115,10 +116,15 @@ public:
     
     void SetThreshold(BL_FLOAT threshold);
     
+    // Magn/phase
     void SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
                  const WDL_TypedBuf<BL_FLOAT> &phases);
-    void GetPreProcessedData(WDL_TypedBuf<BL_FLOAT> *magns);
+    // Complex
+    void SetData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &comp);
     
+    void GetPreProcessedMagns(WDL_TypedBuf<BL_FLOAT> *magns);
+    
+    //
     void DetectPartials();
     void ExtractNoiseEnvelope();
     void FilterPartials();
@@ -147,6 +153,11 @@ public:
     
     // For processing result color for example, just before display
     void PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data);
+    
+    // Complex
+    void PreProcessData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &data,
+                        WDL_TypedBuf<BL_FLOAT> *magns,
+                        WDL_TypedBuf<BL_FLOAT> *phases);
     
     void DenormPartials(vector<PartialTracker5::Partial> *partials);
     void DenormData(WDL_TypedBuf<BL_FLOAT> *data);

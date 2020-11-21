@@ -2832,12 +2832,57 @@ BLUtils::MagnPhaseToComplex(WDL_TypedBuf<WDL_FFT_COMPLEX> *complexBuf,
     }
 }
 template void BLUtils::MagnPhaseToComplex(WDL_TypedBuf<WDL_FFT_COMPLEX> *complexBuf,
-                               const WDL_TypedBuf<float> &magns,
-                               const WDL_TypedBuf<float> &phases);
+                                          const WDL_TypedBuf<float> &magns,
+                                          const WDL_TypedBuf<float> &phases);
 template void BLUtils::MagnPhaseToComplex(WDL_TypedBuf<WDL_FFT_COMPLEX> *complexBuf,
-                               const WDL_TypedBuf<double> &magns,
-                               const WDL_TypedBuf<double> &phases);
+                                          const WDL_TypedBuf<double> &magns,
+                                          const WDL_TypedBuf<double> &phases);
 
+
+template <typename FLOAT_TYPE>
+void BLUtils::ComplexToReIm(WDL_TypedBuf<FLOAT_TYPE> *resultRe,
+                            WDL_TypedBuf<FLOAT_TYPE> *resultIm,
+                            const WDL_TypedBuf<WDL_FFT_COMPLEX> &complexBuf)
+{
+    resultRe->Resize(complexBuf.GetSize());
+    resultIm->Resize(complexBuf.GetSize());
+    
+    for (int i = 0; i < complexBuf.GetSize(); i++)
+    {
+        const WDL_FFT_COMPLEX &c = complexBuf.Get()[i];
+        resultRe->Get()[i] = c.re;
+        resultIm->Get()[i] = c.im;
+    }
+}
+template void BLUtils::ComplexToReIm(WDL_TypedBuf<float> *resultRe,
+                                     WDL_TypedBuf<float> *resultIm,
+                                     const WDL_TypedBuf<WDL_FFT_COMPLEX> &complexBuf);
+template void BLUtils::ComplexToReIm(WDL_TypedBuf<double> *resultRe,
+                                     WDL_TypedBuf<double> *resultIm,
+                                     const WDL_TypedBuf<WDL_FFT_COMPLEX> &complexBuf);
+
+template <typename FLOAT_TYPE>
+void BLUtils::ReImToComplex(WDL_TypedBuf<WDL_FFT_COMPLEX> *complexBuf,
+                            const WDL_TypedBuf<FLOAT_TYPE> &reBuf,
+                            const WDL_TypedBuf<FLOAT_TYPE> &imBuf)
+{
+    complexBuf->Resize(reBuf.GetSize());
+    
+    for (int i = 0; i < reBuf.GetSize(); i++)
+    {
+        WDL_FFT_COMPLEX c;
+        c.re = reBuf.Get()[i];
+        c.im = imBuf.Get()[i];
+    
+        complexBuf->Get()[i] = c;
+    }
+}
+template void BLUtils::ReImToComplex(WDL_TypedBuf<WDL_FFT_COMPLEX> *complexBuf,
+                                     const WDL_TypedBuf<float> &reBuf,
+                                     const WDL_TypedBuf<float> &imBuf);
+template void BLUtils::ReImToComplex(WDL_TypedBuf<WDL_FFT_COMPLEX> *complexBuf,
+                                     const WDL_TypedBuf<double> &reBuf,
+                                     const WDL_TypedBuf<double> &imBuf);
 
 template <typename FLOAT_TYPE>
 void

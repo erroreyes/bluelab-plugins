@@ -717,6 +717,16 @@ public:
                                    const WDL_TypedBuf<FLOAT_TYPE> &phases);
     
     template <typename FLOAT_TYPE>
+    static void ComplexToReIm(WDL_TypedBuf<FLOAT_TYPE> *resultRe,
+                              WDL_TypedBuf<FLOAT_TYPE> *resultIm,
+                              const WDL_TypedBuf<WDL_FFT_COMPLEX> &complexBuf);
+    template <typename FLOAT_TYPE>
+    static void ReImToComplex(WDL_TypedBuf<WDL_FFT_COMPLEX> *complexBuf,
+                              const WDL_TypedBuf<FLOAT_TYPE> &reBuf,
+                              const WDL_TypedBuf<FLOAT_TYPE> &imBuf);
+
+    
+    template <typename FLOAT_TYPE>
     static void NormalizeFftValues(WDL_TypedBuf<FLOAT_TYPE> *magns);
     
     // Num bins is the number of bins of the full fft
