@@ -544,7 +544,9 @@ SASViewerProcess2::DisplayAmplitude()
         mSASViewerRender->AddData(AMPLITUDE, amps);
         
         // WARNING: Won't benefit from straight lines optim
-        mSASViewerRender->SetLineMode(AMPLITUDE, LinesRender2::LINES_TIME);
+        mSASViewerRender->SetLineMode(AMPLITUDE,
+                                      LinesRender2::LINES_FREQ);
+                                      //LinesRender2::LINES_TIME);
         
         mSASViewerRender->ShowTrackingLines(AMPLITUDE, false);
     }
@@ -570,7 +572,9 @@ SASViewerProcess2::DisplayFrequency()
         mSASViewerRender->AddData(FREQUENCY, freqs);
         
         // WARNING: Won't benefit from straight lines optim
-        mSASViewerRender->SetLineMode(FREQUENCY, LinesRender2::/*LINES_FREQ*/LINES_TIME);
+        mSASViewerRender->SetLineMode(FREQUENCY,
+                                      //LinesRender2::LINES_TIME);
+                                      LinesRender2::LINES_FREQ);
         
         mSASViewerRender->ShowTrackingLines(FREQUENCY, false);
     }

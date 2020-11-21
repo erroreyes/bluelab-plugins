@@ -21,6 +21,7 @@
 #include <SinLUT.h>
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 #include <Scale.h>
 
@@ -82,6 +83,7 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 //
 // At 1: low single partial => interpolated locally, far frequencies set to 0
 // Real signal: make some strange peaks at mid/high freqs
+// Sine wave: very good, render only the analyzed input sine
 //
 //#define COLOR_CUT_MISSING_PARTIALS 1 // ORIGIN
 #define COLOR_CUT_MISSING_PARTIALS 0 //1
@@ -1678,6 +1680,8 @@ void
 SASFrame3::ComputeFrequency()
 {
     BL_FLOAT freq = mPartialsToFreq->ComputeFrequency(mPartials);
+    
+    //BLDebug::AppendValue("freq.txt", freq);
     
     mFrequency = freq;
 }

@@ -36,9 +36,11 @@ using namespace std;
 
 // Compute simple, avg, or parabola ?
 // (Avg seems a little more smooth than parabola)
-#define COMPUTE_PEAKS_AVG      1 // Good even for flat partial top
-#define COMPUTE_PEAKS_PARABOLA 0 // Good, but process flat partial tops badly
-#define COMPUTE_PEAKS_SIMPLE   0 //1 // NEW
+// Not perfect: gives hacked SASFrame amplitude
+#define COMPUTE_PEAKS_AVG      0 //1 // ORIGIN 1 // Good even for flat partial top
+// Best: gives smooth SASFrame amplitude
+#define COMPUTE_PEAKS_PARABOLA 1 //0 // Good, but process flat partial tops badly
+#define COMPUTE_PEAKS_SIMPLE   0
 
 // With 1, that made more defined partials
 // With 0, avoids partial leaking in noise ("oohoo")
@@ -2240,7 +2242,7 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
         freq = Scale::ApplyScale(mXScaleInv, freq, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
         partial.mFreq = freq;
         
-        // Comvert to real freqs
+        // Convert to real freqs
         partial.mFreq *= mSampleRate*0.5;
         
         // Reverse AWeighting
