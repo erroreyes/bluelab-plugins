@@ -117,6 +117,8 @@ using namespace std;
 //
 // and: https://ccrma.stanford.edu/~jos/parshl/
 
+// Get the precision when interpolating peak magns, but also for phases
+#define INTERPOLATE_PHASES 1
 
 unsigned long PartialTracker5::Partial::mCurrentId = 0;
 
@@ -1141,11 +1143,16 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     // Default value. Will be overwritten
                     BL_FLOAT peakAmp = magns.Get()[(int)peakIndexF];
                     
-                    peakAmp = ComputePeakAmpInterp(magns, peakFreq);
+#if !INTERPOLATE_PHASES
+                    // Magn
+                    p.mAmp = ComputePeakAmpInterp(magns, peakFreq);
                     
-                    p.mAmp = peakAmp;
                     // Phase
                     p.mPhase = phases.Get()[(int)peakIndexF];
+#else
+                    ComputePeakMagnPhaseInterp(magns, phases, peakFreq,
+                                               &p.mAmp, &p.mPhase);
+#endif
                     
                     outPartials->push_back(p);
                 }
@@ -1862,6 +1869,45 @@ PartialTracker5::ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
     BL_FLOAT peakPhase = (1.0 - t)*prevPhase + t*nextPhase;
     
     return peakPhase;
+}
+
+// Interpolate in complex domain, to interpolate phases correctly
+void
+PartialTracker5::ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                            const WDL_TypedBuf<BL_FLOAT> &phases,
+                                            BL_FLOAT peakFreq,
+                                            BL_FLOAT *peakAmp, BL_FLOAT *peakPhase)
+{    
+    BL_FLOAT bin = peakFreq*mBufferSize*0.5;
+    
+    int prevBin = (int)bin;
+    int nextBin = (int)bin + 1;
+    
+    if (nextBin >= magns.GetSize())
+    {
+        *peakAmp = magns.Get()[prevBin];
+        *peakPhase = phases.Get()[prevBin];
+        
+        return;
+    }
+    
+    // Init
+    WDL_FFT_COMPLEX prevComp;
+    MAGN_PHASE_COMP(magns.Get()[prevBin], phases.Get()[prevBin], prevComp);
+    
+    WDL_FFT_COMPLEX nextComp;
+    MAGN_PHASE_COMP(magns.Get()[nextBin], phases.Get()[nextBin], nextComp);
+    
+    // Interpolate
+    BL_FLOAT t = bin - prevBin;
+    
+    WDL_FFT_COMPLEX peakComp;
+    peakComp.re = (1.0 - t)*prevComp.re + t*nextComp.re;
+    peakComp.im = (1.0 - t)*prevComp.im + t*nextComp.im;
+    
+    // Result
+    *peakAmp = COMP_MAGN(peakComp);
+    *peakPhase = COMP_MAGN(peakComp);
 }
 
 int

@@ -193,7 +193,13 @@ protected:
                                   BL_FLOAT peakFreq);
     
     BL_FLOAT ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
-                                  BL_FLOAT peakFreq);
+                                    BL_FLOAT peakFreq);
+    
+    void ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                    const WDL_TypedBuf<BL_FLOAT> &phases,
+                                    BL_FLOAT peakFreq,
+                                    BL_FLOAT *peakAmp, BL_FLOAT *peakPhase);
+    
     
     // Avoid the partial foot to leak on the left and right
     // with very small amplitudes
