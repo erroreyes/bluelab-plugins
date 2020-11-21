@@ -78,9 +78,15 @@ public:
     void SetColor(const WDL_TypedBuf<BL_FLOAT> &color);
     void SetNormWarping(const WDL_TypedBuf<BL_FLOAT> &warping);
     
+    // Compute directly from input partials
     void ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples);
-    
     void ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples);
+    
+    // Compute by resynthesizing from color, warping etc.
+    void ComputeSamplesResynth(WDL_TypedBuf<BL_FLOAT> *samples);
+    void ComputeSamplesResynthWin(WDL_TypedBuf<BL_FLOAT> *samples);
+    
+    void ComputeFftPartials(WDL_TypedBuf<BL_FLOAT> *samples);
     
     void SetPitch(BL_FLOAT pitch);
     

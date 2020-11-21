@@ -29,6 +29,13 @@
 // 0: should be more correct
 #define DISPLAY_HARMO_SUBSTRACT 1
 
+// Use full SASFrame
+#define OUT_HARMO_SAS_FRAME 0 //1 // ORIGIN
+// Use extracted harmonic envelope
+#define OUT_HARMO_EXTRACTED_ENV 0
+// Use input partials (not modified by color etc.)
+#define OUT_HARMO_INPUT_PARTIALS 1
+
 SASViewerProcess2::SASViewerProcess2(int bufferSize,
                                      BL_FLOAT overlapping, BL_FLOAT oversampling,
                                      BL_FLOAT sampleRate)
@@ -136,13 +143,24 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         mPartialTracker->GetNoiseEnvelope(&noise);
         
         mSASFrame->SetNoiseEnvelope(noise);
-        
         if (mEnableOutNoise)
         {
             mPartialTracker->DenormData(&noise);
             
             magns = noise;
         }
+        
+#if OUT_HARMO_EXTRACTED_ENV
+        WDL_TypedBuf<BL_FLOAT> harmo;
+        mPartialTracker->GetHarmonicEnvelope(&harmo);
+        
+        if (mEnableOutHarmo)
+        {
+            mPartialTracker->DenormData(&harmo);
+            
+            BLUtils::AddValues(&magns, harmo);
+        }
+#endif
         
         Display();
     }
@@ -171,6 +189,18 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> samplesBuffer;
     BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
     
+#if OUT_HARMO_SAS_FRAME
+    // Compute the samples from partials
+    mSASFrame->ComputeSamplesResynth(&samplesBuffer);
+    
+    if (mEnableOutHarmo)
+    {
+        // ioBuffer may already contain noise
+        BLUtils::AddValues(ioBuffer, samplesBuffer);
+    }
+#endif
+    
+#if OUT_HARMO_INPUT_PARTIALS
     // Compute the samples from partials
     mSASFrame->ComputeSamples(&samplesBuffer);
     
@@ -179,6 +209,8 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
         // ioBuffer may already contain noise
         BLUtils::AddValues(ioBuffer, samplesBuffer);
     }
+#endif
+    
 #endif
 }
 
@@ -202,6 +234,18 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> samplesBuffer;
     BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
     
+#if OUT_HARMO_SAS_FRAME
+    // Compute the samples from partials
+    mSASFrame->ComputeSamplesResynthWin(&samplesBuffer);
+    
+    if (mEnableOutHarmo)
+    {
+        // ioBuffer may already contain noise
+        BLUtils::AddValues(ioBuffer, samplesBuffer);
+    }
+#endif
+    
+#if OUT_HARMO_INPUT_PARTIALS
     // Compute the samples from partials
     mSASFrame->ComputeSamplesWin(&samplesBuffer);
     
@@ -210,6 +254,8 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
         // ioBuffer may already contain noise
         BLUtils::AddValues(ioBuffer, samplesBuffer);
     }
+#endif
+    
 #endif
 }
 

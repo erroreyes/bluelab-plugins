@@ -58,7 +58,6 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 #define FREQ_SMOOTH_COEFF 0.0 //0.9
 
 // Compute samples directly from tracked partials
-#define COMPUTE_PARTIALS_SAMPLES     0
 #define COMPUTE_SAS_SAMPLES          1 // GOOD (best quality, but slow)
 #define COMPUTE_SAS_FFT              0 // Perf gain x10 compared to COMPUTE_SAS_SAMPLES
 #define COMPUTE_SAS_FFT_FREQ_ADJUST  1 // GOOD: Avoids a "reverb" phase effet as with COMPUTE_SAS_FFT
@@ -284,10 +283,83 @@ SASFrame3::SetNormWarping(const WDL_TypedBuf<BL_FLOAT> &warping)
 void
 SASFrame3::ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples)
 {
-#if COMPUTE_PARTIALS_SAMPLES
     ComputeSamplesPartials(samples);
-#endif
+}
+
+void
+SASFrame3::ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples)
+{
+    ComputeFftPartials(samples);
+}
+
+// TODO: teste this!
+void
+SASFrame3::ComputeFftPartials(WDL_TypedBuf<BL_FLOAT> *samples)
+{
+    samples->Resize(mBufferSize);
     
+    BLUtils::FillAllZero(samples);
+    
+    if (mPartials.empty())
+        return;
+    
+    // Fft
+    WDL_TypedBuf<BL_FLOAT> magns;
+    BLUtils::ResizeFillZeros(&magns, mBufferSize/2);
+    
+    WDL_TypedBuf<BL_FLOAT> phases;
+    BLUtils::ResizeFillZeros(&phases, mBufferSize/2);
+    
+    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
+    
+    for (int i = 0; i < mPartials.size(); i++)
+    {
+        if (i > SYNTH_MAX_NUM_PARTIALS)
+            break;
+        
+        const PartialTracker5::Partial &partial = mPartials[i];
+    
+        BL_FLOAT freq = partial.mFreq;
+        if (freq > mSampleRate*0.5)
+            continue;
+        
+        if (freq < SYNTH_MIN_FREQ)
+            continue;
+        
+        // Magn
+        BL_FLOAT magn = partial.mAmp;
+        BL_FLOAT phase = partial.mPhase;
+            
+        // Fill the fft
+        BL_FLOAT binNum = freq/hzPerBin;
+        binNum = bl_round(binNum);
+        if (binNum < 0)
+            binNum = 0;
+        if (binNum > magns.GetSize() - 1)
+            binNum = magns.GetSize() - 1;
+                
+        magns.Get()[(int)binNum] = magn;
+        phases.Get()[(int)binNum] = phase;
+            
+        // Update the phases
+        //int numSamples = samples->GetSize()/mOverlapping;
+        //phase += numSamples*2.0*M_PI*freq/mSampleRate;
+        //mSASPartials[partialIndex].mPhase = phase;
+    }
+    
+    // Apply Ifft
+    WDL_TypedBuf<WDL_FFT_COMPLEX> complexBuf;
+    BLUtils::MagnPhaseToComplex(&complexBuf, magns, phases);
+    complexBuf.Resize(complexBuf.GetSize()*2);
+    BLUtils::FillSecondFftHalf(&complexBuf);
+    
+    // Ifft
+    FftProcessObj16::FftToSamples(complexBuf, samples);
+}
+
+void
+SASFrame3::ComputeSamplesResynthWin(WDL_TypedBuf<BL_FLOAT> *samples)
+{
 #if COMPUTE_SAS_SAMPLES
     if (mSynthMode == OSC)
     {
@@ -310,7 +382,7 @@ SASFrame3::ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples)
 }
 
 void
-SASFrame3::ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples)
+SASFrame3::ComputeSamplesResynth(WDL_TypedBuf<BL_FLOAT> *samples)
 {
 #if COMPUTE_SAS_FFT
     ComputeFftSAS(samples);
@@ -1588,10 +1660,6 @@ SASFrame3::SetHarmonicSoundFlag(bool flag)
 bool
 SASFrame3::ComputeSamplesFlag()
 {
-#if COMPUTE_PARTIALS_SAMPLES
-    return false;
-#endif
-
 #if COMPUTE_SAS_SAMPLES
     if (mSynthMode == OSC)
         return false;
@@ -1620,10 +1688,6 @@ SASFrame3::ComputeSamplesFlag()
 bool
 SASFrame3::ComputeSamplesWinFlag()
 {
-#if COMPUTE_PARTIALS_SAMPLES
-    return true;
-#endif
-    
 #if COMPUTE_SAS_SAMPLES
     if (mSynthMode == OSC)
         return true;
