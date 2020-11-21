@@ -92,9 +92,6 @@ protected:
     // Apply freq scale to freq id
     int ScaleFreq(int idx);
     
-    void DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                        const WDL_TypedBuf<BL_FLOAT> &phases);
-    
     void IdToColor(int idx, unsigned char color[3]);
     
     void PartialToColor(const PartialTracker5::Partial &partial,

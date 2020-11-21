@@ -19,8 +19,6 @@
 
 #include "SASViewerProcess2.h"
 
-#define DEBUG_MUTE_NOISE 0 //1
-#define DEBUG_MUTE_PARTIALS 0 //1
 
 #define SHOW_ONLY_ALIVE 0 //1
 #define MIN_AGE_DISPLAY 0 //10 // 4
@@ -112,8 +110,11 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
     mCurrentMagns = magns;
     
-    //
-    DetectPartials(magns, phases);
+    // DetectPartials
+    mPartialTracker->SetData(magns, phases);
+    mPartialTracker->DetectPartials();
+    mPartialTracker->ExtractNoiseEnvelope();
+    mPartialTracker->FilterPartials();
     
     //
     if (mPartialTracker != NULL)
@@ -178,12 +179,6 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     if (!mSASFrame->ComputeSamplesFlag())
         return;
     
-#if DEBUG_MUTE_NOISE
-    // For the moment, empty the io buffer
-    BLUtils::FillAllZero(ioBuffer);
-#endif
-    
-#if !DEBUG_MUTE_PARTIALS
     // Create a separate buffer for samples synthesis from partials
     // (because it doesn't use overlap)
     WDL_TypedBuf<BL_FLOAT> samplesBuffer;
@@ -210,8 +205,6 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
         BLUtils::AddValues(ioBuffer, samplesBuffer);
     }
 #endif
-    
-#endif
 }
 
 // Use this to synthetize directly 1/4 of the samples from partials
@@ -223,12 +216,6 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     if (!mSASFrame->ComputeSamplesWinFlag())
         return;
     
-#if DEBUG_MUTE_NOISE
-    // For the moment, empty the io buffer
-    BLUtils::FillAllZero(ioBuffer);
-#endif
-    
-#if !DEBUG_MUTE_PARTIALS
     // Create a separate buffer for samples synthesis from partials
     // (because it doesn't use overlap)
     WDL_TypedBuf<BL_FLOAT> samplesBuffer;
@@ -254,8 +241,6 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
         // ioBuffer may already contain noise
         BLUtils::AddValues(ioBuffer, samplesBuffer);
     }
-#endif
-    
 #endif
 }
 
@@ -356,20 +341,6 @@ SASViewerProcess2::Display()
     DisplayColor();
     
     DisplayWarping();
-}
-
-void
-SASViewerProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                  const WDL_TypedBuf<BL_FLOAT> &phases)
-{
-    mPartialTracker->SetData(magns, phases);
-    mPartialTracker->DetectPartials();
-    
-#if !DEBUG_MUTE_NOISE
-    mPartialTracker->ExtractNoiseEnvelope();
-#endif
-    
-    mPartialTracker->FilterPartials();
 }
 
 void
