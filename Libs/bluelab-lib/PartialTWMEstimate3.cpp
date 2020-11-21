@@ -371,7 +371,27 @@ PartialTWMEstimate3::EstimateNaive(const vector<PartialTracker5::Partial> &parti
     if (partials.empty())
         return 0.0;
     
-    return partials[0].mFreq;
+    // Very simple
+    //return partials[0].mFreq;
+    
+    // Take the frequency of the maximum umplitude partial
+    int maxIdx = -1;
+    BL_FLOAT maxAmp = 0.0;
+    for (int i = 0; i < partials.size(); i++)
+    {
+        const PartialTracker5::Partial &p = partials[i];
+        if (p.mAmp > maxAmp)
+        {
+            maxAmp = p.mAmp;
+            maxIdx = i;
+        }
+    }
+    
+    BL_FLOAT freq = 0.0;
+    if (maxIdx != -1)
+        freq = partials[maxIdx].mFreq;
+    
+    return freq;
 }
 
 BL_FLOAT
