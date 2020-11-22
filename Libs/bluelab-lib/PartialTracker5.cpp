@@ -1514,11 +1514,12 @@ PartialTracker5::ComputePeakIndexHalfProminenceAvg(const WDL_TypedBuf<BL_FLOAT> 
 {
     // First step: find float indices corresponding to the half prominence
     //
-    
+    // Find float indices, and intermediate interpolated magns, for more accuracy
+    //
     BL_FLOAT prominence =
         ComputePeakProminence(magns, peakIndex, leftIndex, rightIndex);
 
-    // Half-prominence
+    // Half-prominence threshold
     BL_FLOAT thrs = magns.Get()[peakIndex] - prominence*0.5;
     
     // Left and right float points
@@ -1569,6 +1570,9 @@ PartialTracker5::ComputePeakIndexHalfProminenceAvg(const WDL_TypedBuf<BL_FLOAT> 
     }
     
     // Second step: compute the result float peak index (weighted avg)
+    //
+    // NOTE: Separate first and last float indices from the loop
+    //
     BL_FLOAT sumMagns = 0.0;
     BL_FLOAT sumIndices = 0.0;
     
@@ -1585,7 +1589,7 @@ PartialTracker5::ComputePeakIndexHalfProminenceAvg(const WDL_TypedBuf<BL_FLOAT> 
         sumIndices += i*m;
     }
     
-    // Last point
+    // Last float point
     sumMagns += RP[1];
     sumIndices += RP[0]*RP[1];
     
