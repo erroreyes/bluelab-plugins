@@ -39,8 +39,11 @@ using namespace std;
 // Not perfect: gives hacked SASFrame amplitude
 #define COMPUTE_PEAKS_AVG      0 //1 // ORIGIN 1 // Good even for flat partial top
 // Best: gives smooth SASFrame amplitude
-#define COMPUTE_PEAKS_PARABOLA 1 //0 // Good, but process flat partial tops badly
+#define COMPUTE_PEAKS_PARABOLA 0 // 1// Good, but process flat partial tops badly
 #define COMPUTE_PEAKS_SIMPLE   0
+#define COMPUTE_PEAKS_SIMPLE_PROMINENCE 0 //1
+#define COMPUTE_PEAKS_AVG_PROMINENCE 0 //1
+#define COMPUTE_PEAKS_HALF_PROMINENCE_AVG 1
 
 // With 1, that made more defined partials
 // With 0, avoids partial leaking in noise ("oohoo")
@@ -84,7 +87,7 @@ using namespace std;
 
 // Seems better without, not sure...
 #define USE_KALMAN_FOR_ASSOC 0 //1 //0
-// GOOD: avoid many small zig-zags on the result ines
+// GOOD: avoid many small zig-zags on the result lines
 #define USE_KALMAN_FOR_RESULT 1
 
 // Extract noise envelope
@@ -124,6 +127,7 @@ using namespace std;
 // smoothing on complex gives more noisy result.
 #define TIME_SMOOTH_COMPLEX 0 //1
 
+// Better mel filtering of phase if they ar eunwrapped!
 #define MEL_UNWRAP_PHASES 1
 
 unsigned long PartialTracker5::Partial::mCurrentId = 0;
@@ -1123,6 +1127,29 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     BL_FLOAT peakIndexF = (leftIndex + rightIndex)*0.5;
 #endif
                     
+#if COMPUTE_PEAKS_SIMPLE_PROMINENCE
+                    ComputeProminenceIndices(magns, peakIndex,
+                                             &p.mLeftIndex, &p.mRightIndex);
+                    BL_FLOAT peakIndexF = (p.mLeftIndex + p.mRightIndex)*0.5;
+#endif
+
+#if COMPUTE_PEAKS_AVG_PROMINENCE
+                    ComputeProminenceIndices(magns, peakIndex,
+                                             &p.mLeftIndex, &p.mRightIndex);
+                    BL_FLOAT peakIndexF =
+                                ComputePeakIndexAvgSimple(magns,
+                                                          p.mLeftIndex,
+                                                          p.mRightIndex);
+#endif
+
+#if COMPUTE_PEAKS_HALF_PROMINENCE_AVG
+                    BL_FLOAT peakIndexF =
+                            ComputePeakIndexHalfProminenceAvg(magns,
+                                                              peakIndex,
+                                                              p.mLeftIndex,
+                                                              p.mRightIndex);
+#endif
+                    
                     p.mPeakIndex = bl_round(peakIndexF);
                     if (p.mPeakIndex < 0)
                         p.mPeakIndex = 0;
@@ -1130,6 +1157,7 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     if (p.mPeakIndex > maxDetectIndex)
                         p.mPeakIndex = maxDetectIndex;
 
+                    // Remainder: freq is normalized here
                     BL_FLOAT peakFreq = peakIndexF/(mBufferSize*0.5);
                     p.mFreq = peakFreq;
                     
@@ -1152,6 +1180,8 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     // Phase
                     p.mPhase = phases.Get()[(int)peakIndexF];
 #else
+                    //ComputePeakMagnPhaseInterpComp(magns, phases, peakFreq,
+                    //                               &p.mAmp, &p.mPhase);
                     ComputePeakMagnPhaseInterp(magns, phases, peakFreq,
                                                &p.mAmp, &p.mPhase);
 #endif
@@ -1175,6 +1205,14 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
         
         if (currentIndex + 1 <= maxDetectIndex)
             nextVal = magns.Get()[currentIndex + 1];
+    }
+    
+    static int count = 0;
+    if (count++ == 422)
+    {
+        BLDebug::DumpData("magns.txt", magns);
+        
+        DBG_DumpPartials("partials.txt", *outPartials, magns.GetSize());
     }
 }
 
@@ -1204,9 +1242,9 @@ PartialTracker5::GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns,
             // This is a twin partial...
             {
                 BL_FLOAT promCur = ComputePeakProminence(magns,
-                                                       currentPartial.mPeakIndex,
-                                                       currentPartial.mLeftIndex,
-                                                       currentPartial.mRightIndex);
+                                                         currentPartial.mPeakIndex,
+                                                         currentPartial.mLeftIndex,
+                                                         currentPartial.mRightIndex);
                 
                 BL_FLOAT promOther = ComputePeakProminence(magns,
                                                          otherPartial.mPeakIndex,
@@ -1502,6 +1540,133 @@ PartialTracker5::ComputePeakProminence(const WDL_TypedBuf<BL_FLOAT> &magns,
     return prominence;
 }
 
+// Prominence indices
+void
+PartialTracker5::ComputeProminenceIndices(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                          int peakIndex,
+                                          int *leftIndex, int *rightIndex)
+{
+    // Compute prominence
+    //
+    // See: https://www.mathworks.com/help/signal/ref/findpeaks.html
+    //
+    BL_FLOAT leftAmp = magns.Get()[*leftIndex];
+    BL_FLOAT rightAmp = magns.Get()[*rightIndex];
+    
+    if (leftAmp > rightAmp)
+    {
+        while(*rightIndex > peakIndex)
+        {
+            (*rightIndex)--;
+            
+            BL_FLOAT a = magns.Get()[*rightIndex];
+            if (a >= leftAmp)
+                break;
+        }
+    }
+    else if (leftAmp < rightAmp)
+    {
+        while(*leftIndex < peakIndex)
+        {
+            (*leftIndex)++;
+            
+            BL_FLOAT a = magns.Get()[*leftIndex];
+            if (a >= rightAmp)
+                break;
+        }
+    }
+}
+
+BL_FLOAT
+PartialTracker5::ComputePeakIndexHalfProminenceAvg(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                                   int peakIndex, int leftIndex, int rightIndex)
+{
+    // First step: find float indices corresponding to the half prominence
+    //
+    
+    BL_FLOAT prominence =
+        ComputePeakProminence(magns, peakIndex, leftIndex, rightIndex);
+
+    // Half-prominence
+    BL_FLOAT thrs = magns.Get()[peakIndex] - prominence*0.5;
+    
+    // Left and right float points
+    BL_FLOAT LP[2];
+    LP[0] = leftIndex;
+    LP[1] = magns.Get()[leftIndex];
+    
+    BL_FLOAT RP[2];
+    RP[0] = rightIndex;
+    RP[1] = magns.Get()[rightIndex];
+    
+    // Left
+    while(LP[0] < peakIndex)
+    {
+        if (magns.Get()[(int)LP[0] + 1] > thrs)
+        {
+            BL_FLOAT m0 = magns.Get()[(int)LP[0]];
+            BL_FLOAT m1 = magns.Get()[(int)LP[0] + 1];
+            
+            BL_FLOAT t = (thrs - m0)/(m1 - m0);
+            
+            LP[0] = LP[0] + t;
+            LP[1] = m0 + t*(m1 - m0);
+            
+            break;
+        }
+        
+        LP[0]++;
+    }
+    
+    // Right
+    while(RP[0] > peakIndex)
+    {
+        if (magns.Get()[(int)RP[0] - 1] > thrs)
+        {
+            BL_FLOAT m0 = magns.Get()[(int)RP[0]];
+            BL_FLOAT m1 = magns.Get()[(int)RP[0] - 1];
+            
+            BL_FLOAT t = (thrs - m0)/(m1 - m0);
+            
+            RP[0] = RP[0] - t;
+            RP[1] = m0 + t*(m1 - m0);
+            
+            break;
+        }
+        
+        RP[0]--;
+    }
+    
+    // Second step: compute the result float peak index (weighted avg)
+    BL_FLOAT sumMagns = 0.0;
+    BL_FLOAT sumIndices = 0.0;
+    
+    // First float point
+    sumMagns += LP[1];
+    sumIndices += LP[0]*LP[1];
+    
+    // Middle points
+    for (int i = (int)(LP[0] + 1); i <= (int)RP[0]; i++)
+    {
+        BL_FLOAT m = magns.Get()[i];
+        
+        sumMagns += m;
+        sumIndices += i*m;
+    }
+    
+    // Last point
+    sumMagns += RP[1];
+    sumIndices += RP[0]*RP[1];
+    
+    if (sumMagns < BL_EPS)
+        return 0.0;
+    
+    // Result
+    BL_FLOAT indexF = sumIndices/sumMagns;
+    
+    return indexF;
+}
+
 // Inverse of prominence
 BL_FLOAT
 PartialTracker5::ComputePeakHeight(const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -1789,6 +1954,30 @@ PartialTracker5::ComputePeakIndexAvg(const WDL_TypedBuf<BL_FLOAT> &magns,
     return result;
 }
 
+BL_FLOAT
+PartialTracker5::ComputePeakIndexAvgSimple(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                           int leftIndex, int rightIndex)
+{
+    BL_FLOAT sumIndex = 0.0;
+    BL_FLOAT sumMagns = 0.0;
+    for (int i = leftIndex; i <= rightIndex; i++)
+    {
+        BL_FLOAT magn = magns.Get()[i];
+        
+        // IDEA: convert to amp?
+        
+        sumIndex += i*magn;
+        sumMagns += magn;
+    }
+    
+    if (sumMagns < BL_EPS)
+        return 0.0;
+    
+    BL_FLOAT result = sumIndex/sumMagns;
+    
+    return result;
+}
+
 // Parabola peak center detection
 // Works well (but I prefer my method) 
 //
@@ -1873,12 +2062,14 @@ PartialTracker5::ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
     return peakPhase;
 }
 
+// BAD
+
 // Interpolate in complex domain, to interpolate phases correctly
 void
-PartialTracker5::ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                            const WDL_TypedBuf<BL_FLOAT> &phases,
-                                            BL_FLOAT peakFreq,
-                                            BL_FLOAT *peakAmp, BL_FLOAT *peakPhase)
+PartialTracker5::ComputePeakMagnPhaseInterpComp(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                                const WDL_TypedBuf<BL_FLOAT> &phases,
+                                                BL_FLOAT peakFreq,
+                                                BL_FLOAT *peakAmp, BL_FLOAT *peakPhase)
 {    
     BL_FLOAT bin = peakFreq*mBufferSize*0.5;
     
@@ -1909,7 +2100,35 @@ PartialTracker5::ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
     
     // Result
     *peakAmp = COMP_MAGN(peakComp);
-    *peakPhase = COMP_MAGN(peakComp);
+    *peakPhase = COMP_PHASE(peakComp);
+}
+
+// VERY GOOD!
+// NOTE: use unwraped phases
+void
+PartialTracker5::ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                            const WDL_TypedBuf<BL_FLOAT> &uwPhases,
+                                            BL_FLOAT peakFreq,
+                                            BL_FLOAT *peakAmp, BL_FLOAT *peakPhase)
+{
+    BL_FLOAT bin = peakFreq*mBufferSize*0.5;
+    
+    int prevBin = (int)bin;
+    int nextBin = (int)bin + 1;
+    
+    if (nextBin >= magns.GetSize())
+    {
+        *peakAmp = magns.Get()[prevBin];
+        *peakPhase = uwPhases.Get()[prevBin];
+        
+        return;
+    }
+    
+    // Interpolate
+    BL_FLOAT t = bin - prevBin;
+    
+    *peakAmp = (1.0 - t)*magns.Get()[prevBin] + t*magns.Get()[nextBin];
+    *peakPhase = (1.0 - t)*uwPhases.Get()[prevBin] + t*uwPhases.Get()[nextBin];
 }
 
 int
@@ -2230,8 +2449,10 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
     mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 
 #if MEL_UNWRAP_PHASES
+    // NOTE: commented, because we will need unwrapped phases later!
+    
     // With ot without this line, we got the same result
-    BLUtils::MapToPi(phases);
+    //BLUtils::MapToPi(phases);
 #endif
 }
 

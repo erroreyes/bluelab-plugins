@@ -1745,8 +1745,6 @@ SASFrame3::ComputeFrequency()
 {
     BL_FLOAT freq = mPartialsToFreq->ComputeFrequency(mPartials);
     
-    //BLDebug::AppendValue("freq.txt", freq);
-    
     mFrequency = freq;
 }
 

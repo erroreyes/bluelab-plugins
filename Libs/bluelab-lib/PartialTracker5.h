@@ -193,9 +193,15 @@ protected:
     //
     BL_FLOAT ComputePeakIndexAvg(const WDL_TypedBuf<BL_FLOAT> &magns,
                                  int leftIndex, int rightIndex);
+    BL_FLOAT ComputePeakIndexAvgSimple(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                       int leftIndex, int rightIndex);
     
     BL_FLOAT ComputePeakIndexParabola(const WDL_TypedBuf<BL_FLOAT> &magns,
                                       int peakIndex);
+    
+    // Advanced method
+    BL_FLOAT ComputePeakIndexHalfProminenceAvg(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                               int peakIndex, int leftIndex, int rightIndex);
     
     // Peak amp
     //
@@ -205,8 +211,13 @@ protected:
     BL_FLOAT ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
                                     BL_FLOAT peakFreq);
     
+    void ComputePeakMagnPhaseInterpComp(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                        const WDL_TypedBuf<BL_FLOAT> &phases,
+                                        BL_FLOAT peakFreq,
+                                        BL_FLOAT *peakAmp, BL_FLOAT *peakPhase);
+    
     void ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                    const WDL_TypedBuf<BL_FLOAT> &phases,
+                                    const WDL_TypedBuf<BL_FLOAT> &unwrappedPhases,
                                     BL_FLOAT peakFreq,
                                     BL_FLOAT *peakAmp, BL_FLOAT *peakPhase);
     
@@ -270,6 +281,10 @@ protected:
     // Compute for all peaks
     void ComputePeaksHeights(const WDL_TypedBuf<BL_FLOAT> &magns,
                              vector<Partial> *partials);
+
+    void ComputeProminenceIndices(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                  int peakIndex,
+                                  int *ioLeftIndex, int *ioRightIndex);
 
     
     // Filter
