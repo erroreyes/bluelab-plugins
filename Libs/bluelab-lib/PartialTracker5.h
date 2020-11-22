@@ -172,7 +172,9 @@ protected:
                     WDL_TypedBuf<BL_FLOAT> *phases);
     
     // Apply time smooth (removes the noise and make more neat peaks), very good!
-    void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns);
+    void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns); // method 1: magn
+    void PreProcessTimeSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *comps); // method 2: complex
+
     
     // Apply A-Weighting, so the peaks at highest frequencies will not be small
     void PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns, bool reverse = false);
@@ -378,7 +380,10 @@ protected:
     
     // For Pre-Process
     BL_FLOAT mTimeSmoothCoeff;
+    // Either smooth only magns..
     WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevMagns;
+    // Or smooth complex
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTimeSmoothPrevComps;
     
     // Scales
     Scale *mScale;

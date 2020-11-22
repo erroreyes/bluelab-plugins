@@ -56,7 +56,6 @@ using namespace std;
 #define GLUE_BARBS              1 //0
 #define GLUE_BARBS_AMP_RATIO    10.0 //4.0
 
-
 // Filter
 //
 
@@ -119,6 +118,11 @@ using namespace std;
 
 // Get the precision when interpolating peak magns, but also for phases
 #define INTERPOLATE_PHASES 1
+
+// Time smooth on complex or on magns only?
+// => with the same time smooth coeff (0.5),
+// smoothing on complex gives more noisy result.
+#define TIME_SMOOTH_COMPLEX 0 //1
 
 unsigned long PartialTracker5::Partial::mCurrentId = 0;
 
@@ -238,7 +242,6 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     mYScaleInv = Scale::DB_INV;
     
     mTimeSmoothCoeff = 0.5;
-    
     mTimeSmoothNoiseCoeff = 0.5;
     
     mDbgParam = 1.0;
@@ -269,7 +272,7 @@ PartialTracker5::Reset()
     mPrevNoiseMasks.clear();
     
     mTimeSmoothPrevMagns.Resize(0);
-    
+    mTimeSmoothPrevComps.Resize(0);
     mTimeSmoothPrevNoise.Resize(0);
 }
 
@@ -2226,7 +2229,16 @@ void
 PartialTracker5::PreProcessUnwrapPhases(WDL_TypedBuf<BL_FLOAT> *magns,
                                         WDL_TypedBuf<BL_FLOAT> *phases)
 {
+#if !TIME_SMOOTH_COMPLEX
+    // ORIGIN: smooth only magns
     PreProcessTimeSmooth(magns);
+#else
+    // NEW: smooth complex
+    WDL_TypedBuf<WDL_FFT_COMPLEX> comps;
+    BLUtils::MagnPhaseToComplex(&comps, *magns, *phases);
+    PreProcessTimeSmooth(&comps);
+    BLUtils::ComplexToMagnPhase(magns, phases, comps);
+#endif
     
 #if SQUARE_MAGNS
     BLUtils::ComputeSquare(magns);
@@ -2277,6 +2289,32 @@ PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
     }
     
     mTimeSmoothPrevMagns = *magns;
+}
+
+// Time smooth complex
+void
+PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *comps)
+{
+    if (mTimeSmoothPrevComps.GetSize() == 0)
+    {
+        mTimeSmoothPrevComps = *comps;
+        
+        return;
+    }
+    
+    for (int i = 0; i < comps->GetSize(); i++)
+    {
+        WDL_FFT_COMPLEX val = comps->Get()[i];
+        WDL_FFT_COMPLEX prevVal = mTimeSmoothPrevComps.Get()[i];
+        
+        WDL_FFT_COMPLEX newVal;
+        newVal.re = (1.0 - mTimeSmoothCoeff)*val.re + mTimeSmoothCoeff*prevVal.re;
+        newVal.im = (1.0 - mTimeSmoothCoeff)*val.im + mTimeSmoothCoeff*prevVal.im;
+        
+        comps->Get()[i] = newVal;
+    }
+    
+    mTimeSmoothPrevComps = *comps;
 }
 
 // Time smooth noise
