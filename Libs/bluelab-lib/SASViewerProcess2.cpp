@@ -109,9 +109,7 @@ SASViewerProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
     // DetectPartials
-    //mPartialTracker->SetData(magns, phases);
-    //mPartialTracker->SetDataComp(magns, phases);
-    mPartialTracker->SetDataUnwrapPhases(magns, phases);
+    mPartialTracker->SetData(magns, phases);
     mPartialTracker->DetectPartials();
     mPartialTracker->ExtractNoiseEnvelope();
     mPartialTracker->FilterPartials();

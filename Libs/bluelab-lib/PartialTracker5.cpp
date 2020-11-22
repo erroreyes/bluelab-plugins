@@ -124,6 +124,8 @@ using namespace std;
 // smoothing on complex gives more noisy result.
 #define TIME_SMOOTH_COMPLEX 0 //1
 
+#define MEL_UNWRAP_PHASES 1
+
 unsigned long PartialTracker5::Partial::mCurrentId = 0;
 
 
@@ -305,16 +307,6 @@ PartialTracker5::SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
     mCurrentPhases = phases;
     
     PreProcess(&mCurrentMagns, &mCurrentPhases);
-}
-
-void
-PartialTracker5::SetDataUnwrapPhases(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                     const WDL_TypedBuf<BL_FLOAT> &phases)
-{
-    mCurrentMagns = magns;
-    mCurrentPhases = phases;
-    
-    PreProcessUnwrapPhases(&mCurrentMagns, &mCurrentPhases);
 }
 
 void
@@ -2208,26 +2200,10 @@ PartialTracker5::PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data)
     PreProcessDataX(data);
 }
 
+// Unwrap phase before converting to mel => more correct!
 void
 PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
                             WDL_TypedBuf<BL_FLOAT> *phases)
-{
-    PreProcessTimeSmooth(magns);
-    
-#if SQUARE_MAGNS
-    BLUtils::ComputeSquare(magns);
-#endif
-    
-    PreProcessDataXY(magns);
-    
-    // Phases
-    mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-}
-
-// Unwrap phase before converting to mel => more correct!
-void
-PartialTracker5::PreProcessUnwrapPhases(WDL_TypedBuf<BL_FLOAT> *magns,
-                                        WDL_TypedBuf<BL_FLOAT> *phases)
 {
 #if !TIME_SMOOTH_COMPLEX
     // ORIGIN: smooth only magns
@@ -2246,13 +2222,17 @@ PartialTracker5::PreProcessUnwrapPhases(WDL_TypedBuf<BL_FLOAT> *magns,
     
     PreProcessDataXY(magns);
     
+#if MEL_UNWRAP_PHASES
     BLUtils::UnwrapPhases(phases);
+#endif
     
     // Phases
     mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-    
+
+#if MEL_UNWRAP_PHASES
     // With ot without this line, we got the same result
     BLUtils::MapToPi(phases);
+#endif
 }
 
 void

@@ -119,12 +119,6 @@ public:
     // Magn/phase
     void SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
                  const WDL_TypedBuf<BL_FLOAT> &phases);
-    // Process in complex (not working)
-    void SetDataComp(const WDL_TypedBuf<BL_FLOAT> &magns,
-                     const WDL_TypedBuf<BL_FLOAT> &phases);
-    // Unwrap phases for mel scale
-    void SetDataUnwrapPhases(const WDL_TypedBuf<BL_FLOAT> &magns,
-                             const WDL_TypedBuf<BL_FLOAT> &phases);
     
     void GetPreProcessedMagns(WDL_TypedBuf<BL_FLOAT> *magns);
     
