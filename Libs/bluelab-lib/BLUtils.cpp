@@ -2766,8 +2766,8 @@ template void BLUtils::ComplexToPhase(WDL_TypedBuf<double> *result,
 template <typename FLOAT_TYPE>
 void
 BLUtils::ComplexToMagnPhase(WDL_TypedBuf<FLOAT_TYPE> *resultMagn,
-                          WDL_TypedBuf<FLOAT_TYPE> *resultPhase,
-                          const WDL_TypedBuf<WDL_FFT_COMPLEX> &complexBuf)
+                            WDL_TypedBuf<FLOAT_TYPE> *resultPhase,
+                            const WDL_TypedBuf<WDL_FFT_COMPLEX> &complexBuf)
 {
     resultMagn->Resize(complexBuf.GetSize());
     resultPhase->Resize(complexBuf.GetSize());

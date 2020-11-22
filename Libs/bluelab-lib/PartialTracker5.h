@@ -119,8 +119,12 @@ public:
     // Magn/phase
     void SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
                  const WDL_TypedBuf<BL_FLOAT> &phases);
-    // Complex
-    void SetData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &comp);
+    // Process in complex (not working)
+    void SetDataComp(const WDL_TypedBuf<BL_FLOAT> &magns,
+                     const WDL_TypedBuf<BL_FLOAT> &phases);
+    // Unwrap phases for mel scale
+    void SetDataUnwrapPhases(const WDL_TypedBuf<BL_FLOAT> &magns,
+                             const WDL_TypedBuf<BL_FLOAT> &phases);
     
     void GetPreProcessedMagns(WDL_TypedBuf<BL_FLOAT> *magns);
     
@@ -154,10 +158,9 @@ public:
     // For processing result color for example, just before display
     void PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data);
     
-    // Complex
-    void PreProcessData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &data,
-                        WDL_TypedBuf<BL_FLOAT> *magns,
-                        WDL_TypedBuf<BL_FLOAT> *phases);
+    // Unwrap phases for interpolatin in Mel
+    void PreProcessUnwrapPhases(WDL_TypedBuf<BL_FLOAT> *magns,
+                                WDL_TypedBuf<BL_FLOAT> *phases);
     
     void DenormPartials(vector<PartialTracker5::Partial> *partials);
     void DenormData(WDL_TypedBuf<BL_FLOAT> *data);

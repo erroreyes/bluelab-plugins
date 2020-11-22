@@ -305,9 +305,13 @@ PartialTracker5::SetData(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-PartialTracker5::SetData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &comp)
+PartialTracker5::SetDataUnwrapPhases(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                     const WDL_TypedBuf<BL_FLOAT> &phases)
 {
-    PreProcessData(comp, &mCurrentMagns, &mCurrentPhases);
+    mCurrentMagns = magns;
+    mCurrentPhases = phases;
+    
+    PreProcessUnwrapPhases(&mCurrentMagns, &mCurrentPhases);
 }
 
 void
@@ -2202,48 +2206,6 @@ PartialTracker5::PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data)
 }
 
 void
-PartialTracker5::PreProcessData(const WDL_TypedBuf<WDL_FFT_COMPLEX> &data,
-                                WDL_TypedBuf<BL_FLOAT> *resultMagns,
-                                WDL_TypedBuf<BL_FLOAT> *resultPhases)
-{
-    // Extract magns, to be able to apply dB and A-Weighting
-    // And will use phases for re-synthetizing complex
-    WDL_TypedBuf<BL_FLOAT> magns0;
-    WDL_TypedBuf<BL_FLOAT> phases0;
-    BLUtils::ComplexToMagnPhase(&magns0, &phases0, data);
-    
-    // Y: apply dB
-    for (int i = 0; i < magns0.GetSize(); i++)
-    {
-        BL_FLOAT d = magns0.Get()[i];
-        d = Scale::ApplyScale(mYScale, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
-        magns0.Get()[i] = d;
-    }
-    
-    // Better tracking on high frequencies with this!
-    PreProcessAWeighting(&magns0, true);
-    
-    // Re-create complex
-    WDL_TypedBuf<WDL_FFT_COMPLEX> comp0;
-    BLUtils::MagnPhaseToComplex(&comp0, magns0, phases0);
-    
-    // Separate re and im from complex
-    WDL_TypedBuf<BL_FLOAT> re;
-    WDL_TypedBuf<BL_FLOAT> im;
-    BLUtils::ComplexToReIm(&re, &im, comp0);
-    
-    // Scale re and im with mel etc.
-    PreProcessDataX(&re);
-    PreProcessDataX(&im);
-    
-    // Re-assemble complex
-    BLUtils::ReImToComplex(&comp0, re, im);
-    
-    // Separate to magn and phase
-    BLUtils::ComplexToMagnPhase(resultMagns, resultPhases, comp0);
-}
-
-void
 PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
                             WDL_TypedBuf<BL_FLOAT> *phases)
 {
@@ -2257,6 +2219,28 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
     
     // Phases
     mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+}
+
+// Unwrap phase before converting to mel => more correct!
+void
+PartialTracker5::PreProcessUnwrapPhases(WDL_TypedBuf<BL_FLOAT> *magns,
+                                        WDL_TypedBuf<BL_FLOAT> *phases)
+{
+    PreProcessTimeSmooth(magns);
+    
+#if SQUARE_MAGNS
+    BLUtils::ComputeSquare(magns);
+#endif
+    
+    PreProcessDataXY(magns);
+    
+    BLUtils::UnwrapPhases(phases);
+    
+    // Phases
+    mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    
+    // With ot without this line, we got the same result
+    BLUtils::MapToPi(phases);
 }
 
 void
