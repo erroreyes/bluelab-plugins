@@ -166,9 +166,8 @@ protected:
                     WDL_TypedBuf<BL_FLOAT> *phases);
     
     // Apply time smooth (removes the noise and make more neat peaks), very good!
-    void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns); // method 1: magn
-    void PreProcessTimeSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *comps); // method 2: complex
-
+    // NOTE: Smooth only magns. Test on complex, and that was baD.
+    void PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns);
     
     // Apply A-Weighting, so the peaks at highest frequencies will not be small
     void PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns, bool reverse = false);
@@ -207,14 +206,6 @@ protected:
     //
     BL_FLOAT ComputePeakAmpInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
                                   BL_FLOAT peakFreq);
-    
-    BL_FLOAT ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
-                                    BL_FLOAT peakFreq);
-    
-    void ComputePeakMagnPhaseInterpComp(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                        const WDL_TypedBuf<BL_FLOAT> &phases,
-                                        BL_FLOAT peakFreq,
-                                        BL_FLOAT *peakAmp, BL_FLOAT *peakPhase);
     
     void ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
                                     const WDL_TypedBuf<BL_FLOAT> &unwrappedPhases,
@@ -281,10 +272,6 @@ protected:
     // Compute for all peaks
     void ComputePeaksHeights(const WDL_TypedBuf<BL_FLOAT> &magns,
                              vector<Partial> *partials);
-
-    void ComputeProminenceIndices(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                  int peakIndex,
-                                  int *ioLeftIndex, int *ioRightIndex);
 
     
     // Filter
@@ -389,10 +376,8 @@ protected:
     
     // For Pre-Process
     BL_FLOAT mTimeSmoothCoeff;
-    // Either smooth only magns..
+    // Smooth only magns (tried smooth complex, but that was bad)
     WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevMagns;
-    // Or smooth complex
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mTimeSmoothPrevComps;
     
     // Scales
     Scale *mScale;

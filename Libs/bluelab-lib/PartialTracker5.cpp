@@ -37,12 +37,11 @@ using namespace std;
 // Compute simple, avg, or parabola ?
 // (Avg seems a little more smooth than parabola)
 // Not perfect: gives hacked SASFrame amplitude
-#define COMPUTE_PEAKS_AVG      0 //1 // ORIGIN 1 // Good even for flat partial top
-// Best: gives smooth SASFrame amplitude
-#define COMPUTE_PEAKS_PARABOLA 0 // 1// Good, but process flat partial tops badly
+#define COMPUTE_PEAKS_AVG      0
+// Good for narrow partials, but process flat partial tops badly
+#define COMPUTE_PEAKS_PARABOLA 0
 #define COMPUTE_PEAKS_SIMPLE   0
-#define COMPUTE_PEAKS_SIMPLE_PROMINENCE 0 //1
-#define COMPUTE_PEAKS_AVG_PROMINENCE 0 //1
+// Advance method in 2 steps. VERY GOOD!
 #define COMPUTE_PEAKS_HALF_PROMINENCE_AVG 1
 
 // With 1, that made more defined partials
@@ -121,11 +120,6 @@ using namespace std;
 
 // Get the precision when interpolating peak magns, but also for phases
 #define INTERPOLATE_PHASES 1
-
-// Time smooth on complex or on magns only?
-// => with the same time smooth coeff (0.5),
-// smoothing on complex gives more noisy result.
-#define TIME_SMOOTH_COMPLEX 0 //1
 
 // Better mel filtering of phase if they ar eunwrapped!
 #define MEL_UNWRAP_PHASES 1
@@ -278,7 +272,6 @@ PartialTracker5::Reset()
     mPrevNoiseMasks.clear();
     
     mTimeSmoothPrevMagns.Resize(0);
-    mTimeSmoothPrevComps.Resize(0);
     mTimeSmoothPrevNoise.Resize(0);
 }
 
@@ -1123,25 +1116,10 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 #endif
                     
 #if COMPUTE_PEAKS_SIMPLE
-                    //BL_FLOAT peakIndexF = peakIndex;
                     BL_FLOAT peakIndexF = (leftIndex + rightIndex)*0.5;
 #endif
-                    
-#if COMPUTE_PEAKS_SIMPLE_PROMINENCE
-                    ComputeProminenceIndices(magns, peakIndex,
-                                             &p.mLeftIndex, &p.mRightIndex);
-                    BL_FLOAT peakIndexF = (p.mLeftIndex + p.mRightIndex)*0.5;
-#endif
 
-#if COMPUTE_PEAKS_AVG_PROMINENCE
-                    ComputeProminenceIndices(magns, peakIndex,
-                                             &p.mLeftIndex, &p.mRightIndex);
-                    BL_FLOAT peakIndexF =
-                                ComputePeakIndexAvgSimple(magns,
-                                                          p.mLeftIndex,
-                                                          p.mRightIndex);
-#endif
-
+                    // VERY GOOD!
 #if COMPUTE_PEAKS_HALF_PROMINENCE_AVG
                     BL_FLOAT peakIndexF =
                             ComputePeakIndexHalfProminenceAvg(magns,
@@ -1180,8 +1158,6 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     // Phase
                     p.mPhase = phases.Get()[(int)peakIndexF];
 #else
-                    //ComputePeakMagnPhaseInterpComp(magns, phases, peakFreq,
-                    //                               &p.mAmp, &p.mPhase);
                     ComputePeakMagnPhaseInterp(magns, phases, peakFreq,
                                                &p.mAmp, &p.mPhase);
 #endif
@@ -1205,14 +1181,6 @@ PartialTracker5::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
         
         if (currentIndex + 1 <= maxDetectIndex)
             nextVal = magns.Get()[currentIndex + 1];
-    }
-    
-    static int count = 0;
-    if (count++ == 422)
-    {
-        BLDebug::DumpData("magns.txt", magns);
-        
-        DBG_DumpPartials("partials.txt", *outPartials, magns.GetSize());
     }
 }
 
@@ -1538,43 +1506,6 @@ PartialTracker5::ComputePeakProminence(const WDL_TypedBuf<BL_FLOAT> &magns,
     BL_FLOAT prominence = peakAmp - maxFootAmp;
     
     return prominence;
-}
-
-// Prominence indices
-void
-PartialTracker5::ComputeProminenceIndices(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                          int peakIndex,
-                                          int *leftIndex, int *rightIndex)
-{
-    // Compute prominence
-    //
-    // See: https://www.mathworks.com/help/signal/ref/findpeaks.html
-    //
-    BL_FLOAT leftAmp = magns.Get()[*leftIndex];
-    BL_FLOAT rightAmp = magns.Get()[*rightIndex];
-    
-    if (leftAmp > rightAmp)
-    {
-        while(*rightIndex > peakIndex)
-        {
-            (*rightIndex)--;
-            
-            BL_FLOAT a = magns.Get()[*rightIndex];
-            if (a >= leftAmp)
-                break;
-        }
-    }
-    else if (leftAmp < rightAmp)
-    {
-        while(*leftIndex < peakIndex)
-        {
-            (*leftIndex)++;
-            
-            BL_FLOAT a = magns.Get()[*leftIndex];
-            if (a >= rightAmp)
-                break;
-        }
-    }
 }
 
 BL_FLOAT
@@ -2035,82 +1966,17 @@ PartialTracker5::ComputePeakAmpInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
     return peakAmp;
 }
 
-// NOTE: not well tested
-BL_FLOAT
-PartialTracker5::ComputePeakPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &phases,
-                                        BL_FLOAT peakFreq)
-{
-    int bin = peakFreq*(mBufferSize*0.5);
-    
-    int prevBin = (int)bin;
-    int nextBin = (int)bin + 1;
-    
-    if (nextBin >= phases.GetSize())
-    {
-        BL_FLOAT peakPhase = phases.Get()[prevBin];
-        
-        return peakPhase;
-    }
-    
-    BL_FLOAT prevPhase = phases.Get()[prevBin];
-    BL_FLOAT nextPhase = phases.Get()[nextBin];
-    
-    BL_FLOAT t = bin - prevBin;
-    
-    BL_FLOAT peakPhase = (1.0 - t)*prevPhase + t*nextPhase;
-    
-    return peakPhase;
-}
-
-// BAD
-
-// Interpolate in complex domain, to interpolate phases correctly
-void
-PartialTracker5::ComputePeakMagnPhaseInterpComp(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                                const WDL_TypedBuf<BL_FLOAT> &phases,
-                                                BL_FLOAT peakFreq,
-                                                BL_FLOAT *peakAmp, BL_FLOAT *peakPhase)
-{    
-    BL_FLOAT bin = peakFreq*mBufferSize*0.5;
-    
-    int prevBin = (int)bin;
-    int nextBin = (int)bin + 1;
-    
-    if (nextBin >= magns.GetSize())
-    {
-        *peakAmp = magns.Get()[prevBin];
-        *peakPhase = phases.Get()[prevBin];
-        
-        return;
-    }
-    
-    // Init
-    WDL_FFT_COMPLEX prevComp;
-    MAGN_PHASE_COMP(magns.Get()[prevBin], phases.Get()[prevBin], prevComp);
-    
-    WDL_FFT_COMPLEX nextComp;
-    MAGN_PHASE_COMP(magns.Get()[nextBin], phases.Get()[nextBin], nextComp);
-    
-    // Interpolate
-    BL_FLOAT t = bin - prevBin;
-    
-    WDL_FFT_COMPLEX peakComp;
-    peakComp.re = (1.0 - t)*prevComp.re + t*nextComp.re;
-    peakComp.im = (1.0 - t)*prevComp.im + t*nextComp.im;
-    
-    // Result
-    *peakAmp = COMP_MAGN(peakComp);
-    *peakPhase = COMP_PHASE(peakComp);
-}
-
 // VERY GOOD!
 // NOTE: use unwraped phases
+// NOTE: previouslt tested with complex interpolation => that was bad.
 void
 PartialTracker5::ComputePeakMagnPhaseInterp(const WDL_TypedBuf<BL_FLOAT> &magns,
                                             const WDL_TypedBuf<BL_FLOAT> &uwPhases,
                                             BL_FLOAT peakFreq,
                                             BL_FLOAT *peakAmp, BL_FLOAT *peakPhase)
 {
+    // TEST: tested that phases are unwrapped here: ok
+    
     BL_FLOAT bin = peakFreq*mBufferSize*0.5;
     
     int prevBin = (int)bin;
@@ -2424,16 +2290,9 @@ void
 PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
                             WDL_TypedBuf<BL_FLOAT> *phases)
 {
-#if !TIME_SMOOTH_COMPLEX
     // ORIGIN: smooth only magns
+    // NOTE: tested smooting on complex => gave more noisy result
     PreProcessTimeSmooth(magns);
-#else
-    // NEW: smooth complex
-    WDL_TypedBuf<WDL_FFT_COMPLEX> comps;
-    BLUtils::MagnPhaseToComplex(&comps, *magns, *phases);
-    PreProcessTimeSmooth(&comps);
-    BLUtils::ComplexToMagnPhase(magns, phases, comps);
-#endif
     
 #if SQUARE_MAGNS
     BLUtils::ComputeSquare(magns);
@@ -2450,8 +2309,9 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
 
 #if MEL_UNWRAP_PHASES
     // NOTE: commented, because we will need unwrapped phases later!
+    // (in ComputePeakMagnPhaseInterp())
     
-    // With ot without this line, we got the same result
+    // With or without this line, we get the same result
     //BLUtils::MapToPi(phases);
 #endif
 }
@@ -2490,32 +2350,6 @@ PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<BL_FLOAT> *magns)
     }
     
     mTimeSmoothPrevMagns = *magns;
-}
-
-// Time smooth complex
-void
-PartialTracker5::PreProcessTimeSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *comps)
-{
-    if (mTimeSmoothPrevComps.GetSize() == 0)
-    {
-        mTimeSmoothPrevComps = *comps;
-        
-        return;
-    }
-    
-    for (int i = 0; i < comps->GetSize(); i++)
-    {
-        WDL_FFT_COMPLEX val = comps->Get()[i];
-        WDL_FFT_COMPLEX prevVal = mTimeSmoothPrevComps.Get()[i];
-        
-        WDL_FFT_COMPLEX newVal;
-        newVal.re = (1.0 - mTimeSmoothCoeff)*val.re + mTimeSmoothCoeff*prevVal.re;
-        newVal.im = (1.0 - mTimeSmoothCoeff)*val.im + mTimeSmoothCoeff*prevVal.im;
-        
-        comps->Get()[i] = newVal;
-    }
-    
-    mTimeSmoothPrevComps = *comps;
 }
 
 // Time smooth noise

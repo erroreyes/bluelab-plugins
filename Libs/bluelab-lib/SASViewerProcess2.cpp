@@ -28,11 +28,11 @@
 #define DISPLAY_HARMO_SUBSTRACT 1
 
 // Use full SASFrame
-#define OUT_HARMO_SAS_FRAME 0 //1 // ORIGIN
+#define OUT_HARMO_SAS_FRAME 1 //0 //1 // ORIGIN
 // Use extracted harmonic envelope
 #define OUT_HARMO_EXTRACTED_ENV 0 //1 //0
 // Use input partials (not modified by color etc.)
-#define OUT_HARMO_INPUT_PARTIALS 1 //0 //1
+#define OUT_HARMO_INPUT_PARTIALS 0 //1 //0 //1
 
 SASViewerProcess2::SASViewerProcess2(int bufferSize,
                                      BL_FLOAT overlapping, BL_FLOAT oversampling,
