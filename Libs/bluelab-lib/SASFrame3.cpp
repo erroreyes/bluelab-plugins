@@ -54,7 +54,10 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 //
 // Avoids jumps in envelope
 #define COLOR_SMOOTH_COEFF 0.5 //0.95
-#define WARPING_SMOOTH_COEFF 0.0 //0.95
+// ORIGIN
+//#define WARPING_SMOOTH_COEFF 0.0 //0.95
+// NEW
+#define WARPING_SMOOTH_COEFF 0.5
 #define FREQ_SMOOTH_COEFF 0.0 //0.9
 
 // Compute samples directly from tracked partials
@@ -367,7 +370,8 @@ SASFrame3::ComputeSamplesResynthWin(WDL_TypedBuf<BL_FLOAT> *samples)
         //ComputeSamplesSAS2(samples);
         //ComputeSamplesSAS3(samples);
         //ComputeSamplesSAS4(samples);
-        ComputeSamplesSAS5(samples);
+        //ComputeSamplesSAS5(samples);
+        ComputeSamplesSAS6(samples);
     }
 #endif
     
@@ -1097,6 +1101,7 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
                 BL_FLOAT freq = (1.0 - t)*prevPartial.mFreq + t*partial.mFreq;
                 BL_FLOAT amp = (1.0 - t)*prevPartialAmp + t*partialAmp;
                 
+                // NOTE: this is buggy for the moment => makes jumps
                 freq *= w;
                 
 #if !OPTIM_COLOR_INTERP
@@ -1161,6 +1166,141 @@ SASFrame3::ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples)
     mPrevSASPartials = mSASPartials;
 }
 
+// ComputeSamplesSAS2
+// Optim
+// Gain (by suppressing loops): 74 => 57ms (~20%)
+//
+// ComputeSamplesSAS3: avoid tiny clicks (not audible)
+//
+// ComputeSamplesSAS4: optimize more
+//
+// ComputeSamplesSAS5: optimize more
+//
+// ComputeSamplesSAS6: Refact and try to debug
+void
+SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
+{
+    // TEST DEBUG
+    //mFrequency = 350.0;
+    
+    samples->Resize(mBufferSize);
+    
+    BLUtils::FillAllZero(samples);
+    
+    // First time: initialize the partials
+    if (mSASPartials.empty())
+    {
+        mSASPartials.resize(SYNTH_MAX_NUM_PARTIALS);
+    }
+    
+    if (mPrevSASPartials.empty())
+        mPrevSASPartials = mSASPartials;
+    
+    if (mPrevColor.GetSize() != mColor.GetSize())
+        mPrevColor = mColor;
+    
+    if (mPrevNormWarping.GetSize() != mNormWarping.GetSize())
+        mPrevNormWarping = mNormWarping;
+    
+    // Optim
+    BL_FLOAT phaseCoeff = 2.0*M_PI/mSampleRate;
+    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
+    BL_FLOAT hzPerBinInv = 1.0/hzPerBin;
+    
+    // Sort partials by amplitude, in order to play the highest amplitudes ?
+    BL_FLOAT partialFreq = mFrequency*mPitch;
+    int partialIndex = 0;
+    while((partialFreq < mSampleRate/2.0) && (partialIndex < SYNTH_MAX_NUM_PARTIALS))
+    {
+        if (partialFreq > SYNTH_MIN_FREQ)
+        {
+            // Current and prev partials
+            SASPartial &partial = mSASPartials[partialIndex];
+            partial.mFreq = partialFreq;
+            partial.mAmp = mAmplitude;
+            
+            const SASPartial &prevPartial = mPrevSASPartials[partialIndex];
+            
+            // Current phase
+            BL_FLOAT phase = prevPartial.mPhase;
+            
+            // Amp
+            BL_FLOAT partialAmp = partial.mAmp;
+            BL_FLOAT prevPartialAmp = prevPartial.mAmp;
+            
+            // Optim
+            // For color
+            BL_FLOAT binIdx = partialFreq*hzPerBinInv;
+            
+            // TODO: take the exact frequency of prev partial! (may have changed beteen prev and current)
+            // TODO: interp bin float !!!
+            
+            // Warping
+            BL_FLOAT w0 = GetWarping(mPrevNormWarping, binIdx);
+            BL_FLOAT w1 = GetWarping(mNormWarping, binIdx);
+            
+            // Color
+            BL_FLOAT prevBinIdxc = w0*prevPartial.mFreq*hzPerBinInv;
+            BL_FLOAT binIdxc = w1*partial.mFreq*hzPerBinInv;
+            
+            BL_FLOAT col0 = GetColor(mPrevColor, prevBinIdxc);
+            BL_FLOAT col1 = GetColor(mColor, binIdxc);
+            
+            if ((col0 < BL_EPS) && (col1 < BL_EPS))
+            // Color will be 0, no need to synthetize samples
+            {
+                partialIndex++;
+                partialFreq = mFrequency*mPitch*(partialIndex + 1);
+                
+                continue;
+            }
+            
+            // Loop
+            //
+            BL_FLOAT t = 0.0;
+            BL_FLOAT tStep = 1.0/(samples->GetSize()/mOverlapping - 1);
+            for (int i = 0; i < samples->GetSize()/mOverlapping; i++)
+            {
+                // Compute norm warping
+                BL_FLOAT w = 1.0;
+                if (binIdx < mNormWarping.GetSize() - 1)
+                {
+                    w = (1.0 - t)*w0 + t*w1;
+                }
+                
+                // Compute freq and partial amp
+                BL_FLOAT freq = (1.0 - t)*prevPartial.mFreq + t*partial.mFreq;
+                BL_FLOAT amp = (1.0 - t)*prevPartialAmp + t*partialAmp;
+                
+                // NOTE: this is buggy for the moment => makes jumps
+                freq *= w;
+
+                BL_FLOAT col = (1.0 - t)*col0 + t*col1;
+                
+                // Sample
+                BL_FLOAT samp;
+                SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
+                
+                samp *= amp*col;
+                samp *= SYNTH_AMP_COEFF;
+                if (freq >= SYNTH_MIN_FREQ)
+                    samples->Get()[i] += samp;
+                
+                t += tStep;
+                phase += phaseCoeff*freq;
+            }
+            
+            // Compute next phase
+            mSASPartials[partialIndex].mPhase = phase;
+        }
+        
+        partialIndex++;
+        partialFreq = mFrequency*mPitch*(partialIndex + 1);
+    }
+    
+    mPrevSASPartials = mSASPartials;
+}
+
 BL_FLOAT
 SASFrame3::GetColor(const WDL_TypedBuf<BL_FLOAT> &color,
                     BL_FLOAT binIdx)
@@ -1168,21 +1308,36 @@ SASFrame3::GetColor(const WDL_TypedBuf<BL_FLOAT> &color,
     BL_FLOAT col = 0.0;
     if (binIdx < color.GetSize() - 1)
     {
-#if INTERP_COLOR_WARPING
-        BL_FLOAT t0 = binIdx - (int)binIdx;
+        BL_FLOAT t = binIdx - (int)binIdx;
         
         BL_FLOAT col0 = color.Get()[(int)binIdx];
         BL_FLOAT col1 = color.Get()[((int)binIdx) + 1];
 
-        col = (1.0 - t0)*col0 + t0*col1;
-#else
-        binIdx = bl_round(binIdx);
-        
-        col = color.Get()[(int)binIdx];
-#endif
+        col = (1.0 - t)*col0 + t*col1;
+
+        //binIdx = bl_round(binIdx);
+        //col = color.Get()[(int)binIdx];
     }
     
     return col;
+}
+
+BL_FLOAT
+SASFrame3::GetWarping(const WDL_TypedBuf<BL_FLOAT> &warping,
+                      BL_FLOAT binIdx)
+{
+    BL_FLOAT w = 0.0;
+    if (binIdx < warping.GetSize() - 1)
+    {
+        BL_FLOAT t = binIdx - (int)binIdx;
+        
+        BL_FLOAT w0 = warping.Get()[(int)binIdx];
+        BL_FLOAT w1 = warping.Get()[((int)binIdx) + 1];
+        
+        w = (1.0 - t)*w0 + t*w1;
+    }
+    
+    return w;
 }
 
 void
@@ -1954,6 +2109,8 @@ SASFrame3::ApplyNormWarping(BL_FLOAT freq)
     
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
     
+// TODO: use linerp instead of nearest
+    
     //int idx = freq/hzPerBin;
     BL_FLOAT idx = freq/hzPerBin;
     idx = bl_round(idx);
@@ -1972,7 +2129,8 @@ BL_FLOAT
 SASFrame3::ApplyColor(BL_FLOAT freq)
 {
     BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
-    
+ 
+// TODO: use linerp instead of nearest
     int idx = freq/hzPerBin;
     
     if (idx > mColor.GetSize())

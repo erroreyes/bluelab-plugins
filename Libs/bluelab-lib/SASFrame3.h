@@ -112,8 +112,10 @@ protected:
     void ComputeSamplesSAS4(WDL_TypedBuf<BL_FLOAT> *samples);
     // Optim
     void ComputeSamplesSAS5(WDL_TypedBuf<BL_FLOAT> *samples);
+    // Refact
+    void ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples);
     BL_FLOAT GetColor(const WDL_TypedBuf<BL_FLOAT> &color, BL_FLOAT binIdx);
-
+    BL_FLOAT GetWarping(const WDL_TypedBuf<BL_FLOAT> &warping, BL_FLOAT binIdx);
     
     void ComputeFftSAS(WDL_TypedBuf<BL_FLOAT> *samples);
     void ComputeFftSASFreqAdjust(WDL_TypedBuf<BL_FLOAT> *samples);
