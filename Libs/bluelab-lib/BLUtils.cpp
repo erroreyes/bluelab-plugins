@@ -2997,7 +2997,8 @@ template void BLUtils::ConsumeLeft(WDL_TypedBuf<float> *ioBuffer, int numToConsu
 template void BLUtils::ConsumeLeft(WDL_TypedBuf<double> *ioBuffer, int numToConsume);
 #endif
 
-#if 1 // OPTIM
+#if 0 // 1 // OPTIM
+// NOTE: this is risky
 template <typename FLOAT_TYPE>
 void
 BLUtils::ConsumeLeft(WDL_TypedBuf<FLOAT_TYPE> *ioBuffer, int numToConsume)
@@ -3010,8 +3011,34 @@ BLUtils::ConsumeLeft(WDL_TypedBuf<FLOAT_TYPE> *ioBuffer, int numToConsume)
         return;
     }
     
+    // This looks to work, but it is very risky,
+    // memcopy from a buffer to the same buffer...
     memcpy(ioBuffer->Get(), &ioBuffer->Get()[numToConsume], newSize*sizeof(FLOAT_TYPE));
     ioBuffer->Resize(newSize);
+}
+template void BLUtils::ConsumeLeft(WDL_TypedBuf<float> *ioBuffer, int numToConsume);
+template void BLUtils::ConsumeLeft(WDL_TypedBuf<double> *ioBuffer, int numToConsume);
+#endif
+
+#if 1 // Less OPTIM, less risky
+template <typename FLOAT_TYPE>
+void
+BLUtils::ConsumeLeft(WDL_TypedBuf<FLOAT_TYPE> *ioBuffer, int numToConsume)
+{
+    int newSize = ioBuffer->GetSize() - numToConsume;
+    if (newSize <= 0)
+    {
+        ioBuffer->Resize(0);
+        
+        return;
+    }
+    
+    WDL_TypedBuf<FLOAT_TYPE> result;
+    result.Resize(newSize);
+    
+    memcpy(result.Get(), &ioBuffer->Get()[numToConsume], newSize*sizeof(FLOAT_TYPE));
+    
+    *ioBuffer = result;
 }
 template void BLUtils::ConsumeLeft(WDL_TypedBuf<float> *ioBuffer, int numToConsume);
 template void BLUtils::ConsumeLeft(WDL_TypedBuf<double> *ioBuffer, int numToConsume);
