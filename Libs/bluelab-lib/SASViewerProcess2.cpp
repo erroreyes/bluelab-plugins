@@ -204,23 +204,23 @@ SASViewerProcess2::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
 #endif
 }
 
-// Use this to synthetize directly 1/4 of the samples from partials
-// (without overlap in internal)
+// Use this to synthetize directly the samples from partials
 void
-SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                                           const WDL_TypedBuf<BL_FLOAT> *scBuffer)
-{
-    if (!mSASFrame->ComputeSamplesWinFlag())
+SASViewerProcess2::ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
+{    
+    if (!mSASFrame->ComputeSamplesPostFlag())
         return;
     
     // Create a separate buffer for samples synthesis from partials
     // (because it doesn't use overlap)
     WDL_TypedBuf<BL_FLOAT> samplesBuffer;
-    BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
+    //BLUtils::ResizeFillZeros(&samplesBuffer, ioBuffer->GetSize());
+    samplesBuffer.Resize(ioBuffer->GetSize());
+    BLUtils::FillAllZero(&samplesBuffer);
     
 #if OUT_HARMO_SAS_FRAME
     // Compute the samples from partials
-    mSASFrame->ComputeSamplesResynthWin(&samplesBuffer);
+    mSASFrame->ComputeSamplesResynthPost(&samplesBuffer);
     if (mEnableOutHarmo)
     {
         // ioBuffer may already contain noise
@@ -230,7 +230,7 @@ SASViewerProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     
 #if OUT_HARMO_INPUT_PARTIALS
     // Compute the samples from partials
-    mSASFrame->ComputeSamplesWin(&samplesBuffer);
+    mSASFrame->ComputeSamplesPost(&samplesBuffer);
     
     if (mEnableOutHarmo)
     {

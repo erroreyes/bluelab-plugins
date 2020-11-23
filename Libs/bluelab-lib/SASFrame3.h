@@ -46,7 +46,7 @@ public:
     public:
         // Values are normalized, as provided by SASViewerProcess
         BL_FLOAT mFreq;
-        BL_FLOAT mAmp;
+        BL_FLOAT mAmp; // Still used ?
         BL_FLOAT mPhase;
     };
     
@@ -80,11 +80,11 @@ public:
     
     // Compute directly from input partials
     void ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples);
-    void ComputeSamplesWin(WDL_TypedBuf<BL_FLOAT> *samples);
+    void ComputeSamplesPost(WDL_TypedBuf<BL_FLOAT> *samples);
     
     // Compute by resynthesizing from color, warping etc.
     void ComputeSamplesResynth(WDL_TypedBuf<BL_FLOAT> *samples);
-    void ComputeSamplesResynthWin(WDL_TypedBuf<BL_FLOAT> *samples);
+    void ComputeSamplesResynthPost(WDL_TypedBuf<BL_FLOAT> *samples);
     
     void ComputeFftPartials(WDL_TypedBuf<BL_FLOAT> *samples);
     
@@ -93,7 +93,7 @@ public:
     void SetHarmonicSoundFlag(bool flag);
     
     bool ComputeSamplesFlag();
-    bool ComputeSamplesWinFlag();
+    bool ComputeSamplesPostFlag();
     
     static void MixFrames(SASFrame3 *result,
                           const SASFrame3 &frame0,
@@ -163,6 +163,9 @@ protected:
                          BL_FLOAT harmo, BL_FLOAT Amax);
     BL_FLOAT GetNearestHarmonic(BL_FLOAT freq, BL_FLOAT refFreq);
     
+    
+    BL_FLOAT GetFreq(BL_FLOAT freq0, BL_FLOAT freq1, BL_FLOAT t);
+    BL_FLOAT GetAmp(BL_FLOAT amp0, BL_FLOAT amp1, BL_FLOAT t);
     
     //
     SynthMode mSynthMode;

@@ -52,15 +52,13 @@ public:
     void Reset(int overlapping, int oversampling, BL_FLOAT sampleRate);
     
     void ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                          const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer);
+                          const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer) override;
     
     void ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                              WDL_TypedBuf<BL_FLOAT> *scBuffer);
+                              WDL_TypedBuf<BL_FLOAT> *scBuffer) override;
     
-    // Use this to synthetize directly 1/4 of the samples from partials
-    // (without overlap in internal)
-    void ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
-                                 const WDL_TypedBuf<BL_FLOAT> *scBuffer);
+    // Use this to synthetize directly samples from partials
+    void ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer) override;
     
     void SetSASViewerRender(SASViewerRender2 *sasViewerRender);
     
