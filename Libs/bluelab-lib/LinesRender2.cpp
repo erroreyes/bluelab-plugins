@@ -71,6 +71,8 @@ using namespace std;
 // (but it is not perfect)
 #define HACK_DB_SCALE 1
 
+// When density was minimum, while playing, the frequencies lines jittered
+#define FIX_JITTER_LOW_DENSITY 1
 
 static void
 CameraModelProjMat(int winWidth, int winHeight, float angle0, float angle1,
@@ -798,6 +800,12 @@ LinesRender2::ProjectSlices(vector<vector<Point> > *points,
     
     if (mMode == LINES_TIME)
         densityNumSlicesI = DENSITY_MAX_NUM_SLICES;
+#endif
+    
+    // Haked fix, but it works...
+#if FIX_JITTER_LOW_DENSITY
+    if (densityNumSlicesI < mNumSlices)
+        densityNumSlicesI = (int)mNumSlices;
 #endif
     
     // Optim
