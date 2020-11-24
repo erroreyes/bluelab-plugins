@@ -166,6 +166,7 @@ protected:
     
     BL_FLOAT GetFreq(BL_FLOAT freq0, BL_FLOAT freq1, BL_FLOAT t);
     BL_FLOAT GetAmp(BL_FLOAT amp0, BL_FLOAT amp1, BL_FLOAT t);
+    BL_FLOAT GetCol(BL_FLOAT col0, BL_FLOAT col1, BL_FLOAT t);
     
     //
     SynthMode mSynthMode;
@@ -180,6 +181,8 @@ protected:
     BL_FLOAT mAmplitude;
     
     BL_FLOAT mFrequency;
+    // For smoothing
+    BL_FLOAT mPrevFrequency;
     
     int mBufferSize;
     BL_FLOAT mSampleRate;

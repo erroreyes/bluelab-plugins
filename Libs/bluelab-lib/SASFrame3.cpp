@@ -41,14 +41,6 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 #define SYNTH_MIN_FREQ 50.0
 #define SYNTH_DEAD_PARTIAL_DECREASE 0.25
 
-#if 0 // TEST MONDAY
-// Avoids jumps in envelope
-#define COLOR_SMOOTH_COEFF 0.95 //0.9
-#define WARPING_SMOOTH_COEFF 0.95 //0.9
-#define FREQ_SMOOTH_COEFF 0.9 //0.95
-#endif
-
-// TEST MONDAY
 // NOTE: if we don't smooth the color, this will make clips
 // (because if a partial is missing, this will make a hole in the color)
 //
@@ -58,6 +50,8 @@ SIN_LUT_CREATE(SAS_FRAME_SIN_LUT, 4096);
 //#define WARPING_SMOOTH_COEFF 0.0 //0.95
 // NEW
 #define WARPING_SMOOTH_COEFF 0.5
+
+// NOTE: for the moment, smooting freq in only for debugging
 #define FREQ_SMOOTH_COEFF 0.0 //0.9
 
 // Compute samples directly from tracked partials
@@ -131,6 +125,7 @@ SASFrame3::SASFrame3(int bufferSize, BL_FLOAT sampleRate, int overlapping)
     mPrevAmplitude = 0.0;
     
     mFrequency = 0.0;
+    mPrevFrequency = -1.0;
     
     mPitch = 1.0;
     
@@ -173,7 +168,9 @@ SASFrame3::Reset(BL_FLOAT sampleRate)
     mPrevPartials.clear();
     
     mAmplitude = 0.0;
+    
     mFrequency = 0.0;
+    mPrevFrequency = -1.0;
     
     mSASPartials.clear();
     mPrevSASPartials.clear();
@@ -214,6 +211,7 @@ SASFrame3::SetPartials(const vector<PartialTracker5::Partial> &partials)
          PartialTracker5::Partial::FreqLess);
     
     mAmplitude = 0.0;
+    
     mFrequency = 0.0;
     
     Compute();
@@ -1181,9 +1179,7 @@ void
 SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
 {
     // TEST DEBUG
-    mFrequency = 350.0;
-    
-    //samples->Resize(mBufferSize);
+    //mFrequency = 350.0;
     
     BLUtils::FillAllZero(samples);
     
@@ -1233,6 +1229,8 @@ SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
             // Bin param
             BL_FLOAT binIdx = partialFreq*hzPerBinInv;
             
+            // TODO: here, try a mel scale for binIdxc and prevBinIdxc, internally
+            
             // Warping
             BL_FLOAT w0 = GetWarping(mPrevNormWarping, binIdx);
             BL_FLOAT w1 = GetWarping(mNormWarping, binIdx);
@@ -1240,6 +1238,8 @@ SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
             // Color
             BL_FLOAT prevBinIdxc = w0*prevPartial.mFreq*hzPerBinInv;
             BL_FLOAT binIdxc = w1*partial.mFreq*hzPerBinInv;
+            
+            // TODO: here, try a mel scale for binIdxc and prevBinIdxc, internally
             
             BL_FLOAT col0 = GetColor(mPrevColor, prevBinIdxc);
             BL_FLOAT col1 = GetColor(mColor, binIdxc);
@@ -1258,8 +1258,8 @@ SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
             // Loop
             //
             BL_FLOAT t = 0.0;
-            BL_FLOAT tStep = 1.0/(samples->GetSize()/*/mOverlapping*/ - 1);
-            for (int i = 0; i < samples->GetSize()/*/mOverlapping*/; i++)
+            BL_FLOAT tStep = 1.0/(samples->GetSize() - 1);
+            for (int i = 0; i < samples->GetSize(); i++)
             {
                 // Compute norm warping
                 BL_FLOAT w = 1.0;
@@ -1268,20 +1268,22 @@ SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
                     w = (1.0 - t)*w0 + t*w1;
                 }
                 
-                // Compute freq and partial amp
-                //BL_FLOAT freq = (1.0 - t)*prevPartial.mFreq + t*partial.mFreq;
-                //BL_FLOAT amp = (1.0 - t)*prevPartialAmp + t*partialAmp;
+                // Freq
                 BL_FLOAT freq = GetFreq(prevPartial.mFreq, partial.mFreq, t);
-                //BL_FLOAT amp = GetAmp(prevPartial.mAmp, partial.mAmp, t);
                 
+                // Warping
                 // DEBUG: disabled for the moment
                 // NOTE: this is buggy for the moment => makes jumps
                 //freq *= w;
 
-                BL_FLOAT col = (1.0 - t)*col0 + t*col1;
+                // Color
+                BL_FLOAT col = GetCol(col0, col1, t);
+                
+                // DEBUG
+                //col = 1.0; //
                 
                 // Sample
-                //
+                
                 // Not 100% perfect (partials les neat)
                 //BL_FLOAT samp;
                 //SIN_LUT_GET(SAS_FRAME_SIN_LUT, samp, phase);
@@ -1289,16 +1291,6 @@ SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
                 // Better quality.
                 // No "blurb" between frequencies
                 BL_FLOAT samp = std::sin(phase);
-                
-                // DEBUG
-                //samp *= 0.025;
-                
-                // NOTE: 18: Amp only
-                
-                // Color
-                //samp *= amp; //*col;
-                //samp *= col; // TEST col only
-                //samp *= SYNTH_AMP_COEFF;
                 
                 if (freq >= SYNTH_MIN_FREQ)
                 {
@@ -1309,10 +1301,6 @@ SASFrame3::ComputeSamplesSAS6(WDL_TypedBuf<BL_FLOAT> *samples)
                 t += tStep;
                 phase += phaseCoeff*freq;
             }
-            
-            // DEBUG
-            // One step more, for the next call to the method.
-            //phase += phaseCoeff*350.0*3.0;
             
             // Compute next phase
             mSASPartials[partialIndex].mPhase = phase;
@@ -1360,10 +1348,16 @@ SASFrame3::GetColor(const WDL_TypedBuf<BL_FLOAT> &color,
         BL_FLOAT col0 = color.Get()[(int)binIdx];
         BL_FLOAT col1 = color.Get()[((int)binIdx) + 1];
 
+        // Method 1: simple
+        //col = (1.0 - t)*col0 + t*col1;
+        
+        // Method 2: interpolate in dB
+        col0 = Scale::ApplyScale(Scale::DB, col0, mMinAmpDB, (BL_FLOAT)0.0);
+        col1 = Scale::ApplyScale(Scale::DB, col1, mMinAmpDB, (BL_FLOAT)0.0);
+        
         col = (1.0 - t)*col0 + t*col1;
-
-        //binIdx = bl_round(binIdx);
-        //col = color.Get()[(int)binIdx];
+        
+        col = Scale::ApplyScale(Scale::DB_INV, col, mMinAmpDB, (BL_FLOAT)0.0);
     }
     
     return col;
@@ -1949,6 +1943,17 @@ SASFrame3::ComputeFrequency()
     BL_FLOAT freq = mPartialsToFreq->ComputeFrequency(mPartials);
     
     mFrequency = freq;
+    
+    // Smooth
+    if (mPrevFrequency < 0.0)
+        mPrevFrequency = freq;
+    else
+    {
+        freq = (1.0 - FREQ_SMOOTH_COEFF)*freq + FREQ_SMOOTH_COEFF*mPrevFrequency;
+        
+        mPrevFrequency = freq;
+        mFrequency = freq;
+    }
 }
 
 void
@@ -2055,7 +2060,7 @@ SASFrame3::ComputeColorAux()
     }
 #endif
     
-    // Normalize the color
+    // Normalize the color (maybe not necessary)
     BL_FLOAT amplitude = mAmplitude;
     if (amplitude > 0.0)
     {
@@ -2439,7 +2444,18 @@ SASFrame3::MixFrames(SASFrame3 *result,
 BL_FLOAT
 SASFrame3::GetFreq(BL_FLOAT freq0, BL_FLOAT freq1, BL_FLOAT t)
 {
+    // Method 1: simple
+    //BL_FLOAT freq = (1.0 - t)*freq0 + t*freq1;
+    
+    // Method 2: mel scale
+    BL_FLOAT maxFreq = mSampleRate*0.5;
+    freq0 = Scale::ApplyScale(Scale::MEL, freq0/maxFreq, 0.0, maxFreq);
+    freq1 = Scale::ApplyScale(Scale::MEL, freq1/maxFreq, 0.0, maxFreq);
+    
     BL_FLOAT freq = (1.0 - t)*freq0 + t*freq1;
+    
+    freq = Scale::ApplyScale(Scale::MEL_INV, freq, 0.0, maxFreq);
+    freq *= maxFreq;
     
     return freq;
 }
@@ -2459,4 +2475,21 @@ SASFrame3::GetAmp(BL_FLOAT amp0, BL_FLOAT amp1, BL_FLOAT t)
     amp = Scale::ApplyScale(Scale::DB_INV, amp, mMinAmpDB, (BL_FLOAT)0.0);
     
     return amp;
+}
+
+BL_FLOAT
+SASFrame3::GetCol(BL_FLOAT col0, BL_FLOAT col1, BL_FLOAT t)
+{
+    // Method 1: direct
+    //BL_FLOAT col = (1.0 - t)*col0 + t*col1;
+    
+    // Method 2: (if col is not already in dB)
+    col0 = Scale::ApplyScale(Scale::DB, col0, mMinAmpDB, (BL_FLOAT)0.0);
+    col1 = Scale::ApplyScale(Scale::DB, col1, mMinAmpDB, (BL_FLOAT)0.0);
+    
+    BL_FLOAT col = (1.0 - t)*col0 + t*col1;
+    
+    col = Scale::ApplyScale(Scale::DB_INV, col, mMinAmpDB, (BL_FLOAT)0.0);
+    
+    return col;
 }
