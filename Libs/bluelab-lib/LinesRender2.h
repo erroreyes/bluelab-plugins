@@ -163,6 +163,10 @@ protected:
     void ProjectSlices(vector<vector<Point> > *points,
                        const deque<vector<Point> > &slices,
                        int width, int height);
+    // Re-written the method, more simple, with fixes
+    void ProjectSlices2(vector<vector<Point> > *points,
+                        const deque<vector<Point> > &slices,
+                        int width, int height);
     
     // For debugging: display all
     void ProjectSlicesNoDecim(vector<vector<Point> > *points,
@@ -235,7 +239,9 @@ protected:
     
     int mSpeed;
     long int mAddNum;
-       
+    // Num lines really added
+    long int mNumLinesAdded;
+    
     // Optim: GOOD (optim x2)
     // Do not re-allocate points each time
     // Keep a buffer
