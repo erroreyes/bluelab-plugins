@@ -52,6 +52,8 @@ public:
     
     bool IsOwnedByGraph() override { return true; }
     
+    bool AlwaysRefresh() { return true; }
+    
     // Spectrogram
     void SetSpectrogram(BLSpectrogram4 *spectro,
                         BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom);

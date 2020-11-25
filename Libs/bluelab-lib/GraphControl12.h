@@ -110,6 +110,10 @@ public:
     // If it is ownaed by graph, it will be delete each time
     // the graph is deleted.
     virtual bool IsOwnedByGraph() { return false; }
+    
+    // Force the graph to always refresh display,
+    // even if data has not changed.
+    virtual bool AlwaysRefresh() { return false; }
 };
 
 class GraphCustomControl
@@ -304,6 +308,9 @@ protected:
                           const WDL_TypedBuf<BL_GUI_FLOAT> &y,
                           int minNumValues);
 
+    void CheckCustomDrawersRedraw();
+
+    
     //
     
     // For UST

@@ -46,6 +46,8 @@ GraphTimeAxis5::GraphTimeAxis5(bool displayLines)
     mTransportTimeStamp = 0;
     
     mDisplayLines = displayLines;
+    
+    mMustUpdate = true;
 }
 
 GraphTimeAxis5::~GraphTimeAxis5() {}
@@ -55,7 +57,8 @@ GraphTimeAxis5::Init(GraphControl12 *graph,
                      GraphAxis2 *graphAxis,
                      GUIHelper12 *guiHelper,
                      int bufferSize,
-                     BL_FLOAT timeDuration, BL_FLOAT spacingSeconds,
+                     BL_FLOAT timeDuration,
+                     BL_FLOAT spacingSeconds,
                      int yOffset)
 {
     graph->SetGraphTimeAxis(this);
@@ -122,16 +125,27 @@ GraphTimeAxis5::Update()
     if (!mTransportIsPlaying)
         return;
     
+    if (!mMustUpdate)
+        return;
+    
     long int now = BLUtils::GetTimeMillis();
     BL_FLOAT elapsed = (now - mTransportTimeStamp)*0.001;
     
     Update(mCurrentTimeTransport + elapsed);
+    
+    mMustUpdate = false;
 }
 
 void
 GraphTimeAxis5::SetTransportPlaying(bool flag)
 {
     mTransportIsPlaying = flag;
+}
+
+void
+GraphTimeAxis5::SetMustUpdate()
+{
+    mMustUpdate = true;
 }
 
 void

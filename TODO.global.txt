@@ -21,3 +21,5 @@ Knobs style: see Ableton (minimalist and useful)! (but with graduations)
 https://www.youtube.com/watch?v=KUZLXAK8do4
 
 - BUG: (Mac Sierra, Nanovg, GL2), import 2 plugins with OpenGL view and GUI resize, resize one  => the two plugins get big display bugs
+
+- OPTIM: check very well 60fps and perfs for each plugin (e.g Wav3s now consumes too much)

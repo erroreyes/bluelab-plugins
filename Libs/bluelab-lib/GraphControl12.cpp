@@ -2391,6 +2391,8 @@ GraphControl12::Draw(IGraphics &graphics)
     if (!mIsEnabled)
         return;
     
+    CheckCustomDrawersRedraw();
+    
     int w = mRECT.W();
     int h = mRECT.H();
     
@@ -2700,6 +2702,22 @@ GraphControl12::IsCurveUndefined(const WDL_TypedBuf<BL_GUI_FLOAT> &x,
     }
     
     return true;
+}
+
+void
+GraphControl12::CheckCustomDrawersRedraw()
+{
+    for (int i = 0; i < mCustomDrawers.size(); i++)
+    {
+        GraphCustomDrawer *drawer = mCustomDrawers[i];
+        if (drawer->AlwaysRefresh())
+        {
+            // Need to redraw anyway
+            mDataChanged = true;
+            
+            return;
+        }
+    }
 }
 
 #endif // IGRAPHICS_NANOVG

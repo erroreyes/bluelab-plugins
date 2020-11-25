@@ -46,6 +46,10 @@ public:
     void Update();
     void SetTransportPlaying(bool flag);
     
+    // Must be called from ProcessBlock(), to indicate
+    // that the plugin is not bypassed
+    void SetMustUpdate();
+    
     static BL_FLOAT ComputeTimeDuration(int numBuffers, int bufferSize,
                                         int oversampling, BL_FLOAT sampleRate);
     
@@ -70,6 +74,8 @@ protected:
     long int mTransportTimeStamp;
     
     bool mDisplayLines;
+    
+    bool mMustUpdate;
 };
 
 #endif /* defined(__BL_InfrasonicViewer__GraphTimeAxis5__) */
