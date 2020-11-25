@@ -286,6 +286,10 @@ LinesRender2::SetDensePointsFlag(bool flag)
 void
 LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
 {
+    // NOTE: does not work, makes the display blink
+    //if (mMustRecomputeProj)
+    //    return;
+    
     mViewWidth = width;
     mViewHeight = height;
     
