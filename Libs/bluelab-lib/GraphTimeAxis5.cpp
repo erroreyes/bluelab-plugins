@@ -25,7 +25,9 @@
 #define FIX_DISPLAY_MS 1
 
 // When we have only milliseconds, the label "0s" is not displayed
-#define FIX_ZERO_SECONDS_MILLIS 1
+//
+// NOTE: Disabled for GhostViewer: just at startup the first label 0s is false
+#define FIX_ZERO_SECONDS_MILLIS 0 //1
 
 // Avoid that the last label is partially displayed, and cropped
 // (was the case with Reverb, and display 1 second interval)
@@ -105,7 +107,14 @@ GraphTimeAxis5::Reset(int bufferSize, BL_FLOAT timeDuration,
     
 #if FIX_RESET_TIME_AXIS
     // Reset the labels
-    Update(mCurrentTime);
+    //Update(mCurrentTime);
+    
+    // FIX: GhostViewer: start with the plug not bypassed
+    // => the time axis dislays bad values at starting
+#define SS_COEFF 0.9
+    // SS_COEFF => Hack, so that at starting,
+    // there is no missing label on the left of the axis
+    Update(spacingSeconds*SS_COEFF);
 #endif
 }
 
@@ -257,9 +266,9 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
         if (tm > startTime + duration)
             break;
     }
-        
+    
     mGraphAxis->SetData(hAxisData, MAX_NUM_LABELS);
-        
+    
     // Free
     for (int i = 0; i < MAX_NUM_LABELS; i++)
     {
