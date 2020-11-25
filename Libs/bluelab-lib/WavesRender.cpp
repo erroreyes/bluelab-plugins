@@ -273,15 +273,20 @@ WavesRender::OnMouseWheel(float x, float y,
 bool
 WavesRender::OnKeyDown(float x, float y, const IKeyPress& key)
 {
-    // #bl-iplug2: TODO: check this
+    // iPlug1
     //char c = key - KEY_ALPHA_A + 'a';
-    char c = key.VK - EVirtualKey::kVK_A + 'a';
     
-    int keyLen = strlen(_ORXXKey);
+    char c = key.VK + 'a' - 'A';
+    
+    bool handled = false;
+    
+    int keyLen = (int)strlen(_ORXXKey);
     if ((mORXXKeyGuessStep < keyLen) &&
         (_ORXXKey[mORXXKeyGuessStep] == c))
     {
         mORXXKeyGuessStep++;
+        
+        handled = true;
     }
     else
     {
@@ -296,7 +301,13 @@ WavesRender::OnKeyDown(float x, float y, const IKeyPress& key)
         mORXXKeyGuessStep = 0;
     }
     
-    return false;
+    // Makes each key down duplicate
+    //return false;
+    
+    // Avoid Reaper to react to spacebar to restart playback
+    //return true;
+    
+    return handled;
 }
 
 void
