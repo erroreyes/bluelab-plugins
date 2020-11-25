@@ -15,9 +15,22 @@
 // NOTE: may still freeze some rare times
 #define FIX_ABLETON_RESIZE_GUI_FREEZE 1
 
+ResizeGUIPluginInterface::ResizeGUIPluginInterface(Plugin *plug)
+{
+    mPlug = plug;
+    mIsResizingGUI = false;
+}
+
+ResizeGUIPluginInterface::~ResizeGUIPluginInterface() {}
+
 void
 ResizeGUIPluginInterface::ApplyGUIResize(int guiSizeIdx)
 {
+    if (mIsResizingGUI)
+        return;
+    
+    mIsResizingGUI = true;
+    
     int newGUIWidth;
     int newGUIHeight;
     GetNewGUISize(guiSizeIdx, &newGUIWidth, &newGUIHeight);
@@ -28,6 +41,8 @@ ResizeGUIPluginInterface::ApplyGUIResize(int guiSizeIdx)
         mPlug->GetUI()->Resize(newGUIWidth, newGUIHeight, 1.0f, true);
     
     PostResizeGUI();
+    
+    mIsResizingGUI = false;
 }
 
 void

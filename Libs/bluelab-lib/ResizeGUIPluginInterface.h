@@ -20,8 +20,8 @@ class GraphControl11;
 class ResizeGUIPluginInterface
 {
 public:
-    ResizeGUIPluginInterface(Plugin *plug) { mPlug = plug; }
-    virtual ~ResizeGUIPluginInterface() {}
+    ResizeGUIPluginInterface(Plugin *plug);
+    virtual ~ResizeGUIPluginInterface();
          
     virtual void PreResizeGUI(int newGUIWidth, int newGUIHeight) = 0;
     virtual void PostResizeGUI() = 0;
@@ -46,6 +46,9 @@ protected:
     
     //
     Plugin *mPlug;
+    
+    // Avoid launching a new gui resize while a first one is in progress
+    bool mIsResizingGUI;
 };
 
 #endif /* ResizeGUIPluginInterface_h */

@@ -385,7 +385,6 @@ private:
 #if USE_FBO
     NVGframebuffer *mFBO;
     int mInitialFBO;
-    IGraphics *mGraphics;
 #endif
     
     // If anything has changed and the graph needs to be redrawn

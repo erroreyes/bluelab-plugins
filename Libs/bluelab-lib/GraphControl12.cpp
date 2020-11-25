@@ -148,7 +148,6 @@ GraphControl12::GraphControl12(Plugin *pPlug, IGraphics *graphics,
     
 #if USE_FBO
     mFBO = NULL;
-    mGraphics = NULL;
 #endif
 
     mDataChanged = true;
@@ -174,7 +173,8 @@ GraphControl12::~GraphControl12()
 #if USE_FBO && (defined IGRAPHICS_GL)
     if (mFBO != NULL)
     {
-        ((IGraphicsNanoVG *)mGraphics)->DeleteFBO(mFBO);
+        IGraphicsNanoVG *graphics = (IGraphicsNanoVG *)mPlug->GetUI();
+        graphics->DeleteFBO(mFBO);
     }
 #endif
 }
@@ -2371,7 +2371,11 @@ GraphControl12::DrawText(BL_GUI_FLOAT x, BL_GUI_FLOAT y, BL_GUI_FLOAT fontSize,
 void
 GraphControl12::Draw(IGraphics &graphics)
 {
+    mVg = (NVGcontext *)graphics.GetDrawContext();
+    
     DoDraw(graphics);
+    
+    mVg = NULL;
 }
 #endif
 
@@ -2382,14 +2386,11 @@ GraphControl12::Draw(IGraphics &graphics)
 {
     WDL_MutexLock lock(&mMutex);
     
-    // Keep a reference, for deleting FBO
-    mGraphics = &graphics;
-    
-    mVg = (NVGcontext *)graphics.GetDrawContext();
-    
     // Checked: if we fall here, the graph is sure to have mIsEnabled = true!
     if (!mIsEnabled)
         return;
+    
+    mVg = (NVGcontext *)graphics.GetDrawContext();
     
     CheckCustomDrawersRedraw();
     
@@ -2444,6 +2445,8 @@ GraphControl12::Draw(IGraphics &graphics)
     IBitmap bmp {&apibmp, 1, false};
     
     graphics.DrawBitmap(bmp, mRECT);
+    
+    mVg = NULL;
 }
 #endif
 
