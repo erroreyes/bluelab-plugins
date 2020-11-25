@@ -287,6 +287,9 @@ void
 LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
 {
     // NOTE: does not work, makes the display blink
+    // (sometimes the graph need to redraw itself,
+    // whereas LineResner2 has not changed)
+    
     //if (mMustRecomputeProj)
     //    return;
     
