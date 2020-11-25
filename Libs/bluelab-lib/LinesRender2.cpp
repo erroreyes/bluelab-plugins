@@ -299,7 +299,8 @@ LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
     {
         if (!mDisplayAllSlices)
             //ProjectSlices(&points, slices, mViewWidth, mViewHeight);
-            ProjectSlices2(&points, slices, mViewWidth, mViewHeight);
+            //ProjectSlices2(&points, slices, mViewWidth, mViewHeight);
+            ProjectSlices3(&points, slices, mViewWidth, mViewHeight);
         else
             ProjectSlicesNoDecim(&points, slices, mViewWidth, mViewHeight);
         
@@ -1104,6 +1105,146 @@ LinesRender2::ProjectSlices2(vector<vector<Point> > *points,
         (mMode == GRID))
     {
         //OptimStraightLineX(points);
+    }
+    
+    if (mMode == LINES_TIME)
+    {
+        OptimStraightLineZ(points);
+    }
+    
+    // Project everything at one time
+    for (int i = 0; i < points->size(); i++)
+    {
+        ProjectPoints(&(*points)[i], width, height);
+    }
+#endif
+}
+
+void
+LinesRender2::ProjectSlices3(vector<vector<Point> > *points,
+                             const deque<vector<Point> > &slices,
+                             int width, int height)
+{
+    // Decimate the right way:
+    // - iterate over the target data
+    // - use an offset to keep synchronized
+    
+    // Compute decimation parameters
+    int densityNumSlicesI = mDensityNumSlices;
+    int densityNumSlicesJ = mDensityNumSlices;
+    
+    // Will reduce number of points per line
+    // (but is not very beautiful)
+    if (mMode == LINES_FREQ)
+        densityNumSlicesJ = DENSITY_MAX_NUM_SLICES_FREQS;
+    
+    if (mMode == LINES_TIME)
+        densityNumSlicesI = DENSITY_MAX_NUM_SLICES;
+    
+    // Keep computed Z, to use them later
+    points->resize(densityNumSlicesI);
+    WDL_TypedBuf<BL_FLOAT> pointsZ;
+    pointsZ.Resize((int)points->size());
+    
+    BL_FLOAT iCoeff = ((BL_FLOAT)mNumSlices)/densityNumSlicesI;
+
+    BL_FLOAT iOffset = 0.0;
+    if (iCoeff > 1.0)
+        iOffset = std::fmod((BL_FLOAT)mNumLinesAdded, iCoeff);
+    
+    // NOTE: If step is < 1.0, then we will duplicate some lines,
+    // to give the high density effect (augmentation)
+    
+    // Decimate / augment on i (slices)
+    for (int i = 0; i < points->size(); i++)
+    {
+        //BL_FLOAT targetIIdx = bl_round(i*iCoeff + iOffset);
+        BL_FLOAT targetIIdx = bl_round(i*iCoeff + iOffset);
+        if (targetIIdx > slices.size() - 1)
+            targetIIdx = slices.size() - 1;
+        
+        if (mDensePointsFlag)
+        {
+            // Decimate / augment on j (lines)
+            vector<Point> newPoints;
+            newPoints.resize(densityNumSlicesJ);
+            
+            BL_FLOAT jCoeff = ((BL_FLOAT)slices[targetIIdx].size())/densityNumSlicesJ;
+            for (int j = 0; j < newPoints.size(); j++)
+            {
+                int targetJIdx = bl_round(j*jCoeff);
+                if (targetJIdx > (int)slices[targetIIdx].size() - 1)
+                    targetJIdx = (int)slices[targetIIdx].size() - 1;
+                
+                const Point &p = slices[targetIIdx][targetJIdx];
+                    
+                newPoints[j] = p;
+                newPoints[j].mSkipDisplayX = false;
+                newPoints[j].mSkipDisplayZ = false;
+            }
+            
+            (*points)[i] = newPoints;
+        }
+        else
+            (*points)[i] = slices[targetIIdx];
+        
+        //
+        // Compute time step
+        BL_FLOAT z = 0.0;
+        if (densityNumSlicesI > 1)
+        {
+            if (mScrollDirection == BACK_FRONT)
+                z = 1.0 - ((BL_FLOAT)i)/(points->size() - 1);
+            else
+                z = ((BL_FLOAT)i)/(points->size() - 1);
+        }
+        
+        // Center
+        z -= 0.5;
+        
+        pointsZ.Get()[i] = z;
+    }
+    
+    // Process result points
+    //
+    for (int i = 0; i < points->size(); i++)
+    {
+        BL_FLOAT z = pointsZ.Get()[i];
+        for (int j = 0; j < (*points)[i].size(); j++)
+        {
+            Point &p = (*points)[i][j];
+            p.mZ = z;
+        }
+        
+        // Scale on Y
+        for (int j = 0; j < (*points)[i].size(); j++)
+        {
+            Point &p = (*points)[i][j];
+            
+#if USE_DB_SCALE
+            if (mDBScale)
+            {
+                p.mY = BLUtils::AmpToDBNorm(p.mY, (BL_FLOAT)1e-15, mMinDB);
+                
+                // If we want to adjust more the db scale to the axis,
+                // first try to examine this value
+#if HACK_DB_SCALE
+                p.mY *= 0.5;
+#endif
+            }
+#endif
+            
+            p.mY *= mScale;
+        }
+    }
+    
+    // Final processes
+    //
+#if OPTIM_STRAIGHT_LINES2
+    if ((mMode == LINES_FREQ) ||
+        (mMode == GRID))
+    {
+        OptimStraightLineX(points);
     }
     
     if (mMode == LINES_TIME)

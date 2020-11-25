@@ -168,6 +168,11 @@ protected:
                         const deque<vector<Point> > &slices,
                         int width, int height);
     
+    // GOOD method, do it the best way
+    void ProjectSlices3(vector<vector<Point> > *points,
+                        const deque<vector<Point> > &slices,
+                        int width, int height);
+    
     // For debugging: display all
     void ProjectSlicesNoDecim(vector<vector<Point> > *points,
                               const deque<vector<Point> > &slices,
