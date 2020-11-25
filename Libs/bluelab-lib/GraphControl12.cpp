@@ -2432,6 +2432,10 @@ GraphControl12::Draw(IGraphics &graphics)
         float graphicsWidth = graphics.WindowWidth();
         float graphicsHeight = graphics.WindowHeight();
         nvgBeginFrame(mVg, graphicsWidth, graphicsHeight, 1.0f);
+        
+        // Really avoid drawing when nothing changed
+        // (tested with Wav3s)
+        mDataChanged = false;
     }
     
     APIBitmap apibmp {mFBO->image, w, h, 1, 1.};
