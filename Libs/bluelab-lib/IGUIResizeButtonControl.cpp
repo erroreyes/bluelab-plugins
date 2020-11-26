@@ -10,6 +10,33 @@
 
 #include "IGUIResizeButtonControl.h"
 
+IGUIResizeButtonControl::IGUIResizeButtonControl(ResizeGUIPluginInterface *plug,
+                                                 float x, float y,
+                                                 const IBitmap &bitmap,
+                                                 int paramIdx,
+                                                 int guiSizeIdx,
+                                                 EBlend blend)
+: IRolloverButtonControl(x, y, bitmap, paramIdx, false, blend)
+{
+    mPlug = plug;
+    
+    mGuiSizeIdx = guiSizeIdx;
+}
+
+IGUIResizeButtonControl::IGUIResizeButtonControl(ResizeGUIPluginInterface *plug,
+                                                 float x, float y,
+                                                 const IBitmap &bitmap,
+                                                 int guiSizeIdx,
+                                                 EBlend blend)
+: IRolloverButtonControl(x, y, bitmap, kNoParameter, false, blend)
+{
+    mPlug = plug;
+    
+    mGuiSizeIdx = guiSizeIdx;
+}
+
+IGUIResizeButtonControl::~IGUIResizeButtonControl() {}
+
 void
 IGUIResizeButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
@@ -17,8 +44,6 @@ IGUIResizeButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
     // FIX: that made the graph disappear
     if (mod.A)
         ((IMouseMod &)mod).A = false;
-    
-    mIsMouseClicking = true;
     
     double prevValue = GetValue();
     
@@ -29,6 +54,4 @@ IGUIResizeButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
     {
         mPlug->ApplyGUIResize(mGuiSizeIdx);
     }
-    
-    mIsMouseClicking = false;
 }

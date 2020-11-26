@@ -33,14 +33,10 @@ ResizeGUIPluginInterface::ApplyGUIResize(int guiSizeIdx)
     
     int newGUIWidth;
     int newGUIHeight;
-    GetNewGUISize(guiSizeIdx, &newGUIWidth, &newGUIHeight);
-    
-    PreResizeGUI(newGUIWidth, newGUIHeight);
+    PreResizeGUI(guiSizeIdx, &newGUIWidth, &newGUIHeight);
     
     if (mPlug->GetUI() != NULL)
         mPlug->GetUI()->Resize(newGUIWidth, newGUIHeight, 1.0f, true);
-    
-    PostResizeGUI();
     
     mIsResizingGUI = false;
 }
@@ -86,43 +82,6 @@ ResizeGUIPluginInterface::GUIResizeParamChange(int paramNum,
             {
                 if (i != paramNum)
                     buttons[i]->SetValueFromUserInput(0.0);
-            }
-        }
-    }
-}
-
-void
-ResizeGUIPluginInterface::GUIResizePreResizeGUI(IGUIResizeButtonControl *buttons[],
-                                                int numButtons)
-{
-    IGraphics *pGraphics = mPlug->GetUI();
-    if (pGraphics == NULL)
-        return;
-    
-    // Avoid memory corruption:
-    // ResizeGUI() is called from the buttons
-    // And during ResizeGUI(), the previous controls are deleted
-    // (including the buttons)
-    // Then we will delete button from its own code in OnMouseClick()
-    // if the buttons are still attached
-    bool isMouseClicking = false;
-    for (int i = 0; i < numButtons; i++)
-    {
-        if ((buttons[i] != NULL) && buttons[i]->IsMouseClicking())
-        {
-            isMouseClicking = true;
-            
-            break;
-        }
-    }
-    
-    if (isMouseClicking)
-    {
-        for (int i = 0; i < numButtons; i++)
-        {
-            if (buttons[i] != NULL)
-            {
-                pGraphics->DetachControl(buttons[i]);
             }
         }
     }

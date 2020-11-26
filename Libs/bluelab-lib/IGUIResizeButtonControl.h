@@ -31,36 +31,17 @@ public:
                             const IBitmap &bitmap,
                             int paramIdx,
                             int guiSizeIdx,
-                            EBlend blend = EBlend::Default)
-    : IRolloverButtonControl(x, y, bitmap, paramIdx, false, blend)
-    {
-        mPlug = plug;
-        
-        mGuiSizeIdx = guiSizeIdx;
-        
-        mIsMouseClicking = false;
-    }
+                            EBlend blend = EBlend::Default);
     
     IGUIResizeButtonControl(ResizeGUIPluginInterface *plug,
                             float x, float y,
                             const IBitmap &bitmap,
                             int guiSizeIdx,
-                            EBlend blend = EBlend::Default)
-    : IRolloverButtonControl(x, y, bitmap, kNoParameter, false, blend)
-    {
-        mPlug = plug;
-        
-        mGuiSizeIdx = guiSizeIdx;
-    }
+                            EBlend blend = EBlend::Default);
     
-    virtual ~IGUIResizeButtonControl() {}
+    virtual ~IGUIResizeButtonControl();
     
     virtual void OnMouseDown(float x, float y, const IMouseMod &mMod) override;
-    
-    bool IsMouseClicking()
-    {
-        return mIsMouseClicking;
-    }
     
     // Disable double click
     // It was not consistent to use double click on a series of gui resize buttons
@@ -71,8 +52,6 @@ protected:
     ResizeGUIPluginInterface *mPlug;
     
     int mGuiSizeIdx;
-    
-    bool mIsMouseClicking;
 };
 
 #endif /* IGUIResizeButtonControl_h */

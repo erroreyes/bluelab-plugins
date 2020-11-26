@@ -23,12 +23,9 @@ public:
     ResizeGUIPluginInterface(Plugin *plug);
     virtual ~ResizeGUIPluginInterface();
          
-    virtual void PreResizeGUI(int newGUIWidth, int newGUIHeight) = 0;
-    virtual void PostResizeGUI() = 0;
-    
-    virtual void GetNewGUISize(int guiSizeIdx,
-                               int *newGUIWidth,
-                               int *newGUIHeight) = 0;
+    virtual void PreResizeGUI(int guiSizeIdx,
+                              int *outNewGUIWidth,
+                              int *outNewGUIHeight) = 0;
     
     void ApplyGUIResize(int guiSizeIdx);
     
@@ -36,9 +33,6 @@ protected:
     void GUIResizeParamChange(int paramNum,
                               int params[], IGUIResizeButtonControl *buttons[],
                               int numParams);
-    
-    void GUIResizePreResizeGUI(IGUIResizeButtonControl *buttons[],
-                               int numButtons);
     
     void GUIResizeComputeOffsets(int defaultGUIWidth, int defaultGUIHeight,
                                  int newGUIWidth, int newGUIHeight,
