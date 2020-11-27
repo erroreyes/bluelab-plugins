@@ -19,6 +19,9 @@ SmoothCurveDB::SmoothCurveDB(GraphCurve5 *curve,
                              int size, BL_FLOAT defaultValue,
                              BL_FLOAT minDB, BL_FLOAT maxDB)
 {
+    mMinDB = minDB;
+    mMaxDB = maxDB;
+    
     mHistogram = new SmoothAvgHistogramDB(size, smoothFactor,
                                           defaultValue, minDB, maxDB);
     
@@ -62,10 +65,16 @@ SmoothCurveDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
     
     mCurve->ClearValues();
     
+#if 0 // Old version
     for (int i = 0; i < avgValues.GetSize(); i++)
     {
         BL_FLOAT t = ((BL_FLOAT)i)/(avgValues.GetSize() - 1);
         BL_FLOAT val = avgValues.Get()[i];
         mCurve->SetValue(t, val);
     }
+#endif
+    
+#if 1 // New version: avoid the risk to have undefined values
+    mCurve->SetValues4(avgValues);
+#endif
 }

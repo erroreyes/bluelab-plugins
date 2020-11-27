@@ -32,6 +32,9 @@ protected:
     SmoothAvgHistogramDB *mHistogram;
     
     GraphCurve5 *mCurve;
+    
+    BL_FLOAT mMinDB;
+    BL_FLOAT mMaxDB;
 };
 
 #endif
