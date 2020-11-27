@@ -25,6 +25,8 @@
 #include <GraphAxis2.h>
 #include <GraphTimeAxis5.h>
 
+#include <BLDebug.h>
+
 #include "GraphControl12.h"
 
 //#define GRAPH_FONT "font"
@@ -163,6 +165,12 @@ GraphControl12::~GraphControl12()
 {
     WDL_MutexLock lock(&mMutex);
     
+    for (int i = 0; i < mCurves.size(); i++)
+    {
+        GraphCurve5 *curve = mCurves[i];
+        curve->SetGraph(NULL);
+    }
+    
     for (int i = 0; i < mCustomDrawers.size(); i++)
     {
         GraphCustomDrawer *drawer = mCustomDrawers[i];
@@ -285,6 +293,8 @@ GraphControl12::SetSeparatorY0(BL_GUI_FLOAT lineWidth, int color[4])
 void
 GraphControl12::AddCurve(GraphCurve5 *curve)
 {
+    curve->SetGraph(this);
+    
     mCurves.push_back(curve);
 }
 

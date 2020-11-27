@@ -23,6 +23,7 @@ typedef float CurveColor [4];
 
 using namespace iplug::igraphics;
 
+class GraphControl12;
 class GraphCurve5
 {
 public:
@@ -134,6 +135,10 @@ public:
     void SetValues2(const WDL_TypedBuf<BL_GUI_FLOAT> *values);
     void SetValues3(const WDL_TypedBuf<BL_GUI_FLOAT> *values);
     
+    // Avoid having undefined values
+    // values (y) must be in amp units
+    void SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values);
+    
     // Use simple decimation
     void SetValuesDecimateSimple(const WDL_TypedBuf<BL_GUI_FLOAT> *values);
     
@@ -184,6 +189,9 @@ public:
     void SetOptimSameColor(bool flag);
     
 protected:
+    friend class GraphControl12;
+    void SetGraph(GraphControl12 *graph);
+    
     BL_GUI_FLOAT ConvertX(BL_GUI_FLOAT val, BL_GUI_FLOAT width);
     BL_GUI_FLOAT ConvertY(BL_GUI_FLOAT val, BL_GUI_FLOAT height);
     
@@ -191,6 +199,10 @@ protected:
     void ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width);
     void ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT height);
     
+    void NotifyGraph();
+
+    
+    //
     friend class GraphControl12;
     
     // Description
@@ -271,7 +283,8 @@ protected:
     BL_FLOAT mYScaleFactor;
     BL_FLOAT mAutoAdjustFactor;
     
-protected:
+    GraphControl12 *mGraph;
+    
     ParamSmoother mParamSmoother;
 };
 
