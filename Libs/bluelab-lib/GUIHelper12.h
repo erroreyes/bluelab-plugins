@@ -13,6 +13,7 @@
 
 #include <BLVumeterControl.h>
 #include <BLVumeterNeedleControl.h>
+#include <BLVumeter2SidesControl.h>
 #include <ResizeGUIPluginInterface.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -99,6 +100,14 @@ public:
                                      float x, float y,
                                      const char *bitmapFname,
                                      int paramIdx, const char *title = NULL);
+    
+    // Margins are in pixels
+    BLVumeter2SidesControl *CreateVumeter2SidesV(IGraphics *graphics,
+                                                 float x, float y,
+                                                 const char *bitmapFname,
+                                                 int paramIdx, const char *title = NULL,
+                                                 float marginMin = 0.0,
+                                                 float marginMax = 0.0);
     
     BLVumeterNeedleControl *CreateVumeterNeedleV(IGraphics *graphics,
                                                  float x, float y,

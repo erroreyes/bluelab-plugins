@@ -298,6 +298,36 @@ GUIHelper12::CreateVumeterV(IGraphics *graphics,
     return result;
 }
 
+BLVumeter2SidesControl *
+GUIHelper12::CreateVumeter2SidesV(IGraphics *graphics,
+                                  float x, float y,
+                                  const char *bitmapFname,
+                                  int paramIdx, const char *title,
+                                  float marginMin, float marginMax)
+{
+    // Background bitmap
+    float width;
+    float height;
+    CreateBitmap(graphics,
+                 x, y,
+                 bitmapFname,
+                 0.0f, 0.0f,
+                 &width, &height);
+    
+    // Margin
+    x += marginMin;
+    width -= (marginMin + marginMax);
+    
+    IRECT rect(x, y, x + width, y + height);
+    BLVumeter2SidesControl *result = new BLVumeter2SidesControl(rect,
+                                                                mVumeterColor,
+                                                                paramIdx);
+    result->SetInteractionDisabled(true);
+    graphics->AttachControl(result);
+    
+    return result;
+}
+
 BLVumeterNeedleControl *
 GUIHelper12::CreateVumeterNeedleV(IGraphics *graphics,
                                   float x, float y,
