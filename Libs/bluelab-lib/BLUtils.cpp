@@ -2054,6 +2054,7 @@ BLUtils::GetPlugIOBuffers(Plugin *plug, double **inputs, double **outputs,
     }
 }
 
+#if 0 // Prev, dosn't manage sidechain
 //#bl-iplug2
 void
 BLUtils::GetPlugIOBuffers(Plugin *plug,
@@ -2111,6 +2112,111 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
 #endif
             
             (*outp)[i] = buf;
+        }
+    }
+}
+#endif
+
+// iPlug2
+void
+BLUtils::GetPlugIOBuffers(Plugin *plug,
+                          sample **inputs, sample **outputs, int nFrames,
+                          vector<WDL_TypedBuf<BL_FLOAT> > *inp,
+                          vector<WDL_TypedBuf<BL_FLOAT> > *scIn,
+                          vector<WDL_TypedBuf<BL_FLOAT> > *outp)
+{
+#define MAX_NUM_IN_CHANNELS 4
+#define MAX_NUM_OUT_CHANNELS 2
+    
+    /*
+     
+     Logic/Garageband have an long-standing bug where if no sidechain is selected, the same buffers that are sent to the first bus, are sent to the sidechain bus
+     https://forum.juce.com/t/sidechain-is-not-silent-as-expected-au-logic-x-10-2-2/17068/8
+     https://lists.apple.com/archives/coreaudio-api/2012/Feb/msg00127.html
+     
+     Imperfect hack around it here. Probably a better solution is to have an enable sidechain button in the plug-in UI, in addition to the host sidechain routing.
+     */
+    
+#if defined OS_MAC && defined AU_API
+    if(plug->GetHost() == kHostLogic || plug->GetHost() == kHostGarageBand)
+    {
+        const int sz = nFrames * sizeof(sample);
+        if(!memcmp(inputs[0], inputs[2], sz))
+        {
+            memset(inputs[2], 0, sz);
+            inputs[2] = NULL;
+        }
+        if(!memcmp(inputs[1], inputs[3], sz))
+        {
+            memset(inputs[3], 0, sz);
+            inputs[3] = NULL;
+        }
+    }
+#endif
+    
+    inp->resize(0);
+    scIn->resize(0);
+    outp->resize(0);
+    
+    for (int i = 0; i < MAX_NUM_IN_CHANNELS; i++)
+    {
+        bool connected = plug->IsChannelConnected(ERoute::kInput, i);
+        if(connected && (inputs[i] != NULL))
+        {
+            if (i < 2)
+            // input
+            {
+                inp->resize(inp->size() + 1);
+                
+                WDL_TypedBuf<BL_FLOAT> buf;
+#if !BL_TYPE_FLOAT
+                buf.Add(inputs[i], nFrames);
+                
+#else
+                buf.Resize(nFrames);
+                for (int j = 0; j < nFrames; j++)
+                    buf.Get()[j] = inputs[i][j];
+#endif
+                
+                (*inp)[inp->size() - 1] = buf;
+            }
+            else
+            {
+                scIn->resize(scIn->size() + 1);
+                
+                WDL_TypedBuf<BL_FLOAT> buf;
+#if !BL_TYPE_FLOAT
+                buf.Add(inputs[i], nFrames);
+                
+#else
+                buf.Resize(nFrames);
+                for (int j = 0; j < nFrames; j++)
+                    buf.Get()[j] = inputs[i][j];
+#endif
+                
+                (*scIn)[scIn->size() - 1] = buf;
+            }
+        }
+    }
+    
+    for (int i = 0; i < MAX_NUM_OUT_CHANNELS; i++)
+    {
+        bool connected = plug->IsChannelConnected(ERoute::kOutput, i);
+        if(connected && (outputs[i] != NULL))
+        {
+            outp->resize(outp->size() + 1);
+            
+            WDL_TypedBuf<BL_FLOAT> buf;
+#if !BL_TYPE_FLOAT
+            buf.Add(outputs[i], nFrames);
+            
+#else
+            buf.Resize(nFrames);
+            for (int j = 0; j < nFrames; j++)
+                buf.Get()[j] = outputs[i][j];
+#endif
+            
+            (*outp)[outp->size() - 1] = buf;
         }
     }
 }
