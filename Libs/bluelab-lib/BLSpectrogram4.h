@@ -70,7 +70,7 @@ public:
     void TouchData();
     
     // Image data
-    bool GetImageDataFloat(/*int width, int height,*/ unsigned char *buf);
+    bool GetImageDataFloat(unsigned char *buf);
     
     // Colormap image data
     bool GetColormapImageDataRGBA(WDL_TypedBuf<unsigned int> *colormapImageData);

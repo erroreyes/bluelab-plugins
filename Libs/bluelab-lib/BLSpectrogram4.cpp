@@ -359,7 +359,7 @@ BLSpectrogram4::TouchData()
 
 // Optimized version: keep the strict minimum
 bool
-BLSpectrogram4::GetImageDataFloat(/*int width, int height,*/ unsigned char *buf)
+BLSpectrogram4::GetImageDataFloat(unsigned char *buf)
 {
 #if !OPTIM_SPECTROGRAM
     mColorMap->SetRange(mRange);

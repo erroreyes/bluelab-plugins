@@ -109,7 +109,6 @@ BLImage::GetImageDataFloat(WDL_TypedBuf<unsigned char> *buf)
       if (value > 1.0)
           value = 1.0;
       
-      //int pixIdx = (mHeight - 1 - i)*mWidth + j;
       int pixIdx = (mHeight - 1 - j)*mWidth + i;
       ((float *)buf0)[pixIdx] = (float)value;
     }

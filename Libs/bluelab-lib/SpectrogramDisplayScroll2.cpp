@@ -243,7 +243,7 @@ SpectrogramDisplayScroll2::DoUpdateSpectrogram()
             mSpectroImageData.Resize(imageSize);
             
             memset(mSpectroImageData.Get(), 0, imageSize);
-            mSpectrogram->GetImageDataFloat(/*w, h, */mSpectroImageData.Get());
+            mSpectrogram->GetImageDataFloat(mSpectroImageData.Get());
             
             // Spectrogram image
             if (mNvgSpectroImage != 0)
@@ -270,7 +270,7 @@ SpectrogramDisplayScroll2::DoUpdateSpectrogram()
         else
         {
             memset(mSpectroImageData.Get(), 0, imageSize);
-            mSpectrogram->GetImageDataFloat(/*w, h, */mSpectroImageData.Get());
+            mSpectrogram->GetImageDataFloat(mSpectroImageData.Get());
             
             // Spectrogram image
             nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());

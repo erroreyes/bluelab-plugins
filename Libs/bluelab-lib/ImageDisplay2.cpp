@@ -37,9 +37,6 @@ ImageDisplay2::ImageDisplay2(Mode mode)
 
 ImageDisplay2::~ImageDisplay2()
 {
-    //if (mImage != NULL)
-    //    delete mImage;
-  
     if (mVg == NULL)
       return;
   
@@ -89,7 +86,6 @@ ImageDisplay2::DoUpdateImage()
     if (!mNeedUpdateImage)
         return false;
     
-    //int w = mImage->GetMaxNumCols();
     int w = mImage->GetWidth();
     int h = mImage->GetHeight();
     
@@ -149,34 +145,6 @@ ImageDisplay2::DoUpdateImage()
             nvgUpdateImage(mVg, mNvgImage, mImageData.Get());
         }
     }
-
-#if 0
-    // Colormap
-    WDL_TypedBuf<unsigned int> colorMapData;
-    bool updated = mImage->GetColormapImageDataRGBA(&colorMapData);
-    
-    if (updated || (mNvgColormapImage == 0))
-    {
-        if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
-            (mNvgColormapImage == 0))
-        {
-            mColormapImageData = colorMapData;
-        
-            if (mNvgColormapImage != 0)
-                nvgDeleteImage(mVg, mNvgColormapImage);
-        
-            mNvgColormapImage = nvgCreateImageRGBA(mVg,
-                                                   mColormapImageData.GetSize(), 1, NVG_IMAGE_NEAREST /*0*/,
-                                                   (unsigned char *)mColormapImageData.Get());
-        }
-        else
-        {
-            mColormapImageData = colorMapData;
-        
-            nvgUpdateImage(mVg, mNvgColormapImage, (unsigned char *)mColormapImageData.Get());
-        }
-    }
-#endif
     
     if (mNeedUpdateColormapData || (mNvgColormapImage == 0))
     {
@@ -221,7 +189,6 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 {
   mVg = vg;
 
-  // Update just in case..
   DoUpdateImage();
   
   if (!mShowImage)
@@ -238,9 +205,6 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
   //
   
   // Display the rightmost par in case of zoom
-  //NVGpaint imgPaint = nvgImagePattern(mVg, 0.0, 0.0, width, height,
-  //                                    0.0, mNvgSpectroImage, mImageAlpha);
-    
   BL_FLOAT alpha = mImage->GetAlpha();
     
   NVGpaint imgPaint = nvgImagePattern(mVg,
@@ -252,11 +216,6 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
   
   BL_FLOAT b0Yf = mImageBounds[1]*height;
   BL_FLOAT b1Yf = (mImageBounds[3] - mImageBounds[1])*height;
-    // TEST
-//#if GRAPH_CONTROL_FLIP_Y
-//  b0Yf = height - b0Yf;
-//  b1Yf = height - b1Yf;
-//#endif
     
   nvgBeginPath(mVg);
   nvgRect(mVg,

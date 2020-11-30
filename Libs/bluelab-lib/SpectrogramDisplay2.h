@@ -63,7 +63,6 @@ public:
     
     //
     void SetSpectrogramZoom(BL_FLOAT zoomX);
-    //BL_FLOAT GetSpectrogramZoom();
     
     void SetSpectrogramAbsZoom(BL_FLOAT zoomX);
     
