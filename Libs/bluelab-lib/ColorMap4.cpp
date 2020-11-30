@@ -172,7 +172,8 @@ ColorMap4::Generate(WDL_TypedBuf<CmColor> *result)
             BL_FLOAT t1 = 1.0 - mRange;
             
             t = (t - t0)/(t1 - t0);
-        } else // range >= 0.0
+        }
+        else // range >= 0.0
         {
             BL_FLOAT t0 = -mRange;
             BL_FLOAT t1 = 1.0;

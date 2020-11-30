@@ -18,11 +18,11 @@
 // From BatFftObj2 (directly)
 //
 class BLSpectrogram4;
-class SpectrogramDisplay;
 class HistoMaskLine2;
-class ImageDisplay;
-
+class BLImage;
 class SourceLocalisationSystem3;
+class SpectrogramDisplay2;
+class ImageDisplay2;
 
 class BatFftObj5 : public MultichannelProcess
 {
@@ -38,8 +38,7 @@ public:
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
     BLSpectrogram4 *GetSpectrogram();
-    
-    void SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay);
+    BLImage *GetImage();
     
     void SetSharpness(BL_FLOAT sharpness);
     
@@ -49,11 +48,10 @@ public:
     
     void SetTimeSmoothData(BL_FLOAT smooth);
 
-    
     void SetEnabled(bool flag);
     
-    //
-    void DBG_SetImageDisplay(ImageDisplay *imageDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay);
+    void SetImageDisplay(ImageDisplay2 *imageDisplay);
     
 protected:
     void ComputeCoords(const WDL_TypedBuf<BL_FLOAT> &localization,
@@ -100,8 +98,7 @@ protected:
     
     //
     BLSpectrogram4 *mSpectrogram;
-    
-    SpectrogramDisplay *mSpectroDisplay;
+    BLImage *mImage;
     
     long mLineCount;
     
@@ -130,8 +127,9 @@ protected:
     
     bool mIsEnabled;
     
-    // Debug
-    ImageDisplay *mImageDisplay;
+    //
+    SpectrogramDisplay2 *mSpectroDisplay;
+    ImageDisplay2 *mImageDisplay;
 };
 
 #endif // IGRAPHICS_NANOVG

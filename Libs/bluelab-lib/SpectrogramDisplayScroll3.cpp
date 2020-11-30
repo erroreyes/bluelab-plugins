@@ -140,7 +140,7 @@ SpectrogramDisplayScroll3::DoUpdateSpectrogram()
             mSpectroImageData.Resize(imageSize);
             
             memset(mSpectroImageData.Get(), 0, imageSize);
-            bool updated = mSpectrogram->GetImageDataFloat(w, h, mSpectroImageData.Get());
+            bool updated = mSpectrogram->GetImageDataFloat(/*w, h,*/ mSpectroImageData.Get());
             
             if (updated)
             {
@@ -166,7 +166,7 @@ SpectrogramDisplayScroll3::DoUpdateSpectrogram()
         {
                 memset(mSpectroImageData.Get(), 0, imageSize);
                 bool updated =
-                        mSpectrogram->GetImageDataFloat(w, h, mSpectroImageData.Get());
+                        mSpectrogram->GetImageDataFloat(/*w, h,*/ mSpectroImageData.Get());
                 if (updated)
                 {
                     // Spectrogram image

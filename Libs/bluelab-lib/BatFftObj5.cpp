@@ -8,16 +8,17 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <BLSpectrogram4.h>
 #include <Window.h>
 #include <BLUtils.h>
 
-#include <SpectrogramDisplay.h>
+#include <BLSpectrogram4.h>
+#include <BLImage.h>
+#include <SpectrogramDisplay2.h>
+#include <ImageDisplay2.h>
+
 #include <HistoMaskLine2.h>
 
 #include <SourceLocalisationSystem3.h>
-
-#include <ImageDisplay.h>
 
 #include "BatFftObj5.h"
 
@@ -60,6 +61,7 @@ BatFftObj5::BatFftObj5(int bufferSize, int oversampling, int freqRes,
     mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
+    mImage = new BLImage(1, 1);
     mImageDisplay = NULL;
     
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -122,6 +124,8 @@ BatFftObj5::~BatFftObj5()
     {
         delete mSourceLocSystems[i];
     }
+    
+    delete mImage;
 }
 
 void
@@ -152,6 +156,8 @@ BatFftObj5::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
     mSampleRate = sampleRate;
     
     mSpectrogram->Reset(mSampleRate, SPECTRO_WIDTH, SPECTRO_HEIGHT);
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->SetSpectrogram(mSpectrogram);
     
     mLineCount = 0;
     
@@ -169,10 +175,10 @@ BatFftObj5::GetSpectrogram()
     return mSpectrogram;
 }
 
-void
-BatFftObj5::SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay)
+BLImage *
+BatFftObj5::GetImage()
 {
-    mSpectroDisplay = spectroDisplay;
+    return mImage;
 }
 
 void
@@ -204,7 +210,13 @@ BatFftObj5::SetEnabled(bool flag)
 }
 
 void
-BatFftObj5::DBG_SetImageDisplay(ImageDisplay *imageDisplay)
+BatFftObj5::SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay)
+{
+    mSpectroDisplay = spectroDisplay;
+}
+
+void
+BatFftObj5::SetImageDisplay(ImageDisplay2 *imageDisplay)
 {
     mImageDisplay = imageDisplay;
 }
@@ -447,15 +459,13 @@ BatFftObj5::Process2D(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     ComputeAmplitudes(localizationX, &ampsX);
     
     // Debug
+    int width;
+    int height;
+    WDL_TypedBuf<BL_FLOAT> data;
+    mSourceLocSystems[0/*1*//*0*/]->DBG_GetCoincidence(&width, &height, &data);
+    mImage->SetData(width, height, data);
     if (mImageDisplay != NULL)
-    {
-        int width;
-        int height;
-        WDL_TypedBuf<BL_FLOAT> data;
-        mSourceLocSystems[0/*1*//*0*/]->DBG_GetCoincidence(&width, &height, &data);
-        
-        mImageDisplay->SetImage(width, height, data);
-    }
+        mImageDisplay->SetImage(mImage);
     
     // Y
     
@@ -530,6 +540,8 @@ BatFftObj5::Process2D(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     
     // Clear
     mSpectrogram->Reset(mSampleRate);
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->SetSpectrogram(mSpectrogram);
     
     // Smooth
     TimeSmoothData(&lines);
@@ -543,6 +555,9 @@ BatFftObj5::Process2D(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     // Fill spectrogram with lines
     for (int i = 0; i < SPECTRO_WIDTH; i++)
         mSpectrogram->AddLine(lines[i], lines[i]);
+    
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->SetSpectrogram(mSpectrogram);
     
     mLineCount++;
 }
@@ -588,15 +603,13 @@ BatFftObj5::ProcessLeftRight(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     ComputeAmplitudes(localizationX, &ampsX);
     
     // Debug
+    int width;
+    int height;
+    WDL_TypedBuf<BL_FLOAT> data;
+    mSourceLocSystems[0/*1*//*0*/]->DBG_GetCoincidence(&width, &height, &data);
+    mImage->SetData(width, height, data);
     if (mImageDisplay != NULL)
-    {
-        int width;
-        int height;
-        WDL_TypedBuf<BL_FLOAT> data;
-        mSourceLocSystems[0/*1*//*0*/]->DBG_GetCoincidence(&width, &height, &data);
-        
-        mImageDisplay->SetImage(width, height, data);
-    }
+        mImageDisplay->SetImage(mImage);
     
     // Y
     
@@ -656,6 +669,8 @@ BatFftObj5::ProcessLeftRight(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     
     // Clear
     mSpectrogram->Reset(mSampleRate);
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->SetSpectrogram(mSpectrogram);
     
     // Smooth
     TimeSmoothData(&lines);
@@ -669,6 +684,8 @@ BatFftObj5::ProcessLeftRight(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     // Fill spectrogram with lines
     for (int i = 0; i < SPECTRO_WIDTH; i++)
         mSpectrogram->AddLine(lines[i], lines[i]);
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->SetSpectrogram(mSpectrogram);
     
     mLineCount++;
 }
@@ -721,15 +738,13 @@ BatFftObj5::ProcessCross(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     ComputeAmplitudes(localizationX, &ampsX);
     
     // Debug
+    int width;
+    int height;
+    WDL_TypedBuf<BL_FLOAT> data;
+    mSourceLocSystems[0/*1*//*0*/]->DBG_GetCoincidence(&width, &height, &data);
+    mImage->SetData(width, height, data);
     if (mImageDisplay != NULL)
-    {
-        int width;
-        int height;
-        WDL_TypedBuf<BL_FLOAT> data;
-        mSourceLocSystems[0/*1*//*0*/]->DBG_GetCoincidence(&width, &height, &data);
-        
-        mImageDisplay->SetImage(width, height, data);
-    }
+        mImageDisplay->SetImage(mImage);
     
     // Y
     // X
@@ -794,6 +809,8 @@ BatFftObj5::ProcessCross(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     
     // Clear
     mSpectrogram->Reset(mSampleRate);
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->SetSpectrogram(mSpectrogram);
     
     // Smooth
     TimeSmoothData(&lines);
@@ -807,6 +824,9 @@ BatFftObj5::ProcessCross(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
     // Fill spectrogram with lines
     for (int i = 0; i < SPECTRO_WIDTH; i++)
         mSpectrogram->AddLine(lines[i], lines[i]);
+    
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->SetSpectrogram(mSpectrogram);
     
     mLineCount++;
 }

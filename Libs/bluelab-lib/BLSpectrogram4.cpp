@@ -359,7 +359,7 @@ BLSpectrogram4::TouchData()
 
 // Optimized version: keep the strict minimum
 bool
-BLSpectrogram4::GetImageDataFloat(int width, int height, unsigned char *buf)
+BLSpectrogram4::GetImageDataFloat(/*int width, int height,*/ unsigned char *buf)
 {
 #if !OPTIM_SPECTROGRAM
     mColorMap->SetRange(mRange);
@@ -373,7 +373,8 @@ BLSpectrogram4::GetImageDataFloat(int width, int height, unsigned char *buf)
     
     // Empty the buffer
     // Because the spectrogram may be not totally full
-    memset(buf, 0, width*height*4);
+    //memset(buf, 0, width*height*4);
+    memset(buf, 0, mMaxCols*mHeight*4);
     
     // Data
     for (int j = 0; j < mMagns.size(); j++)
@@ -388,7 +389,8 @@ BLSpectrogram4::GetImageDataFloat(int width, int height, unsigned char *buf)
             if (magnValue > 1.0)
                 magnValue = 1.0;
             
-            int pixIdx = (mHeight - 1 - i)*width + j;
+            //int pixIdx = (mHeight - 1 - i)*width + j;
+            int pixIdx = (mHeight - 1 - i)*mMaxCols + j;
             ((float *)buf)[pixIdx] = (float)magnValue;
         }
     }

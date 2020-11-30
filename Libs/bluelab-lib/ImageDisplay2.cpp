@@ -1,0 +1,323 @@
+//
+//  ImageDisplay2.cpp
+//  BL-Ghost
+//
+//  Created by Pan on 14/06/18.
+//
+//
+
+#ifdef IGRAPHICS_NANOVG
+
+#include <ColorMap4.h>
+#include <BLImage.h>
+
+#include "ImageDisplay2.h"
+
+
+ImageDisplay2::ImageDisplay2(Mode mode)
+{
+    mVg = NULL;
+    
+    mMode = mode;
+
+    mImage = NULL;
+    
+    // Image
+    mNvgImage = 0;
+    mNeedUpdateImage = true;
+    mNeedUpdateImageData = true;
+    
+    mNvgColormapImage = 0;
+    mNeedUpdateColormapData = true;
+    
+    mShowImage = false;
+    
+    mPrevImageSize = 0;
+}
+
+ImageDisplay2::~ImageDisplay2()
+{
+    //if (mImage != NULL)
+    //    delete mImage;
+  
+    if (mVg == NULL)
+      return;
+  
+    if (mNvgImage != 0)
+        nvgDeleteImage(mVg, mNvgImage);
+    
+    if (mNvgColormapImage != 0)
+        nvgDeleteImage(mVg, mNvgColormapImage);
+}
+
+void
+ImageDisplay2::Reset()
+{
+    mImageData.Resize(0);
+    
+    mNeedUpdateImage = true;
+    mNeedUpdateImageData = true;
+    mNeedUpdateColormapData = true;
+}
+
+void
+ImageDisplay2::SetImage(BLImage *image)
+{
+  mImage = image;
+  
+  if (mImage == NULL)
+    return;
+    
+  bool updated = mImage->GetImageDataFloat(&mImageData);
+  if (updated)
+  {
+      mNeedUpdateImage = true;
+      mNeedUpdateImageData = true;
+  }
+}
+
+bool
+ImageDisplay2::NeedUpdateImage()
+{
+    return mNeedUpdateImage;
+}
+
+bool
+ImageDisplay2::DoUpdateImage()
+{
+    // Update first, before displaying
+    if (!mNeedUpdateImage)
+        return false;
+    
+    //int w = mImage->GetMaxNumCols();
+    int w = mImage->GetWidth();
+    int h = mImage->GetHeight();
+    
+    int nearestFlag = 0;
+    if (mMode == MODE_NEAREST)
+    {
+        nearestFlag = NVG_IMAGE_NEAREST;
+    }
+    
+#if 1 // Avoid white image when there is no data
+    if ((w == 0) || (mNvgImage == 0))
+    {
+        w = 1;
+        int imageSize = w*h*4;
+        
+        mImageData.Resize(imageSize);
+        memset(mImageData.Get(), 0, imageSize);
+        
+        // Image image
+        if (mNvgImage != 0)
+            nvgDeleteImage(mVg, mNvgImage);
+        
+        mNvgImage = nvgCreateImageRGBA(mVg,
+                                       w, h,
+                                       nearestFlag |
+                                       NVG_IMAGE_ONE_FLOAT_FORMAT,
+                                       mImageData.Get());
+        
+        mNeedUpdateImage = false;
+        mNeedUpdateImageData = false;
+        
+        return true;
+    }
+#endif
+    
+    if (mNeedUpdateImageData || (mNvgImage == 0))
+    {
+        if (mImageData.GetSize() != mPrevImageSize)
+        {
+            mPrevImageSize = mImageData.GetSize();
+            
+            // Image image
+            if (mNvgImage != 0)
+                nvgDeleteImage(mVg, mNvgImage);
+            
+            int iw = mImage->GetWidth();
+            int ih = mImage->GetHeight();
+            mNvgImage = nvgCreateImageRGBA(mVg,
+                                           iw, ih,
+                                           nearestFlag |
+                                           NVG_IMAGE_ONE_FLOAT_FORMAT,
+                                           mImageData.Get());
+        }
+        else
+        {          
+            // Image image
+            nvgUpdateImage(mVg, mNvgImage, mImageData.Get());
+        }
+    }
+    
+    // Colormap
+    WDL_TypedBuf<unsigned int> colorMapData;
+    bool updated = mImage->GetColormapImageDataRGBA(&colorMapData);
+    
+    if (updated || (mNvgColormapImage == 0))
+    {
+        if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
+            (mNvgColormapImage == 0))
+        {
+            mColormapImageData = colorMapData;
+        
+            if (mNvgColormapImage != 0)
+                nvgDeleteImage(mVg, mNvgColormapImage);
+        
+            mNvgColormapImage = nvgCreateImageRGBA(mVg,
+                                                   mColormapImageData.GetSize(), 1, NVG_IMAGE_NEAREST /*0*/,
+                                                   (unsigned char *)mColormapImageData.Get());
+        }
+        else
+        {
+            mColormapImageData = colorMapData;
+        
+            nvgUpdateImage(mVg, mNvgColormapImage, (unsigned char *)mColormapImageData.Get());
+        }
+    }
+    
+    if (mNeedUpdateColormapData || (mNvgColormapImage == 0))
+    {
+        // Colormap
+        WDL_TypedBuf<unsigned int> colorMapData;
+        bool updated = mImage->GetColormapImageDataRGBA(&colorMapData);
+        if (updated || (mNvgColormapImage == 0))
+        {
+            if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
+                (mNvgColormapImage == 0))
+            {
+                mColormapImageData = colorMapData;
+                
+                if (mNvgColormapImage != 0)
+                    nvgDeleteImage(mVg, mNvgColormapImage);
+                
+                mNvgColormapImage =
+                            nvgCreateImageRGBA(mVg,
+                                               mColormapImageData.GetSize(),
+                                               1, NVG_IMAGE_NEAREST,
+                                               (unsigned char *)mColormapImageData.Get());
+            }
+            else
+            {
+                mColormapImageData = colorMapData;
+                
+                nvgUpdateImage(mVg, mNvgColormapImage,
+                               (unsigned char *)mColormapImageData.Get());
+            }
+        }
+    }
+    
+    mNeedUpdateImage = false;
+    mNeedUpdateImageData = false;
+    mNeedUpdateColormapData = false;
+    
+    return true;
+}
+
+void
+ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
+{
+  mVg = vg;
+
+  // Update just in case..
+  DoUpdateImage();
+  
+  if (!mShowImage)
+    return;
+
+  
+  // Draw Image first
+  nvgSave(mVg);
+
+  // New: set colormap only in the Image state
+  nvgSetColormap(mVg, mNvgColormapImage);
+    
+  //
+  // Image image
+  //
+  
+  // Display the rightmost par in case of zoom
+  //NVGpaint imgPaint = nvgImagePattern(mVg, 0.0, 0.0, width, height,
+  //                                    0.0, mNvgSpectroImage, mImageAlpha);
+    
+  BL_FLOAT alpha = mImage->GetAlpha();
+    
+  NVGpaint imgPaint = nvgImagePattern(mVg,
+				      mImageBounds[0]*width,
+				      mImageBounds[1]*height,
+				      (mImageBounds[2] - mImageBounds[0])*width,
+				      (mImageBounds[3] - mImageBounds[1])*height,
+				      0.0, mNvgImage, alpha);
+  
+  BL_FLOAT b0Yf = mImageBounds[1]*height;
+  BL_FLOAT b1Yf = (mImageBounds[3] - mImageBounds[1])*height;
+#if GRAPH_CONTROL_FLIP_Y
+  b0Yf = height - b0Yf;
+  b1Yf = height - b1Yf;
+#endif
+    
+  nvgBeginPath(mVg);
+  nvgRect(mVg,
+	  mImageBounds[0]*width,
+	  b0Yf,
+	  (mImageBounds[2] - mImageBounds[0])*width,
+	  b1Yf);
+  
+  
+  nvgFillPaint(mVg, imgPaint);
+  nvgFill(mVg);
+  
+  nvgRestore(mVg);
+}
+
+void
+ImageDisplay2::SetBounds(BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom)
+{
+    mImageBounds[0] = left;
+    mImageBounds[1] = top;
+    mImageBounds[2] = right;
+    mImageBounds[3] = bottom;
+    
+    mShowImage = true;
+    
+    // Be sure to create the texture image in the right thread
+    UpdateImage(true);
+}
+
+void
+ImageDisplay2::GetBounds(BL_FLOAT *left, BL_FLOAT *top, BL_FLOAT *right, BL_FLOAT *bottom)
+{
+    *left = mImageBounds[0];
+    *top = mImageBounds[1];
+    *right = mImageBounds[2];
+    *bottom = mImageBounds[3];
+}
+
+void
+ImageDisplay2::ShowImage(bool flag)
+{
+    mShowImage = flag;
+}
+
+void
+ImageDisplay2::UpdateImage(bool updateData)
+{
+    mNeedUpdateImage = true;
+    
+    if (!mNeedUpdateImageData)
+        mNeedUpdateImageData = updateData;
+}
+
+void
+ImageDisplay2::UpdateColormap(bool flag)
+{
+    mNeedUpdateImage = true;
+    
+    if (!mNeedUpdateColormapData)
+    {
+        mNeedUpdateColormapData = flag;
+    }
+}
+
+
+#endif // IGRAPHICS_NANOVG
