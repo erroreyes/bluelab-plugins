@@ -31,8 +31,8 @@ public:
 
     void PreDraw(NVGcontext *vg, int width, int height) override;
     bool IsOwnedByGraph() override { return true; }
-    bool AlwaysRefresh() override { return true; }
-
+    bool NeedRedraw() override;
+    
     //
     bool PointInsideSpectrogram(int x, int y,
                                 int width, int height);
@@ -136,6 +136,8 @@ protected:
     
     // For optimization (Chroma)
     bool mDrawBGSpectrogram;
+    
+    bool mNeedRedraw;
 };
 
 #endif /* defined(__BL_Ghost__SpectrogramDisplay2__) */

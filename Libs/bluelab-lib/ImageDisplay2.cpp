@@ -33,6 +33,8 @@ ImageDisplay2::ImageDisplay2(Mode mode)
     mShowImage = false;
     
     mPrevImageSize = 0;
+    
+    mNeedRedraw = false;
 }
 
 ImageDisplay2::~ImageDisplay2()
@@ -55,6 +57,8 @@ ImageDisplay2::Reset()
     mNeedUpdateImage = true;
     mNeedUpdateImageData = true;
     mNeedUpdateColormapData = true;
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -70,6 +74,8 @@ ImageDisplay2::SetImage(BLImage *image)
   {
       mNeedUpdateImage = true;
       mNeedUpdateImageData = true;
+      
+      mNeedRedraw = true;
   }
 }
 
@@ -116,6 +122,8 @@ ImageDisplay2::DoUpdateImage()
         
         mNeedUpdateImage = false;
         mNeedUpdateImageData = false;
+        
+        mNeedRedraw = true;
         
         return true;
     }
@@ -181,6 +189,8 @@ ImageDisplay2::DoUpdateImage()
     mNeedUpdateImageData = false;
     mNeedUpdateColormapData = false;
     
+    mNeedRedraw = true;
+    
     return true;
 }
 
@@ -189,11 +199,15 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 {
   mVg = vg;
 
-  DoUpdateImage();
+  bool updated = DoUpdateImage();
   
   if (!mShowImage)
-    return;
-
+  {
+      mNeedRedraw = false;
+      
+      return;
+  }
+    
   // Draw Image first
   nvgSave(mVg);
 
@@ -228,6 +242,14 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
   nvgFill(mVg);
   
   nvgRestore(mVg);
+    
+  mNeedRedraw = updated;
+}
+
+bool
+ImageDisplay2::NeedRedraw()
+{
+    return mNeedRedraw;
 }
 
 void

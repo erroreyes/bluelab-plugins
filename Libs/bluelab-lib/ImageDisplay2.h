@@ -36,7 +36,7 @@ public:
 
     void PreDraw(NVGcontext *vg, int width, int height) override;
     bool IsOwnedByGraph() override { return true; }
-    bool AlwaysRefresh() override { return true; }
+    bool NeedRedraw() override;
     
     void SetImage(BLImage *image);
     
@@ -65,8 +65,9 @@ protected:
     
     bool mNeedUpdateImage;
     bool mNeedUpdateImageData;
-    
     bool mNeedUpdateColormapData;
+    
+    bool mNeedRedraw;
     
     //
     bool mShowImage;

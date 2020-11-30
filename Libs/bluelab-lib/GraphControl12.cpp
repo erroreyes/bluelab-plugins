@@ -2723,7 +2723,7 @@ GraphControl12::CheckCustomDrawersRedraw()
     for (int i = 0; i < mCustomDrawers.size(); i++)
     {
         GraphCustomDrawer *drawer = mCustomDrawers[i];
-        if (drawer->AlwaysRefresh())
+        if (drawer->NeedRedraw())
         {
             // Need to redraw anyway
             mDataChanged = true;

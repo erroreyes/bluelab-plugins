@@ -111,9 +111,7 @@ public:
     // the graph is deleted.
     virtual bool IsOwnedByGraph() { return false; }
     
-    // Force the graph to always refresh display,
-    // even if data has not changed.
-    virtual bool AlwaysRefresh() { return false; }
+    virtual bool NeedRedraw() { return true; }
 };
 
 class GraphCustomControl

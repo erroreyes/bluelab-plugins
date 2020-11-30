@@ -49,6 +49,8 @@ SpectrogramDisplay2::SpectrogramDisplay2()
     mMiniView = NULL;
     
     mDrawBGSpectrogram = true;
+    
+    mNeedRedraw = true;
 }
 
 SpectrogramDisplay2::~SpectrogramDisplay2()
@@ -79,6 +81,8 @@ SpectrogramDisplay2::Reset()
 #if 0
     mNeedUpdateSpectrogramFullData = true;
 #endif
+    
+    mNeedRedraw = true;
 }
 
 bool
@@ -95,10 +99,7 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
   
     // Update first, before displaying
     if (!mNeedUpdateSpectrogram)
-      //return false;
-      // Must return true, because the spectrogram scrolls over time
-      // (for smooth scrolling), even if the data is not changed
-      return true;
+      return false;
     
     //int w = mSpectrogram->GetMaxNumCols();
     int w = mSpectrogram->GetNumCols();
@@ -246,7 +247,7 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 {
     mVg = vg;
 
-    DoUpdateSpectrogram();
+    bool updated = DoUpdateSpectrogram();
     
     if (!mShowSpectrogram)
     {
@@ -255,6 +256,8 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
             mMiniView->Display(mVg, width, height);
         }
     
+        mNeedRedraw = false;
+        
         return;
     }
     
@@ -356,6 +359,14 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
     {
         mMiniView->Display(mVg, width, height);
     }
+    
+    mNeedRedraw = updated;
+}
+
+bool
+SpectrogramDisplay2::NeedRedraw()
+{
+    return mNeedRedraw;
 }
 
 bool
@@ -424,6 +435,8 @@ SpectrogramDisplay2::SetSpectrogram(BLSpectrogram4 *spectro)
     
     // Be sure to create the texture image in the right thread
     UpdateSpectrogram(true, true);
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -436,6 +449,8 @@ void
 SpectrogramDisplay2::ShowSpectrogram(bool flag)
 {
     mShowSpectrogram = flag;
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -451,6 +466,8 @@ SpectrogramDisplay2::UpdateSpectrogram(bool updateData, bool updateFullData)
         if (updateFullData) // For debugging
             mNeedUpdateSpectrogramFullData = updateFullData;
     }
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -462,6 +479,8 @@ SpectrogramDisplay2::UpdateColormap(bool flag)
     {
         mNeedUpdateColormapData = flag;
     }
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -475,12 +494,16 @@ SpectrogramDisplay2::ResetSpectrogramTransform()
     
     mSpectroCenterPos = 0.5;
     mSpectroAbsTranslation = 0.0;
+    
+    mNeedRedraw = true;
 }
 
 void
 SpectrogramDisplay2::ResetSpectrogramTranslation()
 {
     mSpectroAbsTranslation = 0.0;
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -490,6 +513,8 @@ SpectrogramDisplay2::SetSpectrogramZoom(BL_FLOAT zoomX)
     
     mSpectroMinX = mSpectroCenterPos - norm*zoomX;
     mSpectroMaxX = mSpectroCenterPos + (1.0 - norm)*zoomX;
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -499,12 +524,16 @@ SpectrogramDisplay2::SetSpectrogramAbsZoom(BL_FLOAT zoomX)
     
     mSpectroAbsMinX = mSpectroCenterPos - norm*zoomX;
     mSpectroAbsMaxX = mSpectroCenterPos + (1.0 - norm)*zoomX;
+    
+    mNeedRedraw = true;
 }
 
 void
 SpectrogramDisplay2::SetSpectrogramCenterPos(BL_FLOAT centerPos)
 {
     mSpectroCenterPos = centerPos;
+    
+    mNeedRedraw = true;
 }
 
 bool
@@ -524,6 +553,8 @@ SpectrogramDisplay2::SetSpectrogramTranslation(BL_FLOAT tX)
     
     mSpectroAbsMinX += dX;
     mSpectroAbsMaxX += dX;
+    
+    mNeedRedraw = true;
     
     return true;
 }
@@ -569,6 +600,8 @@ SpectrogramDisplay2::SetSpectrogramVisibleNormBounds2(BL_FLOAT minX, BL_FLOAT ma
     mSpectroMaxX += trans;
     
     mSpectroCenterPos += trans;
+    
+    mNeedRedraw = true;
 }
 
 void
@@ -576,6 +609,8 @@ SpectrogramDisplay2::ResetSpectrogramZoomAndTrans()
 {
     mSpectroMinX = 0.0;
     mSpectroMaxX = 1.0;
+    
+    mNeedRedraw = true;
 }
 
 MiniView *
@@ -588,6 +623,8 @@ void
 SpectrogramDisplay2::SetDrawBGSpectrogram(bool flag)
 {
     mDrawBGSpectrogram = flag;
+    
+    mNeedRedraw = true;
 }
 
 #endif // IGRAPHICS_NANOVG
