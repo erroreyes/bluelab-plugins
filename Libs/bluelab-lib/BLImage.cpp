@@ -100,17 +100,17 @@ BLImage::GetImageDataFloat(WDL_TypedBuf<unsigned char> *buf)
   memset(buf0, 0, mWidth*mHeight*4);
   
   // Data
-  for (int j = 0; j < mWidth; j++)
-  {      
-    BL_FLOAT *buf1 = mData.Get();
-      
-    for (int i = 0; i < mHeight; i++)
+  BL_FLOAT *buf1 = mData.Get();
+  for (int j = 0; j < mHeight; j++)
+  {
+    for (int i = 0; i < mWidth; i++)
     {
-      BL_FLOAT value = buf1[i + j*mHeight];
+      BL_FLOAT value = buf1[i + j*mWidth];
       if (value > 1.0)
           value = 1.0;
       
-      int pixIdx = (mHeight - 1 - i)*mWidth + j;
+      //int pixIdx = (mHeight - 1 - i)*mWidth + j;
+      int pixIdx = (mHeight - 1 - j)*mWidth + i;
       ((float *)buf0)[pixIdx] = (float)value;
     }
   }

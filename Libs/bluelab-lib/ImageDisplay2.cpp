@@ -149,7 +149,8 @@ ImageDisplay2::DoUpdateImage()
             nvgUpdateImage(mVg, mNvgImage, mImageData.Get());
         }
     }
-    
+
+#if 0
     // Colormap
     WDL_TypedBuf<unsigned int> colorMapData;
     bool updated = mImage->GetColormapImageDataRGBA(&colorMapData);
@@ -175,6 +176,7 @@ ImageDisplay2::DoUpdateImage()
             nvgUpdateImage(mVg, mNvgColormapImage, (unsigned char *)mColormapImageData.Get());
         }
     }
+#endif
     
     if (mNeedUpdateColormapData || (mNvgColormapImage == 0))
     {
@@ -225,7 +227,6 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
   if (!mShowImage)
     return;
 
-  
   // Draw Image first
   nvgSave(mVg);
 
@@ -243,26 +244,26 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
   BL_FLOAT alpha = mImage->GetAlpha();
     
   NVGpaint imgPaint = nvgImagePattern(mVg,
-				      mImageBounds[0]*width,
-				      mImageBounds[1]*height,
-				      (mImageBounds[2] - mImageBounds[0])*width,
-				      (mImageBounds[3] - mImageBounds[1])*height,
-				      0.0, mNvgImage, alpha);
+                                      mImageBounds[0]*width,
+                                      mImageBounds[1]*height,
+                                      (mImageBounds[2] - mImageBounds[0])*width,
+                                      (mImageBounds[3] - mImageBounds[1])*height,
+                                      0.0, mNvgImage, alpha);
   
   BL_FLOAT b0Yf = mImageBounds[1]*height;
   BL_FLOAT b1Yf = (mImageBounds[3] - mImageBounds[1])*height;
-#if GRAPH_CONTROL_FLIP_Y
-  b0Yf = height - b0Yf;
-  b1Yf = height - b1Yf;
-#endif
+    // TEST
+//#if GRAPH_CONTROL_FLIP_Y
+//  b0Yf = height - b0Yf;
+//  b1Yf = height - b1Yf;
+//#endif
     
   nvgBeginPath(mVg);
   nvgRect(mVg,
-	  mImageBounds[0]*width,
-	  b0Yf,
-	  (mImageBounds[2] - mImageBounds[0])*width,
-	  b1Yf);
-  
+          mImageBounds[0]*width,
+          b0Yf,
+          (mImageBounds[2] - mImageBounds[0])*width,
+          b1Yf);
   
   nvgFillPaint(mVg, imgPaint);
   nvgFill(mVg);
@@ -271,7 +272,8 @@ ImageDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 }
 
 void
-ImageDisplay2::SetBounds(BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT bottom)
+ImageDisplay2::SetBounds(BL_FLOAT left, BL_FLOAT top,
+                         BL_FLOAT right, BL_FLOAT bottom)
 {
     mImageBounds[0] = left;
     mImageBounds[1] = top;
@@ -285,7 +287,8 @@ ImageDisplay2::SetBounds(BL_FLOAT left, BL_FLOAT top, BL_FLOAT right, BL_FLOAT b
 }
 
 void
-ImageDisplay2::GetBounds(BL_FLOAT *left, BL_FLOAT *top, BL_FLOAT *right, BL_FLOAT *bottom)
+ImageDisplay2::GetBounds(BL_FLOAT *left, BL_FLOAT *top,
+                         BL_FLOAT *right, BL_FLOAT *bottom)
 {
     *left = mImageBounds[0];
     *top = mImageBounds[1];

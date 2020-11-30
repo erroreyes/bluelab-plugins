@@ -127,7 +127,6 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
                                               NVG_IMAGE_NEAREST |
 #endif
                                               NVG_IMAGE_ONE_FLOAT_FORMAT,
-#endif
                                               mSpectroImageData.Get());
         // Spectrogram full image
         if (mNvgSpectroFullImage != 0)
@@ -139,7 +138,6 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
                                                   NVG_IMAGE_NEAREST |
 #endif
                                                   NVG_IMAGE_ONE_FLOAT_FORMAT,
-#endif
                                                   mSpectroImageData.Get());
         
         mNeedUpdateSpectrogram = false;
@@ -230,14 +228,14 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
       if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
 	  (mNvgColormapImage == 0))
       {
-	mColormapImageData = colorMapData;
+          mColormapImageData = colorMapData;
         
-	if (mNvgColormapImage != 0)
-	  nvgDeleteImage(mVg, mNvgColormapImage);
+          if (mNvgColormapImage != 0)
+              nvgDeleteImage(mVg, mNvgColormapImage);
         
-	mNvgColormapImage = nvgCreateImageRGBA(mVg,
-					       mColormapImageData.GetSize(), 1, NVG_IMAGE_NEAREST /*0*/,
-					       (unsigned char *)mColormapImageData.Get());
+          mNvgColormapImage = nvgCreateImageRGBA(mVg,
+                                                 mColormapImageData.GetSize(), 1, NVG_IMAGE_NEAREST /*0*/,
+                                                 (unsigned char *)mColormapImageData.Get());
       }
       else
       {
@@ -313,11 +311,12 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
     
         BL_GUI_FLOAT b1f = mSpectrogramBounds[1]*height;
         BL_GUI_FLOAT b3f = (mSpectrogramBounds[3] - mSpectrogramBounds[1])*height;
-	// TEST
-	//#if GRAPH_CONTROL_FLIP_Y
+        
+        // TEST
+        //#if GRAPH_CONTROL_FLIP_Y
         //b1f = height - b1f;
         //b3f = height - b3f;
-	//#endif
+        //#endif
         
         nvgBeginPath(mVg);
     
@@ -363,6 +362,7 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
     
     BL_GUI_FLOAT b1f = mSpectrogramBounds[1]*height;
     BL_GUI_FLOAT b3f = (mSpectrogramBounds[3] - mSpectrogramBounds[1])*height;
+    
     // TEST
     //#if GRAPH_CONTROL_FLIP_Y
     //b1f = height - b1f;
