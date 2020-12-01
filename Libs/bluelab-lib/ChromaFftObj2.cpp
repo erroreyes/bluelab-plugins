@@ -103,11 +103,6 @@ ChromaFftObj2::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sam
 {
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
-    // ORIGIN
-    //int numCols = mBufferSize/8;
-    
-    // TODO: modify this in GhostViewer too
-    // NEW
     // Prefer this, so the scroll speed won't be modified when
     // the overlapping changes
     int numCols = mBufferSize/(32/mOverlapping);
@@ -272,7 +267,6 @@ ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     {
         int winSize = chromaLine->GetSize()/12;
         Window::MakeHanning(winSize, &mSmoothWin);
-        //Window::MakeSquare(winSize, 1.0, &mSmoothWin); // TEST
     }
     
     WDL_TypedBuf<BL_FLOAT> smoothLine;
@@ -339,13 +333,10 @@ ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         Window::MakeHanning(windowSize, &mSmoothWin);
     }
     
-    //BLDebug::DumpData("win.txt", mSmoothWin);
-    
-#if 1 // Smooth
+    // Smooth
     WDL_TypedBuf<BL_FLOAT> smoothLine;
     BLUtils::SmoothDataWin(&smoothLine, *chromaLine, mSmoothWin);
     *chromaLine = smoothLine;
-#endif
 }
 #endif
 

@@ -22,7 +22,7 @@
 // - with pure low frequencies, there is only one line !
 //
 
-#define USE_FREQ_OBJ 1 //0 //1
+#define USE_FREQ_OBJ 1 //0
 
 // From SpectrogramFftObj
 //
