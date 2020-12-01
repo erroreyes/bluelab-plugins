@@ -28,19 +28,19 @@
 //
 
 class BLSpectrogram4;
-class SpectrogramDisplayScroll;
+class SpectrogramDisplayScroll3;
 
 #if USE_FREQ_OBJ
 class FreqAdjustObj3;
 #endif
 
-class ChromaFftObj : public ProcessObj
+class ChromaFftObj2 : public ProcessObj
 {
 public:
-    ChromaFftObj(int bufferSize, int oversampling, int freqRes,
+    ChromaFftObj2(int bufferSize, int oversampling, int freqRes,
                  BL_FLOAT sampleRate);
     
-    virtual ~ChromaFftObj();
+    virtual ~ChromaFftObj2();
     
     void ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                           const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer = NULL);
@@ -49,11 +49,13 @@ public:
     
     BLSpectrogram4 *GetSpectrogram();
     
-    void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay);
     
     void SetATune(BL_FLOAT aTune);
     
     void SetSharpness(BL_FLOAT sharpness);
+
+    void SetSpeedMod(int speedMod);
     
 protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
@@ -71,8 +73,7 @@ protected:
     BL_FLOAT ComputeC0Freq();
     
     BLSpectrogram4 *mSpectrogram;
-    
-    SpectrogramDisplayScroll *mSpectroDisplay;
+    SpectrogramDisplayScroll3 *mSpectroDisplay;
     
     long mLineCount;
     
@@ -82,6 +83,8 @@ protected:
     
     BL_FLOAT mATune;
     BL_FLOAT mSharpness;
+
+    int mSpeedMod;
     
 #if USE_FREQ_OBJ
     FreqAdjustObj3 *mFreqObj;
