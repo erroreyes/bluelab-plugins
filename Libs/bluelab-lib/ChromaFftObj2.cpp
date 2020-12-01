@@ -132,7 +132,7 @@ ChromaFftObj2::GetSpectrogram()
 }
 
 void
-ChromaFftObj2::SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay)
+ChromaFftObj2::SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }
@@ -153,14 +153,14 @@ ChromaFftObj2::SetSharpness(BL_FLOAT sharpness)
 }
 
 void
-ChromaFftObj::SetSpeedMod(int speedMod)
+ChromaFftObj2::SetSpeedMod(int speedMod)
 {
     mSpeedMod = speedMod;
 }
 
 void
 ChromaFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                 const WDL_TypedBuf<BL_FLOAT> &phases)
+                                  const WDL_TypedBuf<BL_FLOAT> &phases)
 {
 #if USE_AVG_LINES
     
