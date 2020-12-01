@@ -173,9 +173,11 @@ public:
     
     // Graph
     void GetGraphAxisColor(int color[4]);
+    void GetGraphAxisOverlayColor(int color[4]);
     void GetGraphAxisLabelColor(int color[4]);
     void GetGraphAxisLabelOverlayColor(int color[4]);
     float GetGraphAxisLineWidth();
+    float GetGraphAxisLineWidthBold();
     
     void GetGraphCurveDescriptionColor(int color[4]);
     void GetGraphCurveColorBlue(int color[4]);
@@ -281,9 +283,11 @@ protected:
     
     //
     IColor mGraphAxisColor;
+    IColor mGraphAxisOverlayColor;
     IColor mGraphAxisLabelColor;
     IColor mGraphAxisLabelOverlayColor;
     float mGraphAxisLineWidth;
+    float mGraphAxisLineWidthBold;
     
     IColor mGraphCurveDescriptionColor;
     IColor mGraphCurveColorBlue;

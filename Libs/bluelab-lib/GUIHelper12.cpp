@@ -131,9 +131,11 @@ GUIHelper12::GUIHelper12(Style style)
         //mGraphAxisColor = IColor(255, 21, 21, 117); // Dark blue
         // Choose maximum brightness color for labels,
         // to see them well over clear spectrograms
+        mGraphAxisOverlayColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
         mGraphAxisLineWidth = 1.0;
+        mGraphAxisLineWidthBold = 2.0;
         
         mGraphCurveDescriptionColor = IColor(255, 170, 170, 170);
         mGraphCurveColorBlue = IColor(255, 64, 64, 255);
@@ -795,6 +797,15 @@ GUIHelper12::GetGraphAxisColor(int color[4])
 }
 
 void
+GUIHelper12::GetGraphAxisOverlayColor(int color[4])
+{
+    color[0] = mGraphAxisOverlayColor.R;
+    color[1] = mGraphAxisOverlayColor.G;
+    color[2] = mGraphAxisOverlayColor.B;
+    color[3] = mGraphAxisOverlayColor.A;
+}
+
+void
 GUIHelper12::GetGraphAxisLabelColor(int color[4])
 {
     color[0] = mGraphAxisLabelColor.R;
@@ -816,6 +827,12 @@ float
 GUIHelper12::GetGraphAxisLineWidth()
 {
     return mGraphAxisLineWidth;
+}
+
+float
+GUIHelper12::GetGraphAxisLineWidthBold()
+{
+    return mGraphAxisLineWidthBold;
 }
 
 void
