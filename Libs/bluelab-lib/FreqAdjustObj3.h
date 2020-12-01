@@ -27,8 +27,8 @@
 class FreqAdjustObj3
 {
 public:
-    FreqAdjustObj3(int bufferSize, int overlapping, int oversampling,
-                   BL_FLOAT sampleRate);
+    FreqAdjustObj3(int bufferSize, int overlapping,
+                   int oversampling, BL_FLOAT sampleRate);
     
     virtual ~FreqAdjustObj3();
     

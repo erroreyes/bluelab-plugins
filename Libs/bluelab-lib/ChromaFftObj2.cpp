@@ -32,7 +32,7 @@
 
 
 ChromaFftObj2::ChromaFftObj2(int bufferSize, int oversampling, int freqRes,
-			     BL_FLOAT sampleRate)
+                             BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
     mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
@@ -64,7 +64,7 @@ ChromaFftObj2::~ChromaFftObj2()
 
 void
 ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                               const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
+                                const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
     BLUtils::TakeHalf(ioBuffer);
     
@@ -72,16 +72,18 @@ ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> phases;
     BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
 
-    if (mLineCount % mSpeedMod == 0)
-    {     
-      WDL_TypedBuf<BL_FLOAT> chromaLine;
+    WDL_TypedBuf<BL_FLOAT> chromaLine;
     
+#if USE_FREQ_OBJ
+    // Must update the freq obj at each step
+    // (otherwise the detection will be very bad if mSpeedMod != 1)
+    MagnsToCromaLine(magns, phases, &chromaLine);
+#endif
+    
+    if (mLineCount % mSpeedMod == 0)
+    {
 #if !USE_FREQ_OBJ
       MagnsToCromaLine(magns, &chromaLine);
-#endif
-      
-#if USE_FREQ_OBJ
-      MagnsToCromaLine(magns, phases, &chromaLine);
 #endif
       
       AddSpectrogramLine(chromaLine, phases);
@@ -279,8 +281,8 @@ ChromaFftObj2::MagnsToCromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 #if USE_FREQ_OBJ
 void
 ChromaFftObj2::MagnsToCromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                               const WDL_TypedBuf<BL_FLOAT> &phases,
-                               WDL_TypedBuf<BL_FLOAT> *chromaLine)
+                                const WDL_TypedBuf<BL_FLOAT> &phases,
+                                WDL_TypedBuf<BL_FLOAT> *chromaLine)
 {
     WDL_TypedBuf<BL_FLOAT> realFreqs;
     mFreqObj->ComputeRealFrequencies(phases, &realFreqs);
