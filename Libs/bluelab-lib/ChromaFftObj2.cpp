@@ -77,13 +77,16 @@ ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 #if USE_FREQ_OBJ
     // Must update the freq obj at each step
     // (otherwise the detection will be very bad if mSpeedMod != 1)
-    MagnsToCromaLine(magns, phases, &chromaLine);
+    WDL_TypedBuf<BL_FLOAT> realFreqs;
+    mFreqObj->ComputeRealFrequencies(phases, &realFreqs);
 #endif
     
     if (mLineCount % mSpeedMod == 0)
     {
 #if !USE_FREQ_OBJ
-      MagnsToCromaLine(magns, &chromaLine);
+      MagnsToChromaLine(magns, &chromaLine);
+#else
+      MagnsToChromaLine(magns, realFreqs, &chromaLine);
 #endif
       
       AddSpectrogramLine(chromaLine, phases);
@@ -220,8 +223,8 @@ ChromaFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-ChromaFftObj2::MagnsToCromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                               WDL_TypedBuf<BL_FLOAT> *chromaLine)
+ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                 WDL_TypedBuf<BL_FLOAT> *chromaLine)
 {
 // Corresponding to A 440
 //#define C0_TONE 16.35160
@@ -280,13 +283,10 @@ ChromaFftObj2::MagnsToCromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 
 #if USE_FREQ_OBJ
 void
-ChromaFftObj2::MagnsToCromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                const WDL_TypedBuf<BL_FLOAT> &phases,
-                                WDL_TypedBuf<BL_FLOAT> *chromaLine)
+ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                 const WDL_TypedBuf<BL_FLOAT> &realFreqs,
+                                 WDL_TypedBuf<BL_FLOAT> *chromaLine)
 {
-    WDL_TypedBuf<BL_FLOAT> realFreqs;
-    mFreqObj->ComputeRealFrequencies(phases, &realFreqs);
-    
     BL_FLOAT c0Freq = ComputeC0Freq();
     
     BL_FLOAT toneMult = std::pow(2.0, 1.0/12.0);

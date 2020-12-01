@@ -61,13 +61,13 @@ protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
     
-    void MagnsToCromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                          WDL_TypedBuf<BL_FLOAT> *chromaLine);
+    void MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
+                           WDL_TypedBuf<BL_FLOAT> *chromaLine);
     
 #if USE_FREQ_OBJ
-    void MagnsToCromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                          const WDL_TypedBuf<BL_FLOAT> &phases,
-                          WDL_TypedBuf<BL_FLOAT> *chromaLine);
+    void MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
+                           const WDL_TypedBuf<BL_FLOAT> &realFreqs,
+                           WDL_TypedBuf<BL_FLOAT> *chromaLine);
 #endif
     
     BL_FLOAT ComputeC0Freq();
