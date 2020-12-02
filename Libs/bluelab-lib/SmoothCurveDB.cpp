@@ -78,3 +78,11 @@ SmoothCurveDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
     mCurve->SetValues4(avgValues);
 #endif
 }
+
+void
+SmoothCurveDB::ClearValues()
+{
+    mHistogram->Reset();
+    
+    mCurve->ClearValues();
+}

@@ -23,7 +23,7 @@ using namespace iplug;
 // DenoiserObj
 class Denoiser;
 class SoftMaskingComp3;
-
+class SmoothAvgHistogram;
 class DenoiserObj : public ProcessObj
 {
 public:

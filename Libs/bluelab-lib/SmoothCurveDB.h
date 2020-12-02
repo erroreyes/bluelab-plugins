@@ -28,6 +28,8 @@ public:
     
     void AddValues(const WDL_TypedBuf<BL_FLOAT> &values);
     
+    void ClearValues();
+    
 protected:
     SmoothAvgHistogramDB *mHistogram;
     
