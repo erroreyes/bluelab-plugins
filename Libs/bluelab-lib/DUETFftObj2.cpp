@@ -12,8 +12,8 @@
 
 #include <BLUtils.h>
 
-#include <GraphControl11.h>
-#include <SpectrogramDisplay.h>
+#include <GraphControl12.h>
+#include <SpectrogramDisplay2.h>
 #include <ImageDisplay.h>
 
 #include <DUETSeparator2.h>
@@ -31,7 +31,7 @@
 #define DEBUG_INCREASE_BRIGHTNESS 1
 
 
-DUETFftObj2::DUETFftObj2(GraphControl11 *graph,
+DUETFftObj2::DUETFftObj2(GraphControl12 *graph,
                          int bufferSize, int oversampling, int freqRes,
                          BL_FLOAT sampleRate)
 : MultichannelProcess()
@@ -175,7 +175,7 @@ DUETFftObj2::GetSpectrogram()
 }
 
 void
-DUETFftObj2::SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay)
+DUETFftObj2::SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }

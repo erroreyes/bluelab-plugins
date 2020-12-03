@@ -21,7 +21,7 @@ public:
     void Reset();
     
     // Draw after everything
-    void PostDraw(NVGcontext *vg, int width, int height);
+    void PostDraw(NVGcontext *vg, int width, int height) override;
     
     void SetPickCursorActive(bool flag);
     void SetPickCursor(BL_FLOAT x, BL_FLOAT y);

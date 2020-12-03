@@ -11,7 +11,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 #include <DUETPlugInterface.h>
 
 using namespace iplug;
@@ -27,8 +27,8 @@ public:
     
     void Reset();
     
-    void OnMouseDown(float x, float y, const IMouseMod &mod);
-    void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod);
+    void OnMouseDown(float x, float y, const IMouseMod &mod) override;
+    void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod) override;
     
     bool OnKeyDown(float x, float y, const IKeyPress& key) override;
     

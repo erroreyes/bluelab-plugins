@@ -9,7 +9,8 @@
 #ifdef IGRAPHICS_NANOVG
 
 //#include <DUET.h>
-#include <GraphControl11.h>
+#include <GraphControl12.h>
+#include <GraphSwapColor.h>
 
 #include "DUETCustomDrawer.h"
 

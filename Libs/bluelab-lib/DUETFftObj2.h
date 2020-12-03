@@ -16,17 +16,17 @@
 // From BatFftObj5 (directly)
 //
 class BLSpectrogram4;
-class SpectrogramDisplay;
+class SpectrogramDisplay2;
 class ImageDisplay;
-
+class GraphControl12;
 class DUETSeparator2;
 
 class DUETFftObj2 : public MultichannelProcess
 {
 public:
-    DUETFftObj2(GraphControl11 *graph,
-               int bufferSize, int oversampling, int freqRes,
-               BL_FLOAT sampleRate);
+    DUETFftObj2(GraphControl12 *graph,
+                int bufferSize, int oversampling, int freqRes,
+                BL_FLOAT sampleRate);
     
     virtual ~DUETFftObj2();
     
@@ -45,7 +45,7 @@ public:
     
     BLSpectrogram4 *GetSpectrogram();
     
-    void SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay);
     
     void SetTimeSmooth(BL_FLOAT smoothFactor);
     
@@ -99,8 +99,8 @@ protected:
     
     //
     BLSpectrogram4 *mSpectrogram; // Unused
-    SpectrogramDisplay *mSpectroDisplay;
-    GraphControl11 *mGraph;
+    SpectrogramDisplay2 *mSpectroDisplay;
+    GraphControl12 *mGraph;
     
     // For histogram display
     ImageDisplay *mImageDisplay;
