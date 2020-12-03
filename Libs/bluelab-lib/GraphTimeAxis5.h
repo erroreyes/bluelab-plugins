@@ -9,6 +9,8 @@
 #ifndef __BL_InfrasonicViewer__GraphTimeAxis5__
 #define __BL_InfrasonicViewer__GraphTimeAxis5__
 
+#ifdef IGRAPHICS_NANOVG
+
 // From GraphTimeAxis
 // - fixes and improvements
 //
@@ -77,5 +79,7 @@ protected:
     
     bool mMustUpdate;
 };
+
+#endif
 
 #endif /* defined(__BL_InfrasonicViewer__GraphTimeAxis5__) */

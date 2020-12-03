@@ -1,4 +1,8 @@
+#include <BLUtils.h>
+
 #include "NotesQueue.h"
+
+#define GAIN_PAD 0.0 //-10.0
 
 NotesQueue::NotesQueue(double sampleRate)
 {
@@ -7,7 +11,7 @@ NotesQueue::NotesQueue(double sampleRate)
     mId = 0;
 
 #if NQ_OPTIM1
-    mPadAmp = DBToAmp(GAIN_PAD);
+    mPadAmp = BLUtils::DBToAmp(GAIN_PAD);
 #endif
     
 #if ADSR_SMOOTH_FEATURE

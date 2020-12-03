@@ -9,6 +9,8 @@
 #ifndef EQHack_GraphCurve5_h
 #define EQHack_GraphCurve5_h
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLTypes.h>
 #include <Scale.h>
 #include <ParamSmoother.h>
@@ -287,5 +289,7 @@ protected:
     
     ParamSmoother mParamSmoother;
 };
+
+#endif
 
 #endif

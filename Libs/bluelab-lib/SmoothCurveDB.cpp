@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <SmoothAvgHistogramDB.h>
 #include <GraphCurve5.h>
 
@@ -86,3 +88,5 @@ SmoothCurveDB::ClearValues()
     
     mCurve->ClearValues();
 }
+
+#endif

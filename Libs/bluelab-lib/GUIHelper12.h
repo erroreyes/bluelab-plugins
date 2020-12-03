@@ -151,6 +151,8 @@ public:
 
     void CreateDemoMessage(IGraphics *graphics);
     
+    void CreateWatermarkMessage(IGraphics *graphics, const char *message);
+    
     IRadioButtonsControl *
         CreateRadioButtons(IGraphics *graphics,
                            float x, float y,
@@ -272,6 +274,12 @@ protected:
     float mDemoTextOffsetY;
     IColor mDemoTextColor;
     char *mDemoFont;
+    
+    float mWatermarkTextSize;
+    float mWatermarkTextOffsetX;
+    float mWatermarkTextOffsetY;
+    IColor mWatermarkTextColor;
+    char *mWatermarkFont;
     
     float mRadioLabelTextSize;
     float mRadioLabelTextOffsetX;

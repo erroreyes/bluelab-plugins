@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphAxis2.h>
 #include <GUIHelper12.h>
 #include <BLUtils.h>
@@ -287,4 +289,6 @@ GraphTimeAxis5::ComputeTimeDuration(int numBuffers, int bufferSize,
     
     return timeDuration;
 }
+
+#endif
 

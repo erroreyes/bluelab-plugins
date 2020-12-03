@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl12.h>
 #include <BLUtils.h>
 
@@ -1144,3 +1146,5 @@ GraphCurve5::NotifyGraph()
         // Notify the graph
         mGraph->SetDataChanged();
 }
+
+#endif

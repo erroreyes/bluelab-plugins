@@ -118,6 +118,12 @@ GUIHelper12::GUIHelper12(Style style)
         mDemoTextColor = IColor(255, 200, 0, 0);
         mDemoFont = "font-regular";
         
+        mWatermarkTextSize = 10.0;
+        mWatermarkTextOffsetX = 2.0;
+        mWatermarkTextOffsetY = 2.0;
+        mWatermarkTextColor = IColor(255, 0, 128, 255);
+        mWatermarkFont = "font-regular";
+        
         mRadioLabelTextSize = 15;
         mRadioLabelTextOffsetX = 6.0;
         mRadioLabelTextColor = IColor(255, 100, 100, 161);
@@ -624,6 +630,23 @@ GUIHelper12::CreateDemoMessage(IGraphics *graphics)
     // Avoids that the trial message masks the interaction on the help button for example
     textControl->SetInteractionDisabled(true);
 #endif
+}
+
+void
+GUIHelper12::CreateWatermarkMessage(IGraphics *graphics,
+                                    const char *message)
+{
+    int x = mWatermarkTextOffsetX;
+    int y = graphics->Height() - mWatermarkTextSize - mWatermarkTextOffsetY;
+    
+    ITextControl *textControl = CreateText(graphics,
+                                           x, y,
+                                           message, mWatermarkTextSize,
+                                           mWatermarkFont,
+                                           mWatermarkTextColor, EAlign::Near);
+    
+    // Avoids that the trial message masks the interaction on the help button for example
+    textControl->SetInteractionDisabled(true);
 }
 
 IRadioButtonsControl *

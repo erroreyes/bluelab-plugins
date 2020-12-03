@@ -8,6 +8,8 @@
 #ifndef SmoothCurveDB_h
 #define SmoothCurveDB_h
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLTypes.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -38,5 +40,7 @@ protected:
     BL_FLOAT mMinDB;
     BL_FLOAT mMaxDB;
 };
+
+#endif
 
 #endif

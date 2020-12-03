@@ -1,6 +1,11 @@
 #ifndef NOTES_QUEUE_H
 #define NOTES_QUEUE_H
 
+#include <vector>
+using namespace std;
+
+#include <EnvelopeGenerator3.h>
+
 #define ADSR_SMOOTH_FEATURE 1
 
 #define ADSR_ADVANCED_PARAMS_FEATURE 1
