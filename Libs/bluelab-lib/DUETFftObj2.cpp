@@ -9,12 +9,14 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <BLSpectrogram4.h>
+#include <SpectrogramDisplay2.h>
+
+#include <BLImage.h>
+#include <ImageDisplay2.h>
 
 #include <BLUtils.h>
 
 #include <GraphControl12.h>
-#include <SpectrogramDisplay2.h>
-#include <ImageDisplay.h>
 
 #include <DUETSeparator2.h>
 
@@ -36,11 +38,17 @@ DUETFftObj2::DUETFftObj2(GraphControl12 *graph,
                          BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
+    mSeparator = new DUETSeparator2(HISTO_SIZE, mSampleRate);
+    
     mGraph = graph;
     
     mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
+    int width = mSeparator->GetHistogramWidth();
+    int height = mSeparator->GetHistogramHeight();
+
+    mImage = new BLImage(width, height);
     mImageDisplay = NULL;
     
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -52,7 +60,6 @@ DUETFftObj2::DUETFftObj2(GraphControl12 *graph,
     mSampleRate = sampleRate;
     
     //
-    mSeparator = new DUETSeparator2(HISTO_SIZE, mSampleRate);
     
     mUseSoftMasksComp = false;
     
@@ -64,6 +71,7 @@ DUETFftObj2::DUETFftObj2(GraphControl12 *graph,
 DUETFftObj2::~DUETFftObj2()
 {
     delete mSpectrogram;
+    delete mImage;
     
     delete mSeparator;
 }
@@ -178,6 +186,18 @@ void
 DUETFftObj2::SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
+}
+
+BLImage *
+DUETFftObj2::GetImage()
+{
+    return mImage;
+}
+
+void
+DUETFftObj2::SetImageDisplay(ImageDisplay2 *imageDisplay)
+{
+    mImageDisplay = imageDisplay;
 }
 
 void
@@ -306,12 +326,6 @@ DUETFftObj2::SetThresholdAll(bool flag)
 }
 
 void
-DUETFftObj2::SetImageDisplay(ImageDisplay *imageDisplay)
-{
-    mImageDisplay = imageDisplay;
-}
-
-void
 DUETFftObj2::SetPickingActive(bool flag)
 {
     mSeparator->SetPickingActive(flag);
@@ -325,6 +339,9 @@ DUETFftObj2::SetPickingActive(bool flag)
 void
 DUETFftObj2::SetPickPosition(BL_FLOAT x, BL_FLOAT y)
 {
+    if (mImageDisplay == NULL)
+        return;
+    
     BL_FLOAT left;
     BL_FLOAT top;
     BL_FLOAT right;
@@ -412,9 +429,13 @@ DUETFftObj2::Process()
     BLUtils::MultValues(&histogram, (BL_FLOAT)16.0);
 #endif
     
-    int width = mSeparator->GetHistogramWidth();
-    int height = mSeparator->GetHistogramHeight();
-    mImageDisplay->SetImage(width, height, histogram);
+    //int width = mSeparator->GetHistogramWidth();
+    //int height = mSeparator->GetHistogramHeight();
+    if (mImageDisplay != NULL)
+    {
+        mImage->SetData(histogram);
+        mImageDisplay->SetImage(mImage);
+    }
     
     mMustReprocess = false;
 }

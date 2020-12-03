@@ -17,7 +17,8 @@
 //
 class BLSpectrogram4;
 class SpectrogramDisplay2;
-class ImageDisplay;
+class BLImage;
+class ImageDisplay2;
 class GraphControl12;
 class DUETSeparator2;
 
@@ -44,8 +45,10 @@ public:
     void Update();
     
     BLSpectrogram4 *GetSpectrogram();
-    
     void SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay);
+    
+    BLImage *GetImage();
+    void SetImageDisplay(ImageDisplay2 *imageDisplay);
     
     void SetTimeSmooth(BL_FLOAT smoothFactor);
     
@@ -73,9 +76,6 @@ public:
     void SetThresholdAll(bool flag);
     
     //
-    void SetImageDisplay(ImageDisplay *imageDisplay);
-    
-    //
     void SetPickingActive(bool flag);
     void SetPickPosition(BL_FLOAT x, BL_FLOAT y);
     void SetInvertPickSelection(bool flag);
@@ -100,10 +100,12 @@ protected:
     //
     BLSpectrogram4 *mSpectrogram; // Unused
     SpectrogramDisplay2 *mSpectroDisplay;
-    GraphControl12 *mGraph;
     
     // For histogram display
-    ImageDisplay *mImageDisplay;
+    BLImage *mImage;
+    ImageDisplay2 *mImageDisplay;
+    
+    GraphControl12 *mGraph;
     
     //
     DUETSeparator2 *mSeparator;
