@@ -23,11 +23,11 @@
 #include "DUETFftObj2.h"
 
 // Resolution of the spectrogram
-#define SPECTRO_WIDTH 128 //512
-#define SPECTRO_HEIGHT 128 //512
+#define SPECTRO_WIDTH 128
+#define SPECTRO_HEIGHT 128
 
 // Paper: 35x50
-#define HISTO_SIZE 64 //32 //64 //128 //32 //8
+#define HISTO_SIZE 64
 
 // Increase the default brightness
 #define DEBUG_INCREASE_BRIGHTNESS 1
@@ -58,8 +58,6 @@ DUETFftObj2::DUETFftObj2(GraphControl12 *graph,
     mOverlapping = oversampling;
     mFreqRes = freqRes;
     mSampleRate = sampleRate;
-    
-    //
     
     mUseSoftMasksComp = false;
     
@@ -145,7 +143,7 @@ DUETFftObj2::ProcessInputSamplesWin(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples
         FftProcessObj16::ComputeFft(samples[i], &mPACOversampledFft[i], oversampling);
         
         BLUtils::TakeHalf(&mPACOversampledFft[i]);
-        BLUtils::MultValues(&mPACOversampledFft[i],  0.5); // Hack
+        BLUtils::MultValues(&mPACOversampledFft[i], 0.5); // Hack
     }
     
     mSeparator->SetPACOversamplesFft(mPACOversampledFft);
@@ -207,7 +205,6 @@ DUETFftObj2::SetThresholdFloor(BL_FLOAT threshold)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -218,7 +215,6 @@ DUETFftObj2::SetThresholdPeaks(BL_FLOAT threshold)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -229,7 +225,6 @@ DUETFftObj2::SetThresholdPeaksWidth(BL_FLOAT threshold)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -240,7 +235,6 @@ DUETFftObj2::SetDisplayThresholded(bool flag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -251,7 +245,6 @@ DUETFftObj2::SetDisplayMaxima(bool flag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -262,7 +255,6 @@ DUETFftObj2::SetDisplayMasks(bool flag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -299,7 +291,6 @@ DUETFftObj2::SetUseKernelSmooth(bool kernelSmoothFlag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -310,7 +301,6 @@ DUETFftObj2::SetUseGradientMasks(bool flag)
 
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -321,7 +311,6 @@ DUETFftObj2::SetThresholdAll(bool flag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -332,7 +321,6 @@ DUETFftObj2::SetPickingActive(bool flag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -357,7 +345,6 @@ DUETFftObj2::SetPickPosition(BL_FLOAT x, BL_FLOAT y)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -368,7 +355,6 @@ DUETFftObj2::SetInvertPickSelection(bool flag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -379,7 +365,6 @@ DUETFftObj2::SetHistogramSize(int histoSize)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -390,7 +375,6 @@ DUETFftObj2::SetAlphaZoom(BL_FLOAT zoom)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -401,7 +385,6 @@ DUETFftObj2::SetDeltaZoom(BL_FLOAT zoom)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -413,7 +396,6 @@ DUETFftObj2::SetUsePhaseAliasingCorrection(bool flag)
     
     mMustReprocess = true;
     
-    //mGraph->SetDirty(true);
     mGraph->SetDataChanged();
 }
 
@@ -429,8 +411,6 @@ DUETFftObj2::Process()
     BLUtils::MultValues(&histogram, (BL_FLOAT)16.0);
 #endif
     
-    //int width = mSeparator->GetHistogramWidth();
-    //int height = mSeparator->GetHistogramHeight();
     if (mImageDisplay != NULL)
     {
         mImage->SetData(histogram);
