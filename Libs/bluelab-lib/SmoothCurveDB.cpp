@@ -89,4 +89,9 @@ SmoothCurveDB::ClearValues()
     mCurve->ClearValues();
 }
 
+void
+SmoothCurveDB::GetValues(WDL_TypedBuf<BL_FLOAT> *values)
+{
+  mHistogram->GetValues(values);
+}
 #endif
