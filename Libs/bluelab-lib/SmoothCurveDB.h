@@ -27,9 +27,9 @@ public:
     virtual ~SmoothCurveDB();
     
     void Reset();
-    
-    void AddValues(const WDL_TypedBuf<BL_FLOAT> &values);
     void ClearValues();
+    
+    void SetValues(const WDL_TypedBuf<BL_FLOAT> &values);
     void GetValues(WDL_TypedBuf<BL_FLOAT> *values);
     
 protected:

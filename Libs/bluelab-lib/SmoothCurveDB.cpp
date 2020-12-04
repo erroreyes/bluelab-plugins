@@ -42,7 +42,15 @@ SmoothCurveDB::Reset()
 }
 
 void
-SmoothCurveDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
+SmoothCurveDB::ClearValues()
+{
+    mHistogram->Reset();
+    
+    mCurve->ClearValues();
+}
+
+void
+SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values)
 {
     // Add the values
     int histoNumValues = mHistogram->GetNumValues();
@@ -81,13 +89,6 @@ SmoothCurveDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
 #endif
 }
 
-void
-SmoothCurveDB::ClearValues()
-{
-    mHistogram->Reset();
-    
-    mCurve->ClearValues();
-}
 
 void
 SmoothCurveDB::GetValues(WDL_TypedBuf<BL_FLOAT> *values)
