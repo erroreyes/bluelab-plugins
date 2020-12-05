@@ -17,7 +17,13 @@ class GUIHelper12;
 class GraphAmpAxis
 {
 public:
-    GraphAmpAxis(bool displayLines = true);
+    enum Density
+    {
+        DENSITY_20DB = 0,
+        DENSITY_10DB,
+    };
+    
+    GraphAmpAxis(bool displayLines = true, Density density = DENSITY_20DB);
     
     virtual ~GraphAmpAxis();
     
@@ -31,6 +37,9 @@ public:
 protected:
     void Update();
     
+    void UpdateDensity20dB();
+    void UpdateDensity10dB();
+    
     //
     GraphAxis2 *mGraphAxis;
     
@@ -38,6 +47,8 @@ protected:
     BL_FLOAT mMaxDB;
     
     bool mDisplayLines;
+    
+    Density mDensity;
 };
 
 #endif /* defined(__BL_InfrasonicViewer__GraphAmpAxis__) */

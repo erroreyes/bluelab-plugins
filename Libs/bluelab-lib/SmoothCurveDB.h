@@ -29,7 +29,7 @@ public:
     void Reset();
     void ClearValues();
     
-    void SetValues(const WDL_TypedBuf<BL_FLOAT> &values);
+    void SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset = false);
     void GetValues(WDL_TypedBuf<BL_FLOAT> *values);
     
 protected:
