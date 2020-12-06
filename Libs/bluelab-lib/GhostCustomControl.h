@@ -1,10 +1,12 @@
 #ifndef GHOST_CUSTOM_CONTROL_H
 #define GHOST_CUSTOM_CONTROL_H
 
+#include <GhostPluginInterface.h>
+
 class GhostCustomControl : public GraphCustomControl
 {
 public:
-    GhostCustomControl(Ghost *plug);
+    GhostCustomControl(GhostPluginInterface *plug);
     
     virtual ~GhostCustomControl() {}
     
@@ -45,7 +47,7 @@ protected:
     // Update the selection depending on the selection type
     void UpdateSelectionType();
     
-    Ghost *mPlug;
+    GhostPluginInterface *mPlug;
     
     // Used to detect pure mouse up, without drag
     bool mPrevMouseDrag;

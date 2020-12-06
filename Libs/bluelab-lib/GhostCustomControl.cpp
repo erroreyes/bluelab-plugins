@@ -1,6 +1,6 @@
 #include "GhostCustomControl.h"
 
-GhostCustomControl::GhostCustomControl(Ghost *plug)
+GhostCustomControl::GhostCustomControl(GhostPluginInterface *plug)
 {
     mPlug = plug;
     

@@ -1,10 +1,7 @@
 #include "GhostCustomDrawer.h"
 
-GhostCustomDrawer::GhostCustomDrawer(Ghost *plug,
-                                     BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
-{
-    mPlug = plug;
-    
+GhostCustomDrawer::GhostCustomDrawer(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
+{    
     mBarActive = false;
     mBarPos = 0.0;
     

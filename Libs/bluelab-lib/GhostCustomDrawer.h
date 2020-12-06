@@ -3,12 +3,10 @@
 
 #include <GraphControl12.h>
 
-class Ghost; // TODO: plugin interface
 class GhostCustomDrawer : public GraphCustomDrawer
 {
 public:
-    GhostCustomDrawer(Ghost *plug,
-                      BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1);
+    GhostCustomDrawer(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1);
     
     virtual ~GhostCustomDrawer() {}
     
@@ -60,8 +58,6 @@ protected:
     void DrawBar(NVGcontext *vg, int width, int height);
     void DrawSelection(NVGcontext *vg, int width, int height);
     void DrawPlayBar(NVGcontext *vg, int width, int height);
-    
-    Ghost *mPlug;
     
     bool mBarActive;
     BL_FLOAT mBarPos;

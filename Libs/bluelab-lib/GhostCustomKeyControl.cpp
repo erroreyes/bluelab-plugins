@@ -1,6 +1,6 @@
 #include "GhostCustomKeyControl.h"
 
-GhostCustomKeyControl::GhostCustomKeyControl(Ghost *plug)
+GhostCustomKeyControl::GhostCustomKeyControl(GhostPluginInterface *plug)
 {
     mPlug = plug;
 }
@@ -25,7 +25,9 @@ GhostCustomKeyControl::OnKeyDown(int x, int y, int key, IMouseMod* pMod)
         if (!mPlug->PlayStarted())
         {
             mPlug->StartPlay();
-            
+
+	    // TODO
+	    
             // Synchronize the play button state
             mPlug->GetGUI()->SetParameterFromPlug(kPlayStop, 1, false);
         }

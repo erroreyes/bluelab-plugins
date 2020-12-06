@@ -1,7 +1,9 @@
+#include <GhostPluginInterface.h>
+
 #include "GhostTriggerControl.h"
 
 void
 GhostTriggerControl::OnGUIIdle()
 {
-    ((Ghost *)mPlug)->CheckRecomputeData();
+    ((GhostPluginInterface *)mPlug)->CheckRecomputeData();
 }

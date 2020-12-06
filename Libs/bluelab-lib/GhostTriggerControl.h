@@ -4,7 +4,7 @@
 class GhostTriggerControl : public ITriggerControl
 {
 public:
-    GhostTriggerControl(Ghost* pPlug, int paramIdx)
+    GhostTriggerControl(IPlugin* pPlug, int paramIdx)
     : ITriggerControl(pPlug, paramIdx) {}
     
     virtual ~GhostTriggerControl() {}
