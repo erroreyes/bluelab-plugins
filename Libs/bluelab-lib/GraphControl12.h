@@ -128,7 +128,7 @@ public:
     virtual void OnMouseDblClick(float x, float y,
                                  const IMouseMod &mod) {};
     virtual void OnMouseWheel(float x, float y,
-                              const IMouseMod &mod, BL_GUI_FLOAT d) {};
+                              const IMouseMod &mod, float d) {};
     virtual bool OnKeyDown(float x, float y, const IKeyPress& key) { return false; }
     
     virtual void OnMouseOver(float x, float y, const IMouseMod &mod) {}
