@@ -764,7 +764,7 @@ SMVVolRender3::OnKeyDown(float x, float y, const IKeyPress& key)
 
 void
 SMVVolRender3::OnMouseWheel(float x, float y,
-                            const IMouseMod &mod, BL_FLOAT d)
+                            const IMouseMod &mod, float d)
 {
 #define WHEEL_ZOOM_STEP 0.025
     

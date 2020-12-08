@@ -171,6 +171,13 @@ public:
                                     char *label,
                                     int guiSizeIdx);
     
+    IControl *CreateRolloverButton(IGraphics *graphics,
+                                   float x, float y,
+                                   const char *bitmapFname,
+                                   int paramIdx,
+                                   char *label);
+
+    
     void GetValueTextColor(IColor *valueTextColor) const;
     
     // Graph
@@ -186,11 +193,16 @@ public:
     void GetGraphCurveColorGreen(int color[4]);
     void GetGraphCurveColorLightBlue(int color[4]);
     float GetGraphCurveFillAlpha();
+
+    void GetGraphCurveColorGray(int color[4]);
     
     static void ResetParameter(Plugin *plug, int paramIdx);
     
     // Refresh all the controls, from their values
     static void RefreshAllParameters(Plugin *plug, int numParams);
+
+    static bool PromptForFile(Plugin *plug, EFileAction action, WDL_String *result,
+                              char* dir = "", char* extensions = "");
     
 protected:
     void CreateTitle(IGraphics *graphics, float x, float y,
@@ -302,6 +314,8 @@ protected:
     IColor mGraphCurveColorGreen;
     IColor mGraphCurveColorLightBlue;
     float mGraphCurveFillAlpha;
+
+    IColor mGraphCurveColorGray;
 };
 
 #endif /* GUIHelper12_hpp */

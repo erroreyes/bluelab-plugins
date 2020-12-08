@@ -15,7 +15,7 @@
 #include <GraphControl12.h>
 
 class BLSpectrogram4;
-class MiniView;
+//class MiniView;
 class NVGcontext;
 class SpectrogramDisplay2 : public GraphCustomDrawer
 {
@@ -53,7 +53,7 @@ public:
 
     void UpdateColormap(bool flag);
     
-    void SetMiniView(MiniView *view);
+    //void SetMiniView(MiniView *view);
     
     // Reset all
     void ResetSpectrogramTransform();
@@ -82,12 +82,14 @@ public:
     // Called after local data recomputation
     void ResetSpectrogramZoomAndTrans();
 
-    MiniView *GetMiniView();
+    //MiniView *GetMiniView();
     
     // For optimization
     // To be able to disable background spectrogram
     // will avoid to draw the spectrogram twice with Chroma and GhostViewer
     void SetDrawBGSpectrogram(bool flag);
+    
+    void SetAlpha(BL_FLOAT alpha);
     
 protected:
     // NanoVG
@@ -132,7 +134,7 @@ protected:
     WDL_TypedBuf<unsigned int> mColormapImageData;
     
     // Mini view
-    MiniView *mMiniView;
+    //MiniView *mMiniView;
     
     // For optimization (Chroma)
     bool mDrawBGSpectrogram;

@@ -1,6 +1,9 @@
 #ifndef GHOST_COMMAND_H
 #define GHOST_COMMAND_H
 
+#include <vector>
+using namespace std;
+
 #include <BLTypes.h>
 
 #include "IPlug_include_in_plug_hdr.h"

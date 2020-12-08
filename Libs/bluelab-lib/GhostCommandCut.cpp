@@ -1,12 +1,14 @@
+#include <BLUtils.h>
+
 #include "GhostCommandCut.h"
 
-GhostComandCut::GhostComandCut() {}
+GhostCommandCut::GhostCommandCut() {}
 
-GhostComandCut::~GhostComandCut() {}
+GhostCommandCut::~GhostCommandCut() {}
 
 void
-GhostComandCut::Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
-                  vector<WDL_TypedBuf<BL_FLOAT> > *phases)
+GhostCommandCut::Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
+                       vector<WDL_TypedBuf<BL_FLOAT> > *phases)
 {
     // Do not use phases
     
@@ -17,7 +19,7 @@ GhostComandCut::Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
     GetSelectedDataY(*magns, &selectedMagns);
     
     // For the moment, do not use fade, just fill all with zeros
-    Utils::FillAllZero(&selectedMagns);
+    BLUtils::FillAllZero(&selectedMagns);
     
     // And replace in the result
     //ReplaceSelectedData(data, selectedData);

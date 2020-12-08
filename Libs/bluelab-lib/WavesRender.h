@@ -65,7 +65,7 @@ public:
                                           const IMouseMod &mod) override;
     virtual void OnMouseWheel(float x, float y,
                               const IMouseMod &mod,
-                              BL_FLOAT d) override;
+                              float d) override;
     
     virtual bool OnKeyDown(float x, float y, const IKeyPress& key) override;
     

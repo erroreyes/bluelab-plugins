@@ -5,7 +5,7 @@
 
 #include "IPlug_include_in_plug_hdr.h"
 
-class GhostCommandGain : public Command
+class GhostCommandGain : public GhostCommand
 {
 public:
     GhostCommandGain(BL_FLOAT factor);
@@ -13,7 +13,7 @@ public:
     virtual ~GhostCommandGain();
     
     void Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
-               vector<WDL_TypedBuf<BL_FLOAT> > *phases);
+               vector<WDL_TypedBuf<BL_FLOAT> > *phases) override;
     
 protected:
     BL_FLOAT mFactor;

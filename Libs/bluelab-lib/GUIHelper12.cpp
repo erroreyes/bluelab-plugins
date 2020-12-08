@@ -148,6 +148,8 @@ GUIHelper12::GUIHelper12(Style style)
         mGraphCurveColorGreen = IColor(255, 194, 243, 61);
         mGraphCurveColorLightBlue = IColor(255, 200, 200, 255);
         mGraphCurveFillAlpha = 0.5;
+
+	mGraphCurveColorGray = IColor(255, 64, 64, 64);
     }
 }
 
@@ -804,6 +806,39 @@ GUIHelper12::CreateGUIResizeButton(ResizeGUIPluginInterface *plug, IGraphics *gr
     return control;
 }
 
+IControl *
+GUIHelper12::CreateRolloverButton(IGraphics *graphics,
+                                  float x, float y,
+                                  const char *bitmapFname,
+                                  int paramIdx,
+                                  char *label)
+{
+  int bmpFrames = 3;
+  
+  IBitmap bitmap = graphics->LoadBitmap(bitmapFname, bmpFrames);
+  
+  IRECT pR;
+  pR.L = x;
+  pR.T = y;
+  pR.R = x + bitmap.W();
+  pR.B = y + bitmap.H();
+    
+  bool toggleFlag = true;
+  IControl *control = new IRolloverButtonControl(x, y, bitmap,
+                                                 paramIdx,
+                                                 toggleFlag);
+   
+  graphics->AttachControl(control);
+  
+  // Add the label
+  CreateTitle(graphics,
+	      x + mButtonLabelTextOffsetX,
+	      y + bitmap.H()*1.5/((BL_FLOAT)bmpFrames) + mButtonLabelTextOffsetY,
+	      label, Size::SIZE_DEFAULT);
+  
+  return control;
+}
+
 void
 GUIHelper12::GetValueTextColor(IColor *valueTextColor) const
 {
@@ -901,10 +936,43 @@ GUIHelper12::GetGraphCurveFillAlpha()
 }
 
 void
+GUIHelper12::GetGraphCurveColorGray(int color[4])
+{
+  color[0] = mGraphCurveColorGray.R;
+  color[1] = mGraphCurveColorGray.G;
+  color[2] = mGraphCurveColorGray.B;
+  color[3] = mGraphCurveColorGray.A;
+}
+
+void
 GUIHelper12::RefreshAllParameters(Plugin *plug, int numParams)
 {
     for (int i = 0; i < numParams; i++)
         plug->SendParameterValueFromAPI(i, plug->GetParam(i)->Value(), false);
+}
+
+bool
+GUIHelper12::PromptForFile(Plugin *plug, EFileAction action, WDL_String *result,
+                           char* dir, char* extensions)
+{
+    WDL_String file;
+    //IFileSelectorControl::EFileSelectorState state = IFileSelectorControl::kFSNone;
+    
+    if (plug && plug->GetUI())
+    {
+        WDL_String wdlDir(dir);
+        
+        //state = IFileSelectorControl::kFSSelecting;
+        plug->GetUI()->PromptForFile(file, wdlDir, action, extensions);
+        //state = IFileSelectorControl::kFSDone;
+    }
+    
+    result->Set(file.Get());
+    
+    if (result->GetLength() == 0)
+        return false;
+    
+    return true;
 }
 
 void

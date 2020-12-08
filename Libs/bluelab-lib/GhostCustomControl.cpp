@@ -1,4 +1,12 @@
+#include <SpectrogramDisplay2.h>
+#include <MiniView2.h>
+
 #include "GhostCustomControl.h"
+
+#define WHEEL_ZOOM_STEP 0.025 //0.1
+
+// 4 pixels
+#define SELECTION_BORDER_SIZE 8
 
 GhostCustomControl::GhostCustomControl(GhostPluginInterface *plug)
 {
@@ -26,9 +34,11 @@ GhostCustomControl::GhostCustomControl(GhostPluginInterface *plug)
     mPrevMouseDownInsideSpectro = false;
     mPrevMouseDownInsideMiniView = false;
     
-    mSelectionType = Ghost::RECTANGLE;
+    mSelectionType = GhostPluginInterface::RECTANGLE;
     
     mPrevMouseDown = false;
+    
+    mMiniView = NULL;
 }
 
 void
@@ -42,13 +52,19 @@ GhostCustomControl::Resize(int prevWidth, int prevHeight,
 }
 
 void
-GhostCustomControl::SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay)
+GhostCustomControl::SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }
 
 void
-GhostCustomControl::SetSelectionType(Ghost::SelectionType selectionType)
+GhostCustomControl::SetMiniView(MiniView2 *miniView)
+{
+    mMiniView = miniView;
+}
+
+void
+GhostCustomControl::SetSelectionType(GhostPluginInterface::SelectionType selectionType)
 {
     mSelectionType = selectionType;
     
@@ -63,9 +79,9 @@ GhostCustomControl::SetSelectionType(Ghost::SelectionType selectionType)
 }
 
 void
-GhostCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
+GhostCustomControl::OnMouseDown(float x, float y, const IMouseMod &pMod)
 {
-    if (mPlug->GetMode() != Ghost::EDIT)
+    if (mPlug->GetMode() != GhostPluginInterface::EDIT)
         return;
     
     mPrevMouseDown = true;
@@ -84,7 +100,8 @@ GhostCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
         mPrevMouseDownInsideSpectro = false;
     }
     
-    bool insideMiniView = mSpectroDisplay->PointInsideMiniView(x, y, width, height);
+    //bool insideMiniView = mSpectroDisplay->PointInsideMiniView(x, y, width, height);
+    bool insideMiniView = mMiniView->IsPointInside(x, y, width, height);
     if (insideMiniView)
     {
         mPrevMouseDownInsideMiniView = true;
@@ -94,7 +111,8 @@ GhostCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
         mPrevMouseDownInsideMiniView = false;
     }
     
-    if (pMod->Cmd)
+    //if (pMod->Cmd)
+    if (pMod.C || pMod.Cmd) // NEW
         // Command pressed (or Control on Windows)
     {
         // We are dragging the spectrogram,
@@ -120,9 +138,9 @@ GhostCustomControl::OnMouseDown(int x, int y, IMouseMod* pMod)
 }
 
 void
-GhostCustomControl::OnMouseUp(int x, int y, IMouseMod* pMod)
+GhostCustomControl::OnMouseUp(float x, float y, const IMouseMod &pMod)
 {
-    if (mPlug->GetMode() != Ghost::EDIT)
+    if (mPlug->GetMode() != GhostPluginInterface::EDIT)
         return;
     
     // FIX: click on the resize button, to a bigger size, then the
@@ -132,7 +150,8 @@ GhostCustomControl::OnMouseUp(int x, int y, IMouseMod* pMod)
         return;
     mPrevMouseDown = false;
     
-    if (pMod->Cmd)
+    //if (pMod->Cmd)
+    if (pMod.C || pMod.Cmd) // NEW
         // Command pressed (or control on Windows)
     {
         // We are dragging the spectrogram,
@@ -173,9 +192,9 @@ GhostCustomControl::OnMouseUp(int x, int y, IMouseMod* pMod)
 }
 
 void
-GhostCustomControl::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
+GhostCustomControl::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &pMod)
 {
-    if (mPlug->GetMode() != Ghost::EDIT)
+    if (mPlug->GetMode() != GhostPluginInterface::EDIT)
         return;
     
     bool beginDrag = !mPrevMouseDrag;
@@ -188,7 +207,8 @@ GhostCustomControl::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     
     if (mPrevMouseDownInsideSpectro)
     {
-        if (pMod->Cmd)
+        //if (pMod->Cmd)
+        if (pMod.C || pMod.Cmd) // NEW
             // Command pressed (on Control on Windows)
         {
             // Drag the spectrogram
@@ -202,7 +222,7 @@ GhostCustomControl::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
             return;
         }
     
-        if (pMod->A)
+        if (pMod.A)
             // Alt-drag => zoom
         {
 #define DRAG_WHEEL_COEFF 0.2
@@ -318,10 +338,10 @@ GhostCustomControl::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     
     if (mPrevMouseDownInsideMiniView)
     {
-        MiniView *miniView = mSpectroDisplay->GetMiniView();
-        if (miniView != NULL)
+        //MiniView *miniView = mSpectroDisplay->GetMiniView();
+        if (mMiniView != NULL)
         {
-            BL_FLOAT drag = miniView->GetDrag(dX, width);
+            BL_FLOAT drag = mMiniView->GetDrag(dX, width);
             
             drag *= width;
             
@@ -332,25 +352,27 @@ GhostCustomControl::OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
     }
 }
 
-bool
-GhostCustomControl::OnMouseDblClick(int x, int y, IMouseMod* pMod)
+//bool
+void
+GhostCustomControl::OnMouseDblClick(float x, float y, const IMouseMod &pMod)
 {
     int width;
     int height;
     mPlug->GetGraphSize(&width, &height);
     
-    bool insideMiniView = mSpectroDisplay->PointInsideMiniView(x, y, width, height);
+    //bool insideMiniView = mSpectroDisplay->PointInsideMiniView(x, y, width, height);
+    bool insideMiniView = mMiniView->IsPointInside(x, y, width, height);
     
     if (insideMiniView)
         mPlug->RewindView();
     
-    return true;
+    //return true;
 }
 
 void
-GhostCustomControl::OnMouseWheel(int x, int y, IMouseMod* pMod, float d)
+GhostCustomControl::OnMouseWheel(float x, float y, const IMouseMod &pMod, float d)
 {
-    if (mPlug->GetMode() != Ghost::EDIT)
+    if (mPlug->GetMode() != GhostPluginInterface::EDIT)
         return;
     
     // Don't check insideSpectro here
@@ -447,7 +469,7 @@ GhostCustomControl::BorderSelected()
 void
 GhostCustomControl::UpdateZoomSelection(BL_FLOAT zoomChange)
 {
-    Ghost::UpdateZoomSelection(mSelection, zoomChange);
+    mPlug->UpdateZoomSelection(mSelection, zoomChange);
 }
 
 void
@@ -484,14 +506,14 @@ GhostCustomControl::UpdateSelection(bool updateCenterPos)
 void
 GhostCustomControl::UpdateSelectionType()
 {
-    if (mSelectionType == Ghost::RECTANGLE)
+    if (mSelectionType == GhostPluginInterface::RECTANGLE)
         return;
     
     int width;
     int height;
     mPlug->GetGraphSize(&width, &height);
     
-    if (mSelectionType == Ghost::HORIZONTAL)
+    if (mSelectionType == GhostPluginInterface::HORIZONTAL)
     {
         mSelection[0] = 0;
         mSelection[2] = width;
@@ -499,7 +521,7 @@ GhostCustomControl::UpdateSelectionType()
         return;
     }
     
-    if (mSelectionType == Ghost::VERTICAL)
+    if (mSelectionType == GhostPluginInterface::VERTICAL)
     {
         mSelection[1] = 0;
         mSelection[3] = height;

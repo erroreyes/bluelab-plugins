@@ -61,7 +61,7 @@ public:
                              const IMouseMod &mod);
     virtual void/*bool*/ OnMouseDblClick(float x, float y, const IMouseMod &mod);
     virtual void OnMouseWheel(float x, float y,
-                              const IMouseMod &mod, BL_FLOAT d);
+                              const IMouseMod &mod, float d);
     
     // Parameters
     virtual void SetSpeed(BL_FLOAT speed);

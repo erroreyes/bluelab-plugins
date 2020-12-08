@@ -77,7 +77,7 @@ GhostCommandCopyPaste::Undo(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
     for (int i = 0; i < 4; i++)
         mSelection[i] = mPastedSelection[i];
     
-    Command::Undo(magns, phases);
+    GhostCommand::Undo(magns, phases);
 }
 
 bool
@@ -109,8 +109,10 @@ GhostCommandCopyPaste::GetPastedSelection(BL_FLOAT pastedSelection[4], bool yLog
     
     if (yLogScale)
     {
-        pastedSelection[1] = Utils::LogScaleNormInv(pastedSelection[1], 1.0, Y_LOG_SCALE_FACTOR);
-        pastedSelection[3] = Utils::LogScaleNormInv(pastedSelection[3], 1.0, Y_LOG_SCALE_FACTOR);
+#if 0 // TODO
+        pastedSelection[1] = BLUtils::LogScaleNormInv(pastedSelection[1], 1.0, Y_LOG_SCALE_FACTOR);
+        pastedSelection[3] = BLUtils::LogScaleNormInv(pastedSelection[3], 1.0, Y_LOG_SCALE_FACTOR);
+#endif
     }
 }
 

@@ -1,15 +1,31 @@
 #ifndef GHOST_FILE_DROP_CONTROL_H
 #define GHOST_FILE_DROP_CONTROL_H
 
-class GhostFilesDropControl : public IFilesDropControl
+#include "IPlug_include_in_plug_hdr.h"
+
+#include <GhostPluginInterface.h>
+
+#include "IControl.h"
+
+using namespace iplug;
+using namespace iplug::igraphics;
+
+//class GhostFilesDropControl : public IFilesDropControl
+class GhostFileDropControl : public IControl
 {
 public:
-    GhostFilesDropControl(IPlugBase* pPlug)
-    : IFilesDropControl(pPlug) {}
+    //GhostFilesDropControl(IPlugBase* pPlug)
+    //: IFilesDropControl(pPlug) {}
+    GhostFileDropControl(GhostPluginInterface* pPlug, const IRECT& bounds)
+    : IControl(bounds) { mPlug = pPlug; }
     
-    virtual ~GhostFilesDropControl() {}
+    virtual ~GhostFileDropControl() {}
     
-    void OnFilesDropped(const char *fileNames);
+    //void OnFilesDropped(const char *fileNames);
+    void OnDrop(const char *fileNames) override;
+    
+protected:
+    GhostPluginInterface *mPlug;
 };
 
 #endif

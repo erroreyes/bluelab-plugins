@@ -63,7 +63,7 @@ public:
                              const IMouseMod &mod) override;
     virtual void OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
     virtual void OnMouseWheel(float x, float y,
-                              const IMouseMod &mod, BL_FLOAT d) override;
+                              const IMouseMod &mod, float d) override;
     
     // Parameters
     virtual void SetSpeed(BL_FLOAT speed);

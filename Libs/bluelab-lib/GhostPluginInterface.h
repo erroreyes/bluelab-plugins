@@ -1,10 +1,12 @@
 #ifndef GHOST_PLUGIN_INTERFACE_H
 #define GHOST_PLUGIN_INTERFACE_H
 
+#include <BLTypes.h>
+
 class GhostPluginInterface
 {
  public:
-  enum GhostPlugMode
+  enum PlugMode
   {
     VIEW = 0,
     ACQUIRE,
@@ -12,15 +14,23 @@ class GhostPluginInterface
     RENDER
   };
   
+  enum SelectionType
+  {
+    RECTANGLE = 0,
+    HORIZONTAL,
+    VERTICAL
+  };
+    
   virtual void UpdateSelection(double x0, double y0, double x1, double y1,
-			       bool updateCenterPos,
-			       bool activateDrawSelection = false,
-			       bool updateCustomControl = false) = 0;
+                               bool updateCenterPos,
+                               bool activateDrawSelection = false,
+                               bool updateCustomControl = false) = 0;
 
-  virtual enum GhostPlugMode GetMode() = 0;
+  virtual enum PlugMode GetMode() = 0;
 
   virtual void GetGraphSize(int *width, int *height) = 0;
 
+  virtual bool IsBarActive() = 0;
   virtual void SetBarActive(bool flag) = 0;
   virtual void SetBarPos(BL_FLOAT x) = 0;
   virtual void ResetPlayBar() = 0;
@@ -28,9 +38,17 @@ class GhostPluginInterface
   virtual void StartPlay() = 0;
   virtual void StopPlay() = 0;
   virtual bool PlayStarted() = 0;
-  
+  virtual void ClearBar() = 0;
+    
   virtual bool IsSelectionActive() = 0;
-  
+  virtual void UpdateZoomSelection(BL_FLOAT selection[4],
+                                   BL_FLOAT zoomChange) = 0;
+  virtual void SelectionChanged() = 0;
+  virtual void BeforeSelTranslation() = 0;
+  virtual void AfterSelTranslation() = 0;
+    
+  virtual bool PlayBarOutsideSelection() = 0;
+    
   virtual void UpdateZoom(BL_FLOAT zoomChange) = 0;
   virtual void SetZoomCenter(int x) = 0;
   virtual void Translate(int dX) = 0;
@@ -49,6 +67,8 @@ class GhostPluginInterface
   virtual void CheckRecomputeData() = 0;
 
   virtual void OpenFile(const char *fileName) = 0;
+    
+  virtual void SetPlayStopParameter(int value) = 0;
 };
 
 #endif

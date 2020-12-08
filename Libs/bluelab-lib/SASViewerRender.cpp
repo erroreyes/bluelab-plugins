@@ -287,7 +287,7 @@ SASViewerRender::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 
 void
 SASViewerRender::OnMouseWheel(float x, float y,
-                              const IMouseMod &mod, BL_FLOAT d)
+                              const IMouseMod &mod, float d)
 {
 #define WHEEL_ZOOM_STEP 0.025
     

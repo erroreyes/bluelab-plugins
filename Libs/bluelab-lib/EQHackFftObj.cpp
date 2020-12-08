@@ -9,7 +9,7 @@ EQHackFftObj::EQHackFftObj(int bufferSize, int oversampling, int freqRes,
                            FftProcessBufObj *eqSource)
   : ProcessObj(bufferSize),
     mEQSource(eqSource),
-    mMode(EQHack::LEARN)
+    mMode(EQHackPluginInterface::LEARN)
 {
   ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
 }
@@ -74,19 +74,19 @@ EQHackFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
       learnValue = mLearnCurve.Get()[index];
     }
     
-    if ((mMode == EQHack::LEARN) ||
-        (mMode == EQHack::GUESS))
+    if ((mMode == EQHackPluginInterface::LEARN) ||
+        (mMode == EQHackPluginInterface::GUESS))
     {
       WDL_FFT_COMPLEX eq = eqBuf.Get()[i];
     
       BL_FLOAT eqMagn = COMP_MAGN(eq);
     
-      if (mMode == EQHack::LEARN)
+      if (mMode == EQHackPluginInterface::LEARN)
       {
         if (sigMagn > BL_EPS)
           newMagn = eqMagn/sigMagn;
       }
-      else if (mMode == EQHack::GUESS)
+      else if (mMode == EQHackPluginInterface::GUESS)
       {
         if (eqMagn > BL_EPS)
           newMagn = sigMagn/eqMagn;
@@ -95,13 +95,13 @@ EQHackFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             newMagn *= learnValue;
       }
     }
-    else if (mMode == EQHack::APPLY)
+    else if (mMode == EQHackPluginInterface::APPLY)
     {
       // Add the learn curve
       if (learnValue != 0.0)
         newMagn = sigMagn*learnValue;
     }
-    else if (mMode == EQHack::APPLY_INV)
+    else if (mMode == EQHackPluginInterface::APPLY_INV)
     {
       // Add the inverse learn curve
       if (learnValue != 0.0)
@@ -132,7 +132,7 @@ EQHackFftObj::GetBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
 }
 
 void
-EQHackFftObj::SetMode(EQHack::Mode mode)
+EQHackFftObj::SetMode(EQHackPluginInterface::Mode mode)
 {
   mMode = mode;
 }

@@ -1,3 +1,6 @@
+#include <BLTypes.h>
+#include <ImageInpaint2.h>
+
 #include "GhostCommandReplace.h"
 
 GhostCommandReplace::GhostCommandReplace(bool processHorizontal, bool processVertical)
@@ -10,7 +13,7 @@ GhostCommandReplace::~GhostCommandReplace() {}
 
 void
 GhostCommandReplace::Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
-                      vector<WDL_TypedBuf<BL_FLOAT> > *phases)
+                           vector<WDL_TypedBuf<BL_FLOAT> > *phases)
 {
     // Do not use phases
     

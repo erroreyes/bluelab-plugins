@@ -9,7 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <BLSpectrogram4.h>
-#include <MiniView.h>
+//#include <MiniView.h>
 
 #include "SpectrogramDisplay2.h"
 
@@ -46,7 +46,7 @@ SpectrogramDisplay2::SpectrogramDisplay2()
     
     mSpectrogramAlpha = 1.0;
     
-    mMiniView = NULL;
+    //mMiniView = NULL;
     
     mDrawBGSpectrogram = true;
     
@@ -251,10 +251,10 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
     
     if (!mShowSpectrogram)
     {
-        if (mMiniView != NULL)
+        /*if (mMiniView != NULL)
         {
             mMiniView->Display(mVg, width, height);
-        }
+        }*/
     
         mNeedRedraw = false;
         
@@ -355,10 +355,10 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
     
     nvgRestore(mVg);
 
-    if (mMiniView != NULL)
+    /*if (mMiniView != NULL)
     {
         mMiniView->Display(mVg, width, height);
-    }
+    }*/
     
     mNeedRedraw = updated;
 }
@@ -391,6 +391,7 @@ SpectrogramDisplay2::PointInsideSpectrogram(int x, int y, int width, int height)
     return true;
 }
 
+#if 0
 bool
 SpectrogramDisplay2::PointInsideMiniView(int x, int y, int width, int height)
 {
@@ -401,6 +402,7 @@ SpectrogramDisplay2::PointInsideMiniView(int x, int y, int width, int height)
     
     return inside;
 }
+#endif
 
 void
 SpectrogramDisplay2::GetSpectroNormCoordinate(int x, int y, int width, int height,
@@ -439,11 +441,13 @@ SpectrogramDisplay2::SetSpectrogram(BLSpectrogram4 *spectro)
     mNeedRedraw = true;
 }
 
+/*
 void
 SpectrogramDisplay2::SetMiniView(MiniView *view)
 {
   mMiniView = view;
 }
+*/
 
 void
 SpectrogramDisplay2::ShowSpectrogram(bool flag)
@@ -613,11 +617,13 @@ SpectrogramDisplay2::ResetSpectrogramZoomAndTrans()
     mNeedRedraw = true;
 }
 
+#if 0
 MiniView *
 SpectrogramDisplay2::GetMiniView()
 {
     return mMiniView;
 }
+#endif
 
 void
 SpectrogramDisplay2::SetDrawBGSpectrogram(bool flag)
@@ -625,6 +631,12 @@ SpectrogramDisplay2::SetDrawBGSpectrogram(bool flag)
     mDrawBGSpectrogram = flag;
     
     mNeedRedraw = true;
+}
+
+void
+SpectrogramDisplay2::SetAlpha(BL_FLOAT alpha)
+{
+    mSpectrogramAlpha = alpha;
 }
 
 #endif // IGRAPHICS_NANOVG

@@ -1,8 +1,12 @@
 #ifndef GHOST_CUSTOM_CONTROL_H
 #define GHOST_CUSTOM_CONTROL_H
 
+#include <GraphControl12.h>
+
 #include <GhostPluginInterface.h>
 
+class SpectrogramDisplay2;
+class MiniView2;
 class GhostCustomControl : public GraphCustomControl
 {
 public:
@@ -13,19 +17,22 @@ public:
     void Resize(int prevWidth, int prevHeight,
                 int newWidth, int newHeight);
     
-    void SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay);
+    void SetMiniView(MiniView2 *miniView);
     
-    void SetSelectionType(Ghost::SelectionType selectionType);
+    void SetSelectionType(GhostPluginInterface::SelectionType selectionType);
     
-    virtual void OnMouseDown(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseUp(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
-    virtual bool OnMouseDblClick(int x, int y, IMouseMod* pMod);
-    virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, float d);
-    virtual bool OnKeyDown(int x, int y, int key, IMouseMod* pMod) { return false; }
+    virtual void OnMouseDown(float x, float y, const IMouseMod &pMod) override;
+    virtual void OnMouseUp(float x, float y, const IMouseMod &pMod) override;
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &pMod) override;
+    virtual /*bool*/ void OnMouseDblClick(float x, float y, const IMouseMod &pMod) override;
+    virtual void OnMouseWheel(float x, float y, const IMouseMod &pMod, float d) override;
+    virtual bool OnKeyDown(float x, float y,
+                           const IKeyPress &key) override { return false; }
     
-    virtual void OnMouseOver(int x, int y, IMouseMod* pMod) {}
-    virtual void OnMouseOut() {}
+    virtual void OnMouseOver(float x, float y, const IMouseMod &pMod) override {}
+    virtual void OnMouseOut() override {}
     
     void UpdateZoomSelection(BL_FLOAT zoomChange);
     
@@ -67,14 +74,16 @@ protected:
     bool mPrevMouseDownInsideSpectro;
     bool mPrevMouseDownInsideMiniView;
     
-    SpectrogramDisplay *mSpectroDisplay;
+    SpectrogramDisplay2 *mSpectroDisplay;
     
-    Ghost::SelectionType mSelectionType;
+    GhostPluginInterface::SelectionType mSelectionType;
     
     // Detect if we actually made the mouse down insde the spectrogram
     // (FIXES: mouse up on resize button to a bigger size, and then the mouse up
     // is inside the graph at the end (without previous mouse down inside)
     bool mPrevMouseDown;
+    
+    MiniView2 *mMiniView;
 };
 
 

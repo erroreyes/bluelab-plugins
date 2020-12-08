@@ -1,19 +1,21 @@
 #include "GhostCommand.h"
 
-GhostCommand::Command() {}
+GhostCommand::GhostCommand() {}
 
-GhostCommand::~Command() {}
+GhostCommand::~GhostCommand() {}
 
 void
 GhostCommand::SetSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
                       bool yLogScale)
 {
+#if 0 // TODO iPlug2
     if (yLogScale)
     {
         y0 = Utils::LogScaleNorm(y0, 1.0/*BUFFER_SIZE/2*/, Y_LOG_SCALE_FACTOR);
         y1 = Utils::LogScaleNorm(y1, 1.0/*BUFFER_SIZE/2*/, Y_LOG_SCALE_FACTOR);
     }
-   
+#endif
+    
     // Allows partially out of bounds selection
 #if 0
     // Bound the selection
@@ -39,8 +41,8 @@ GhostCommand::SetSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
 
 void
 GhostCommand::ApplySlice(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
-                    vector<WDL_TypedBuf<BL_FLOAT> > *phases,
-                    int offsetXLines)
+                         vector<WDL_TypedBuf<BL_FLOAT> > *phases,
+                         int offsetXLines)
 {
     DataToBuf(*magns, &mSavedMagnsSlice);
     DataToBuf(*phases, &mSavedPhasesSlice);
@@ -72,18 +74,20 @@ GhostCommand::ApplySlice(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
 
 void
 GhostCommand::GetSelection(BL_FLOAT *x0, BL_FLOAT *y0, BL_FLOAT *x1, BL_FLOAT *y1,
-                      bool yLogScale) const
+                           bool yLogScale) const
 {
     *x0 = mSelection[0];
     *y0 = mSelection[1];
     *x1 = mSelection[2];
     *y1 = mSelection[3];
     
+#if 0 // TODO iPlug2
     if (yLogScale)
     {
         *y0 = Utils::LogScaleNormInv(*y0, 1.0, Y_LOG_SCALE_FACTOR);
         *y1 = Utils::LogScaleNormInv(*y1, 1.0, Y_LOG_SCALE_FACTOR);
     }
+#endif
 }
 
 void

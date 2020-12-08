@@ -3,7 +3,7 @@
 
 #include <FftProcessObj16.h>
 
-#include <EQHack.h> // For Mode
+#include <EQHackPluginInterface.h> // For Mode
 
 #include "IGraphics_include_in_plug_hdr.h"
 
@@ -22,7 +22,7 @@ public:
 
   void GetBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer);
   
-  void SetMode(EQHack::Mode mode);
+  void SetMode(EQHackPluginInterface::Mode mode);
   
   void SetLearnCurve(const WDL_TypedBuf<BL_FLOAT> *learnCurve);
   
@@ -31,7 +31,7 @@ private:
   
   WDL_TypedBuf<BL_FLOAT> mCurrentBuf;
   
-  EQHack::Mode mMode;
+  EQHackPluginInterface::Mode mMode;
   
   WDL_TypedBuf<BL_FLOAT> mLearnCurve;
 };

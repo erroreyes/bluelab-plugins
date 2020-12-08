@@ -3,10 +3,13 @@
 
 #include <GraphControl12.h>
 
+#include <GhostPluginInterface.h>
+
 class GhostCustomDrawer : public GraphCustomDrawer
 {
 public:
-    GhostCustomDrawer(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1);
+    GhostCustomDrawer(GhostPluginInterface *plug,
+                      BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1);
     
     virtual ~GhostCustomDrawer() {}
     
@@ -69,6 +72,8 @@ protected:
     BL_FLOAT mPlayBarPos;
     
     BL_FLOAT mBounds[4];
+    
+    GhostPluginInterface *mPlug;
 };
 
 #endif

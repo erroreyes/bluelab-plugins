@@ -82,7 +82,7 @@ public:
     virtual bool OnKeyDown(float x, float y, const IKeyPress& key) override;
     
     virtual void OnMouseWheel(float x, float y,
-                              const IMouseMod &mod, BL_FLOAT d);
+                              const IMouseMod &mod, float d);
     
     virtual void OnGUIIdle();
     

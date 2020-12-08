@@ -5,7 +5,7 @@
 
 #include "IPlug_include_in_plug_hdr.h"
 
-class GhostCommandCopyPaste : public Command
+class GhostCommandCopyPaste : public GhostCommand
 {
 public:
     GhostCommandCopyPaste();

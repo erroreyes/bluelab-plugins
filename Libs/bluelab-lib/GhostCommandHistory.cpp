@@ -62,7 +62,7 @@ GhostCommandHistory::GetLastCommand()
     if (mCommands.empty())
         return NULL;
     
-    Command *lastCommand = mCommands[mCommands.size() - 1];
+    GhostCommand *lastCommand = mCommands[mCommands.size() - 1];
     
     return lastCommand;
 }

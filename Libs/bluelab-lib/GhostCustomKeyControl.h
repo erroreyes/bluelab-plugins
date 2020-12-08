@@ -3,18 +3,26 @@
 
 #include <GhostPluginInterface.h>
 
-class GhostCustomKeyControl : public KeyCustomControl
+#include "IPlug_include_in_plug_hdr.h"
+#include "IControl.h"
+
+using namespace iplug;
+using namespace iplug::igraphics;
+
+//class GhostCustomKeyControl : public KeyCustomControl
+class GhostCustomKeyControl : public IControl
 {
 public:
-    GhostCustomKeyControl(GhostPluginInterface *plug);
+    GhostCustomKeyControl(GhostPluginInterface *plug, const IRECT &bounds);
     
     virtual ~GhostCustomKeyControl() {}
     
-    virtual bool OnKeyDown(int x, int y, int key, IMouseMod* pMod);
+    virtual bool OnKeyDown(float x, float y, const IKeyPress &key) override;
+    
+    virtual void Draw(IGraphics& g) override {};
     
 protected:
     GhostPluginInterface *mPlug;
 };
-
 
 #endif

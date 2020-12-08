@@ -1,6 +1,9 @@
+#include <GraphSwapColor.h>
+
 #include "GhostCustomDrawer.h"
 
-GhostCustomDrawer::GhostCustomDrawer(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
+GhostCustomDrawer::GhostCustomDrawer(GhostPluginInterface *plug,
+                                     BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
 {    
     mBarActive = false;
     mBarPos = 0.0;
@@ -18,6 +21,8 @@ GhostCustomDrawer::GhostCustomDrawer(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_F
     mBounds[1] = y0;
     mBounds[2] = x1;
     mBounds[3] = y1;
+    
+    mPlug = plug;
 }
 
 void
@@ -125,7 +130,7 @@ GhostCustomDrawer::GetSelection(BL_FLOAT *x0, BL_FLOAT *y0,
 void
 GhostCustomDrawer::UpdateZoomSelection(BL_FLOAT zoomChange)
 {
-    Ghost::UpdateZoomSelection(mSelection, zoomChange);
+    mPlug->UpdateZoomSelection(mSelection, zoomChange);
 }
 
 bool

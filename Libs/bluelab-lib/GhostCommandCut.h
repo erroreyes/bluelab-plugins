@@ -13,7 +13,7 @@ public:
     virtual ~GhostCommandCut();
     
     void Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
-               vector<WDL_TypedBuf<BL_FLOAT> > *phases);
+               vector<WDL_TypedBuf<BL_FLOAT> > *phases) override;
 };
 
 #endif

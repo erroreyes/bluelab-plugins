@@ -1,3 +1,5 @@
+#include <BLUtils.h>
+
 #include "GhostCommandGain.h"
 
 GhostCommandGain::GhostCommandGain(BL_FLOAT factor)
@@ -9,7 +11,7 @@ GhostCommandGain::~GhostCommandGain() {}
 
 void
 GhostCommandGain::Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
-                   vector<WDL_TypedBuf<BL_FLOAT> > *phases)
+                        vector<WDL_TypedBuf<BL_FLOAT> > *phases)
 {
     // Do not use phases
     
@@ -20,7 +22,7 @@ GhostCommandGain::Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
     GetSelectedDataY(*magns, &selectedMagns);
     
     // For the moment, do not use fade, just fill all with zeros
-    Utils::MultValues(&selectedMagns, mFactor);
+    BLUtils::MultValues(&selectedMagns, mFactor);
     
     // And replace in the result
     //ReplaceSelectedData(data, selectedData);
