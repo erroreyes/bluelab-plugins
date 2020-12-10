@@ -930,6 +930,8 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
 
             t = ConvertToBoundsY(t);
 
+            t = ConvertToAxisBounds(axis, t);
+            
             BL_GUI_FLOAT y = t*height;
             
             // Hack
@@ -2648,6 +2650,23 @@ GraphControl12::ConvertToBoundsY(BL_GUI_FLOAT t)
     // Rescale
     t *= (mBounds[3] - mBounds[1]);
     t += (1.0 - mBounds[3]);
+    
+    // Clip
+    if (t < 0.0)
+        t = 0.0;
+    if (t > 1.0)
+        t = 1.0;
+    
+    return t;
+}
+
+BL_GUI_FLOAT
+GraphControl12::ConvertToAxisBounds(GraphAxis2 *axis, BL_GUI_FLOAT t)
+{
+    // Rescale
+    t *= (axis->mBounds[1] - axis->mBounds[0]);
+    //t += (1.0 - axis->mBounds[1]);
+    t += axis->mBounds[0];
     
     // Clip
     if (t < 0.0)

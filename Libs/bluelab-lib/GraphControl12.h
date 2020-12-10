@@ -293,9 +293,13 @@ protected:
     void SetCurveDrawStyle(GraphCurve5 *curve);
     void SetCurveDrawStyleWeight(GraphCurve5 *curve, BL_GUI_FLOAT weight);
     
-    // Bounds
+    // Graph bounds
     BL_GUI_FLOAT ConvertToBoundsX(BL_GUI_FLOAT t);
     BL_GUI_FLOAT ConvertToBoundsY(BL_GUI_FLOAT t);
+    
+    // Axis bounds in the graph
+    BL_GUI_FLOAT ConvertToAxisBounds(GraphAxis2 *axis, BL_GUI_FLOAT t);
+
     
     void DrawBackgroundImage(IGraphics &graphics);
     void DrawOverlayImage(IGraphics &graphics);

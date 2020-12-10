@@ -40,6 +40,12 @@ public:
                                  FLOAT_TYPE maxValue = -1.0);
     
     template <typename FLOAT_TYPE>
+    static FLOAT_TYPE ApplyScaleInv(Type scaleType,
+                                    FLOAT_TYPE x,
+                                    FLOAT_TYPE minValue = -1.0,
+                                    FLOAT_TYPE maxValue = -1.0);
+    
+    template <typename FLOAT_TYPE>
     void ApplyScale(Type scaleType,
                     WDL_TypedBuf<FLOAT_TYPE> *values,
                     FLOAT_TYPE minValue = -1.0,
@@ -56,6 +62,10 @@ protected:
     static FLOAT_TYPE NormalizedToLog(FLOAT_TYPE x, FLOAT_TYPE minValue,
                                       FLOAT_TYPE maxValue);
     
+    template <typename FLOAT_TYPE>
+    static FLOAT_TYPE NormalizedToLogInv(FLOAT_TYPE x, FLOAT_TYPE minValue,
+                                         FLOAT_TYPE maxValue);
+    
 #if 0 // Legacy test
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedToLogCoeff(FLOAT_TYPE x,
@@ -65,6 +75,9 @@ protected:
     // Apply to axis for example
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedToLogScale(FLOAT_TYPE value);
+    
+    template <typename FLOAT_TYPE>
+    static FLOAT_TYPE NormalizedToLogScaleInv(FLOAT_TYPE value);
     
     // Apply to spectrogram for example
     template <typename FLOAT_TYPE>

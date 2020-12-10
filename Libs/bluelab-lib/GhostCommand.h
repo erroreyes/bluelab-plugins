@@ -6,22 +6,24 @@ using namespace std;
 
 #include <BLTypes.h>
 
+#include <Scale.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 
 class Ghost;
 class GhostCommand
 {
 public:
-    GhostCommand();
+    GhostCommand(BL_FLOAT sampleRate);
     
     virtual ~GhostCommand();
     
     // Coordinates are normalized coordinates on data
     void SetSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
-                      bool yLogScale);
+                      Scale::Type yScale);
     
     void GetSelection(BL_FLOAT *x0, BL_FLOAT *y0, BL_FLOAT *x1, BL_FLOAT *y1,
-                      bool yLogScale) const;
+                      Scale::Type yScale) const;
     
     // Provide an "overflow", since the extracted data slice has extra magins in x,
     // for good reconstruction
@@ -80,6 +82,8 @@ protected:
     // Same, for with slice extraction mechanism
     WDL_TypedBuf<BL_FLOAT> mSavedMagnsSlice;
     WDL_TypedBuf<BL_FLOAT> mSavedPhasesSlice;
+    
+    BL_FLOAT mSampleRate;
 };
 
 #endif

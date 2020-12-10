@@ -8,7 +8,7 @@
 class GhostCommandCopyPaste : public GhostCommand
 {
 public:
-    GhostCommandCopyPaste();
+    GhostCommandCopyPaste(BL_FLOAT sampleRate);
    
     // To manage on copy then multiple pastes
     GhostCommandCopyPaste(const GhostCommandCopyPaste &other);
@@ -30,7 +30,9 @@ public:
     
     void ComputePastedSelection();
     
-    void GetPastedSelection(BL_FLOAT pastedSelection[4], bool yLogScale);
+    void GetPastedSelection(BL_FLOAT pastedSelection[4],
+                            Scale::Type yScale);
+                            //bool yLogScale);
     
     int GetOffsetXLines();
     

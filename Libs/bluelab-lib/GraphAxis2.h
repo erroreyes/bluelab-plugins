@@ -49,6 +49,10 @@ public:
     
     void SetData(char *data[][2], int numData);
     
+    // Screen bounds [0, 1] by default
+    void SetBounds(BL_FLOAT bounds[2]);
+
+    
 protected:
     void InitAxis(int axisColor[4],
                   int axisLabelColor[4],
@@ -95,6 +99,8 @@ protected:
     bool mAlignRight;
     
     BL_GUI_FLOAT mLineWidth;
+    
+    BL_GUI_FLOAT mBounds[2];
 };
 
 #endif

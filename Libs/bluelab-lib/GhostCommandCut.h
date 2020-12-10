@@ -8,7 +8,7 @@
 class GhostCommandCut : public GhostCommand
 {
 public:
-    GhostCommandCut();
+    GhostCommandCut(BL_FLOAT sampleRate);
     
     virtual ~GhostCommandCut();
     

@@ -8,7 +8,7 @@
 class GhostCommandGain : public GhostCommand
 {
 public:
-    GhostCommandGain(BL_FLOAT factor);
+    GhostCommandGain(BL_FLOAT sampleRate, BL_FLOAT factor);
     
     virtual ~GhostCommandGain();
     

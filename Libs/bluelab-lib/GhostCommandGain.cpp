@@ -2,7 +2,9 @@
 
 #include "GhostCommandGain.h"
 
-GhostCommandGain::GhostCommandGain(BL_FLOAT factor)
+GhostCommandGain::GhostCommandGain(BL_FLOAT sampleRate,
+                                   BL_FLOAT factor)
+: GhostCommand(sampleRate)
 {
     mFactor = factor;
 }

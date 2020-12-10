@@ -6,18 +6,21 @@
 //
 //
 
-#include <BLDefs.h>
+//#include <BLDefs.h>
 
 #include <GraphAxis2.h>
 #include <GUIHelper12.h>
 #include <BLUtils.h>
-#include <Scale.h>
+//#include <Scale.h>
 
 #include "GraphFreqAxis2.h"
 
 
-GraphFreqAxis2::GraphFreqAxis2(bool displayLines)
+GraphFreqAxis2::GraphFreqAxis2(bool displayLines,
+                               Scale::Type scale)
 {
+    mScale = scale;
+    
     mGraphAxis = NULL;
     
     mBufferSize = 2048;
@@ -59,6 +62,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     //
     if (horizontal)
     {
+#if 0
 #if !USE_DEFAULT_SCALE_MEL
         mGraphAxis->InitHAxis(Scale::LOG_FACTOR,
                               0.0, sampleRate*0.5,
@@ -74,9 +78,18 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
                               0.0,
                               axisLabelOverlayColor);
 #endif
+#endif
+        
+        mGraphAxis->InitHAxis(mScale,
+                              0.0, sampleRate*0.5,
+                              axisColor, axisLabelColor,
+                              lineWidth,
+                              0.0,
+                              axisLabelOverlayColor);
     }
     else
     {
+#if 0
 #if !USE_DEFAULT_SCALE_MEL
         mGraphAxis->InitVAxis(Scale::LOG_FACTOR,
                               0.0, sampleRate*0.5,
@@ -92,10 +105,24 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
                               0.0, graphWidth - 40.0,
                               axisLabelOverlayColor);
 #endif
+#endif
+        
+        mGraphAxis->InitVAxis(mScale,
+                              0.0, sampleRate*0.5,
+                              axisColor, axisLabelColor,
+                              lineWidth,
+                              0.0, graphWidth - 40.0,
+                              axisLabelOverlayColor);
     }
     
     //
     Update();
+}
+
+void
+GraphFreqAxis2::SetBounds(BL_FLOAT bounds[2])
+{
+    mGraphAxis->SetBounds(bounds);
 }
 
 void

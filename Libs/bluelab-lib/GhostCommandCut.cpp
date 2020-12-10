@@ -2,7 +2,8 @@
 
 #include "GhostCommandCut.h"
 
-GhostCommandCut::GhostCommandCut() {}
+GhostCommandCut::GhostCommandCut(BL_FLOAT sampleRate)
+: GhostCommand(sampleRate) {}
 
 GhostCommandCut::~GhostCommandCut() {}
 

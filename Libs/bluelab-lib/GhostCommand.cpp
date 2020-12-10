@@ -1,12 +1,15 @@
 #include "GhostCommand.h"
 
-GhostCommand::GhostCommand() {}
+GhostCommand::GhostCommand(BL_FLOAT sampleRate)
+{
+    mSampleRate = sampleRate;
+}
 
 GhostCommand::~GhostCommand() {}
 
 void
 GhostCommand::SetSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
-                      bool yLogScale)
+                           Scale::Type yScale)
 {
 #if 0 // TODO iPlug2
     if (yLogScale)
@@ -15,6 +18,9 @@ GhostCommand::SetSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
         y1 = Utils::LogScaleNorm(y1, 1.0/*BUFFER_SIZE/2*/, Y_LOG_SCALE_FACTOR);
     }
 #endif
+    
+    y0 = Scale::ApplyScaleInv(yScale, y0, 0.0, mSampleRate*0.5);
+    y1 = Scale::ApplyScaleInv(yScale, y1, 0.0, mSampleRate*0.5);
     
     // Allows partially out of bounds selection
 #if 0
@@ -74,12 +80,16 @@ GhostCommand::ApplySlice(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
 
 void
 GhostCommand::GetSelection(BL_FLOAT *x0, BL_FLOAT *y0, BL_FLOAT *x1, BL_FLOAT *y1,
-                           bool yLogScale) const
+                           Scale::Type yScale) const
 {
     *x0 = mSelection[0];
     *y0 = mSelection[1];
     *x1 = mSelection[2];
     *y1 = mSelection[3];
+    
+    *y0 = Scale::ApplyScale(yScale, *y0, 0.0, mSampleRate*0.5);
+    *y1 = Scale::ApplyScale(yScale, *y1, 0.0, mSampleRate*0.5);
+
     
 #if 0 // TODO iPlug2
     if (yLogScale)
@@ -146,7 +156,7 @@ GhostCommand::GetSelectedDataY(const vector<WDL_TypedBuf<BL_FLOAT> > &data,
         return;
     
     int h = y1 - y0;
-    int w = data.size();
+    int w = (int)data.size();
     
     selectedData->Resize(w*h);
     

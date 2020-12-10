@@ -11,7 +11,8 @@ using namespace std;
 class GhostCommandReplace : public GhostCommand
 {
 public:
-    GhostCommandReplace(bool processHorizontal, bool processVertical);
+    GhostCommandReplace(BL_FLOAT sampleRate,
+                        bool processHorizontal, bool processVertical);
     
     virtual ~GhostCommandReplace();
     

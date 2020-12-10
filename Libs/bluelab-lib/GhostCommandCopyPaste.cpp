@@ -1,12 +1,14 @@
 #include "GhostCommandCopyPaste.h"
 
-GhostCommandCopyPaste::GhostCommandCopyPaste()
+GhostCommandCopyPaste::GhostCommandCopyPaste(BL_FLOAT sampleRate)
+: GhostCommand(sampleRate)
 {
     mIsPasteDone = false;
     mOffsetXLines = 0;
 }
 
 GhostCommandCopyPaste::GhostCommandCopyPaste(const GhostCommandCopyPaste &other)
+: GhostCommand(other.mSampleRate)
 {
     mCopiedMagns = other.mCopiedMagns;
     mCopiedPhases = other.mCopiedPhases;
@@ -102,18 +104,25 @@ GhostCommandCopyPaste::ComputePastedSelection()
 }
 
 void
-GhostCommandCopyPaste::GetPastedSelection(BL_FLOAT pastedSelection[4], bool yLogScale)
+GhostCommandCopyPaste::GetPastedSelection(BL_FLOAT pastedSelection[4],
+                                          Scale::Type yScale)
+                                          //bool yLogScale)
 {
     for (int i = 0; i < 4; i++)
         pastedSelection[i] = mPastedSelection[i];
     
+#if 0 // TODO
     if (yLogScale)
     {
-#if 0 // TODO
         pastedSelection[1] = BLUtils::LogScaleNormInv(pastedSelection[1], 1.0, Y_LOG_SCALE_FACTOR);
         pastedSelection[3] = BLUtils::LogScaleNormInv(pastedSelection[3], 1.0, Y_LOG_SCALE_FACTOR);
-#endif
     }
+#endif
+    
+    pastedSelection[1] = Scale::ApplyScale(yScale, pastedSelection[1],
+                                           0.0, mSampleRate*0.5);
+    pastedSelection[3] = Scale::ApplyScale(yScale, pastedSelection[3],
+                                           0.0, mSampleRate*0.5);
 }
 
 int

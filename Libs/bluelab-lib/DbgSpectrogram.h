@@ -15,6 +15,8 @@ using namespace std;
 
 #include <BLTypes.h>
 
+#include <Scale.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 //#include "../../WDL/IPlug/Containers.h"
 
@@ -28,11 +30,13 @@ using namespace std;
 class DbgSpectrogram
 {
 public:
-    DbgSpectrogram(int height, int maxCols = -1);
+    DbgSpectrogram(int height, int maxCols = -1,
+                   Scale::Type scale = Scale::MEL);
     
     virtual ~DbgSpectrogram();
     
-    void SetYLogScale(bool flag); //, BL_FLOAT factor);
+    //void SetYLogScale(bool flag); //, BL_FLOAT factor);
+    void SetYScale(Scale::Type scale);
     
     void SetAmpDb(bool flag);
     
@@ -83,12 +87,14 @@ protected:
     int mHeight;
     int mMaxCols;
     
-    bool mYLogScale;
+    //bool mYLogScale;
     //BL_FLOAT mYLogScaleFactor;
     
     bool mAmpDb;
     
     deque<WDL_TypedBuf<BL_FLOAT> > mMagns;
+    
+    Scale::Type mYScale;
 };
 
 #endif /* defined(__Denoiser__DbgSpectrogram__) */

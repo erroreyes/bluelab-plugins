@@ -8,7 +8,7 @@
 
 #include "ColorMap4.h"
 
-#include <BLDefs.h>
+//#include <BLDefs.h>
 
 #include <BLTypes.h>
 #include <BLUtils.h>
@@ -42,7 +42,8 @@ BLSpectrogram4::BLSpectrogram4(BL_FLOAT sampleRate,
     
     mDisplayMagns = true;
     
-    mYLogScale = false;
+    //mYLogScale = false;
+    mYScale = Scale::MEL;
     
     mScale = new Scale();
     
@@ -129,6 +130,7 @@ BLSpectrogram4::SetDisplayMagns(bool flag)
 #endif
 }
 
+#if 0
 void
 BLSpectrogram4::SetYLogScale(bool flag)
 {
@@ -138,6 +140,18 @@ BLSpectrogram4::SetYLogScale(bool flag)
     mSpectroDataChanged = true;
 #endif
 }
+#endif
+
+void
+BLSpectrogram4::SetYScale(Scale::Type yScale)
+{
+    mYScale = yScale;
+    
+#if OPTIM_SPECTROGRAM2
+    mSpectroDataChanged = true;
+#endif
+}
+
 
 void
 BLSpectrogram4::SetDisplayPhasesX(bool flag)
@@ -268,6 +282,7 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     WDL_TypedBuf<BL_FLOAT> magns0 = magns;
     WDL_TypedBuf<BL_FLOAT> phases0 = phases;
     
+#if 0
     if (mYLogScale)
     {
 #if !USE_DEFAULT_SCALE_MEL
@@ -280,6 +295,12 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                           (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 #endif
     }
+#endif
+    
+    mScale->ApplyScale(mYScale, &magns0,
+                       (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    mScale->ApplyScale(mYScale, &phases0,
+                       (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
     
     if ((magns0.GetSize() > mHeight) ||
         (phases0.GetSize() > mHeight))

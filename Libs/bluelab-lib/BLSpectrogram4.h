@@ -16,6 +16,8 @@ using namespace std;
 #include <PPMFile.h>
 #include <ColorMapFactory.h>
 
+#include <Scale.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 
 #define OPTIM_SPECTROGRAM2 1
@@ -41,7 +43,8 @@ public:
     
     void TouchColorMap();
     
-    void SetYLogScale(bool flag);
+    //void SetYLogScale(bool flag);
+    void SetYScale(Scale::Type yScale);
     
     void SetDisplayMagns(bool flag);
     
@@ -149,7 +152,8 @@ protected:
     
     BL_FLOAT mContrast;
     
-    bool mYLogScale;
+    //bool mYLogScale;
+    Scale::Type mYScale;
     
     bool mDisplayMagns;
     

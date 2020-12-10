@@ -8,12 +8,10 @@
 
 //#include "ColorMap3.h"
 
-#include <BLDefs.h>
+//#include <BLDefs.h>
 
 #define GLSL_COLORMAP 1
 #include "ColorMap4.h"
-
-#include <Scale.h>
 
 #include <BLUtils.h>
 #include "PPMFile.h"
@@ -21,13 +19,15 @@
 #include "DbgSpectrogram.h"
 
 
-
-DbgSpectrogram::DbgSpectrogram(int height, int maxCols)
+DbgSpectrogram::DbgSpectrogram(int height, int maxCols,
+                               Scale::Type scale)
 {
     mHeight = height;
     mMaxCols = maxCols;
+
+    //mYLogScale = false;
+    mYScale = scale;
     
-    mYLogScale = false;
     //mYLogScaleFactor = 1.0;
     
     if (mMaxCols > 0)
@@ -43,11 +43,19 @@ DbgSpectrogram::DbgSpectrogram(int height, int maxCols)
 
 DbgSpectrogram::~DbgSpectrogram() {}
 
+#if 0
 void
 DbgSpectrogram::SetYLogScale(bool flag) //, BL_FLOAT factor)
 {
     mYLogScale = flag;
     //mYLogScaleFactor = factor;
+}
+#endif
+
+void
+DbgSpectrogram::SetYScale(Scale::Type scale)
+{
+    mYScale = scale;
 }
 
 void
@@ -106,6 +114,7 @@ DbgSpectrogram::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns)
     }
     
     WDL_TypedBuf<BL_FLOAT> magns0 = magns;
+#if 0
     if (mYLogScale)
     {
 #if !USE_DEFAULT_SCALE_MEL
@@ -115,6 +124,10 @@ DbgSpectrogram::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns)
         tmpScale.ApplyScale(Scale::MEL, &magns0);
 #endif
     }
+#endif
+    
+    Scale tmpScale;
+    tmpScale.ApplyScale(mYScale, &magns0);
     
     if (magns0.GetSize() > mHeight)
     {

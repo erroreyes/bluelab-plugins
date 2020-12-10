@@ -6,6 +6,7 @@
 //
 
 #include <cmath>
+#include <math.h> // for exp10
 
 #include <BLTypes.h>
 #include <BLUtils.h>
@@ -66,6 +67,39 @@ Scale::ApplyScale(Type scaleType,
 }
 template float Scale::ApplyScale(Type scaleType, float y, float mindB, float maxdB);
 template double Scale::ApplyScale(Type scaleType, double y, double mindB, double maxdB);
+
+template <typename FLOAT_TYPE>
+FLOAT_TYPE
+Scale::ApplyScaleInv(Type scaleType,
+                     FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+{
+    if (scaleType == DB)
+    {
+        x = NormalizedToDBInv(x, minValue, maxValue);
+    }
+    else if (scaleType == LOG)
+    {
+        x = NormalizedToLogInv(x, minValue, maxValue);
+    }
+#if 0
+    else if (scaleType == LOG_FACTOR)
+    {
+        x = NormalizedToLogFactorInv(x, minValue, maxValue);
+    }
+#endif
+    else if (scaleType == LOG_FACTOR)
+    {
+        x = NormalizedToLogScaleInv(x);
+    }
+    else if ((scaleType == MEL) || (scaleType == MEL_FILTER))
+    {
+        x = NormalizedToMelInv(x, minValue, maxValue);
+    }
+    
+    return x;
+}
+template float Scale::ApplyScaleInv(Type scaleType, float y, float mindB, float maxdB);
+template double Scale::ApplyScaleInv(Type scaleType, double y, double mindB, double maxdB);
 
 template <typename FLOAT_TYPE>
 void
@@ -159,6 +193,25 @@ Scale::NormalizedToLog(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
 template float Scale::NormalizedToLog(float x, float mindB, float maxdB);
 template double Scale::NormalizedToLog(double x, double mindB, double maxdB);
 
+// NOTE: not well checked yet
+template <typename FLOAT_TYPE>
+FLOAT_TYPE
+Scale::NormalizedToLogInv(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+{
+    FLOAT_TYPE lMin = std::log10(1.0 + minValue);
+    FLOAT_TYPE lMax = std::log10(1.0 + maxValue);
+    
+    x = x*(lMax - lMin) + lMin;
+    
+    x = std::pow((FLOAT_TYPE)10.0, x) - 1.0;
+    
+    x = (x - minValue)/(maxValue - minValue);
+    
+    return x;
+}
+template float Scale::NormalizedToLogInv(float x, float mindB, float maxdB);
+template double Scale::NormalizedToLogInv(double x, double mindB, double maxdB);
+
 #if 0 // Legacy test
 template <typename FLOAT_TYPE>
 FLOAT_TYPE
@@ -188,6 +241,19 @@ Scale::NormalizedToLogScale(FLOAT_TYPE value)
 }
 template float Scale::NormalizedToLogScale(float value);
 template double Scale::NormalizedToLogScale(double value);
+
+// NOTE: Not well checked yet
+template <typename FLOAT_TYPE>
+FLOAT_TYPE
+Scale::NormalizedToLogScaleInv(FLOAT_TYPE value)
+{
+    FLOAT_TYPE t0 =
+        (std::exp(value) - 1.0)/(((std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
+    
+    return t0;
+}
+template float Scale::NormalizedToLogScaleInv(float value);
+template double Scale::NormalizedToLogScaleInv(double value);
 
 template <typename FLOAT_TYPE>
 void

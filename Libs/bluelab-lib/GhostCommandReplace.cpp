@@ -3,7 +3,9 @@
 
 #include "GhostCommandReplace.h"
 
-GhostCommandReplace::GhostCommandReplace(bool processHorizontal, bool processVertical)
+GhostCommandReplace::GhostCommandReplace(BL_FLOAT sampleRate,
+                                         bool processHorizontal, bool processVertical)
+: GhostCommand(sampleRate)
 {
     mProcessHorizontal = processHorizontal;
     mProcessVertical = processVertical;
@@ -34,7 +36,7 @@ GhostCommandReplace::Apply(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
     GetDataBoundsSlice(*magns, &y0, &y1);
     
     //int width = x1 - x0;
-    int width = magns->size();
+    int width = (int)magns->size();
     int height = y1 - y0;
     
 #if 0 // old method, worked only for background noise

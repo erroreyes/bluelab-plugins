@@ -43,6 +43,10 @@ GraphAxis2::GraphAxis2()
     mAlignRight = false;
     
     mLineWidth = 1.0;
+    
+    // Bounds
+    mBounds[0] = 0.0;
+    mBounds[1] = 1.0;
 }
 
 GraphAxis2::~GraphAxis2() {}
@@ -139,6 +143,13 @@ GraphAxis2::SetData(char *data[][2], int numData)
         
         mValues.push_back(aData);
     }
+}
+
+void
+GraphAxis2::SetBounds(BL_FLOAT bounds[2])
+{
+    mBounds[0] = bounds[0];
+    mBounds[1] = bounds[1];
 }
 
 void
