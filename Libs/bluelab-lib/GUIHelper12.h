@@ -175,7 +175,8 @@ public:
                                    float x, float y,
                                    const char *bitmapFname,
                                    int paramIdx,
-                                   char *label);
+                                   char *label,
+                                   bool toggleFlag = false);
 
     
     void GetValueTextColor(IColor *valueTextColor) const;
@@ -205,9 +206,9 @@ public:
                               char* dir = "", char* extensions = "");
     
 protected:
-    void CreateTitle(IGraphics *graphics, float x, float y,
-                     const char *title, Size size,
-                     EAlign align = EAlign::Center);
+    ITextControl * CreateTitle(IGraphics *graphics, float x, float y,
+                               const char *title, Size size,
+                               EAlign align = EAlign::Center);
     
     ITextControl *CreateText(IGraphics *graphics, float x, float y,
                              const char *textStr, const IText &text,
@@ -241,6 +242,7 @@ protected:
     float mTitleTextOffsetX;
     float mTitleTextOffsetY;
     IColor mTitleTextColor;
+    IColor mHilightTextColor;
     
     Size mDefaultTitleSize;
     char *mTitleFont;

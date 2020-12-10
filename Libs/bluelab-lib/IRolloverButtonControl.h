@@ -45,6 +45,8 @@ public:
     
     virtual void OnMouseDown(float x, float y, const IMouseMod &mod) override;
     
+    virtual void OnMouseUp(float x, float y, const IMouseMod& mod) override;
+    
     virtual void OnMouseOver(float x, float y, const IMouseMod &mod) override;
     
     virtual void OnMouseOut() override;

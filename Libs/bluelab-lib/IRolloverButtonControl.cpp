@@ -19,7 +19,11 @@ IRolloverButtonControl::Draw(IGraphics &g)
         if (GetValue() <= 0.5)
             mText->SetTextColor(mTextColor);
         else
+        {
+            // Hilight text too when just clicking?
+            //if (mToggleFlag)
             mText->SetTextColor(mTextHilightColor);
+        }
     }
 }
 
@@ -41,22 +45,22 @@ IRolloverButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
             // Set hilight text before value
             // because SetValueFromUserInput() can lock the GUI by
             // opening a file chooser
-            if (mText != NULL)
-            {
-                mText->SetTextColor(mTextColor);
-                mText->SetDirty();
-            }
+            //if (mText != NULL)
+            //{
+            //    mText->SetTextColor(mTextColor);
+            //    mText->SetDirty();
+            //}
             
             // Set value after hilight text
             SetValueFromUserInput(0.0);
         }
         else
         {
-            if (mText != NULL)
-            {
-                mText->SetTextColor(mTextHilightColor);
-                mText->SetDirty();
-            }
+            //if (mText != NULL)
+            //{
+            //    mText->SetTextColor(mTextHilightColor);
+            //    mText->SetDirty();
+            //}
             
             // Special function, to hilight the button if necessary, before
             // starting doing the action
@@ -65,13 +69,29 @@ IRolloverButtonControl::OnMouseDown(float x, float y, const IMouseMod &mod)
     }
     else
     {
-        if (mText != NULL)
-        {
-            mText->SetTextColor(mTextHilightColor);
-            mText->SetDirty();
-        }
+        // Set to 1 (hilight colors)
+        //if (mText != NULL)
+        //{
+        //    mText->SetTextColor(mTextHilightColor);
+        //    mText->SetDirty();
+        //}
         
         SetValueFromUserInput(1.0);
+    }
+}
+
+void
+IRolloverButtonControl::OnMouseUp(float x, float y, const IMouseMod& mod)
+{
+    IBitmapControl::OnMouseUp(x, y, mod);
+    
+    if (!mToggleFlag)
+    {
+        // Set to 0 (base colors)
+        SetValueFromUserInput(0.0);
+        
+        //mText->SetTextColor(mTextColor);
+        //mText->SetDirty();
     }
 }
 

@@ -72,6 +72,8 @@ GUIHelper12::GUIHelper12(Style style)
         mTitleTextOffsetY = -23.0;
         mTitleTextColor = IColor(255, 110, 110, 110);
         
+        mHilightTextColor = IColor(255, 248, 248, 248);
+        
         mTitleTextSizeBig = 20.0;
         mTitleTextOffsetXBig = 0.0;
         mTitleTextOffsetYBig = -32.0;
@@ -811,7 +813,8 @@ GUIHelper12::CreateRolloverButton(IGraphics *graphics,
                                   float x, float y,
                                   const char *bitmapFname,
                                   int paramIdx,
-                                  char *label)
+                                  char *label,
+                                  bool toggleFlag)
 {
   int bmpFrames = 3;
   
@@ -823,21 +826,24 @@ GUIHelper12::CreateRolloverButton(IGraphics *graphics,
   pR.R = x + bitmap.W();
   pR.B = y + bitmap.H();
     
-  bool toggleFlag = true;
-  IControl *control = new IRolloverButtonControl(x, y, bitmap,
-                                                 paramIdx,
-                                                 toggleFlag);
+  IRolloverButtonControl *control = new IRolloverButtonControl(x, y, bitmap,
+                                                               paramIdx,
+                                                               toggleFlag);
    
   graphics->AttachControl(control);
   
   // Add the label
-  CreateTitle(graphics,
-              x + mButtonLabelTextOffsetX,
-              y + bitmap.H()*1.5/((BL_FLOAT)bmpFrames) + mButtonLabelTextOffsetY,
-              label,
-              //Size::SIZE_DEFAULT, // NOTE: with small size, text is not well centered
-              Size::SIZE_BIG,
-              EAlign::Near);
+  ITextControl *text = CreateTitle(graphics,
+				   x + mButtonLabelTextOffsetX,
+				   y + bitmap.H()*1.5/((BL_FLOAT)bmpFrames) +
+				   mButtonLabelTextOffsetY,
+				   label,
+				   // NOTE: with small/default size, text is not well centered
+				   //Size::SIZE_DEFAULT,
+				   Size::SIZE_BIG,
+				   EAlign::Near);
+
+  control->LinkText(text, mTitleTextColor, mHilightTextColor);
   
   return control;
 }
@@ -978,7 +984,7 @@ GUIHelper12::PromptForFile(Plugin *plug, EFileAction action, WDL_String *result,
     return true;
 }
 
-void
+ITextControl *
 GUIHelper12::CreateTitle(IGraphics *graphics, float x, float y,
                          const char *title, Size size, EAlign align)
 {
@@ -1009,6 +1015,8 @@ GUIHelper12::CreateTitle(IGraphics *graphics, float x, float y,
                                        textOffsetX, textOffsetY);
     
     control->SetInteractionDisabled(true);
+    
+    return control;
 }
 
 float
