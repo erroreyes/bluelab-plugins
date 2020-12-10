@@ -209,13 +209,14 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
     if (mNeedUpdateColormapData || (mNvgColormapImage == 0))
     {
       // Colormap
-      WDL_TypedBuf<unsigned int> colorMapData;
-      mSpectrogram->GetColormapImageDataRGBA(&colorMapData);
+      //WDL_TypedBuf<unsigned int> colorMapData;
+      bool updated = mSpectrogram->GetColormapImageDataRGBA(&mColormapImageData);
     
-      if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
-	  (mNvgColormapImage == 0))
+      //if ((colorMapData.GetSize() != mColormapImageData.GetSize()) ||
+      //    (mNvgColormapImage == 0))
+      if (mNvgColormapImage == 0)
       {
-          mColormapImageData = colorMapData;
+          //mColormapImageData = colorMapData;
         
           if (mNvgColormapImage != 0)
               nvgDeleteImage(mVg, mNvgColormapImage);
@@ -228,10 +229,11 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
       }
       else
       {
-        mColormapImageData = colorMapData;
+        //mColormapImageData = colorMapData;
         
-        nvgUpdateImage(mVg, mNvgColormapImage,
-                       (unsigned char *)mColormapImageData.Get());
+          if (updated)
+              nvgUpdateImage(mVg, mNvgColormapImage,
+                             (unsigned char *)mColormapImageData.Get());
       }
     }
     
