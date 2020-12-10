@@ -102,7 +102,7 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
       return false;
     
     //int w = mSpectrogram->GetMaxNumCols();
-    int w = mSpectrogram->GetNumCols();
+    int w = mSpectrogram->GetNumCols(); // ??
     int h = mSpectrogram->GetHeight();
     
 #if 1 // Avoid white image when there is no data

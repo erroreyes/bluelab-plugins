@@ -374,7 +374,10 @@ BLSpectrogram4::GetImageDataFloat(unsigned char *buf)
     // Empty the buffer
     // Because the spectrogram may be not totally full
     //memset(buf, 0, width*height*4);
-    memset(buf, 0, mMaxCols*mHeight*4);
+    //memset(buf, 0, mMaxCols*mHeight*4);
+    
+    int numCols = GetNumCols();
+    memset(buf, 0, numCols*mHeight*4);
     
     // Data
     for (int j = 0; j < mMagns.size(); j++)
@@ -390,7 +393,8 @@ BLSpectrogram4::GetImageDataFloat(unsigned char *buf)
                 magnValue = 1.0;
             
             //int pixIdx = (mHeight - 1 - i)*width + j;
-            int pixIdx = (mHeight - 1 - i)*mMaxCols + j;
+            //int pixIdx = (mHeight - 1 - i)*mMaxCols + j;
+            int pixIdx = (mHeight - 1 - i)*numCols + j;
             ((float *)buf)[pixIdx] = (float)magnValue;
         }
     }
