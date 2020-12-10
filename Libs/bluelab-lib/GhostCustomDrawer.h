@@ -17,12 +17,6 @@ public:
     void Resize(int prevWidth, int prevHeight,
                 int newWidth, int newHeight);
     
-    // Implement one of the two methods, depending on when
-    // you whant to draw
-    
-    // Draw before everything
-    void PreDraw(NVGcontext *vg, int width, int height) {}
-    
     // Draw after everything
     void PostDraw(NVGcontext *vg, int width, int height);
     

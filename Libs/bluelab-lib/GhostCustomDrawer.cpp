@@ -198,9 +198,11 @@ GhostCustomDrawer::DrawBar(NVGcontext *vg, int width, int height)
         // Draw the line
         BL_FLOAT x = mBarPos*width;
     
-        nvgMoveTo(vg, x, (1.0 - mBounds[1])*height);
-        nvgLineTo(vg, x, (1.0 - mBounds[3])*height);
-    
+        //nvgMoveTo(vg, x, (1.0 - mBounds[1])*height);
+        //nvgLineTo(vg, x, (1.0 - mBounds[3])*height);
+        nvgMoveTo(vg, x, mBounds[1]*height);
+        nvgLineTo(vg, x, mBounds[3]*height);
+        
         nvgStroke(vg);
     }
 }
@@ -227,12 +229,19 @@ GhostCustomDrawer::DrawSelection(NVGcontext *vg, int width, int height)
         nvgBeginPath(vg);
     
         // Draw the line
-        nvgMoveTo(vg, mSelection[0]*width, (1.0 - mSelection[1])*height);
+        /*nvgMoveTo(vg, mSelection[0]*width, (1.0 - mSelection[1])*height);
     
         nvgLineTo(vg, mSelection[2]*width, (1.0 - mSelection[1])*height);
         nvgLineTo(vg, mSelection[2]*width, (1.0 - mSelection[3])*height);
         nvgLineTo(vg, mSelection[0]*width, (1.0 - mSelection[3])*height);
-        nvgLineTo(vg, mSelection[0]*width, (1.0 - mSelection[1])*height);
+        nvgLineTo(vg, mSelection[0]*width, (1.0 - mSelection[1])*height); */
+        
+        nvgMoveTo(vg, mSelection[0]*width, mSelection[1]*height);
+        
+        nvgLineTo(vg, mSelection[2]*width, mSelection[1]*height);
+        nvgLineTo(vg, mSelection[2]*width, mSelection[3]*height);
+        nvgLineTo(vg, mSelection[0]*width, mSelection[3]*height);
+        nvgLineTo(vg, mSelection[0]*width, mSelection[1]*height);
     
         nvgStroke(vg);
     }
@@ -263,9 +272,12 @@ GhostCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
         // Draw the line
         BL_FLOAT x = mPlayBarPos*width;
     
-        nvgMoveTo(vg, x, (1.0 - mBounds[1])*height);
-        nvgLineTo(vg, x, (1.0 - mBounds[3])*height);
-    
+        //nvgMoveTo(vg, x, (1.0 - mBounds[1])*height);
+        //nvgLineTo(vg, x, (1.0 - mBounds[3])*height);
+        
+        nvgMoveTo(vg, x, mBounds[1]*height);
+        nvgLineTo(vg, x, mBounds[3]*height);
+        
         nvgStroke(vg);
     }
 }
