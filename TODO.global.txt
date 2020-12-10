@@ -29,3 +29,7 @@ ParamSmooth => new version / CParamSmooth / sampleRate
 - parameter emacs indentation (tab = 4 speaces), and re-indent everything
 
 BUG: when quitting a Cario plug, into the XCode debugger, it crashes
+- REFACT: bien classer les variables memebres (parametres, fft objs etc…), pour tous les plugins
+
+- TODO: disable auto CPU anti-denormalization !
+(and check denormalization by hand)

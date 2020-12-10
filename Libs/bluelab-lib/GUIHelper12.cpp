@@ -832,9 +832,12 @@ GUIHelper12::CreateRolloverButton(IGraphics *graphics,
   
   // Add the label
   CreateTitle(graphics,
-	      x + mButtonLabelTextOffsetX,
-	      y + bitmap.H()*1.5/((BL_FLOAT)bmpFrames) + mButtonLabelTextOffsetY,
-	      label, Size::SIZE_DEFAULT);
+              x + mButtonLabelTextOffsetX,
+              y + bitmap.H()*1.5/((BL_FLOAT)bmpFrames) + mButtonLabelTextOffsetY,
+              label,
+              //Size::SIZE_DEFAULT, // NOTE: with small size, text is not well centered
+              Size::SIZE_BIG,
+              EAlign::Near);
   
   return control;
 }
