@@ -212,14 +212,16 @@ GraphCurve5::SetYValues(const WDL_TypedBuf<BL_GUI_FLOAT> *yValues,
     
     mYValues = *yValues;
     
-    mXValues.Resize(0);
+    //mXValues.Resize(0);
+    mXValues.Resize(mYValues.GetSize());
     for (int i = 0; i < mYValues.GetSize(); i++)
     {
         BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(mYValues.GetSize() - 1);
         
         BL_GUI_FLOAT x = minX + t*(maxX - minX);
     
-        mXValues.Add(x);
+        //mXValues.Add(x);
+        mXValues.Get()[i] = x;
     }
     
     NotifyGraph();
@@ -354,7 +356,8 @@ GraphCurve5::SetBevel(bool bevelFlag)
 {
     mBevelFlag = bevelFlag;
     
-    NotifyGraph();}
+    NotifyGraph();
+}
 
 void
 GraphCurve5::SetSmooth(bool flag)
