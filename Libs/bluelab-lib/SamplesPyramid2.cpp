@@ -33,7 +33,13 @@
 // to avoid discontinuities
 // (will decrease when going deeper in the pyramid)
 //#define NUM_SAMPLES_OVERLAP 0 // ORIGIN
-#define NUM_SAMPLES_OVERLAP 512 // UST => avoids holes when testing with white noise
+
+// UST => avoids holes when testing with white noise
+// NOTE: crashes Ghost, in capture mode
+//#define NUM_SAMPLES_OVERLAP 512
+
+// For Ghost, without crash
+#define NUM_SAMPLES_OVERLAP 0
 
 // NOTE: in case of problem of jittering or other, thing about
 // buffering in the calling code
@@ -74,7 +80,7 @@ SamplesPyramid2::SetValues(const WDL_TypedBuf<BL_FLOAT> &samples)
     
     while(true)
     {
-        int pyramidLevel = mSamplesPyramid.size();
+        int pyramidLevel = (int)mSamplesPyramid.size();
         mSamplesPyramid.resize(pyramidLevel + 1);
         
         const WDL_TypedBuf<BL_FLOAT> &prevLevel = mSamplesPyramid[pyramidLevel - 1];
@@ -187,7 +193,7 @@ SamplesPyramid2::PopValues(long numSamples)
     // will not scroll correclly).
     long numSamples0 = numSamples + mRemainToPop;
     
-    numSamples0 = BLUtils::NextPowerOfTwo(numSamples0);
+    numSamples0 = BLUtils::NextPowerOfTwo((int)numSamples0);
     
 #if !FIX_PUSH_POP_POW_TWO
     numSamples0 /= 2;
