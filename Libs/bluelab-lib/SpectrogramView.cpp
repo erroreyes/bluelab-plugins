@@ -119,6 +119,16 @@ SpectrogramView::SetViewSelection(BL_FLOAT x0, BL_FLOAT y0,
     mSelection[2] = (x1 - mBounds[0])/(mBounds[2] - mBounds[0]);
     mSelection[3] = (y1 - mBounds[1])/(mBounds[3] - mBounds[1]);
     
+    // Hack
+    // Avoid out of bounds selection(due to graph + miniview)
+    // TODO: manage coordinates better
+#if 1
+    if (mSelection[1] < 0.0)
+        mSelection[1] = 0.0;
+    if (mSelection[3] > 1.0)
+        mSelection[3] = 1.0;
+#endif
+    
     mSelectionActive = true;
 }
 

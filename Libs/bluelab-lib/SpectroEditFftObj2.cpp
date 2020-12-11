@@ -540,6 +540,7 @@ SpectroEditFftObj2::GetNumLines()
 void
 SpectroEditFftObj2::SwapSelection(BL_FLOAT selection[4])
 {
+#if 0 // Not needed anymore since iPlug2
     if (selection[0] > selection[2])
     {
         BL_FLOAT tmp = selection[0];
@@ -553,4 +554,5 @@ SpectroEditFftObj2::SwapSelection(BL_FLOAT selection[4])
         selection[1] = selection[3];
         selection[3] = tmp;
     }
+#endif
 }
