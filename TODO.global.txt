@@ -33,3 +33,5 @@ BUG: when quitting a Cario plug, into the XCode debugger, it crashes
 
 - TODO: disable auto CPU anti-denormalization !
 (and check denormalization by hand)
+
+- TODO: set bevel for all curves
