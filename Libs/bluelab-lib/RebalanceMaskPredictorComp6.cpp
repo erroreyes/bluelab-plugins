@@ -108,8 +108,12 @@ RebalanceMaskPredictorComp6::Reset()
     // NEW
     InitMixCols();
     
+#if USE_MASK_STACK
     for (int i = 0; i < NUM_STEM_SOURCES; i++)
+    {
         mMaskStacks[i]->Reset();
+    }
+#endif
 }
 
 void

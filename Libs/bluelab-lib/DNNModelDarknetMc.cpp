@@ -33,6 +33,12 @@ extern "C" {
 // Output is not normalized at all, it has negative values, and values > 1.
 #define FIX_OUTPUT_NORM 1
 
+// Was a test (interesting, but needs more testing)
+#define OTHER_IS_REST2 0
+
+// Was a test
+#define SET_OTHER_TO_ZERO 0
+
 DNNModelDarknetMc::DNNModelDarknetMc()
 {
     mNet = NULL;
@@ -189,9 +195,49 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
     // Prediction
     float *pred = network_predict(mNet, X.Get());
     
+#if OTHER_IS_REST2
+    for (int i = 0; i < input0.GetSize(); i++)
+    {
+        float vals[NUM_STEMS];
+        for (int j = 0; j < NUM_STEMS; j++)
+        {
+            vals[j] = pred[i + j*input0.GetSize()];
+        }
+        
+        vals[3] = 1.0 - (vals[0] + vals[1] + vals[2]);
+        if (vals[3] < 0.0)
+            vals[3] = 0.0;
+        pred[i + 3*input0.GetSize()] = vals[3];
+    }
+#endif
+    
+#if SET_OTHER_TO_ZERO
+    for (int i = 0; i < input0.GetSize(); i++)
+    {
+        pred[i + 3*input0.GetSize()] = 0.0;
+    }
+#endif
+    
+#if DBG_DUMP
+    BLDebug::DumpData("pred0.txt", pred, X.GetSize());
+#endif
+    
 #if FIX_OUTPUT_NORM
     // Exactly like the process done in darknet, to multiply masks
     BLUtils::Normalize(pred, input0.GetSize()*NUM_STEMS);
+#endif
+
+#if SET_OTHER_TO_ZERO
+    // Set to 0 again to avoid a floor effect after normalization
+    // (mask would be a constant value instead of 0
+    for (int i = 0; i < input0.GetSize(); i++)
+    {
+        pred[i + 3*input0.GetSize()] = 0.0;
+    }
+#endif
+    
+#if DBG_DUMP
+    BLDebug::DumpData("pred1.txt", pred, X.GetSize());
 #endif
     
     masks->resize(NUM_STEMS);
@@ -209,7 +255,7 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
         (*masks)[maskIndex].Get()[i % input0.GetSize()] = val;
     }
 
-#if 0// DEBUG
+#if DBG_DUMP //0// DEBUG
     BLDebug::DumpData("pred-mask0.txt", (*masks)[0]);
     BLDebug::DumpData("pred-mask1.txt", (*masks)[1]);
     BLDebug::DumpData("pred-mask2.txt", (*masks)[2]);
