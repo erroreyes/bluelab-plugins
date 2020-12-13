@@ -9,6 +9,8 @@
 #ifndef __BL_Ghost__SpectrogramView__
 #define __BL_Ghost__SpectrogramView__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <vector>
 using namespace std;
 
@@ -125,5 +127,7 @@ protected:
     // Just for resampling
     BL_FLOAT mSampleRate;
 };
+
+#endif
 
 #endif /* defined(__BL_Ghost__SpectrogramView__) */

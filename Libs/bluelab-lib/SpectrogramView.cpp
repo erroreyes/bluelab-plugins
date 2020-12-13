@@ -5,6 +5,7 @@
 //  Created by Pan on 02/06/18.
 //
 //
+#ifdef IGRAPHICS_NANOVG
 
 #include <BLSpectrogram4.h>
 #include <FftProcessObj16.h>
@@ -586,3 +587,5 @@ SpectrogramView::SetSampleRate(BL_FLOAT sampleRate)
 {
     mSampleRate = sampleRate;
 }
+
+#endif

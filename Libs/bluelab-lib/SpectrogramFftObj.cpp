@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram4.h>
 #include <BLUtils.h>
 
@@ -208,3 +210,5 @@ SpectrogramFftObj::ComputeAddStep()
     
     return addStep;
 }
+
+#endif

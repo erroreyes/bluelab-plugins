@@ -1,6 +1,8 @@
 #ifndef GHOST_CUSTOM_CONTROL_H
 #define GHOST_CUSTOM_CONTROL_H
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl12.h>
 
 #include <GhostPluginInterface.h>
@@ -86,5 +88,6 @@ protected:
     MiniView2 *mMiniView;
 };
 
+#endif
 
 #endif

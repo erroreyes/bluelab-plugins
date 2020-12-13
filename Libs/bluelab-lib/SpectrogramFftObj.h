@@ -9,6 +9,8 @@
 #ifndef __BL_Ghost__SpectrogramFftObj__
 #define __BL_Ghost__SpectrogramFftObj__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include "FftProcessObj16.h"
 
 // Added during GHOST_OPTIM_GL
@@ -73,5 +75,7 @@ protected:
     
     Mode mMode;
 };
+
+#endif
 
 #endif /* defined(__BL_Ghost__SpectrogramFftObj__) */

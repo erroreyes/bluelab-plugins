@@ -9,8 +9,9 @@
 #ifndef __BL_Ghost__SimpleSpectrogramFftObj__
 #define __BL_Ghost__SimpleSpectrogramFftObj__
 
-#include "FftProcessObj16.h"
+#ifdef IGRAPHICS_NANOVG
 
+#include "FftProcessObj16.h"
 
 class BLSpectrogram4;
 class SimpleSpectrogramFftObj : public ProcessObj
@@ -35,5 +36,7 @@ protected:
     //
     BLSpectrogram4 *mSpectrogram;
 };
+
+#endif
 
 #endif /* defined(__BL_Ghost__SimpleSpectrogramFftObj__) */

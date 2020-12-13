@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram4.h>
 #include <Window.h>
 #include <BLUtils.h>
@@ -465,3 +467,5 @@ BatFftObj4::ComputeLocalization2D(const WDL_TypedBuf<BL_FLOAT> &localizationX,
         }
     }
 }
+
+#endif

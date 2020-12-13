@@ -9,6 +9,9 @@
 #ifndef __BL_Ghost__MiniView2__
 #define __BL_Ghost__MiniView2__
 
+#ifdef IGRAPHICS_NANOVG
+
+#include <BLTypes.h>
 #include <GraphControl12.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -45,5 +48,7 @@ protected:
     BL_FLOAT mMinNormX;
     BL_FLOAT mMaxNormX;
 };
+
+#endif
 
 #endif /* defined(__BL_Ghost__MiniView2__) */

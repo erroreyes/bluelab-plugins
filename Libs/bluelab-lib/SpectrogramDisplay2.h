@@ -9,6 +9,8 @@
 #ifndef __BL_Ghost__SpectrogramDisplay2__
 #define __BL_Ghost__SpectrogramDisplay2__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include "IPlug_include_in_plug_hdr.h"
 
 #include <BLTypes.h>
@@ -141,5 +143,7 @@ protected:
     
     bool mNeedRedraw;
 };
+
+#endif
 
 #endif /* defined(__BL_Ghost__SpectrogramDisplay2__) */

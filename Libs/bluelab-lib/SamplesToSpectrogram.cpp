@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram4.h>
 #include <SimpleSpectrogramFftObj.h>
 #include <FftProcessObj16.h>
@@ -168,3 +170,5 @@ SamplesToSpectrogram::GetSpectrogram()
 {
     return mSpectrogram;
 }
+
+#endif

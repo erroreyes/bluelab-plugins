@@ -1,3 +1,5 @@
+#ifdef IGRAPHICS_NANOVG
+
 #include <SpectrogramDisplay2.h>
 #include <MiniView2.h>
 
@@ -529,3 +531,5 @@ GhostCustomControl::UpdateSelectionType()
         return;
     }
 }
+
+#endif

@@ -9,6 +9,8 @@
 #ifndef __BL_Ghost__SpectrogramFftObjEXPE__
 #define __BL_Ghost__SpectrogramFftObjEXPE__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include "FftProcessObj16.h"
 
 class BLSpectrogram4;
@@ -66,5 +68,7 @@ protected:
     BL_FLOAT mFreqAmpRatio;
     BL_FLOAT mTransThreshold;
 };
+
+#endif
 
 #endif /* defined(__BL_Ghost__SpectrogramFftObjEXPE__) */

@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram4.h>
 #include <BLUtils.h>
 
@@ -237,3 +239,5 @@ SpectrogramFftObjEXPE::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     //mSpectrogram->AddLine(magns, phases);
 #endif
 }
+
+#endif

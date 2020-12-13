@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLSpectrogram4.h>
 #include <Window.h>
 #include <BLUtils.h>
@@ -526,3 +528,5 @@ BatFftObj::TimeSmooth(vector<WDL_TypedBuf<BL_FLOAT> > *lines)
     
     mPrevLines = *lines;
 }
+
+#endif

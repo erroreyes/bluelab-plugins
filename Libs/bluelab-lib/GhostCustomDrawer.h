@@ -1,6 +1,8 @@
 #ifndef GHOST_CUSTOM_DRAWER_H
 #define GHOST_CUSTOM_DRAWER_H
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <GraphControl12.h>
 
 #include <GhostPluginInterface.h>
@@ -69,5 +71,7 @@ protected:
     
     GhostPluginInterface *mPlug;
 };
+
+#endif
 
 #endif

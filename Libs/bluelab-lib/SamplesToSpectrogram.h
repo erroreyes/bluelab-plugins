@@ -9,6 +9,8 @@
 #ifndef __BL_Reverb__SamplesToSpectrogram__
 #define __BL_Reverb__SamplesToSpectrogram__
 
+#ifdef IGRAPHICS_NANOVG
+
 #include <BLTypes.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -40,5 +42,7 @@ protected:
     
     BL_FLOAT mSampleRate;
 };
+
+#endif
 
 #endif /* defined(__BL_Reverb__SamplesToSpectrogram__) */
