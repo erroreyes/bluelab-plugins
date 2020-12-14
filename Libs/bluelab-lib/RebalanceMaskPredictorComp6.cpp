@@ -296,25 +296,41 @@ RebalanceMaskPredictorComp6::SetDbgThreshold(BL_FLOAT thrs)
 void
 RebalanceMaskPredictorComp6::SetVocalSensitivity(BL_FLOAT vocalSensitivity)
 {
+#if !SENSIVITY_IS_SCALE
     mSensitivities[0] = vocalSensitivity;
+#else
+    mModel->SetMaskScale(0, vocalSensitivity);
+#endif
 }
 
 void
 RebalanceMaskPredictorComp6::SetBassSensitivity(BL_FLOAT bassSensitivity)
 {
+#if !SENSIVITY_IS_SCALE
     mSensitivities[1] = bassSensitivity;
+#else
+    mModel->SetMaskScale(1, bassSensitivity);
+#endif
 }
 
 void
 RebalanceMaskPredictorComp6::SetDrumsSensitivity(BL_FLOAT drumsSensitivity)
 {
+#if !SENSIVITY_IS_SCALE
     mSensitivities[2] = drumsSensitivity;
+#else
+    mModel->SetMaskScale(2, drumsSensitivity);
+#endif
 }
 
 void
 RebalanceMaskPredictorComp6::SetOtherSensitivity(BL_FLOAT otherSensitivity)
 {
+#if !SENSIVITY_IS_SCALE
     mSensitivities[3] = otherSensitivity;
+#else
+    mModel->SetMaskScale(3, otherSensitivity);
+#endif
 }
 
 void

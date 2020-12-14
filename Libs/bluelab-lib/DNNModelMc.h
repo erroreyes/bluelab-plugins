@@ -36,7 +36,10 @@ public:
     virtual void Predict(const WDL_TypedBuf<BL_FLOAT> &input,
                          vector<WDL_TypedBuf<BL_FLOAT> > *masks) = 0;
     
+    // TESTS
     virtual void SetDbgThreshold(BL_FLOAT thrs) = 0;
+    
+    virtual void SetMaskScale(int maskNum, BL_FLOAT scale) = 0;
 };
 
 #endif

@@ -35,3 +35,8 @@ BUG: when quitting a Cario plug, into the XCode debugger, it crashes
 (and check denormalization by hand)
 
 - TODO: set bevel for all curves
+
+- TODO: the plugin needs to even process the sound when UI is closed (make test with reaper, [UI] button). e.g Rebalance
+
+- TODO: Cairo, fix correctly the crash when quitting 
+(now, there is currently a memory leak)

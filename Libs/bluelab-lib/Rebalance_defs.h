@@ -42,8 +42,16 @@
 // When set to 0, use quick method
 #define REBALANCE_USE_MEL_FILTER_METHOD 1
 
+#define USE_SOFT_MASKS 1
+
+#define PROCESS_SIGNAL_DB 1
+#define PROCESS_SIGNAL_MIN_DB -60.0
+
 // Threshold the masks (debug..)
 #define USE_DBG_PREDICT_MASK_THRESHOLD 0 //1 // 0
+
+// Basice sensivity
+#define SENSIVITY_IS_SCALE 1
 
 enum RebalanceMode
 {

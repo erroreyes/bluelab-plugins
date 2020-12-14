@@ -9,6 +9,7 @@
 #ifndef __BL_Rebalance__DNNModelDarknetMc__
 #define __BL_Rebalance__DNNModelDarknetMc__
 
+#include <Rebalance_defs.h>
 #include <DNNModelMc.h>
 
 // Models trained directily inside Darknet
@@ -31,7 +32,9 @@ public:
     void Predict(const WDL_TypedBuf<BL_FLOAT> &input,
                  vector<WDL_TypedBuf<BL_FLOAT> > *masks);
     
+    // TESTS
     void SetDbgThreshold(BL_FLOAT thrs);
+    void SetMaskScale(int maskNum, BL_FLOAT scale);
     
 protected:
     bool LoadWinTest(const char *modelFileName, const char *resourcePath);
@@ -40,6 +43,8 @@ protected:
     network *mNet;
     
     BL_FLOAT mDbgThreshold;
+    
+    BL_FLOAT mMaskScales[NUM_STEM_SOURCES];
 };
 
 #endif /* defined(__BL_Rebalance__DNNModelDarknetMc__) */

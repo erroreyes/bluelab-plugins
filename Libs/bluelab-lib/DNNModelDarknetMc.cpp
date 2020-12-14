@@ -47,6 +47,8 @@ DNNModelDarknetMc::DNNModelDarknetMc()
     mNet = NULL;
     
     mDbgThreshold = 0.0;
+    for (int i = 0; i < NUM_STEM_SOURCES; i++)
+        mMaskScales[i] = 1.0;
 }
 
 DNNModelDarknetMc::~DNNModelDarknetMc()
@@ -167,6 +169,15 @@ DNNModelDarknetMc::LoadWin(IGraphics &pGraphics,
 }
 
 void
+DNNModelDarknetMc::SetMaskScale(int maskNum, BL_FLOAT scale)
+{
+    if (maskNum >= NUM_STEM_SOURCES)
+        return;
+    
+    mMaskScales[maskNum] = scale;
+}
+
+void
 DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
                            vector<WDL_TypedBuf<BL_FLOAT> > *masks)
 {
@@ -187,8 +198,10 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
     {
         BL_FLOAT val = input0.Get()[i % input0.GetSize()];
         
+#if PROCESS_SIGNAL_DB
         // Used when model is traind in dB
-        val = Scale::ApplyScale(Scale::DB, val, -60.0, 0.0);
+        val = Scale::ApplyScale(Scale::DB, val, PROCESS_SIGNAL_MIN_DB, 0.0);
+#endif
         
         X.Get()[i] = val;
     }
@@ -231,11 +244,21 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
     BLDebug::DumpData("pred0.txt", pred, X.GetSize());
 #endif
     
+#if SENSIVITY_IS_SCALE
+    for (int i = 0; i < X.GetSize(); i++)
+    {
+        int maskIndex = i/input0.GetSize();
+        
+        float val = pred[i];
+        val *= mMaskScales[maskIndex];
+        pred[i] = val;
+    }
+#endif
+    
 #if FIX_OUTPUT_NORM
     // Exactly like the process done in darknet, to multiply masks
     BLUtils::Normalize(pred, input0.GetSize()*NUM_STEMS);
 #endif
-
     
 #if USE_DBG_PREDICT_MASK_THRESHOLD
     for (int i = 0; i < X.GetSize(); i++)

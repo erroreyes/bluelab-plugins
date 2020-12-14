@@ -10,6 +10,9 @@
 #include <SoftMaskingNComp.h>
 #include <BLUtils.h>
 #include <BLDebug.h>
+#include <Scale.h>
+
+#include <Rebalance_defs.h>
 
 #include "RebalanceProcessFftObjComp3.h"
 
@@ -33,7 +36,12 @@ RebalanceProcessFftObjComp3::RebalanceProcessFftObjComp3(int bufferSize,
     
     // Soft masks
     mSoftMasking = new SoftMaskingNComp(softMaskHistoSize);
+    
+#if USE_SOFT_MASKS
     mUseSoftMasks = true;
+#else
+    mUseSoftMasks = false;
+#endif
     
     ResetMixColsComp();
     
@@ -122,6 +130,22 @@ RebalanceProcessFftObjComp3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioB
     WDL_TypedBuf<WDL_FFT_COMPLEX> mixBuffer = *ioBuffer;
     BLUtils::TakeHalf(&mixBuffer);
     
+#if PROCESS_SIGNAL_DB
+    WDL_TypedBuf<BL_FLOAT> magns0;
+    WDL_TypedBuf<BL_FLOAT> phases0;
+    
+    BLUtils::ComplexToMagnPhase(&magns0, &phases0, mixBuffer);
+    
+    for (int i = 0; i < magns0.GetSize(); i++)
+    {
+        BL_FLOAT val = magns0.Get()[i];
+        val = Scale::ApplyScale(Scale::DB, val, PROCESS_SIGNAL_MIN_DB, 0.0);
+        magns0.Get()[i] = val;
+    }
+
+    BLUtils::MagnPhaseToComplex(&mixBuffer, magns0, phases0);
+#endif
+    
     // For soft masks
     // mMixCols is filled with zeros at the origin
     mMixColsComp.push_back(mixBuffer);
@@ -139,6 +163,27 @@ RebalanceProcessFftObjComp3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioB
     // TODO: smooth gamma between soft and hard
     WDL_TypedBuf<WDL_FFT_COMPLEX> dataSoft;
     ComputeMix(&dataSoft, mixBuffer);
+    
+#if PROCESS_SIGNAL_DB
+    WDL_TypedBuf<BL_FLOAT> magns1;
+    WDL_TypedBuf<BL_FLOAT> phases1;
+    BLUtils::ComplexToMagnPhase(&magns1, &phases1, dataSoft);
+    
+    for (int i = 0; i < magns1.GetSize(); i++)
+    {
+        BL_FLOAT val = magns1.Get()[i];
+        val = Scale::ApplyScaleInv(Scale::DB, val, PROCESS_SIGNAL_MIN_DB, 0.0);
+        
+        // Noise floor
+        BL_FLOAT db = BLUtils::AmpToDB(val);
+        if (db < PROCESS_SIGNAL_MIN_DB + 1)
+            val = 0.0;
+        
+        magns1.Get()[i] = val;
+    }
+    
+    BLUtils::MagnPhaseToComplex(&dataSoft, magns1, phases1);
+#endif
     
     // Fill the result
     WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples = dataSoft;
@@ -342,9 +387,29 @@ RebalanceProcessFftObjComp3::ApplyMask(const WDL_TypedBuf<WDL_FFT_COMPLEX> &inDa
         
         WDL_FFT_COMPLEX val = inData.Get()[i];
         
+#if 0 //PROCESS_SIGNAL_DB
+        BL_FLOAT magn0 = COMP_MAGN(val);
+        BL_FLOAT phase0 = COMP_PHASE(val);
+        
+        magn0 = Scale::ApplyScale(Scale::DB, magn0, PROCESS_SIGNAL_MIN_DB, 0.0);
+        
+        MAGN_PHASE_COMP(magn0, phase0, val)
+#endif
         // Result
         WDL_FFT_COMPLEX res;
         COMP_MULT(val, coeff, res);
+        
+#if 0 //PROCESS_SIGNAL_DB
+        BL_FLOAT magn1 = COMP_MAGN(res);
+        BL_FLOAT phase1 = COMP_PHASE(res);
+        
+        magn1 = Scale::ApplyScaleInv(Scale::DB, magn1, PROCESS_SIGNAL_MIN_DB, 0.0);
+        
+        // TODO: Noise floor
+        
+        MAGN_PHASE_COMP(magn1, phase1, res);
+#endif
+
         outData->Get()[i] = res;
     }
 }
