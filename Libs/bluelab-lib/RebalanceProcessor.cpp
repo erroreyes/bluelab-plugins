@@ -266,6 +266,12 @@ RebalanceProcessor::GetDumpData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTR
         mDumpObj->GetData(data);
 }
 
+void
+RebalanceProcessor::SetDbgThreshold(BL_FLOAT thrs)
+{
+    mMaskPred->SetDbgThreshold(thrs);
+}
+
 bool
 RebalanceProcessor::ProcessSamplesBuffers(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers,
                                           vector<WDL_TypedBuf<BL_FLOAT> > *ioResampBuffer)

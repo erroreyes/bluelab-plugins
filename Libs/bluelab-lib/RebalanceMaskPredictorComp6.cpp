@@ -288,6 +288,12 @@ RebalanceMaskPredictorComp6::SetMasksContrast(BL_FLOAT contrast)
 }
 
 void
+RebalanceMaskPredictorComp6::SetDbgThreshold(BL_FLOAT thrs)
+{
+    mModel->SetDbgThreshold(thrs);
+}
+
+void
 RebalanceMaskPredictorComp6::SetVocalSensitivity(BL_FLOAT vocalSensitivity)
 {
     mSensitivities[0] = vocalSensitivity;

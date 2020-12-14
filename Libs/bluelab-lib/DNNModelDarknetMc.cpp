@@ -21,6 +21,9 @@ extern "C" {
 
 #include <PPMFile.h>
 
+#include <Scale.h>
+#include <Rebalance_defs.h>
+
 #include "DNNModelDarknetMc.h"
 
 // Was just a test to avoid writing the temporary file to disk (failed)
@@ -42,6 +45,8 @@ extern "C" {
 DNNModelDarknetMc::DNNModelDarknetMc()
 {
     mNet = NULL;
+    
+    mDbgThreshold = 0.0;
 }
 
 DNNModelDarknetMc::~DNNModelDarknetMc()
@@ -181,6 +186,10 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
     for (int i = 0; i < X.GetSize(); i++)
     {
         BL_FLOAT val = input0.Get()[i % input0.GetSize()];
+        
+        // Used when model is traind in dB
+        val = Scale::ApplyScale(Scale::DB, val, -60.0, 0.0);
+        
         X.Get()[i] = val;
     }
     
@@ -227,6 +236,22 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
     BLUtils::Normalize(pred, input0.GetSize()*NUM_STEMS);
 #endif
 
+    
+#if USE_DBG_PREDICT_MASK_THRESHOLD
+    for (int i = 0; i < X.GetSize(); i++)
+    {
+        int maskIndex = i/input0.GetSize();
+        if (maskIndex != 3)
+            continue;
+        
+        float val = pred[i];
+        if (val > /*<*/mDbgThreshold)
+            val = 0.0;
+        
+        pred[i] = val;
+    }
+#endif
+    
 #if SET_OTHER_TO_ZERO
     // Set to 0 again to avoid a floor effect after normalization
     // (mask would be a constant value instead of 0
@@ -281,6 +306,12 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
         int dummy = 0;
     }
 #endif
+}
+
+void
+DNNModelDarknetMc::SetDbgThreshold(BL_FLOAT thrs)
+{
+    mDbgThreshold = thrs;
 }
 
 // To test on Mac, the mechanisme using fmem

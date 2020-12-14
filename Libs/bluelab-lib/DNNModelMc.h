@@ -35,6 +35,8 @@ public:
     // Returns several masks at once
     virtual void Predict(const WDL_TypedBuf<BL_FLOAT> &input,
                          vector<WDL_TypedBuf<BL_FLOAT> > *masks) = 0;
+    
+    virtual void SetDbgThreshold(BL_FLOAT thrs) = 0;
 };
 
 #endif

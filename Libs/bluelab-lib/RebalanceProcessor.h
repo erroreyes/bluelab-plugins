@@ -59,6 +59,9 @@ public:
     bool HasEnoughDumpData();
     void GetDumpData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTRO_COLS]);
     
+    // Debug
+    void SetDbgThreshold(BL_FLOAT thrs);
+    
 protected:
     bool ProcessSamplesBuffers(vector<WDL_TypedBuf<BL_FLOAT> > *ioBuffers,
                                vector<WDL_TypedBuf<BL_FLOAT> > *ioResampBuffers) override;

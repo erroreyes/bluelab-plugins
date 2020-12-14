@@ -31,11 +31,15 @@ public:
     void Predict(const WDL_TypedBuf<BL_FLOAT> &input,
                  vector<WDL_TypedBuf<BL_FLOAT> > *masks);
     
+    void SetDbgThreshold(BL_FLOAT thrs);
+    
 protected:
     bool LoadWinTest(const char *modelFileName, const char *resourcePath);
     
     // Darknet model
     network *mNet;
+    
+    BL_FLOAT mDbgThreshold;
 };
 
 #endif /* defined(__BL_Rebalance__DNNModelDarknetMc__) */

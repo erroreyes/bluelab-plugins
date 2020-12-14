@@ -36,10 +36,14 @@
 #define REBALANCE_OVERLAPPING 4
 #define REBALANCE_NUM_SPECTRO_FREQS 256
 #define REBALANCE_NUM_SPECTRO_COLS 32
+// Fastest
 #define REBALANCE_PREDICT_MODULO_NUM 3
 
 // When set to 0, use quick method
 #define REBALANCE_USE_MEL_FILTER_METHOD 1
+
+// Threshold the masks (debug..)
+#define USE_DBG_PREDICT_MASK_THRESHOLD 0 //1 // 0
 
 enum RebalanceMode
 {

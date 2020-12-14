@@ -90,6 +90,9 @@ public:
     // Masks contrast, relative one to each other (previous soft/hard)
     void SetMasksContrast(BL_FLOAT contrast);
     
+    // DEBUG
+    void SetDbgThreshold(BL_FLOAT thrs);
+    
 protected:
     void ComputeLineMask(WDL_TypedBuf<BL_FLOAT> *maskResult,
                          const WDL_TypedBuf<BL_FLOAT> &maskSource,
