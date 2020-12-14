@@ -157,14 +157,13 @@ template <typename FLOAT_TYPE>
 FLOAT_TYPE
 Scale::NormalizedToDBInv(FLOAT_TYPE x, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
 {
-    FLOAT_TYPE minAmp = BLUtils::DBToAmp(mindB);
-    FLOAT_TYPE maxAmp = BLUtils::DBToAmp(maxdB);
-    
     x = mindB + x*(maxdB - mindB);
     
     x = BLUtils::DBToAmp(x);
-    
-    x = (x - minAmp)/(maxAmp - minAmp);
+ 
+    //FLOAT_TYPE minAmp = BLUtils::DBToAmp(mindB);
+    //FLOAT_TYPE maxAmp = BLUtils::DBToAmp(maxdB);
+    //x = (x - minAmp)/(maxAmp - minAmp);
     
     // Avoid negative values, for very low x dB
     if (x < 0.0)
