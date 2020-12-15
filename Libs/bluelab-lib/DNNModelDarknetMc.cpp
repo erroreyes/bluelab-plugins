@@ -9,6 +9,10 @@
 #include <darknet.h>
 
 extern "C" {
+#include "bl_utils.h"
+}
+
+extern "C" {
 #include <fmem.h>
 
 #ifdef WIN32
@@ -258,6 +262,7 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
 #if FIX_OUTPUT_NORM
     // Exactly like the process done in darknet, to multiply masks
     BLUtils::Normalize(pred, input0.GetSize()*NUM_STEMS);
+    //my_normalize_chan2(pred, NUM_STEMS, input0.GetSize());
 #endif
     
 #if USE_DBG_PREDICT_MASK_THRESHOLD
