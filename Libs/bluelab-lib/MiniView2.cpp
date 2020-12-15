@@ -55,17 +55,17 @@ MiniView2::PostDraw(NVGcontext *vg, int width, int height)
     
     BL_GUI_FLOAT b1f = mBounds[1]*height;
     BL_GUI_FLOAT b3f = mBounds[3]*height;
-#if GRAPH_CONTROL_FLIP_Y
+#if 0 //GRAPH_CONTROL_FLIP_Y
     b1f = height - b1f;
     b3f = height - b3f;
 #endif
     
     // FIX: the bottom miniview border was not displayed
-    b1f -= BOTTOM_BORDER_OFFSET;
+    b3f -= BOTTOM_BORDER_OFFSET;
     
     nvgMoveTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width + BORDER_OFFSET_WIDTH, b1f);
-    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width - BORDER_OFFSET_WIDTH, b1f);
-    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width - BORDER_OFFSET_WIDTH, b3f);
+    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width /*-*/+ BORDER_OFFSET_WIDTH, b1f);
+    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width /*-*/+ BORDER_OFFSET_WIDTH, b3f);
     nvgLineTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width + BORDER_OFFSET_WIDTH, b3f);
     nvgLineTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width + BORDER_OFFSET_WIDTH, b1f);
     
@@ -79,7 +79,8 @@ MiniView2::IsPointInside(int x, int y, int width, int height)
 {
     // Warning: y is reversed !
     BL_FLOAT nx = ((BL_FLOAT)x)/width;
-    BL_FLOAT ny = 1.0 - ((BL_FLOAT)y)/height;
+    //BL_FLOAT ny = 1.0 - ((BL_FLOAT)y)/height;
+    BL_FLOAT ny = ((BL_FLOAT)y)/height;
     
     if (nx < mBounds[0])
         return false;
@@ -122,7 +123,8 @@ MiniView2::SetData(const WDL_TypedBuf<BL_FLOAT> &data)
     
     BLUtils::MultValues(&mWaveForm, coeff);
     
-    BLUtils::AddValues(&mWaveForm, (BL_FLOAT)(mBounds[3] - boundsSize/2.0));
+    //BLUtils::AddValues(&mWaveForm, (BL_FLOAT)(mBounds[3] - boundsSize/2.0));
+    BLUtils::AddValues(&mWaveForm, (BL_FLOAT)(1.0 - mBounds[1] - boundsSize/2.0));
 }
 
 void

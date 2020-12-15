@@ -376,7 +376,8 @@ SpectrogramDisplay2::PointInsideSpectrogram(int x, int y, int width, int height)
 {
     // Warning: y is reversed !
     BL_FLOAT nx = ((BL_FLOAT)x)/width;
-    BL_FLOAT ny = 1.0 - ((BL_FLOAT)y)/height;
+    //BL_FLOAT ny = 1.0 - ((BL_FLOAT)y)/height;
+    BL_FLOAT ny = ((BL_FLOAT)y)/height;
     
     if (nx < mSpectrogramBounds[0])
         return false;
