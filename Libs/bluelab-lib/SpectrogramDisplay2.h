@@ -22,9 +22,25 @@ class NVGcontext;
 class SpectrogramDisplay2 : public GraphCustomDrawer
 {
 public:
-    SpectrogramDisplay2();
+    struct SpectrogramTransform
+    {
+        // For local spectrogram
+        BL_FLOAT mMinX;
+        BL_FLOAT mMaxX;
+        
+        // For global spectrogram
+        BL_FLOAT mAbsMinX;
+        BL_FLOAT mAbsMaxX;
+        
+        BL_FLOAT mAbsTranslation;
+        
+        BL_FLOAT mCenterPos;
+    };
     
+    SpectrogramDisplay2(SpectrogramTransform *spectroTransform);
     virtual ~SpectrogramDisplay2();
+    
+    SpectrogramTransform *GetTransform();
     
     void Reset();
     
@@ -110,15 +126,7 @@ protected:
     int mNvgSpectroFullImage;
     bool mNeedUpdateSpectrogramFullData;
     
-    // For local spectrogram
-    BL_FLOAT mSpectroMinX;
-    BL_FLOAT mSpectroMaxX;
-    
-    // For global spectrogram
-    BL_FLOAT mSpectroAbsMinX;
-    BL_FLOAT mSpectroAbsMaxX;
-    
-    BL_FLOAT mSpectroAbsTranslation;
+    SpectrogramTransform *mSpectroTransform;
     
     BL_FLOAT mSpectrogramAlpha;
 
@@ -127,9 +135,7 @@ protected:
     //
     bool mShowSpectrogram;
     
-    BL_FLOAT mSpectroCenterPos;
-    
-    BL_FLOAT mSpectrogramGain;
+    //BL_FLOAT mSpectrogramGain;
     
     // Colormap
     int mNvgColormapImage;

@@ -42,6 +42,7 @@ public:
     void SetContrast(BL_FLOAT contrast);
     
     void TouchColorMap();
+    void TouchData();
     
     //void SetYLogScale(bool flag);
     void SetYScale(Scale::Type yScale);
@@ -69,8 +70,6 @@ public:
     bool GetLine(int index,
                  WDL_TypedBuf<BL_FLOAT> *magns,
                  WDL_TypedBuf<BL_FLOAT> *phases);
-    
-    void TouchData();
     
     // Image data
     bool GetImageDataFloat(unsigned char *buf);
