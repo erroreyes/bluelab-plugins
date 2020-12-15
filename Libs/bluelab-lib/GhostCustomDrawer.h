@@ -10,14 +10,28 @@
 class GhostCustomDrawer : public GraphCustomDrawer
 {
 public:
+    struct State
+    {
+        bool mBarActive;
+        BL_FLOAT mBarPos;
+        
+        bool mSelectionActive;
+        BL_FLOAT mSelection[4];
+        
+        bool mPlayBarActive;
+        BL_FLOAT mPlayBarPos;
+    };
+    
     GhostCustomDrawer(GhostPluginInterface *plug,
-                      BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1);
+                      BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
+                      State *state);
     
     virtual ~GhostCustomDrawer() {}
     
-    // UNUSED
-    void Resize(int prevWidth, int prevHeight,
-                int newWidth, int newHeight);
+    State *GetState();
+    
+    // The graph will destry it automatically
+    bool IsOwnedByGraph() override { return true; }
     
     // Draw after everything
     void PostDraw(NVGcontext *vg, int width, int height);
@@ -58,18 +72,12 @@ protected:
     void DrawSelection(NVGcontext *vg, int width, int height);
     void DrawPlayBar(NVGcontext *vg, int width, int height);
     
-    bool mBarActive;
-    BL_FLOAT mBarPos;
-    
-    bool mSelectionActive;
-    BL_FLOAT mSelection[4];
-    
-    bool mPlayBarActive;
-    BL_FLOAT mPlayBarPos;
-    
+    //
     BL_FLOAT mBounds[4];
     
     GhostPluginInterface *mPlug;
+    
+    State *mState;
 };
 
 #endif

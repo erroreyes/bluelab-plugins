@@ -5,18 +5,25 @@
 #include "GhostCustomDrawer.h"
 
 GhostCustomDrawer::GhostCustomDrawer(GhostPluginInterface *plug,
-                                     BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
-{    
-    mBarActive = false;
-    mBarPos = 0.0;
+                                     BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
+                                     State *state)
+{
+    mState = state;
+    if (mState == NULL)
+    {
+        mState = new State();;
     
-    mPlayBarActive = false;
-    mPlayBarPos = 0.0;
+        mState->mBarActive = false;
+        mState->mBarPos = 0.0;
     
-    mSelectionActive = false;
+        mState->mPlayBarActive = false;
+        mState->mPlayBarPos = 0.0;
     
-    for (int i = 0; i < 4; i++)
-        mSelection[i] = 0.0;
+        mState->mSelectionActive = false;
+    
+        for (int i = 0; i < 4; i++)
+            mState->mSelection[i] = 0.0;
+    }
     
     // Warning: y is reversed ??
     mBounds[0] = x0;
@@ -27,14 +34,10 @@ GhostCustomDrawer::GhostCustomDrawer(GhostPluginInterface *plug,
     mPlug = plug;
 }
 
-void
-GhostCustomDrawer::Resize(int prevWidth, int prevHeight,
-                          int newWidth, int newHeight)
+GhostCustomDrawer::State *
+GhostCustomDrawer::GetState()
 {
-    mSelection[0] = ((BL_FLOAT)mSelection[0]*newWidth)/prevWidth;
-    mSelection[1] = ((BL_FLOAT)mSelection[1]*prevHeight)/newHeight;
-    mSelection[2] = ((BL_FLOAT)mSelection[2]*prevWidth)/newWidth;
-    mSelection[3] = ((BL_FLOAT)mSelection[3]*prevHeight)/newHeight;
+    return mState;
 }
 
 void
@@ -50,49 +53,49 @@ GhostCustomDrawer::PostDraw(NVGcontext *vg, int width, int height)
 void
 GhostCustomDrawer::ClearBar()
 {
-    mBarActive = false;
+    mState->mBarActive = false;
 }
 
 void
 GhostCustomDrawer::ClearSelection()
 {
-    mSelectionActive = false;
+    mState->mSelectionActive = false;
 }
 
 void
 GhostCustomDrawer::SetBarPos(BL_FLOAT pos)
 {
-    mBarPos = pos;
+    mState->mBarPos = pos;
     
     // Set play bar to the same position, to start
-    mPlayBarPos = pos;
+    mState->mPlayBarPos = pos;
     
-    mBarActive = true;
-    mSelectionActive = false;
+    mState->mBarActive = true;
+    mState->mSelectionActive = false;
 }
 
 void
 GhostCustomDrawer::SetSelectionActive(bool flag)
 {
-    mSelectionActive = flag;
+    mState->mSelectionActive = flag;
 }
 
 BL_FLOAT
 GhostCustomDrawer::GetBarPos()
 {
-    return mBarPos;
+    return mState->mBarPos;
 }
 
 void
 GhostCustomDrawer::SetBarActive(bool flag)
 {
-    mBarActive = flag;
+    mState->mBarActive = flag;
 }
 
 bool
 GhostCustomDrawer::IsBarActive()
 {
-    return mBarActive;
+    return mState->mBarActive;
 }
 
 void
@@ -112,74 +115,75 @@ GhostCustomDrawer::SetSelection(BL_FLOAT x0, BL_FLOAT y0,
     if (y1 > mBounds[3])
         y1 = mBounds[3];
     
-    mSelection[0] = x0;
-    mSelection[1] = y0;
-    mSelection[2] = x1;
-    mSelection[3] = y1;
+    mState->mSelection[0] = x0;
+    mState->mSelection[1] = y0;
+    mState->mSelection[2] = x1;
+    mState->mSelection[3] = y1;
 }
 
 void
 GhostCustomDrawer::GetSelection(BL_FLOAT *x0, BL_FLOAT *y0,
                                 BL_FLOAT *x1, BL_FLOAT *y1)
 {
-    *x0 = mSelection[0];
-    *y0 = mSelection[1];
+    *x0 = mState->mSelection[0];
+    *y0 = mState->mSelection[1];
     
-    *x1 = mSelection[2];
-    *y1 = mSelection[3];
+    *x1 = mState->mSelection[2];
+    *y1 = mState->mSelection[3];
 }
 
 void
 GhostCustomDrawer::UpdateZoomSelection(BL_FLOAT zoomChange)
 {
-    mPlug->UpdateZoomSelection(mSelection, zoomChange);
+    mPlug->UpdateZoomSelection(mState->mSelection, zoomChange);
 }
 
 bool
 GhostCustomDrawer::IsSelectionActive()
 {
-    return mSelectionActive;
+    return mState->mSelectionActive;
 }
 
 BL_FLOAT
 GhostCustomDrawer::GetPlayBarPos()
 {
-    return mPlayBarPos;
+    return mState->mPlayBarPos;
 }
 
 void
 GhostCustomDrawer::SetPlayBarPos(BL_FLOAT pos, bool activate)
 {
-    mPlayBarPos = pos;
+    mState->mPlayBarPos = pos;
     
     if (activate)
-        mPlayBarActive = true;
+        mState->mPlayBarActive = true;
 }
 
 bool
 GhostCustomDrawer::IsPlayBarActive()
 {
-    return mPlayBarActive;
+    return mState->mPlayBarActive;
 }
 
 void
 GhostCustomDrawer::SetPlayBarActive(bool flag)
 {
-    mPlayBarActive = flag;
+    mState->mPlayBarActive = flag;
 }
 
 void
 GhostCustomDrawer::SetSelPlayBarPos(BL_FLOAT pos)
 {
-    mPlayBarPos = mSelection[0] + pos*(mSelection[2] - mSelection[0]);
+    mState->mPlayBarPos = mState->mSelection[0] +
+                        pos*(mState->mSelection[2] - mState->mSelection[0]);
     
-    mPlayBarActive = true;
+    mState->mPlayBarActive = true;
 }
 
 void
 GhostCustomDrawer::DrawBar(NVGcontext *vg, int width, int height)
 {
-    if (!mBarActive)
+    if (!mState->mBarActive)
         return;
     
     BL_FLOAT strokeWidths[2] = { 3.0, 2.0 };
@@ -198,7 +202,7 @@ GhostCustomDrawer::DrawBar(NVGcontext *vg, int width, int height)
         nvgBeginPath(vg);
     
         // Draw the line
-        BL_FLOAT x = mBarPos*width;
+        BL_FLOAT x = mState->mBarPos*width;
     
         //nvgMoveTo(vg, x, (1.0 - mBounds[1])*height);
         //nvgLineTo(vg, x, (1.0 - mBounds[3])*height);
@@ -212,7 +216,7 @@ GhostCustomDrawer::DrawBar(NVGcontext *vg, int width, int height)
 void
 GhostCustomDrawer::DrawSelection(NVGcontext *vg, int width, int height)
 {
-    if (!mSelectionActive)
+    if (!mState->mSelectionActive)
         return;
     
     BL_FLOAT strokeWidths[2] = { 3.0, 2.0 };
@@ -238,12 +242,12 @@ GhostCustomDrawer::DrawSelection(NVGcontext *vg, int width, int height)
         nvgLineTo(vg, mSelection[0]*width, (1.0 - mSelection[3])*height);
         nvgLineTo(vg, mSelection[0]*width, (1.0 - mSelection[1])*height); */
         
-        nvgMoveTo(vg, mSelection[0]*width, mSelection[1]*height);
+        nvgMoveTo(vg, mState->mSelection[0]*width, mState->mSelection[1]*height);
         
-        nvgLineTo(vg, mSelection[2]*width, mSelection[1]*height);
-        nvgLineTo(vg, mSelection[2]*width, mSelection[3]*height);
-        nvgLineTo(vg, mSelection[0]*width, mSelection[3]*height);
-        nvgLineTo(vg, mSelection[0]*width, mSelection[1]*height);
+        nvgLineTo(vg, mState->mSelection[2]*width, mState->mSelection[1]*height);
+        nvgLineTo(vg, mState->mSelection[2]*width, mState->mSelection[3]*height);
+        nvgLineTo(vg, mState->mSelection[0]*width, mState->mSelection[3]*height);
+        nvgLineTo(vg, mState->mSelection[0]*width, mState->mSelection[1]*height);
     
         nvgStroke(vg);
     }
@@ -252,7 +256,7 @@ GhostCustomDrawer::DrawSelection(NVGcontext *vg, int width, int height)
 void
 GhostCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
 {
-    if (!mPlayBarActive)
+    if (!mState->mPlayBarActive)
         return;
     
     BL_FLOAT strokeWidths[2] = { 2.0, 1.0 };
@@ -273,7 +277,7 @@ GhostCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
         nvgBeginPath(vg);
     
         // Draw the line
-        BL_FLOAT x = mPlayBarPos*width;
+        BL_FLOAT x = mState->mPlayBarPos*width;
     
         //nvgMoveTo(vg, x, (1.0 - mBounds[1])*height);
         //nvgLineTo(vg, x, (1.0 - mBounds[3])*height);
