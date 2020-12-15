@@ -13,6 +13,9 @@
 
 #include "MiniView2.h"
 
+#define BORDER_OFFSET_WIDTH 1
+#define BOTTOM_BORDER_OFFSET 3 //2
+
 MiniView2::MiniView2(int maxNumPoints,
                    BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
 {
@@ -56,11 +59,14 @@ MiniView2::PreDraw(NVGcontext *vg, int width, int height)
     b3f = height - b3f;
 #endif
     
-    nvgMoveTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width, b1f);
-    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width, b1f);
-    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width, b3f);
-    nvgLineTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width, b3f);
-    nvgLineTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width, b1f);
+    // FIX: the bottom miniview border was not displayed
+    b1f -= BOTTOM_BORDER_OFFSET;
+    
+    nvgMoveTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width + BORDER_OFFSET_WIDTH, b1f);
+    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width - BORDER_OFFSET_WIDTH, b1f);
+    nvgLineTo(vg, (mBounds[0] + mMaxNormX*boundsSizeX)*width - BORDER_OFFSET_WIDTH, b3f);
+    nvgLineTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width + BORDER_OFFSET_WIDTH, b3f);
+    nvgLineTo(vg, (mBounds[0] + mMinNormX*boundsSizeX)*width + BORDER_OFFSET_WIDTH, b1f);
     
     nvgStroke(vg);
     
