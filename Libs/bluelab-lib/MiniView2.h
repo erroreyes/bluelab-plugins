@@ -26,7 +26,7 @@ public:
     
     virtual ~MiniView2();
 
-    void PreDraw(NVGcontext *vg, int width, int height) override;
+    void PostDraw(NVGcontext *vg, int width, int height) override;
     
     bool IsPointInside(int x, int y, int width, int height);
     

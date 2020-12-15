@@ -33,7 +33,8 @@ MiniView2::MiniView2(int maxNumPoints,
 MiniView2::~MiniView2() {}
 
 void
-MiniView2::PreDraw(NVGcontext *vg, int width, int height)
+//MiniView2::PreDraw(NVGcontext *vg, int width, int height)
+MiniView2::PostDraw(NVGcontext *vg, int width, int height)
 {
     nvgSave(vg);
     
