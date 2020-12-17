@@ -1,13 +1,13 @@
 //
-//  GraphTimeAxis5.h
+//  GraphTimeAxis6.h
 //  BL-InfrasonicViewer
 //
 //  Created by applematuer on 11/22/19.
 //
 //
 
-#ifndef __BL_InfrasonicViewer__GraphTimeAxis5__
-#define __BL_InfrasonicViewer__GraphTimeAxis5__
+#ifndef __BL_InfrasonicViewer__GraphTimeAxis6__
+#define __BL_InfrasonicViewer__GraphTimeAxis6__
 
 #ifdef IGRAPHICS_NANOVG
 
@@ -26,23 +26,24 @@
 // GraphTimeAxis5: from GraphTimeAxis4
 // - use new GraphControl12
 //
+// GraphTimeAxis6: fromGraphTimeAxis5:
+// Improved for Ghost
 class GUIHelper12;
 class GraphControl12;
-class GraphTimeAxis5
+class GraphTimeAxis6
 {
 public:
-    GraphTimeAxis5(bool displayLines = true, bool roundToIntLabels = false);
+    GraphTimeAxis6(bool displayLines = true, bool squeezeBorderLabels = true);
     
-    virtual ~GraphTimeAxis5();
+    virtual ~GraphTimeAxis6();
     
     void Init(GraphControl12 *graph,
               GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
               int bufferSize,
-              BL_FLOAT timeDuration, BL_FLOAT spacingSeconds,
+              BL_FLOAT timeDuration, int numLabels,
               BL_FLOAT yOffset = 0);
     
-    void Reset(int bufferSize, BL_FLOAT timeDuration,
-               BL_FLOAT spacingSeconds);
+    void Reset(int bufferSize, BL_FLOAT timeDuration, int numLabels);
     
     void UpdateFromTransport(BL_FLOAT currentTime);
     void Update();
@@ -65,8 +66,7 @@ protected:
     
     BL_FLOAT mTimeDuration;
     
-    // For example, one label every 1s, or one label every 0.5 sedons
-    BL_FLOAT mSpacingSeconds;
+    int mNumLabels;
     
     BL_FLOAT mCurrentTime;
     
@@ -79,9 +79,9 @@ protected:
     
     bool mMustUpdate;
     
-    bool mRoundToIntLabels;
+    bool mSqueezeBorderLabels;
 };
 
 #endif
 
-#endif /* defined(__BL_InfrasonicViewer__GraphTimeAxis5__) */
+#endif /* defined(__BL_InfrasonicViewer__GraphTimeAxis6__) */

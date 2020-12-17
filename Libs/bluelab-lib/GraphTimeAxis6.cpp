@@ -1,5 +1,5 @@
 //
-//  GraphTimeAxis5.cpp
+//  GraphTimeAxis6.cpp
 //  BL-InfrasonicViewer
 //
 //  Created by applematuer on 11/22/19.
@@ -15,7 +15,7 @@
 
 #include <GraphControl12.h>
 
-#include "GraphTimeAxis5.h"
+#include "GraphTimeAxis6.h"
 
 #define MAX_NUM_LABELS 128
 
@@ -38,10 +38,10 @@
 // => it makes the last label pop inside a previous large empty space
 #define SQUEEZE_LAST_CROPPED_LABEL 0 //1
 
-// TMP
-#define FIX_COMPILATION 1
+#define ROUND_TO_INT_LABELS 1
 
-GraphTimeAxis5::GraphTimeAxis5(bool displayLines, bool roundToIntLabels)
+GraphTimeAxis6::GraphTimeAxis6(bool displayLines,
+                               bool squeezeBorderLabels)
 {
     mGraphAxis = NULL;
     
@@ -53,31 +53,29 @@ GraphTimeAxis5::GraphTimeAxis5(bool displayLines, bool roundToIntLabels)
     
     mDisplayLines = displayLines;
     
-    mRoundToIntLabels = roundToIntLabels;
+    mSqueezeBorderLabels = squeezeBorderLabels;
     
     mMustUpdate = true;
 }
 
-GraphTimeAxis5::~GraphTimeAxis5() {}
+GraphTimeAxis6::~GraphTimeAxis6() {}
 
 void
-GraphTimeAxis5::Init(GraphControl12 *graph,
+GraphTimeAxis6::Init(GraphControl12 *graph,
                      GraphAxis2 *graphAxis,
                      GUIHelper12 *guiHelper,
                      int bufferSize,
                      BL_FLOAT timeDuration,
-                     BL_FLOAT spacingSeconds,
+                     int numLabels,
                      BL_FLOAT yOffset)
 {
-#if !FIX_COMPILATION
     graph->SetGraphTimeAxis(this);
-#endif
     
     mGraphAxis = graphAxis;
     
     mBufferSize = bufferSize;
     mTimeDuration = timeDuration;
-    mSpacingSeconds = spacingSeconds;
+    mNumLabels = numLabels;
     
     //
     int axisColor[4];
@@ -106,13 +104,13 @@ GraphTimeAxis5::Init(GraphControl12 *graph,
 }
 
 void
-GraphTimeAxis5::Reset(int bufferSize, BL_FLOAT timeDuration,
-                      BL_FLOAT spacingSeconds)
+GraphTimeAxis6::Reset(int bufferSize, BL_FLOAT timeDuration,
+                      int numLabels)
 {
     mBufferSize = bufferSize;
     mTimeDuration = timeDuration;
     
-    mSpacingSeconds = spacingSeconds;
+    mNumLabels = numLabels;
     
 #if FIX_RESET_TIME_AXIS
     // Reset the labels
@@ -123,12 +121,14 @@ GraphTimeAxis5::Reset(int bufferSize, BL_FLOAT timeDuration,
 #define SS_COEFF 0.9
     // SS_COEFF => Hack, so that at starting,
     // there is no missing label on the left of the axis
-    Update(spacingSeconds*SS_COEFF);
+    BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration;
+    //Update(spacingSeconds*SS_COEFF);
+    Update(oneLabelSeconds*SS_COEFF);
 #endif
 }
 
 void
-GraphTimeAxis5::UpdateFromTransport(BL_FLOAT currentTime)
+GraphTimeAxis6::UpdateFromTransport(BL_FLOAT currentTime)
 {
     mCurrentTimeTransport = currentTime;
     
@@ -138,7 +138,7 @@ GraphTimeAxis5::UpdateFromTransport(BL_FLOAT currentTime)
 }
 
 void
-GraphTimeAxis5::Update()
+GraphTimeAxis6::Update()
 {
     if (!mTransportIsPlaying)
         return;
@@ -155,19 +155,19 @@ GraphTimeAxis5::Update()
 }
 
 void
-GraphTimeAxis5::SetTransportPlaying(bool flag)
+GraphTimeAxis6::SetTransportPlaying(bool flag)
 {
     mTransportIsPlaying = flag;
 }
 
 void
-GraphTimeAxis5::SetMustUpdate()
+GraphTimeAxis6::SetMustUpdate()
 {
     mMustUpdate = true;
 }
 
 void
-GraphTimeAxis5::Update(BL_FLOAT currentTime)
+GraphTimeAxis6::Update(BL_FLOAT currentTime)
 {
     // Just in case
     if (mGraphAxis == NULL)
@@ -183,11 +183,11 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
     BL_FLOAT startTime = currentTime - mTimeDuration;
     BL_FLOAT endTime = currentTime;
         
-    BL_FLOAT duration = endTime - startTime;
+    BL_FLOAT timeDuration = endTime - startTime;
         
     // Convert to milliseconds
     startTime *= 1000.0;
-    duration *= 1000.0;
+    timeDuration *= 1000.0;
         
     char *hAxisData[MAX_NUM_LABELS][2];
         
@@ -205,45 +205,45 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
     BL_FLOAT tm = startTime;
     
     // Align to 0 seconds
-    tm = tm - fmod(tm, mSpacingSeconds*1000.0);
+    BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration*0.001;
+    tm = tm - fmod(tm, oneLabelSeconds*1000.0);
     
     BL_FLOAT prevT = 0.0;
     for (int i = 0; i < MAX_NUM_LABELS; i++)
     {
         // Parameter
-        BL_FLOAT t = (tm - startTime)/duration;
+        BL_FLOAT t = (tm - startTime)/timeDuration;
         
-        if (mRoundToIntLabels)
-        {
-            int numLabels = 0.001*duration/mSpacingSeconds;
+#if ROUND_TO_INT_LABELS
+        //int numLabels = 0.001*duration/mSpacingSeconds;
             
-            // Choose labels with integer values
-            // (to avoid evenly spaced labels, but with various values)
-            if ((i > 0) && (i < MAX_NUM_LABELS - 1))
-                // Middle values
+        // Choose labels with integer values
+        // (to avoid evenly spaced labels, but with various values)
+        if ((i > 0) && (i < MAX_NUM_LABELS - 1))
+            // Middle values
+        {
+            if (timeDuration >= 1000.0)
             {
-                if (duration >= 1000.0)
-                {
-                    tm = ((int)(tm/(1000.0/numLabels)))*(1000.0/numLabels);
-                }
-                else if (duration >= 100.0)
-                {
-                    tm = ((int)(tm/(100.0/numLabels)))*(100.0/numLabels);
-                }
-                else if (duration >= 10.0)
-                {
-                    tm = ((int)(tm/(10.0/numLabels)))*(10.0/numLabels);
-                }
-                
-                t = (tm - startTime)/duration;
-                
-                // Avoid repeating the same value
-                if (fabs(t - prevT) < BL_EPS)
-                    continue;
-                
-                prevT = t;
+                tm = ((int)(tm/(1000.0/mNumLabels)))*(1000.0/mNumLabels);
             }
+            else if (timeDuration >= 100.0)
+            {
+                tm = ((int)(tm/(100.0/mNumLabels)))*(100.0/mNumLabels);
+            }
+            else if (timeDuration >= 10.0)
+            {
+                tm = ((int)(tm/(10.0/mNumLabels)))*(10.0/mNumLabels);
+            }
+                
+            t = (tm - startTime)/timeDuration;
+                
+            // Avoid repeating the same value
+            if (fabs(t - prevT) < BL_EPS)
+                continue;
+                
+            prevT = t;
         }
+#endif
         
         sprintf(hAxisData[i][0], "%g", t);
         
@@ -251,7 +251,11 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
         sprintf(hAxisData[i][1], "0s");
 #endif
         
-        if ((i > 0) && (i < MAX_NUM_LABELS - 1)) // Squeeze the borders
+        bool squeeze = (mSqueezeBorderLabels &&
+                        ((i == 0) || (i == MAX_NUM_LABELS - 1)));
+        
+        //if ((i > 0) && (i < MAX_NUM_LABELS - 1)) // Squeeze the borders
+        if (!squeeze)
         {
             int seconds = (int)tm/1000;
             int millis = tm - seconds*1000;
@@ -282,8 +286,14 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
             }
             else if (seconds != 0)
             {
-                //sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/100);
-                sprintf(hAxisData[i][1], "%d.%ds", seconds, millis);
+                // Check the number of digits to display
+                BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration*0.001;
+                if (oneLabelSeconds > 0.1)
+                    sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/100);
+                else if (oneLabelSeconds > 0.01)
+                    sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/10);
+                else
+                    sprintf(hAxisData[i][1], "%d.%ds", seconds, millis);
             }
 #if FIX_DISPLAY_MS
             else if (millis != 0)
@@ -304,9 +314,11 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
         }
 #endif
         
-        tm += mSpacingSeconds*1000.0;
+        BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration*0.001;
         
-        if (tm > startTime + duration)
+        tm += oneLabelSeconds*1000.0;
+        
+        if (tm > startTime + timeDuration)
             break;
     }
     
@@ -321,7 +333,7 @@ GraphTimeAxis5::Update(BL_FLOAT currentTime)
 }
 
 BL_FLOAT
-GraphTimeAxis5::ComputeTimeDuration(int numBuffers, int bufferSize,
+GraphTimeAxis6::ComputeTimeDuration(int numBuffers, int bufferSize,
                                     int oversampling, BL_FLOAT sampleRate)
 {
     int numSamples = (numBuffers*bufferSize)/oversampling;

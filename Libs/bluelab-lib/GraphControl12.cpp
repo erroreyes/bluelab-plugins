@@ -23,7 +23,7 @@
 #include <UpTime.h>
 
 #include <GraphAxis2.h>
-#include <GraphTimeAxis5.h>
+#include <GraphTimeAxis6.h>
 
 #include <BLDebug.h>
 
@@ -662,7 +662,7 @@ GraphControl12::SetRecreateWhiteImageHack(bool flag)
 }
 
 void
-GraphControl12::SetGraphTimeAxis(GraphTimeAxis5 *timeAxis)
+GraphControl12::SetGraphTimeAxis(GraphTimeAxis6 *timeAxis)
 {
     mGraphTimeAxis = timeAxis;
 }
