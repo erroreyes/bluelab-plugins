@@ -19,8 +19,10 @@ GhostCommand::SetSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
     }
 #endif
     
-    y0 = Scale::ApplyScaleInv(yScale, y0, 0.0, mSampleRate*0.5);
-    y1 = Scale::ApplyScaleInv(yScale, y1, 0.0, mSampleRate*0.5);
+    y0 = Scale::ApplyScaleInv(yScale, y0,
+                              (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    y1 = Scale::ApplyScaleInv(yScale, y1,
+                              (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
     
     // Allows partially out of bounds selection
 #if 0
@@ -87,8 +89,10 @@ GhostCommand::GetSelection(BL_FLOAT *x0, BL_FLOAT *y0, BL_FLOAT *x1, BL_FLOAT *y
     *x1 = mSelection[2];
     *y1 = mSelection[3];
     
-    *y0 = Scale::ApplyScale(yScale, *y0, 0.0, mSampleRate*0.5);
-    *y1 = Scale::ApplyScale(yScale, *y1, 0.0, mSampleRate*0.5);
+    *y0 = Scale::ApplyScale(yScale, *y0,
+                            (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    *y1 = Scale::ApplyScale(yScale, *y1,
+                            (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 
     
 #if 0 // TODO iPlug2

@@ -1,3 +1,5 @@
+#include <Scale.h>
+
 #include "GhostCommandCopyPaste.h"
 
 GhostCommandCopyPaste::GhostCommandCopyPaste(BL_FLOAT sampleRate)
@@ -120,9 +122,9 @@ GhostCommandCopyPaste::GetPastedSelection(BL_FLOAT pastedSelection[4],
 #endif
     
     pastedSelection[1] = Scale::ApplyScale(yScale, pastedSelection[1],
-                                           0.0, mSampleRate*0.5);
+                                           (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
     pastedSelection[3] = Scale::ApplyScale(yScale, pastedSelection[3],
-                                           0.0, mSampleRate*0.5);
+                                           (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 }
 
 int

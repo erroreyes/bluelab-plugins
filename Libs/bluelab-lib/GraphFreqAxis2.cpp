@@ -114,7 +114,8 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
                               axisColor, axisLabelColor,
                               lineWidth,
                               //0.0, graphWidth - 40.0,
-                              graphWidth - 40.0, 0.0,
+                              //graphWidth - 40.0, 0.0,
+                              1.0 - 40.0/graphWidth, 0.0,
                               axisLabelOverlayColor);
     }
     

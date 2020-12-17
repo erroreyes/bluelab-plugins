@@ -139,7 +139,8 @@ RebalanceProcessFftObjComp3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioB
     for (int i = 0; i < magns0.GetSize(); i++)
     {
         BL_FLOAT val = magns0.Get()[i];
-        val = Scale::ApplyScale(Scale::DB, val, PROCESS_SIGNAL_MIN_DB, 0.0);
+        val = Scale::ApplyScale(Scale::DB, val,
+                                (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
         magns0.Get()[i] = val;
     }
 
@@ -172,7 +173,8 @@ RebalanceProcessFftObjComp3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioB
     for (int i = 0; i < magns1.GetSize(); i++)
     {
         BL_FLOAT val = magns1.Get()[i];
-        val = Scale::ApplyScaleInv(Scale::DB, val, PROCESS_SIGNAL_MIN_DB, 0.0);
+        val = Scale::ApplyScaleInv(Scale::DB, val,
+                                   (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
         
         // Noise floor
         BL_FLOAT db = BLUtils::AmpToDB(val);
