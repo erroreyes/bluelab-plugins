@@ -235,7 +235,8 @@ GraphControl12::Resize(int width, int height)
     if (mVAxis != NULL)
     {
         if (mVAxis->mAlignRight) // Added a test to fix resize with SpectralDiff
-            mVAxis->mOffsetX -= dWidth;
+            //mVAxis->mOffsetX -= dWidth;
+            mVAxis->mOffsetX -= ((BL_FLOAT)dWidth)/width;
     }
     
     // FIXED: Resize the FBO instead of deleting and re-creating it
@@ -936,7 +937,10 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
             
             // Hack
             // See Transient, with it 2 vertical axis
-            y += axis->mOffset;
+            //y += axis->mOffset;
+            
+            //y += axis->mOffsetY; // For Ghost
+            y += axis->mOffsetY*height; // For Ghost
             
             if ((i > 0) && (i < axis->mValues.size() - 1))
                 // First and last: don't draw axis line
@@ -994,14 +998,16 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     if (axis->mOverlay)
                     {
                         // Draw background text (for overlay)
-                        DrawText(textOffset + axis->mOffsetX + OVERLAY_OFFSET,
+                        //DrawText(textOffset + axis->mOffsetX + OVERLAY_OFFSET,
+                        DrawText(textOffset + axis->mOffsetX*width + OVERLAY_OFFSET,
                                  y + OVERLAY_OFFSET,
                                  FONT_SIZE, text, axis->mLabelOverlayColor,
                                  align | NVG_ALIGN_MIDDLE, NVG_ALIGN_BOTTOM,
                                  axis->mFontSizeCoeff);
                     }
                     
-                    DrawText(textOffset + axis->mOffsetX,
+                    //DrawText(textOffset + axis->mOffsetX,
+                    DrawText(textOffset + axis->mOffsetX*width,
                              y, FONT_SIZE, text,
                              axis->mLabelColor,
                              align | NVG_ALIGN_MIDDLE,
@@ -1018,14 +1024,15 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     if (axis->mOverlay)
                     {
                         // Draw background text (for overlay)
-                        DrawText(textOffset + axis->mOffsetX + OVERLAY_OFFSET,
+                        //DrawText(textOffset + axis->mOffsetX + OVERLAY_OFFSET,
+                        DrawText(textOffset + axis->mOffsetX*width + OVERLAY_OFFSET,
                                  y + FONT_SIZE*0.75 + OVERLAY_OFFSET,
                                  FONT_SIZE, text, axis->mLabelOverlayColor,
                                  NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                                  axis->mFontSizeCoeff);
                     }
                     
-                    DrawText(textOffset + axis->mOffsetX,
+                    DrawText(textOffset + axis->mOffsetX*width,
                              y + FONT_SIZE*0.75, FONT_SIZE, text,
                              axis->mLabelColor, NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);
@@ -1037,14 +1044,14 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     if (axis->mOverlay)
                     {
                         // Draw background text (for overlay)
-                        DrawText(textOffset + axis->mOffsetX + OVERLAY_OFFSET,
+                        DrawText(textOffset + axis->mOffsetX*width + OVERLAY_OFFSET,
                                  y - FONT_SIZE*1.5 + OVERLAY_OFFSET,
                                  FONT_SIZE, text, axis->mLabelOverlayColor,
                                  NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                                  axis->mFontSizeCoeff);
                     }
                     
-                    DrawText(textOffset + axis->mOffsetX,
+                    DrawText(textOffset + axis->mOffsetX*width,
                              y - FONT_SIZE*1.5, FONT_SIZE, text,
                              axis->mLabelColor, NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);

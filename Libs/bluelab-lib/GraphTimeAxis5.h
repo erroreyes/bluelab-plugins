@@ -39,7 +39,7 @@ public:
               GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
               int bufferSize,
               BL_FLOAT timeDuration, BL_FLOAT spacingSeconds,
-              int yOffset = 0);
+              BL_FLOAT yOffset = 0);
     
     void Reset(int bufferSize, BL_FLOAT timeDuration,
                BL_FLOAT spacingSeconds);

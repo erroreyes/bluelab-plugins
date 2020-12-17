@@ -38,7 +38,8 @@ public:
                    BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                    int axisColor[4], int axisLabelColor[4],
                    BL_GUI_FLOAT lineWidth,
-                   BL_GUI_FLOAT offset = 0.0, BL_GUI_FLOAT offsetX = 0.0,
+                   //BL_GUI_FLOAT offset = 0.0, BL_GUI_FLOAT offsetX = 0.0,
+                   BL_GUI_FLOAT offsetX = 0.0, BL_GUI_FLOAT offsetY = 0.0,
                    int axisOverlayColor[4] = NULL,
                    BL_GUI_FLOAT fontSizeCoeff = 1.0,
                    bool alignTextRight = false,
@@ -79,7 +80,7 @@ protected:
     int mLabelColor[4];
     
     // Hack
-    BL_GUI_FLOAT mOffset;
+    //BL_GUI_FLOAT mOffset;
     
     // To be able to display the axis on the right
     BL_GUI_FLOAT mOffsetX;

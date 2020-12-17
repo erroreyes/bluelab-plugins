@@ -95,14 +95,16 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
-                              0.0, graphWidth - 40.0,
+                              //0.0, graphWidth - 40.0,
+                              graphWidth - 40.0, 0.0,
                               axisLabelOverlayColor);
 #else
         mGraphAxis->InitVAxis(Scale::MEL,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
-                              0.0, graphWidth - 40.0,
+                              //0.0, graphWidth - 40.0,
+                              graphWidth - 40.0, 0.0,
                               axisLabelOverlayColor);
 #endif
 #endif
@@ -111,7 +113,8 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
                               0.0, sampleRate*0.5,
                               axisColor, axisLabelColor,
                               lineWidth,
-                              0.0, graphWidth - 40.0,
+                              //0.0, graphWidth - 40.0,
+                              graphWidth - 40.0, 0.0,
                               axisLabelOverlayColor);
     }
     

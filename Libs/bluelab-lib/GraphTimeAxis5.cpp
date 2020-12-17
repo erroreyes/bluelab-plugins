@@ -63,7 +63,7 @@ GraphTimeAxis5::Init(GraphControl12 *graph,
                      int bufferSize,
                      BL_FLOAT timeDuration,
                      BL_FLOAT spacingSeconds,
-                     int yOffset)
+                     BL_FLOAT yOffset)
 {
     graph->SetGraphTimeAxis(this);
     
@@ -94,7 +94,8 @@ GraphTimeAxis5::Init(GraphControl12 *graph,
     mGraphAxis->InitVAxis(Scale::LINEAR, 0.0, 1.0,
                           axisColor, axisLabelColor,
                           lineWidth,
-                          yOffset, 0.0,
+                          //yOffset, 0.0,
+                          0.0, yOffset,
                           axisLabelOverlayColor);
 }
 

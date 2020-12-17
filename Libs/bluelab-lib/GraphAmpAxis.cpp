@@ -56,9 +56,10 @@ GraphAmpAxis::Init(GraphAxis2 *graphAxis,
                           minDB, maxDB,
                           axisColor, axisLabelColor,
                           lineWidth,
-                          0.0,
-                          //graphWidth - 40.0, // on the right
-                          4.0, //40.0, // on the left
+                          ///0.0,
+                          /////graphWidth - 40.0, // on the right
+                          ///4.0, //40.0, // on the left
+                          4.0, 0.0,
                           axisLabelOverlayColor);
     
     //

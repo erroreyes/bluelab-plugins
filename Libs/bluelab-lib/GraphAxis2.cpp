@@ -20,7 +20,7 @@ GraphAxis2::GraphAxis2()
     for (int i = 0; i < 4; i++)
         mLabelColor[i] = 0;
     
-    mOffset = 0.0;
+    //mOffset = 0.0;
     mOffsetX = 0.0;
     mOffsetY = 0.0;
     
@@ -61,9 +61,11 @@ GraphAxis2::InitHAxis(Scale::Type scale,
                       BL_GUI_FLOAT fontSizeCoeff,
                       int axisLinesOverlayColor[4])
 {
-    mOffset = 0.0;
+    //mOffset = 0.0;
     
+    // ????
     // Warning, offset Y is normalized value
+    mOffsetX = 0.0; //
     mOffsetY = offsetY;
     mOverlay = false;
     mLinesOverlay = false;
@@ -86,7 +88,7 @@ GraphAxis2::InitVAxis(Scale::Type scale,
                       BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                       int axisColor[4], int axisLabelColor[4],
                       BL_GUI_FLOAT lineWidth,
-                      BL_GUI_FLOAT offset, BL_GUI_FLOAT offsetX,
+                      BL_GUI_FLOAT offsetX, BL_GUI_FLOAT offsetY,
                       int axisOverlayColor[4],
                       BL_GUI_FLOAT fontSizeCoeff, bool alignTextRight,
                       int axisLinesOverlayColor[4],
@@ -94,9 +96,10 @@ GraphAxis2::InitVAxis(Scale::Type scale,
 {
     mOverlay = false;
     mLinesOverlay = false;
-    mOffset = offset;
+    //mOffset = offset;
     mOffsetX = offsetX;
-    mOffsetY = 0.0;
+    //mOffsetY = 0.0;
+    mOffsetY = offsetY;
     
     mFontSizeCoeff = fontSizeCoeff;
     
