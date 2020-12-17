@@ -66,7 +66,7 @@ GraphTimeAxis6::Init(GraphControl12 *graph,
                      GUIHelper12 *guiHelper,
                      int bufferSize,
                      BL_FLOAT timeDuration,
-                     int numLabels,
+                     int maxNumLabels,
                      BL_FLOAT yOffset)
 {
     graph->SetGraphTimeAxis(this);
@@ -75,7 +75,7 @@ GraphTimeAxis6::Init(GraphControl12 *graph,
     
     mBufferSize = bufferSize;
     mTimeDuration = timeDuration;
-    mNumLabels = numLabels;
+    mMaxNumLabels = maxNumLabels;
     
     //
     int axisColor[4];
@@ -105,12 +105,12 @@ GraphTimeAxis6::Init(GraphControl12 *graph,
 
 void
 GraphTimeAxis6::Reset(int bufferSize, BL_FLOAT timeDuration,
-                      int numLabels)
+                      int maxNumLabels)
 {
     mBufferSize = bufferSize;
     mTimeDuration = timeDuration;
     
-    mNumLabels = numLabels;
+    mMaxNumLabels = maxNumLabels;
     
 #if FIX_RESET_TIME_AXIS
     // Reset the labels
@@ -121,7 +121,7 @@ GraphTimeAxis6::Reset(int bufferSize, BL_FLOAT timeDuration,
 #define SS_COEFF 0.9
     // SS_COEFF => Hack, so that at starting,
     // there is no missing label on the left of the axis
-    BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration;
+    BL_FLOAT oneLabelSeconds = (1.0/mMaxNumLabels)*timeDuration;
     //Update(spacingSeconds*SS_COEFF);
     Update(oneLabelSeconds*SS_COEFF);
 #endif
@@ -166,6 +166,7 @@ GraphTimeAxis6::SetMustUpdate()
     mMustUpdate = true;
 }
 
+#if 0 // ORIGIN
 void
 GraphTimeAxis6::Update(BL_FLOAT currentTime)
 {
@@ -205,7 +206,7 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
     BL_FLOAT tm = startTime;
     
     // Align to 0 seconds
-    BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration*0.001;
+    BL_FLOAT oneLabelSeconds = (1.0/mMaxNumLabels)*timeDuration*0.001;
     tm = tm - fmod(tm, oneLabelSeconds*1000.0);
     
     BL_FLOAT prevT = 0.0;
@@ -215,8 +216,6 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
         BL_FLOAT t = (tm - startTime)/timeDuration;
         
 #if ROUND_TO_INT_LABELS
-        //int numLabels = 0.001*duration/mSpacingSeconds;
-            
         // Choose labels with integer values
         // (to avoid evenly spaced labels, but with various values)
         if ((i > 0) && (i < MAX_NUM_LABELS - 1))
@@ -224,17 +223,17 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
         {
             if (timeDuration >= 1000.0)
             {
-                tm = ((int)(tm/(1000.0/mNumLabels)))*(1000.0/mNumLabels);
+                tm = ((int)(tm/(1000.0/mMaxNumLabels)))*(1000.0/mMaxNumLabels);
             }
             else if (timeDuration >= 100.0)
             {
-                tm = ((int)(tm/(100.0/mNumLabels)))*(100.0/mNumLabels);
+                tm = ((int)(tm/(100.0/mMaxNumLabels)))*(100.0/mMaxNumLabels);
             }
             else if (timeDuration >= 10.0)
             {
-                tm = ((int)(tm/(10.0/mNumLabels)))*(10.0/mNumLabels);
+                tm = ((int)(tm/(10.0/mMaxNumLabels)))*(10.0/mMaxNumLabels);
             }
-                
+            
             t = (tm - startTime)/timeDuration;
                 
             // Avoid repeating the same value
@@ -287,7 +286,7 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
             else if (seconds != 0)
             {
                 // Check the number of digits to display
-                BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration*0.001;
+                BL_FLOAT oneLabelSeconds = (1.0/mMaxNumLabels)*timeDuration*0.001;
                 if (oneLabelSeconds > 0.1)
                     sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/100);
                 else if (oneLabelSeconds > 0.01)
@@ -314,12 +313,181 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
         }
 #endif
         
-        BL_FLOAT oneLabelSeconds = (1.0/mNumLabels)*timeDuration*0.001;
+        BL_FLOAT oneLabelSeconds = (1.0/mMaxNumLabels)*timeDuration*0.001;
         
         tm += oneLabelSeconds*1000.0;
         
         if (tm > startTime + timeDuration)
             break;
+    }
+    
+    mGraphAxis->SetData(hAxisData, MAX_NUM_LABELS);
+    
+    // Free
+    for (int i = 0; i < MAX_NUM_LABELS; i++)
+    {
+        delete []hAxisData[i][0];
+        delete []hAxisData[i][1];
+    }
+}
+#endif
+
+void
+GraphTimeAxis6::Update(BL_FLOAT currentTime)
+{
+    // Just in case
+    if (mGraphAxis == NULL)
+        return;
+    
+    mCurrentTime = currentTime;
+    
+    // Make a cool axis, with values sliding as we zoom
+    // and units changing when necessary
+    // (the border values have decimals, the middle values are rounded and slide)
+#define EPS 1e-15
+    
+    BL_FLOAT startTime = currentTime - mTimeDuration;
+    BL_FLOAT endTime = currentTime;
+    
+    BL_FLOAT timeDuration = endTime - startTime;
+    
+    // Convert to milliseconds
+    startTime *= 1000.0;
+    timeDuration *= 1000.0;
+    
+    char *hAxisData[MAX_NUM_LABELS][2];
+    
+    // Allocate
+#define LABEL_MAX_SIZE 64
+    for (int i = 0; i < MAX_NUM_LABELS; i++)
+    {
+        hAxisData[i][0] = new char[LABEL_MAX_SIZE];
+        memset(hAxisData[i][0], '\0', LABEL_MAX_SIZE);
+        
+        hAxisData[i][1] = new char[LABEL_MAX_SIZE];
+        memset(hAxisData[i][1], '\0', LABEL_MAX_SIZE);
+    }
+    
+    BL_FLOAT tm = startTime;
+    
+    BL_FLOAT step = timeDuration/mMaxNumLabels;
+    int mod = 1;
+    if (timeDuration > 1000)
+        mod = 100;
+    else if (timeDuration > 500)
+        mod = 50;
+    else if (timeDuration > 100)
+        mod = 10;
+    else if (timeDuration > 50)
+        mod = 5;
+    
+    step = ((int)(step/mod))*mod;
+    
+    // HACK
+    // Without this, mMaxNumLabels is in fact min num labels,
+    // and max num labels is 2*mMaxNumLabels
+    step *= 2.0;
+    
+    // Start label
+    tm = ((int)(tm/step))*step;
+
+    for (int i = 0; i < MAX_NUM_LABELS; i++)
+    {
+        // Parameter
+        BL_FLOAT t = (tm - startTime)/timeDuration;
+        
+        sprintf(hAxisData[i][0], "%g", t);
+        
+#if FIX_ZERO_SECONDS_MILLIS
+        sprintf(hAxisData[i][1], "0s");
+#endif
+        
+        bool squeeze = (mSqueezeBorderLabels &&
+                        ((i == 0) || (i == MAX_NUM_LABELS - 1)));
+        
+        //if ((i > 0) && (i < MAX_NUM_LABELS - 1)) // Squeeze the borders
+        if (!squeeze)
+        {
+            int seconds = (int)tm/1000;
+            int millis = tm - seconds*1000;
+            bool negMillis = false;
+            if (millis < 0)
+            {
+                millis = -millis;
+                negMillis = true;
+            }
+            
+            int minutes = seconds/60;
+            seconds = seconds % 60;
+            
+            int hours = minutes/60;
+            minutes = minutes % 60;
+            
+            // Default
+            sprintf(hAxisData[i][1], "0s");
+            
+            // New formatting3: manage minutes and hours, formating like hh:mm:ss.ms
+            if (hours != 0)
+            {
+                sprintf(hAxisData[i][1], "%d:%02d:%d.%d", hours, minutes, seconds, millis/100);
+            }
+            else if (minutes != 0)
+            {
+                sprintf(hAxisData[i][1], "%d:%02d.%d", minutes, seconds, millis/100);
+            }
+            else if (seconds != 0)
+            {
+                // Check the number of digits to display
+                /*BL_FLOAT oneLabelSeconds = (1.0/mMaxNumLabels)*timeDuration*0.001;
+                if (oneLabelSeconds > 0.1)
+                    sprintf(hAxisData[i][1], "%d.%ds", seconds, millis);
+                else if (oneLabelSeconds > 0.01)
+                    sprintf(hAxisData[i][1], "%d.%ds", seconds, millis);
+                else
+                    sprintf(hAxisData[i][1], "%d.%ds", seconds, millis);*/
+                
+                BL_FLOAT oneLabelSeconds = (1.0/mMaxNumLabels)*timeDuration*0.001;
+                int div = 1;
+                if (oneLabelSeconds >= 0.1)
+                    div = 100;
+                else if (oneLabelSeconds >= 0.01)
+                    div = 10;
+                else
+                    // HACK: limit the precision to 10ms (it is sufficient!)
+                    div = 10;
+                
+                if (millis == 0)
+                    sprintf(hAxisData[i][1], "%ds", seconds);
+                
+                if ((millis > 0) && (millis < 10))
+                    sprintf(hAxisData[i][1], "%d.00%ds", seconds, millis/div);
+                
+                if ((millis > 0) && (millis < 100))
+                    sprintf(hAxisData[i][1], "%d.0%ds", seconds, millis/div);
+                
+                if ((millis > 0) && (millis >= 100))
+                    sprintf(hAxisData[i][1], "%d.%ds", seconds, millis/div);
+            }
+#if FIX_DISPLAY_MS
+            else if (millis != 0)
+            {
+                if (negMillis)
+                    millis = -millis;
+                
+                sprintf(hAxisData[i][1], "%dms", millis);
+            }
+#endif
+        }
+        
+#if SQUEEZE_LAST_CROPPED_LABEL
+        BL_FLOAT normSpacing = mSpacingSeconds/mTimeDuration;
+        if (t > 1.0 - normSpacing)
+        {
+            sprintf(hAxisData[i][1], "");
+        }
+#endif
+        
+        tm += step;
     }
     
     mGraphAxis->SetData(hAxisData, MAX_NUM_LABELS);

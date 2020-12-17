@@ -40,10 +40,10 @@ public:
     void Init(GraphControl12 *graph,
               GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
               int bufferSize,
-              BL_FLOAT timeDuration, int numLabels,
+              BL_FLOAT timeDuration, int maxNumLabels,
               BL_FLOAT yOffset = 0);
     
-    void Reset(int bufferSize, BL_FLOAT timeDuration, int numLabels);
+    void Reset(int bufferSize, BL_FLOAT timeDuration, int maxNumLabels);
     
     void UpdateFromTransport(BL_FLOAT currentTime);
     void Update();
@@ -66,7 +66,7 @@ protected:
     
     BL_FLOAT mTimeDuration;
     
-    int mNumLabels;
+    int mMaxNumLabels;
     
     BL_FLOAT mCurrentTime;
     
