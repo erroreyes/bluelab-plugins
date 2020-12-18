@@ -32,6 +32,11 @@
 
 #define DEMO_MESSAGE "[DEMO] Please consider buying if you like it!"
 
+// FIX: when plugin with a graph is resized, the background bitmap is not resized
+// and the extents are displayed in dark grey
+// (detected with Ghost)
+#define FIX_RESIZE_GRAPH 1
+
 GUIHelper12::GUIHelper12(Style style)
 {
     mStyle = style;
@@ -207,7 +212,9 @@ GUIHelper12::CreateGraph(Plugin *plug, IGraphics *graphics,
     IRECT rect(x, y, x + bitmap.W(), y + bitmap.H());
     GraphControl12 *graph = new GraphControl12(plug, graphics, rect, paramIdx, fontPath);
     
+#if !FIX_RESIZE_GRAPH
     graph->SetBackgroundImage(bitmap);
+#endif
     
     if (overlayFname != NULL)
     {
