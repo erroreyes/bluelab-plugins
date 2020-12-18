@@ -17,9 +17,11 @@ public:
     //GhostFilesDropControl(IPlugBase* pPlug)
     //: IFilesDropControl(pPlug) {}
     GhostFileDropControl(GhostPluginInterface* pPlug, const IRECT& bounds)
-    : IControl(bounds) { mPlug = pPlug; }
+    : IControl(bounds) { mPlug = pPlug; }
     
     virtual ~GhostFileDropControl() {}
+    
+    void Draw(IGraphics& g) override {}
     
     //void OnFilesDropped(const char *fileNames);
     void OnDrop(const char *fileNames) override;
