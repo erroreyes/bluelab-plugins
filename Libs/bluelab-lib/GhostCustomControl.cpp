@@ -3,6 +3,8 @@
 #include <SpectrogramDisplay2.h>
 #include <MiniView2.h>
 
+#include <GhostPluginInterface.h>
+
 #include "GhostCustomControl.h"
 
 #define WHEEL_ZOOM_STEP 0.025 //0.1

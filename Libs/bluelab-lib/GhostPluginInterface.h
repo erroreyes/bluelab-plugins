@@ -3,6 +3,9 @@
 
 #include <BLTypes.h>
 
+// Zoom on the pointer inside of on the bar (for zoom center)
+#define ZOOM_ON_POINTER 1
+
 class GhostPluginInterface
 {
  public:
@@ -24,7 +27,8 @@ class GhostPluginInterface
   GhostPluginInterface();
   virtual ~GhostPluginInterface();
     
-  virtual void UpdateSelection(double x0, double y0, double x1, double y1,
+  virtual void UpdateSelection(BL_FLOAT x0, BL_FLOAT y0,
+                               BL_FLOAT x1, BL_FLOAT y1,
                                bool updateCenterPos,
                                bool activateDrawSelection = false,
                                bool updateCustomControl = false) = 0;
