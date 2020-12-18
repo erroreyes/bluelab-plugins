@@ -21,6 +21,9 @@ class GhostPluginInterface
     VERTICAL
   };
     
+  GhostPluginInterface();
+  virtual ~GhostPluginInterface();
+    
   virtual void UpdateSelection(double x0, double y0, double x1, double y1,
                                bool updateCenterPos,
                                bool activateDrawSelection = false,
@@ -69,6 +72,12 @@ class GhostPluginInterface
   virtual void OpenFile(const char *fileName) = 0;
     
   virtual void SetPlayStopParameter(int value) = 0;
+  
+  // For Protools
+  bool PlaybackWasRestarted(unsigned long long delay);
+    
+protected:
+  unsigned long long mPrevUpTime;
 };
 
 #endif
