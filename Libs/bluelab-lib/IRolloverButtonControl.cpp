@@ -115,6 +115,15 @@ IRolloverButtonControl::OnMouseOut()
 }
 
 void
+IRolloverButtonControl::SetDisabled(bool disable)
+{
+    IControl::SetDisabled(disable);
+    
+    if (mText != NULL)
+        mText->SetDisabled(disable);
+}
+
+void
 IRolloverButtonControl::LinkText(ITextControl *textControl,
                                  const IColor &color, const IColor &hilightColor)
 {

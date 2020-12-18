@@ -40,3 +40,5 @@ BUG: when quitting a Cario plug, into the XCode debugger, it crashes
 
 - TODO: Cairo, fix correctly the crash when quitting 
 (now, there is currently a memory leak)
+
+- when gay out knob, think to gray out value text also

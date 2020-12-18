@@ -51,6 +51,8 @@ public:
     
     virtual void OnMouseOut() override;
     
+    virtual void SetDisabled(bool disable) override;
+    
     // Reference fo the associated text control, for hilighting
     void LinkText(ITextControl *textControl, const IColor &color, const IColor &hilightColor);
     
