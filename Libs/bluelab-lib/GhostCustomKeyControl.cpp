@@ -10,7 +10,7 @@ GhostCustomKeyControl::GhostCustomKeyControl(GhostPluginInterface *plug,
 bool
 GhostCustomKeyControl::OnKeyDown(float x, float y, const IKeyPress &key)
 {
-#if !SA_API
+#if !APP_API
     // Non-standalone version
     // => Disable keyboard shortcuts on plugin versions !
     
