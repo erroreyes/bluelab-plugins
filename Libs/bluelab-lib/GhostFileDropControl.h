@@ -16,8 +16,7 @@ class GhostFileDropControl : public IControl
 public:
     //GhostFilesDropControl(IPlugBase* pPlug)
     //: IFilesDropControl(pPlug) {}
-    GhostFileDropControl(GhostPluginInterface* pPlug, const IRECT& bounds)
-    : IControl(bounds) { mPlug = pPlug; }
+    GhostFileDropControl(GhostPluginInterface* pPlug, const IRECT& bounds);
     
     virtual ~GhostFileDropControl() {}
     

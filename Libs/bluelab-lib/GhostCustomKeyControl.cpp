@@ -5,6 +5,8 @@ GhostCustomKeyControl::GhostCustomKeyControl(GhostPluginInterface *plug,
 : IControl(bounds)
 {
     mPlug = plug;
+    
+    SetInteractionDisabled(true);
 }
 
 bool
