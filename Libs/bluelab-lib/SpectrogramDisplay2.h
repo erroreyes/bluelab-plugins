@@ -39,7 +39,7 @@ public:
         // Background spectrogram
         int mSpectroImageWidth;
         int mSpectroImageHeight;
-        WDL_TypedBuf<unsigned char> mSpectroImageFullData;
+        WDL_TypedBuf<unsigned char> mBGSpectroImageData;
     };
     
     SpectrogramDisplay2(SpectrogramDisplayState *spectroTransform);
@@ -72,7 +72,7 @@ public:
     void SetSpectrogram(BLSpectrogram4 *spectro);
     
     void ShowSpectrogram(bool flag);
-    void UpdateSpectrogram(bool updateData = true, bool updateFullData = false);
+    void UpdateSpectrogram(bool updateData = true, bool updateBgData = false);
 
     void UpdateColormap(bool flag);
     
@@ -128,8 +128,8 @@ protected:
     bool mNeedUpdateSpectrogram;
     bool mNeedUpdateSpectrogramData;
     
-    int mNvgSpectroFullImage;
-    bool mNeedUpdateSpectrogramFullData;
+    int mNvgBGSpectroImage;
+    bool mNeedUpdateBGSpectrogramData;
     
     SpectrogramDisplayState *mState;
     

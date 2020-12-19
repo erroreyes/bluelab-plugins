@@ -46,8 +46,8 @@ SpectrogramDisplay2::SpectrogramDisplay2(SpectrogramDisplayState *state)
     mNeedUpdateSpectrogramData = false;
     mNvgColormapImage = 0;
     
-    mNeedUpdateSpectrogramFullData = false;
-    mNvgSpectroFullImage = 0;
+    mNeedUpdateBGSpectrogramData = false;
+    mNvgBGSpectroImage = 0;
     
     mShowSpectrogram = false;
     
@@ -73,8 +73,8 @@ SpectrogramDisplay2::~SpectrogramDisplay2()
     if (mNvgColormapImage != 0)
         nvgDeleteImage(mVg, mNvgColormapImage);
     
-    if (mNvgSpectroFullImage != 0)
-        nvgDeleteImage(mVg, mNvgSpectroFullImage);
+    if (mNvgBGSpectroImage != 0)
+        nvgDeleteImage(mVg, mNvgBGSpectroImage);
 }
 
 SpectrogramDisplay2::SpectrogramDisplayState *
@@ -94,7 +94,7 @@ SpectrogramDisplay2::Reset()
     // FIX: with this line uncommented, there is a bug:
     // the background is updated at each edit but with the current zoom
 #if 0
-    mNeedUpdateSpectrogramFullData = true;
+    mNeedUpdateBGSpectrogramData = true;
 #endif
     
     mNeedRedraw = true;
@@ -127,7 +127,7 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
         memset(mSpectroImageData.Get(), 0, 4);
         
         mNeedUpdateSpectrogramData = true;
-        mNeedUpdateSpectrogramFullData = true;
+        mNeedUpdateBGSpectrogramData = true;
     }
     
     int imageSize = w*h*4;
@@ -142,7 +142,7 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
     
     if ((mNeedUpdateSpectrogramData ||
         (mNvgSpectroImage == 0) ||
-        (mNvgSpectroFullImage == 0)))
+        (mNvgBGSpectroImage == 0)))
     {
         bool imageCreated = false;
         if ((mSpectroImageData.GetSize() != imageSize) ||
@@ -153,12 +153,12 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
             memset(mSpectroImageData.Get(), 0, imageSize);
             mSpectrogram->GetImageDataFloat(mSpectroImageData.Get());
             
-            if (mState->mSpectroImageFullData.GetSize() == 0)
+            if (mState->mBGSpectroImageData.GetSize() == 0)
             {
                 mState->mSpectroImageWidth = w;
                 mState->mSpectroImageHeight = h;
                 
-                mState->mSpectroImageFullData = mSpectroImageData;
+                mState->mBGSpectroImageData = mSpectroImageData;
             }
             
             // Spectrogram image
@@ -176,14 +176,14 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
             imageCreated = true;
         }
         
-        bool fullImageCreated = false;
-        if (mNeedUpdateSpectrogramFullData || (mNvgSpectroFullImage == 0))
+        bool bgImageCreated = false;
+        if (mNeedUpdateBGSpectrogramData || (mNvgBGSpectroImage == 0))
         {
-            // Spectrogram full image
-            if (mNvgSpectroFullImage != 0)
-                nvgDeleteImage(mVg, mNvgSpectroFullImage);
+            // Spectrogram background image
+            if (mNvgBGSpectroImage != 0)
+                nvgDeleteImage(mVg, mNvgBGSpectroImage);
                 
-            mNvgSpectroFullImage = nvgCreateImageRGBA(mVg,
+            mNvgBGSpectroImage = nvgCreateImageRGBA(mVg,
                                                       mState->mSpectroImageWidth,
                                                       mState->mSpectroImageHeight,
 #if USE_SPECTRO_NEAREST
@@ -191,14 +191,14 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
 #endif
                                                       NVG_IMAGE_ONE_FLOAT_FORMAT,
                                                       //mSpectroImageData.Get());
-                                                      mState->mSpectroImageFullData.Get());
+                                                      mState->mBGSpectroImageData.Get());
             
             
-            fullImageCreated = true;
+            bgImageCreated = true;
 
         }
         
-        if (!imageCreated || !fullImageCreated)
+        if (!imageCreated || !bgImageCreated)
         {
             memset(mSpectroImageData.Get(), 0, imageSize);
             bool updated = mSpectrogram->GetImageDataFloat(mSpectroImageData.Get());
@@ -214,15 +214,15 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
                     }
                 }
                 
-                if (!fullImageCreated)
+                if (!bgImageCreated)
                 {
-                    // Spectrogram full image
-                    if (mNeedUpdateSpectrogramFullData)
+                    // Spectrogram background image
+                    if (mNeedUpdateBGSpectrogramData)
                     {
-                        if (mNvgSpectroFullImage != 0)
+                        if (mNvgBGSpectroImage != 0)
                             nvgUpdateImage(mVg,
-                                           mNvgSpectroFullImage,
-                                           mState->mSpectroImageFullData.Get());
+                                           mNvgBGSpectroImage,
+                                           mState->mBGSpectroImageData.Get());
                     }
                 }
             }
@@ -262,7 +262,7 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
     
     mNeedUpdateSpectrogram = false;
     mNeedUpdateSpectrogramData = false;
-    mNeedUpdateSpectrogramFullData = false;
+    mNeedUpdateBGSpectrogramData = false;
     
     return true;
 }
@@ -299,15 +299,16 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
     if (mDrawBGSpectrogram)
     {
         //
-        // Spectrogram full image
+        // Spectrogram background image
         //
-        // Display the full image first, so it will be in background
-        NVGpaint fullImgPaint = nvgImagePattern(mVg,
-                                                mSpectrogramBounds[0]*width,
-                                                mSpectrogramBounds[1]*height,
-                                                (mSpectrogramBounds[2] - mSpectrogramBounds[0])*width,
-                                                (mSpectrogramBounds[3] - mSpectrogramBounds[1])*height,
-                                                0.0, mNvgSpectroFullImage, mSpectrogramAlpha);
+        // Display the background image first, so it will be in background
+        NVGpaint bgImgPaint = nvgImagePattern(mVg,
+                                              mSpectrogramBounds[0]*width,
+                                              mSpectrogramBounds[1]*height,
+                                              (mSpectrogramBounds[2] - mSpectrogramBounds[0])*width,
+                                              (mSpectrogramBounds[3] - mSpectrogramBounds[1])*height,
+                                              0.0,
+                                              mNvgBGSpectroImage, mSpectrogramAlpha);
 #if USE_ZOOM_NVG_TRANSFORM
         nvgResetTransform(mVg);
     
@@ -327,7 +328,7 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
                 mSpectrogramBounds[0]*width, b1f,
                 (mSpectrogramBounds[2] - mSpectrogramBounds[0])*width, b3f);
     
-        nvgFillPaint(mVg, fullImgPaint);
+        nvgFillPaint(mVg, bgImgPaint);
         nvgFill(mVg);
     
 #if USE_ZOOM_NVG_TRANSFORM
@@ -484,17 +485,17 @@ SpectrogramDisplay2::ShowSpectrogram(bool flag)
 }
 
 void
-SpectrogramDisplay2::UpdateSpectrogram(bool updateData, bool updateFullData)
+SpectrogramDisplay2::UpdateSpectrogram(bool updateData, bool updateBGData)
 {
     mNeedUpdateSpectrogram = true;
     
     if (!mNeedUpdateSpectrogramData)
         mNeedUpdateSpectrogramData = updateData;
     
-    if (!mNeedUpdateSpectrogramFullData)
+    if (!mNeedUpdateBGSpectrogramData)
     {
-        if (updateFullData) // For debugging
-            mNeedUpdateSpectrogramFullData = updateFullData;
+        if (updateBGData) // For debugging
+            mNeedUpdateBGSpectrogramData = updateBGData;
     }
     
     mNeedRedraw = true;
