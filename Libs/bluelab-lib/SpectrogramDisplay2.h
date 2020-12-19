@@ -23,6 +23,7 @@ class SpectrogramDisplay2 : public GraphCustomDrawer
 {
 public:
     struct SpectrogramTransform
+    struct SpectrogramDisplayState
     {
         // For local spectrogram
         BL_FLOAT mMinX;
@@ -38,9 +39,11 @@ public:
     };
     
     SpectrogramDisplay2(SpectrogramTransform *spectroTransform);
+    SpectrogramDisplay2(SpectrogramDisplayState *spectroTransform);
     virtual ~SpectrogramDisplay2();
     
     SpectrogramTransform *GetTransform();
+    SpectrogramDisplayState *GetState();
     
     void Reset();
     
@@ -127,6 +130,7 @@ protected:
     bool mNeedUpdateSpectrogramFullData;
     
     SpectrogramTransform *mSpectroTransform;
+    SpectrogramDisplayState *mState;
     
     BL_FLOAT mSpectrogramAlpha;
 

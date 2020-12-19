@@ -17,21 +17,21 @@
 
 #define USE_SPECTRO_NEAREST 0
 
-SpectrogramDisplay2::SpectrogramDisplay2(SpectrogramTransform *spectroTransform)
+SpectrogramDisplay2::SpectrogramDisplay2(SpectrogramDisplayState *state)
 {
-    mSpectroTransform = spectroTransform;
-    if (mSpectroTransform == NULL)
+    mState = state;
+    if (mState == NULL)
     {
-        mSpectroTransform = new SpectrogramTransform();
+        mState = new SpectrogramDisplayState();
         
-        mSpectroTransform->mCenterPos = 0.5;
-        mSpectroTransform->mAbsTranslation = 0.0;
+        mState->mCenterPos = 0.5;
+        mState->mAbsTranslation = 0.0;
         
-        mSpectroTransform->mMinX = 0.0;
-        mSpectroTransform->mMaxX = 1.0;
+        mState->mMinX = 0.0;
+        mState->mMaxX = 1.0;
         
-        mSpectroTransform->mAbsMinX = 0.0;
-        mSpectroTransform->mAbsMaxX = 1.0;
+        mState->mAbsMinX = 0.0;
+        mState->mAbsMaxX = 1.0;
     }
     
     mVg = NULL;
@@ -74,10 +74,10 @@ SpectrogramDisplay2::~SpectrogramDisplay2()
         nvgDeleteImage(mVg, mNvgSpectroFullImage);
 }
 
-SpectrogramDisplay2::SpectrogramTransform *
-SpectrogramDisplay2::GetTransform()
+SpectrogramDisplay2::SpectrogramDisplayState *
+SpectrogramDisplay2::GetState()
 {
-    return mSpectroTransform;
+    return mState;
 }
 
 void
@@ -313,9 +313,9 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 #if USE_ZOOM_NVG_TRANSFORM
         nvgResetTransform(mVg);
     
-        BL_FLOAT absZoom = mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX;
+        BL_FLOAT absZoom = mState->mAbsMaxX - mState->mAbsMinX;
     
-        nvgTranslate(mVg, mSpectroTransform->mAbsMinX*width, 0.0);
+        nvgTranslate(mVg, mState->mAbsMinX*width, 0.0);
         nvgScale(mVg, absZoom, 1.0);
 #endif
     
@@ -355,9 +355,9 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 #if USE_ZOOM_NVG_TRANSFORM
     nvgResetTransform(mVg);
     
-    BL_FLOAT zoom = mSpectroTransform->mMaxX - mSpectroTransform->mMinX;
+    BL_FLOAT zoom = mState->mMaxX - mState->mMinX;
     
-    nvgTranslate(mVg, mSpectroTransform->mMinX*width, 0.0);
+    nvgTranslate(mVg, mState->mMinX*width, 0.0);
     nvgScale(mVg, zoom, 1.0);
 #endif
     
@@ -518,14 +518,14 @@ SpectrogramDisplay2::UpdateColormap(bool flag)
 void
 SpectrogramDisplay2::ResetSpectrogramTransform()
 {
-    mSpectroTransform->mMinX = 0.0;
-    mSpectroTransform->mMaxX = 1.0;
+    mState->mMinX = 0.0;
+    mState->mMaxX = 1.0;
     
-    mSpectroTransform->mAbsMinX = 0.0;
-    mSpectroTransform->mAbsMaxX = 1.0;
+    mState->mAbsMinX = 0.0;
+    mState->mAbsMaxX = 1.0;
     
-    mSpectroTransform->mCenterPos = 0.5;
-    mSpectroTransform->mAbsTranslation = 0.0;
+    mState->mCenterPos = 0.5;
+    mState->mAbsTranslation = 0.0;
     
     mNeedRedraw = true;
 }
@@ -533,7 +533,7 @@ SpectrogramDisplay2::ResetSpectrogramTransform()
 void
 SpectrogramDisplay2::ResetSpectrogramTranslation()
 {
-    mSpectroTransform->mAbsTranslation = 0.0;
+    mState->mAbsTranslation = 0.0;
     
     mNeedRedraw = true;
 }
@@ -541,11 +541,11 @@ SpectrogramDisplay2::ResetSpectrogramTranslation()
 void
 SpectrogramDisplay2::SetSpectrogramZoom(BL_FLOAT zoomX)
 {
-    BL_FLOAT norm = (mSpectroTransform->mCenterPos - mSpectroTransform->mMinX)/
-                        (mSpectroTransform->mMaxX - mSpectroTransform->mMinX);
+    BL_FLOAT norm = (mState->mCenterPos - mState->mMinX)/
+                        (mState->mMaxX - mState->mMinX);
     
-    mSpectroTransform->mMinX = mSpectroTransform->mCenterPos - norm*zoomX;
-    mSpectroTransform->mMaxX = mSpectroTransform->mCenterPos + (1.0 - norm)*zoomX;
+    mState->mMinX = mState->mCenterPos - norm*zoomX;
+    mState->mMaxX = mState->mCenterPos + (1.0 - norm)*zoomX;
     
     mNeedRedraw = true;
 }
@@ -553,11 +553,11 @@ SpectrogramDisplay2::SetSpectrogramZoom(BL_FLOAT zoomX)
 void
 SpectrogramDisplay2::SetSpectrogramAbsZoom(BL_FLOAT zoomX)
 {
-    BL_FLOAT norm = (mSpectroTransform->mCenterPos - mSpectroTransform->mAbsMinX)/
-                        (mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX);
+    BL_FLOAT norm = (mState->mCenterPos - mState->mAbsMinX)/
+                        (mState->mAbsMaxX - mState->mAbsMinX);
     
-    mSpectroTransform->mAbsMinX = mSpectroTransform->mCenterPos - norm*zoomX;
-    mSpectroTransform->mAbsMaxX = mSpectroTransform->mCenterPos + (1.0 - norm)*zoomX;
+    mState->mAbsMinX = mState->mCenterPos - norm*zoomX;
+    mState->mAbsMaxX = mState->mCenterPos + (1.0 - norm)*zoomX;
     
     mNeedRedraw = true;
 }
@@ -565,7 +565,7 @@ SpectrogramDisplay2::SetSpectrogramAbsZoom(BL_FLOAT zoomX)
 void
 SpectrogramDisplay2::SetSpectrogramCenterPos(BL_FLOAT centerPos)
 {
-    mSpectroTransform->mCenterPos = centerPos;
+    mState->mCenterPos = centerPos;
     
     mNeedRedraw = true;
 }
@@ -573,20 +573,20 @@ SpectrogramDisplay2::SetSpectrogramCenterPos(BL_FLOAT centerPos)
 bool
 SpectrogramDisplay2::SetSpectrogramTranslation(BL_FLOAT tX)
 {
-    BL_FLOAT dX = tX - mSpectroTransform->mAbsTranslation;
+    BL_FLOAT dX = tX - mState->mAbsTranslation;
     
-    if (((mSpectroTransform->mAbsMinX > 1.0) && (dX > 0.0)) ||
-        ((mSpectroTransform->mAbsMaxX < 0.0) && (dX < 0.0)))
+    if (((mState->mAbsMinX > 1.0) && (dX > 0.0)) ||
+        ((mState->mAbsMaxX < 0.0) && (dX < 0.0)))
         // Do not translate if the spectrogram gets out of view
         return false;
     
-    mSpectroTransform->mAbsTranslation = tX;
+    mState->mAbsTranslation = tX;
     
-    mSpectroTransform->mMinX += dX;
-    mSpectroTransform->mMaxX += dX;
+    mState->mMinX += dX;
+    mState->mMaxX += dX;
     
-    mSpectroTransform->mAbsMinX += dX;
-    mSpectroTransform->mAbsMaxX += dX;
+    mState->mAbsMinX += dX;
+    mState->mAbsMaxX += dX;
     
     mNeedRedraw = true;
     
@@ -596,48 +596,48 @@ SpectrogramDisplay2::SetSpectrogramTranslation(BL_FLOAT tX)
 void
 SpectrogramDisplay2::GetSpectrogramVisibleNormBounds(BL_FLOAT *minX, BL_FLOAT *maxX)
 {
-    if (mSpectroTransform->mAbsMinX < 0.0)
-        *minX = -mSpectroTransform->mAbsMinX/
-                    (mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX);
+    if (mState->mAbsMinX < 0.0)
+        *minX = -mState->mAbsMinX/
+                    (mState->mAbsMaxX - mState->mAbsMinX);
     else
         *minX = 0.0;
     
-    if (mSpectroTransform->mAbsMaxX < 1.0)
+    if (mState->mAbsMaxX < 1.0)
         *maxX = 1.0;
     else
-        *maxX = 1.0 - (mSpectroTransform->mAbsMaxX - 1.0)/
-                        (mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX);
+        *maxX = 1.0 - (mState->mAbsMaxX - 1.0)/
+                        (mState->mAbsMaxX - mState->mAbsMinX);
 }
 
 void
 SpectrogramDisplay2::GetSpectrogramVisibleNormBounds2(BL_FLOAT *minX, BL_FLOAT *maxX)
 {
-    *minX = -mSpectroTransform->mAbsMinX/
-                (mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX);
-    *maxX = 1.0 - (mSpectroTransform->mAbsMaxX - 1.0)/
-                (mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX);
+    *minX = -mState->mAbsMinX/
+                (mState->mAbsMaxX - mState->mAbsMinX);
+    *maxX = 1.0 - (mState->mAbsMaxX - 1.0)/
+                (mState->mAbsMaxX - mState->mAbsMinX);
 }
 
 void
 SpectrogramDisplay2::SetSpectrogramVisibleNormBounds2(BL_FLOAT minX, BL_FLOAT maxX)
 {
-    minX *= mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX;
+    minX *= mState->mAbsMaxX - mState->mAbsMinX;
     BL_FLOAT spectroAbsMinX = -minX;
     
-    maxX *= mSpectroTransform->mAbsMaxX - mSpectroTransform->mAbsMinX;
+    maxX *= mState->mAbsMaxX - mState->mAbsMinX;
     
     BL_FLOAT spectroAbsMaxX = -maxX;
     
-    BL_FLOAT trans = spectroAbsMinX - mSpectroTransform->mAbsMinX;
+    BL_FLOAT trans = spectroAbsMinX - mState->mAbsMinX;
     
-    mSpectroTransform->mAbsMinX = spectroAbsMinX;
-    mSpectroTransform->mAbsMaxX = spectroAbsMaxX;
+    mState->mAbsMinX = spectroAbsMinX;
+    mState->mAbsMaxX = spectroAbsMaxX;
     
     //
-    mSpectroTransform->mMinX += trans;
-    mSpectroTransform->mMaxX += trans;
+    mState->mMinX += trans;
+    mState->mMaxX += trans;
     
-    mSpectroTransform->mCenterPos += trans;
+    mState->mCenterPos += trans;
     
     mNeedRedraw = true;
 }
@@ -645,8 +645,8 @@ SpectrogramDisplay2::SetSpectrogramVisibleNormBounds2(BL_FLOAT minX, BL_FLOAT ma
 void
 SpectrogramDisplay2::ResetSpectrogramZoomAndTrans()
 {
-    mSpectroTransform->mMinX = 0.0;
-    mSpectroTransform->mMaxX = 1.0;
+    mState->mMinX = 0.0;
+    mState->mMaxX = 1.0;
     
     mNeedRedraw = true;
 }
