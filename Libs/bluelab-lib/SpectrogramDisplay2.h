@@ -114,6 +114,8 @@ public:
     
     void SetAlpha(BL_FLOAT alpha);
     
+    void ClearBGSpectrogram();
+    
 protected:
     // NanoVG
     NVGcontext *mVg;

@@ -672,4 +672,13 @@ SpectrogramDisplay2::SetAlpha(BL_FLOAT alpha)
     mSpectrogramAlpha = alpha;
 }
 
+void
+SpectrogramDisplay2::ClearBGSpectrogram()
+{
+    mState->mSpectroImageWidth = 0;
+    mState->mSpectroImageHeight = 0;
+    
+    mState->mBGSpectroImageData.Resize(0);
+}
+
 #endif // IGRAPHICS_NANOVG
