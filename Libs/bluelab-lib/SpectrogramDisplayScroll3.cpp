@@ -66,6 +66,8 @@ SpectrogramDisplayScroll3::SpectrogramDisplayScroll3(Plugin *plug)
 
 SpectrogramDisplayScroll3::~SpectrogramDisplayScroll3()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mVg == NULL)
         return;
     
@@ -79,6 +81,8 @@ SpectrogramDisplayScroll3::~SpectrogramDisplayScroll3()
 void
 SpectrogramDisplayScroll3::Reset()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mSpectroImageData.Resize(0);
     
     mNeedUpdateSpectrogram = true;
@@ -99,6 +103,8 @@ SpectrogramDisplayScroll3::Reset()
 void
 SpectrogramDisplayScroll3::ResetScroll()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mLinesOffset = 0;
     
     mSpectroMagns.clear();
@@ -118,6 +124,8 @@ SpectrogramDisplayScroll3::NeedUpdateSpectrogram()
 bool
 SpectrogramDisplayScroll3::DoUpdateSpectrogram()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     if (mVg == NULL)
         return true;
     
@@ -215,6 +223,8 @@ SpectrogramDisplayScroll3::DoUpdateSpectrogram()
 void
 SpectrogramDisplayScroll3::PreDraw(NVGcontext *vg, int width, int height)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mVg = vg;
     
     DoUpdateSpectrogram();
@@ -267,6 +277,8 @@ SpectrogramDisplayScroll3::SetSpectrogram(BLSpectrogram4 *spectro,
                                          BL_FLOAT left, BL_FLOAT top,
                                          BL_FLOAT right, BL_FLOAT bottom)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mSpectrogram = spectro;
     
     // Must "shift" the left of the spectrogram,
@@ -305,6 +317,8 @@ SpectrogramDisplayScroll3::SetFftParams(int bufferSize,
                                         int overlapping,
                                         BL_FLOAT sampleRate)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     bool overlappingChanged = (overlapping != mOverlapping);
     
     mBufferSize = bufferSize; 
@@ -323,6 +337,8 @@ void
 SpectrogramDisplayScroll3::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                                               const WDL_TypedBuf<BL_FLOAT> &phases)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mSpectroMagns.push_back(magns);
     mSpectroPhases.push_back(phases);
     
@@ -391,6 +407,8 @@ SpectrogramDisplayScroll3::GetSpeedMod()
 BL_FLOAT
 SpectrogramDisplayScroll3::GetScaleRatio()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     int maxCols = mSpectrogram->GetMaxNumCols();
     BL_FLOAT ratio = ((BL_FLOAT)(maxCols - MARGIN_COEFF))/maxCols;
     
@@ -400,6 +418,8 @@ SpectrogramDisplayScroll3::GetScaleRatio()
 void
 SpectrogramDisplayScroll3::AddSpectrogramLines(BL_FLOAT numLines)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Keep the remainder, to add back later
     int numLines0 = numLines + mAddLineRemainder;
     
@@ -426,6 +446,8 @@ SpectrogramDisplayScroll3::AddSpectrogramLines(BL_FLOAT numLines)
 BL_FLOAT
 SpectrogramDisplayScroll3::ComputeScrollOffsetPixels(int width)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // Elapsed time since last time
     unsigned long long currentTimeMillis = UpTime::GetUpTime();
     long long elapsedMillis = currentTimeMillis - mPrevTimeMillis;
