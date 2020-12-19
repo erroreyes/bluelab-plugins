@@ -117,50 +117,6 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
     int w = mSpectrogram->GetNumCols(); // ??
     int h = mSpectrogram->GetHeight();
     
-#if 0 //1 // Avoid white image when there is no data
-    if ((w == 0) ||
-        (mNvgSpectroImage == 0) || (mNvgSpectroFullImage == 0))
-    {
-        w = 1;
-        int imageSize = w*h*4;
-        
-        mSpectroImageData.Resize(imageSize);
-        memset(mSpectroImageData.Get(), 0, imageSize);
-        
-        // TEST
-        //mSpectrogram->GetImageDataFloat(mSpectroImageData.Get());
-        
-        // Spectrogram image
-        if (mNvgSpectroImage != 0)
-            nvgDeleteImage(mVg, mNvgSpectroImage);
-        
-        mNvgSpectroImage = nvgCreateImageRGBA(mVg,
-                                              w, h,
-#if USE_SPECTRO_NEAREST
-                                              NVG_IMAGE_NEAREST |
-#endif
-                                              NVG_IMAGE_ONE_FLOAT_FORMAT,
-                                              mSpectroImageData.Get());
-        // Spectrogram full image
-        if (mNvgSpectroFullImage != 0)
-            nvgDeleteImage(mVg, mNvgSpectroFullImage);
-        
-        mNvgSpectroFullImage = nvgCreateImageRGBA(mVg,
-                                                  w, h,
-#if USE_SPECTRO_NEAREST
-                                                  NVG_IMAGE_NEAREST |
-#endif
-                                                  NVG_IMAGE_ONE_FLOAT_FORMAT,
-                                                  mSpectroImageData.Get());
-        
-        mNeedUpdateSpectrogram = false;
-        mNeedUpdateSpectrogramData = false;
-        mNeedUpdateSpectrogramFullData = false;
-        
-        return true;
-    }
-#endif
-    
     // Avoid white image when there is no data
     if (mSpectroImageData.GetSize() == 0)
     {
