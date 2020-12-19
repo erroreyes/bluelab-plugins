@@ -188,6 +188,11 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
             if (mNvgSpectroImage != 0)
                 nvgDeleteImage(mVg, mNvgSpectroImage);
             
+            if (mState->mSpectroImageFullData.GetSize() == 0)
+            {
+                mState->mSpectroImageFullData = mSpectroImageData;
+            }
+            
             mNvgSpectroImage = nvgCreateImageRGBA(mVg,
                                                   w, h,
 #if USE_SPECTRO_NEAREST
@@ -219,13 +224,16 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
 
             if (updated)
             {
-                // Spectrogram image
-                nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());
             
                 // Spectrogram full image
                 if (mNeedUpdateSpectrogramFullData)
+                    nvgUpdateImage(mVg, mNvgSpectroImage, mSpectroImageData.Get());
                 {
-                    nvgUpdateImage(mVg, mNvgSpectroFullImage, mSpectroImageData.Get());
+                    // Spectrogram full image
+                    if (mNeedUpdateSpectrogramFullData)
+                        nvgUpdateImage(mVg,
+                                       mNvgSpectroFullImage,
+                                       mState->mSpectroImageFullData.Get());
                 }
             }
         }

@@ -22,7 +22,6 @@ class NVGcontext;
 class SpectrogramDisplay2 : public GraphCustomDrawer
 {
 public:
-    struct SpectrogramTransform
     struct SpectrogramDisplayState
     {
         // For local spectrogram
@@ -36,20 +35,20 @@ public:
         BL_FLOAT mAbsTranslation;
         
         BL_FLOAT mCenterPos;
+        
+        WDL_TypedBuf<unsigned char> mSpectroImageFullData;
     };
     
-    SpectrogramDisplay2(SpectrogramTransform *spectroTransform);
     SpectrogramDisplay2(SpectrogramDisplayState *spectroTransform);
     virtual ~SpectrogramDisplay2();
     
-    SpectrogramTransform *GetTransform();
     SpectrogramDisplayState *GetState();
     
     void Reset();
     
     bool NeedUpdateSpectrogram();
     bool DoUpdateSpectrogram();
-
+    
     void PreDraw(NVGcontext *vg, int width, int height) override;
     bool IsOwnedByGraph() override { return true; }
     bool NeedRedraw() override;
@@ -129,7 +128,6 @@ protected:
     int mNvgSpectroFullImage;
     bool mNeedUpdateSpectrogramFullData;
     
-    SpectrogramTransform *mSpectroTransform;
     SpectrogramDisplayState *mState;
     
     BL_FLOAT mSpectrogramAlpha;
