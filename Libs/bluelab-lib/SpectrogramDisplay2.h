@@ -150,8 +150,6 @@ protected:
     bool mDrawBGSpectrogram;
     
     bool mNeedRedraw;
-    
-    WDL_Mutex mMutex;
 };
 
 #endif

@@ -61,8 +61,6 @@ SpectrogramDisplay2::SpectrogramDisplay2(SpectrogramDisplayState *state)
 
 SpectrogramDisplay2::~SpectrogramDisplay2()
 {
-    WDL_MutexLock lock(&mMutex);
-    
     if (mVg == NULL)
       return;
   
@@ -85,8 +83,6 @@ SpectrogramDisplay2::GetState()
 void
 SpectrogramDisplay2::Reset()
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mSpectroImageData.Resize(0);
     
     mNeedUpdateSpectrogram = true;   
@@ -110,8 +106,6 @@ SpectrogramDisplay2::NeedUpdateSpectrogram()
 bool
 SpectrogramDisplay2::DoUpdateSpectrogram()
 {
-    WDL_MutexLock lock(&mMutex);
-    
     if (mVg == NULL)
       return true;
   
@@ -254,8 +248,6 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
 void
 SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mVg = vg;
 
     bool updated = DoUpdateSpectrogram();
@@ -383,8 +375,6 @@ SpectrogramDisplay2::NeedRedraw()
 bool
 SpectrogramDisplay2::PointInsideSpectrogram(int x, int y, int width, int height)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     // Warning: y is reversed !
     BL_FLOAT nx = ((BL_FLOAT)x)/width;
     //BL_FLOAT ny = 1.0 - ((BL_FLOAT)y)/height;
@@ -422,8 +412,6 @@ void
 SpectrogramDisplay2::GetSpectroNormCoordinate(int x, int y, int width, int height,
                                              BL_FLOAT *nx, BL_FLOAT *ny)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     BL_FLOAT nx0 = ((BL_FLOAT)x)/width;
     BL_FLOAT ny0 = ((BL_FLOAT)y)/height;
     
@@ -438,8 +426,6 @@ void
 SpectrogramDisplay2::SetBounds(BL_FLOAT left, BL_FLOAT top,
                                BL_FLOAT right, BL_FLOAT bottom)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mSpectrogramBounds[0] = left;
     mSpectrogramBounds[1] = top;
     mSpectrogramBounds[2] = right;
@@ -449,8 +435,6 @@ SpectrogramDisplay2::SetBounds(BL_FLOAT left, BL_FLOAT top,
 void
 SpectrogramDisplay2::SetSpectrogram(BLSpectrogram4 *spectro)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mSpectrogram = spectro;
     
     mShowSpectrogram = true;
@@ -480,8 +464,6 @@ SpectrogramDisplay2::ShowSpectrogram(bool flag)
 void
 SpectrogramDisplay2::UpdateSpectrogram(bool updateData, bool updateFullData)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mNeedUpdateSpectrogram = true;
     
     if (!mNeedUpdateSpectrogramData)
@@ -499,8 +481,6 @@ SpectrogramDisplay2::UpdateSpectrogram(bool updateData, bool updateFullData)
 void
 SpectrogramDisplay2::UpdateColormap(bool flag)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mNeedUpdateSpectrogram = true;
     
     if (!mNeedUpdateColormapData)
@@ -514,8 +494,6 @@ SpectrogramDisplay2::UpdateColormap(bool flag)
 void
 SpectrogramDisplay2::ResetSpectrogramTransform()
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mState->mMinX = 0.0;
     mState->mMaxX = 1.0;
     
@@ -531,8 +509,6 @@ SpectrogramDisplay2::ResetSpectrogramTransform()
 void
 SpectrogramDisplay2::ResetSpectrogramTranslation()
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mState->mAbsTranslation = 0.0;
     
     mNeedRedraw = true;
@@ -541,8 +517,6 @@ SpectrogramDisplay2::ResetSpectrogramTranslation()
 void
 SpectrogramDisplay2::SetSpectrogramZoom(BL_FLOAT zoomX)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     BL_FLOAT norm = (mState->mCenterPos - mState->mMinX)/
                         (mState->mMaxX - mState->mMinX);
     
@@ -555,8 +529,6 @@ SpectrogramDisplay2::SetSpectrogramZoom(BL_FLOAT zoomX)
 void
 SpectrogramDisplay2::SetSpectrogramAbsZoom(BL_FLOAT zoomX)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     BL_FLOAT norm = (mState->mCenterPos - mState->mAbsMinX)/
                         (mState->mAbsMaxX - mState->mAbsMinX);
     
@@ -569,8 +541,6 @@ SpectrogramDisplay2::SetSpectrogramAbsZoom(BL_FLOAT zoomX)
 void
 SpectrogramDisplay2::SetSpectrogramCenterPos(BL_FLOAT centerPos)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mState->mCenterPos = centerPos;
     
     mNeedRedraw = true;
@@ -579,8 +549,6 @@ SpectrogramDisplay2::SetSpectrogramCenterPos(BL_FLOAT centerPos)
 bool
 SpectrogramDisplay2::SetSpectrogramTranslation(BL_FLOAT tX)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     BL_FLOAT dX = tX - mState->mAbsTranslation;
     
     if (((mState->mAbsMinX > 1.0) && (dX > 0.0)) ||
@@ -604,8 +572,6 @@ SpectrogramDisplay2::SetSpectrogramTranslation(BL_FLOAT tX)
 void
 SpectrogramDisplay2::GetSpectrogramVisibleNormBounds(BL_FLOAT *minX, BL_FLOAT *maxX)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     if (mState->mAbsMinX < 0.0)
         *minX = -mState->mAbsMinX/
                     (mState->mAbsMaxX - mState->mAbsMinX);
@@ -622,8 +588,6 @@ SpectrogramDisplay2::GetSpectrogramVisibleNormBounds(BL_FLOAT *minX, BL_FLOAT *m
 void
 SpectrogramDisplay2::GetSpectrogramVisibleNormBounds2(BL_FLOAT *minX, BL_FLOAT *maxX)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     *minX = -mState->mAbsMinX/
                 (mState->mAbsMaxX - mState->mAbsMinX);
     *maxX = 1.0 - (mState->mAbsMaxX - 1.0)/
@@ -633,8 +597,6 @@ SpectrogramDisplay2::GetSpectrogramVisibleNormBounds2(BL_FLOAT *minX, BL_FLOAT *
 void
 SpectrogramDisplay2::SetSpectrogramVisibleNormBounds2(BL_FLOAT minX, BL_FLOAT maxX)
 {
-    WDL_MutexLock lock(&mMutex);
-    
     minX *= mState->mAbsMaxX - mState->mAbsMinX;
     BL_FLOAT spectroAbsMinX = -minX;
     
@@ -659,8 +621,6 @@ SpectrogramDisplay2::SetSpectrogramVisibleNormBounds2(BL_FLOAT minX, BL_FLOAT ma
 void
 SpectrogramDisplay2::ResetSpectrogramZoomAndTrans()
 {
-    WDL_MutexLock lock(&mMutex);
-    
     mState->mMinX = 0.0;
     mState->mMaxX = 1.0;
     

@@ -138,8 +138,6 @@ protected:
     
     // Variable speed
     int mSpeedMod;
-    
-    WDL_Mutex mMutex;
 };
 
 #endif // IGRAPHICS_NANOVG
