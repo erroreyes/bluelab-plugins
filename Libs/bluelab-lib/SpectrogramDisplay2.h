@@ -36,6 +36,9 @@ public:
         
         BL_FLOAT mCenterPos;
         
+        // Background spectrogram
+        int mSpectroImageWidth;
+        int mSpectroImageHeight;
         WDL_TypedBuf<unsigned char> mSpectroImageFullData;
     };
     
