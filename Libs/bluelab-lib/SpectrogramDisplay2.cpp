@@ -382,11 +382,6 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
 #endif
     
     nvgRestore(mVg);
-
-    /*if (mMiniView != NULL)
-    {
-        mMiniView->Display(mVg, width, height);
-    }*/
     
     mNeedRedraw = updated;
 }
