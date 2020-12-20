@@ -294,7 +294,7 @@ SpectrogramDisplay2::PreDraw(NVGcontext *vg, int width, int height)
     // New: set colormap only in the spectrogram state
     nvgSetColormap(mVg, mNvgColormapImage);
     
-#define DEBUG_DISPLAY_FG 0 //1
+#define DEBUG_DISPLAY_FG 1
 #define DEBUG_DISPLAY_BG 1
     
 #if DEBUG_DISPLAY_BG
