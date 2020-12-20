@@ -130,15 +130,15 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
         mNeedUpdateBGSpectrogramData = true;
     }
     
-    int imageSize = w*h*4;
-    
     // The following lines avoid that: at startup when there is no data loaded,
     // all the background was white.
-    if (imageSize == 0)
+    if ((w == 0) || (h == 0))
     {
         w = 1;
         h = 1;
     }
+    
+    int imageSize = w*h*4;
     
     if ((mNeedUpdateSpectrogramData ||
         (mNvgSpectroImage == 0) ||
