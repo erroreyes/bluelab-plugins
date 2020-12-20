@@ -259,6 +259,8 @@ void
 GraphControl12::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0,
                           BL_GUI_FLOAT x1, BL_GUI_FLOAT y1)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mBounds[0] = x0;
     mBounds[1] = y0;
     mBounds[2] = x1;
@@ -271,6 +273,8 @@ GraphControl12::SetBounds(BL_GUI_FLOAT x0, BL_GUI_FLOAT y0,
 void
 GraphControl12::OnGUIIdle()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     for (int i = 0; i < mCustomControls.size(); i++)
     {
         GraphCustomControl *control = mCustomControls[i];
@@ -282,6 +286,8 @@ GraphControl12::OnGUIIdle()
 void
 GraphControl12::SetSeparatorY0(BL_GUI_FLOAT lineWidth, int color[4])
 {
+    WDL_MutexLock lock(&mMutex);
+    
     mSeparatorY0 = true;
     mSepY0LineWidth = lineWidth;
     
@@ -482,6 +488,8 @@ GraphControl12::AddCustomControl(GraphCustomControl *customControl)
 void
 GraphControl12::OnMouseDown(float x, float y, const IMouseMod &mod)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     IControl::OnMouseDown(x, y, mod);
     
 #if CUSTOM_CONTROL_FIX
@@ -499,6 +507,8 @@ GraphControl12::OnMouseDown(float x, float y, const IMouseMod &mod)
 void
 GraphControl12::OnMouseUp(float x, float y, const IMouseMod &mod)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     IControl::OnMouseUp(x, y, mod);
     
 #if CUSTOM_CONTROL_FIX
@@ -516,6 +526,8 @@ GraphControl12::OnMouseUp(float x, float y, const IMouseMod &mod)
 void
 GraphControl12::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     IControl::OnMouseDrag(x, y, dX, dY, mod);
     
 #if CUSTOM_CONTROL_FIX
@@ -533,6 +545,8 @@ GraphControl12::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMo
 void
 GraphControl12::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     IControl::OnMouseDblClick(x, y, mod);
     
     // #bl-iplug2
@@ -554,6 +568,8 @@ GraphControl12::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 void
 GraphControl12::OnMouseWheel(float x, float y, const IMouseMod &mod, float d)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     IControl::OnMouseWheel(x, y, mod, d);
     
 #if CUSTOM_CONTROL_FIX
@@ -571,6 +587,8 @@ GraphControl12::OnMouseWheel(float x, float y, const IMouseMod &mod, float d)
 bool
 GraphControl12::OnKeyDown(float x, float y, const IKeyPress& key)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     // #bl-iplug2
     IControl::OnKeyDown(x, y, key);
     
@@ -592,6 +610,8 @@ GraphControl12::OnKeyDown(float x, float y, const IKeyPress& key)
 void
 GraphControl12::OnMouseOver(float x, float y, const IMouseMod &mod)
 {
+    WDL_MutexLock lock(&mMutex);
+    
     IControl::OnMouseOver(x, y, mod);
     
 #if CUSTOM_CONTROL_FIX
@@ -609,6 +629,8 @@ GraphControl12::OnMouseOver(float x, float y, const IMouseMod &mod)
 void
 GraphControl12::OnMouseOut()
 {
+    WDL_MutexLock lock(&mMutex);
+    
     IControl::OnMouseOut();
     
     for (int i = 0; i < mCustomControls.size(); i++)
