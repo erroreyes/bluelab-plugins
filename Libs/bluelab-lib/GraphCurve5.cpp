@@ -705,8 +705,8 @@ GraphCurve5::SetValues3(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 void
 GraphCurve5::SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values)
 {
-    if (mYValues.GetSize() != values.GetSize())
-        return;
+    //if (mYValues.GetSize() != values.GetSize())
+    //    return;
     
     // Normalize, then adapt to the graph
     int width = mViewSize[0];
