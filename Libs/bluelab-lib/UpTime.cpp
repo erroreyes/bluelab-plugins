@@ -29,7 +29,10 @@ unsigned long long
 UpTime::GetUpTime()
 {
 #ifdef WIN32
-    return GetTickCount64();
+    // Change for launching on Windows Xp (For Lars, StereoWidth)
+    // (Not integrated with the latest iPlug1 version of StereoWidth)
+    //return GetTickCount64();
+    return GetTickCount();
 #else
     
     struct timespec ts;
