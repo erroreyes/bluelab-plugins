@@ -973,7 +973,7 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     BL_GUI_FLOAT x1 = width;
                 
                     BL_GUI_FLOAT yf = y;
-#if GRAPH_CONTROL_FLIP_Y
+#if 0 //GRAPH_CONTROL_FLIP_Y
                     yf = height - yf;
 #endif
                     // Draw a horizontal line
@@ -996,7 +996,7 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                         BL_GUI_FLOAT x1 = width;
                         
                         BL_GUI_FLOAT yf = y + OVERLAY_OFFSET;
-#if GRAPH_CONTROL_FLIP_Y
+#if 0 //GRAPH_CONTROL_FLIP_Y
                         yf = height - yf;
 #endif
                         
