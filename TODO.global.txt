@@ -41,4 +41,13 @@ BUG: when quitting a Cario plug, into the XCode debugger, it crashes
 - TODO: Cairo, fix correctly the crash when quitting 
 (now, there is currently a memory leak)
 
-- when gay out knob, think to gray out value text also
+- when gray out knob, think to gray out value text also
+
+- apply the new mutexes and flags from Ghost to all other plugins
+
+Compile for Windows Xp:
+Visual Studio 2013 on Windows 7 => is ok!
+Platform Toolset: Visual Studio 2013 - Windows Xp (v120p)
+=> need Xp SP3 + 3D graphics driver for execution (and suppress GetTickCount64())
+
+TODO: Envelope an next => fix threads with fiwes from Air/Ghost + pass thread sanitizer
