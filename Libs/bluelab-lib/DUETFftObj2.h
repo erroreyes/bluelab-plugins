@@ -44,6 +44,8 @@ public:
     // To be called from the audio thread, to force update if a parameter changed.
     void Update();
     
+    void SetGraph(GraphControl12 *graph);
+    
     BLSpectrogram4 *GetSpectrogram();
     void SetSpectrogramDisplay(SpectrogramDisplay2 *spectroDisplay);
     

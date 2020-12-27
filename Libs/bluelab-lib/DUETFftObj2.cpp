@@ -174,6 +174,12 @@ DUETFftObj2::Update()
         Process();
 }
 
+void
+DUETFftObj2::SetGraph(GraphControl12 *graph)
+{
+    mGraph = graph;
+}
+
 BLSpectrogram4 *
 DUETFftObj2::GetSpectrogram()
 {
@@ -205,7 +211,8 @@ DUETFftObj2::SetThresholdFloor(BL_FLOAT threshold)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -215,7 +222,8 @@ DUETFftObj2::SetThresholdPeaks(BL_FLOAT threshold)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -225,7 +233,8 @@ DUETFftObj2::SetThresholdPeaksWidth(BL_FLOAT threshold)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -235,7 +244,8 @@ DUETFftObj2::SetDisplayThresholded(bool flag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -245,7 +255,8 @@ DUETFftObj2::SetDisplayMaxima(bool flag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -255,7 +266,8 @@ DUETFftObj2::SetDisplayMasks(bool flag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -291,7 +303,8 @@ DUETFftObj2::SetUseKernelSmooth(bool kernelSmoothFlag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -301,7 +314,8 @@ DUETFftObj2::SetUseGradientMasks(bool flag)
 
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -311,7 +325,8 @@ DUETFftObj2::SetThresholdAll(bool flag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -321,7 +336,8 @@ DUETFftObj2::SetPickingActive(bool flag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -345,7 +361,8 @@ DUETFftObj2::SetPickPosition(BL_FLOAT x, BL_FLOAT y)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -355,7 +372,8 @@ DUETFftObj2::SetInvertPickSelection(bool flag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -365,7 +383,8 @@ DUETFftObj2::SetHistogramSize(int histoSize)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -375,7 +394,8 @@ DUETFftObj2::SetAlphaZoom(BL_FLOAT zoom)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -385,7 +405,8 @@ DUETFftObj2::SetDeltaZoom(BL_FLOAT zoom)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -396,7 +417,8 @@ DUETFftObj2::SetUsePhaseAliasingCorrection(bool flag)
     
     mMustReprocess = true;
     
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
