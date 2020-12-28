@@ -21,6 +21,7 @@
 #include <USTFireworks.h>
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 #include <USTPluginInterface.h>
 
@@ -555,6 +556,7 @@ USTVectorscope5::SetGraphs(GraphControl12 *graph0,
         int pointColor1[3] = { 232, 110, 36 };
 #endif
 
+#if 0 // TODO: suppress this
 #if BLUE_COLOR_SCHEME
         //int pointColor0[3] = { 193, 229, 237 };
         //int pointColor1[3] = { 170, 202, 209 };
@@ -581,6 +583,8 @@ USTVectorscope5::SetGraphs(GraphControl12 *graph0,
         bool bevelFlag0 = false;
 #endif
 
+#endif
+        
 #if 0 // No need!
         SetCurveStyle(mGraphs[UPMIX_MODE_ID],
                       CURVE_POINTS0,

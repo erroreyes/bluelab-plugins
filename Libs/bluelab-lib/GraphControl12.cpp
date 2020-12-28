@@ -302,6 +302,11 @@ GraphControl12::AddCurve(GraphCurve5 *curve)
 {
     curve->SetGraph(this);
     
+    // NEW
+    float width = this->mRECT.W();
+    float height = this->mRECT.H();
+    curve->SetViewSize(width, height);
+    
     mCurves.push_back(curve);
 }
 
