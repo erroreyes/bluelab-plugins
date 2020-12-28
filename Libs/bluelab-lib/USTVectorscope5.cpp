@@ -605,6 +605,11 @@ USTVectorscope5::SetGraphs(GraphControl12 *graph0,
 	
         mGraphs[UPMIX_MODE_ID]->SetDisablePointOffsetHack(true);
     }
+    
+    mGraphs[POLAR_SAMPLE_MODE_ID]->AddCurve(mGraph0Curve);
+    mGraphs[LISSAJOUS_MODE_ID]->AddCurve(mGraph1Curve);
+    mGraphs[FIREWORKS_MODE_ID]->AddCurve(mGraph2Curves[0]);
+    mGraphs[FIREWORKS_MODE_ID]->AddCurve(mGraph2Curves[1]);
 }
 
 void

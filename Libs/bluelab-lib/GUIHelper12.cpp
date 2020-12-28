@@ -49,6 +49,7 @@ GUIHelper12::GUIHelper12(Style style)
         mTitleTextOffsetX = 0.0;
         mTitleTextOffsetY = -18.0;
         mTitleTextColor = IColor(255, 110, 110, 110);
+        mTitleFont = "font-bold";
         
         mValueCaptionOffset = 0.0;
         mValueTextSize = 14.0;
@@ -57,11 +58,13 @@ GUIHelper12::GUIHelper12(Style style)
         mValueTextColor = IColor(255, 240, 240, 255);
         mValueTextFGColor = mValueTextColor;
         mValueTextBGColor = IColor(0, 0, 0, 0);
+        mValueTextFont = "font-bold";
         
         mVersionTextSize = 12.0;
         mVersionTextOffsetX = 100.0;
         mVersionTextOffsetY = 3.0;
         mVersionTextColor = IColor(255, 110 , 110, 110);
+        mVersionTextFont = "font-regular";
         
         mVumeterColor = IColor(255, 131 , 152, 214);
         mVumeterNeedleColor = IColor(255, 237, 120, 31);
@@ -156,7 +159,7 @@ GUIHelper12::GUIHelper12(Style style)
         mGraphCurveColorLightBlue = IColor(255, 200, 200, 255);
         mGraphCurveFillAlpha = 0.5;
 
-	mGraphCurveColorGray = IColor(255, 64, 64, 64);
+        mGraphCurveColorGray = IColor(255, 64, 64, 64);
     }
 }
 
@@ -245,7 +248,8 @@ GUIHelper12::CreateSwitchButton(IGraphics *graphics,
 {
     IBitmap bitmap = graphics->LoadBitmap(bitmapFname, nStates);
  
-    CreateTitle(graphics, x + bitmap.W()/2, y, title, titleSize);
+    if (mCreateTitles)
+        CreateTitle(graphics, x + bitmap.W()/2, y, title, titleSize);
     
     IBSwitchControl *button = new IBSwitchControl(x, y, bitmap, paramIdx);
     graphics->AttachControl(button);

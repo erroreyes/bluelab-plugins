@@ -166,6 +166,9 @@ USTMultiBandDisplay::SetGraph(GraphControl12 *graph)
 #if !FIX_PROTOOLS_CRASH
     Update(-1);
 #endif
+    
+    for (int i = 0; i < MB_NUM_CURVES; i++)
+        mGraph->AddCurve(mCurves[i]);
 }
 
 void

@@ -263,6 +263,16 @@ USTClipperDisplay4::SetGraph(GraphControl12 *graph)
         mSweepBarCurve->SetLineWidth(1.0);
         mSweepBarCurve->SetSingleValueV(true);
         //mGraph->SetCurveXScale(SWEEP_BAR_CURVE, false);
+        
+        // Add curved
+        mGraph->AddCurve(mAxisCurve);
+        mGraph->AddCurve(mWaveformUpCurve);
+        mGraph->AddCurve(mWaveformDownCurve);
+        mGraph->AddCurve(mWaveformClipUpCurve);
+        mGraph->AddCurve(mWaveformClipDownCurve);
+        mGraph->AddCurve(mClipLoCurve);
+        mGraph->AddCurve(mClipHiCurve);
+        mGraph->AddCurve(mSweepBarCurve);
     }
 }
 
