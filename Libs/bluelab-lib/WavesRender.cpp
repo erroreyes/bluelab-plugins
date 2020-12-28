@@ -117,11 +117,12 @@ WavesRender::Reset(BL_FLOAT sampleRate)
         
 #if !FIX_ABLETON_AU_FREEZE
         // Force refresh, for the freq axis to be updated
-        mGraph->SetDirty(true);
+        if (mGraph != NULL)
+            mGraph->SetDirty(true);
 #else
         // Don't push param to plug because Reset() is called from the audio thread
-        //mGraph->SetDirty(false);
-        mGraph->SetDataChanged();
+        if (mGraph != NULL)
+            mGraph->SetDataChanged();
 #endif
     }
 }
@@ -138,11 +139,12 @@ WavesRender::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
     
 #if !FIX_ABLETON_AU_FREEZE
     // Without that, the volume rendering is not displayed
-    mGraph->SetDirty(true);
+    if (mGraph != NULL)
+        mGraph->SetDirty(true);
 #else
     // Don't push param to plug because AddMagns() is called from the audio thread
-    //mGraph->SetDirty(false);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 #endif
 }
 
@@ -224,13 +226,13 @@ WavesRender::OnMouseDrag(float x, float y, float dX, float dY,
     //
     // Without that, the camera point of view is not modified if
     // the sound is not playing
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
     
     mPlug->SetCameraAngles(mCamAngle0, mCamAngle1);
 }
 
-void //bool
+void
 WavesRender::OnMouseDblClick(float x, float y, const IMouseMod &mod)
 {
     // Reset the view
@@ -242,15 +244,13 @@ WavesRender::OnMouseDblClick(float x, float y, const IMouseMod &mod)
     // Reset the fov
     mLinesRender->ResetZoom();
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
     
     mPlug->SetCameraAngles(mCamAngle0, mCamAngle1);
     
     BL_FLOAT fov = mLinesRender->GetCameraFov();
     mPlug->SetCameraFov(fov);
-    
-    // return true;
 }
 
 void
@@ -263,8 +263,8 @@ WavesRender::OnMouseWheel(float x, float y,
     
     mLinesRender->ZoomChanged(zoomChange);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
     
     BL_FLOAT angle = mLinesRender->GetCameraFov();
     mPlug->SetCameraFov(angle);
@@ -315,17 +315,17 @@ WavesRender::SetMode(LinesRender2::Mode mode)
 {
     mLinesRender->SetMode(mode);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
 WavesRender::SetSpeed(BL_FLOAT speed)
 {
     mLinesRender->SetSpeed(speed);
-    
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -333,8 +333,8 @@ WavesRender::SetDensity(BL_FLOAT density)
 {
     mLinesRender->SetDensity(density);
 
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -347,8 +347,8 @@ WavesRender::SetScale(BL_FLOAT scale)
         mAmpsAxis->SetScale(scale);
     }
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -356,8 +356,8 @@ WavesRender::SetScrollDirection(LinesRender2::ScrollDirection dir)
 {
     mLinesRender->SetScrollDirection(dir);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -365,8 +365,8 @@ WavesRender::SetShowAxes(bool flag)
 {
     mLinesRender->SetShowAxes(flag);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -378,8 +378,8 @@ WavesRender::SetDBScale(bool flag, BL_FLOAT minDB)
     
     mAmpsAxis->SetDBScale(flag, minDB);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -389,8 +389,8 @@ WavesRender::SetCamAngle0(BL_FLOAT angle)
     
     mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -400,8 +400,8 @@ WavesRender::SetCamAngle1(BL_FLOAT angle)
     
     mLinesRender->SetCameraAngles(mCamAngle0, mCamAngle1);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
@@ -409,15 +409,16 @@ WavesRender::SetCamFov(BL_FLOAT angle)
 {
     mLinesRender->SetCameraFov(angle);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
 }
 
 void
 WavesRender::SetDirty(bool pushParamToPlug)
 {
     //mGraph->SetDirty(pushParamToPlug);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
     
     // Force recomputing projection
     mLinesRender->SetDirty();
@@ -428,8 +429,8 @@ WavesRender::SetColors(unsigned char color0[4], unsigned char color1[4])
 {
     mLinesRender->SetColors(color0, color1);
     
-    //mGraph->SetDirty(false);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+        mGraph->SetDataChanged();
     
     // Force recomputing projection
     mLinesRender->SetDirty();
