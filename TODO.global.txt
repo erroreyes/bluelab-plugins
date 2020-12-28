@@ -50,4 +50,4 @@ Visual Studio 2013 on Windows 7 => is ok!
 Platform Toolset: Visual Studio 2013 - Windows Xp (v120p)
 => need Xp SP3 + 3D graphics driver for execution (and suppress GetTickCount64())
 
-TODO: Envelope an next => fix threads with fiwes from Air/Ghost + pass thread sanitizer
+TODO: UST => fix threads with fiwes from Air/Ghost + pass thread sanitizer
