@@ -13,7 +13,8 @@
 
 #include <BLTypes.h>
 
-class GraphControl11;
+class GraphControl12;
+class GraphCurve5;
 
 // USTClipperDisplay2:
 // - Draw filled waveforms
@@ -30,7 +31,7 @@ public:
     
     virtual ~USTClipperDisplay4();
     
-    void SetGraph(GraphControl11 *graph);
+    void SetGraph(GraphControl12 *graph);
     
     void Reset(BL_GUI_FLOAT sampleRate);
     
@@ -56,8 +57,10 @@ protected:
 
     void UpdateSweepBar();
 
-    
-    GraphControl11 *mGraph;
+    void CreateCurves();
+
+    //
+    GraphControl12 *mGraph;
     
     BL_GUI_FLOAT mSampleRate;
     
@@ -77,6 +80,16 @@ protected:
     
     long mSweepPos;
     long mSweepPosClip;
+
+    // Curves
+    GraphCurve5 *mAxisCurve;
+    GraphCurve5 *mWaveformUpCurve;
+    GraphCurve5 *mWaveformDownCurve;
+    GraphCurve5 *mWaveformClipUpCurve;
+    GraphCurve5 *mWaveformClipDownCurve;
+    GraphCurve5 *mClipLoCurve;
+    GraphCurve5 *mClipHiCurve;
+    GraphCurve5 *mSweepBarCurve;
 };
 
 #endif /* defined(__UST__USTClipperDisplay2__) */

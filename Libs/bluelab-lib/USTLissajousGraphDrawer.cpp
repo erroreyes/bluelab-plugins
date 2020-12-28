@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include "USTLissajousGraphDrawer.h"
 
 #define MALIK_CIRCLE 1
@@ -170,14 +172,14 @@ USTLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 #endif
     
     // Left
-    GraphControl11::DrawText(vg, FONT_SIZE + TEXT_OFFSET_X,
+    GraphControl12::DrawText(vg, FONT_SIZE + TEXT_OFFSET_X,
                              textY + FONT_SIZE/2 + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, leftText, fontColor,
                              NVG_ALIGN_CENTER, NVG_ALIGN_MIDDLE);
     
     // Right
-    GraphControl11::DrawText(vg, width - FONT_SIZE - TEXT_OFFSET_X,
+    GraphControl12::DrawText(vg, width - FONT_SIZE - TEXT_OFFSET_X,
                              textY + FONT_SIZE/2 + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, rightText, fontColor,

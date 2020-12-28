@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include <BLUtils.h>
 
 #include "USTCircleGraphDrawer.h"
@@ -140,7 +142,7 @@ USTCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 
     
     // Left
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              (1.0 - COS_PI4)*RADIUS*radiusRatio + OFFSET_X - TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
@@ -148,7 +150,7 @@ USTCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
                              halignL, NVG_ALIGN_MIDDLE /*NVG_ALIGN_BOTTOM*/);
     
     // Right
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              (1.0 + COS_PI4)*RADIUS*radiusRatio + OFFSET_X + TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
@@ -157,14 +159,14 @@ USTCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
 #if 0
     // Left
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              FONT_SIZE + OFFSET_X, FONT_SIZE/2 + OFFSET_Y,
                              width, height,
                              FONT_SIZE, "L", fontColor,
                              NVG_ALIGN_CENTER, NVG_ALIGN_MIDDLE /*NVG_ALIGN_BOTTOM*/);
     
     // Right
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              width - FONT_SIZE - OFFSET_X, FONT_SIZE/2 + OFFSET_Y,
                              width, height,
                              FONT_SIZE, "R", fontColor,

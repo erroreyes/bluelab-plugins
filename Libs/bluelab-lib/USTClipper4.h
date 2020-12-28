@@ -16,7 +16,7 @@ using namespace std;
 
 #include "IPlug_include_in_plug_hdr.h"
 
-class GraphControl11;
+class GraphControl12;
 class USTClipperDisplay3;
 class USTClipperDisplay4;
 class ClipperOverObj4;
@@ -31,7 +31,7 @@ public:
     
     virtual ~USTClipper4();
     
-    void SetGraph(GraphControl11 *graph);
+    void SetGraph(GraphControl12 *graph);
     
     //void Reset(BL_FLOAT sampleRate);
     

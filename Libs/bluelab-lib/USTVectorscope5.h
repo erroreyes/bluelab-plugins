@@ -14,7 +14,8 @@
 #include <vector>
 using namespace std;
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
+#include <GraphCurve5.h>
 
 #include "IPlug_include_in_plug_hdr.h"
 
@@ -25,7 +26,6 @@ using namespace std;
 
 #define VECTORSCOPE_NUM_GRAPHS 4
 
-class GraphControl11;
 class USTCircleGraphDrawer;
 class USTLissajousGraphDrawer;
 class USTFireworks;
@@ -64,14 +64,13 @@ public:
     
     void SetEnabled(bool flag);
     
-    int GetNumCurves(int graphNum);
+    //int GetNumCurves(int graphNum);
+    //int GetNumPoints(int graphNum);
 
-    int GetNumPoints(int graphNum);
-
-    void SetGraphs(GraphControl11 *graph0,
-                   GraphControl11 *graph1,
-                   GraphControl11 *graph2,
-                   GraphControl11 *graph3);
+    void SetGraphs(GraphControl12 *graph0,
+                   GraphControl12 *graph1,
+                   GraphControl12 *graph2,
+                   GraphControl12 *graph3);
 
     void SetGraphsNull();
     
@@ -82,8 +81,7 @@ public:
     
 protected:
 
-    void SetCurveStyle(GraphControl11 *graph,
-                       int curveNum,
+    void SetCurveStyle(GraphCurve5 *curve,
                        BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX,
                        BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                        bool pointFlag,
@@ -95,9 +93,20 @@ protected:
                        bool pointOverlay,
                        bool linesPolarFlag);
 
+    void CreateCurves();
+
+    //
     USTPluginInterface *mPlug;
     
-    GraphControl11 *mGraphs[VECTORSCOPE_NUM_GRAPHS];
+    GraphControl12 *mGraphs[VECTORSCOPE_NUM_GRAPHS];
+
+    // Polar samples
+    GraphCurve5 *mGraph0Curve;
+    // Lissajous
+    GraphCurve5 *mGraph1Curve;
+    // Fireworks
+    GraphCurve5 *mGraph2Curves[2];
+    // No curve for "upmix" graph
     
     USTCircleGraphDrawer *mCircleDrawerPolarSamples;
     USTCircleGraphDrawer *mCircleDrawerFireworks;

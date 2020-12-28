@@ -8,7 +8,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 
 #include <BLUtils.h>
 
@@ -19,7 +19,7 @@
 #define GRAPH_NUM_POINTS 256
 
 // Curves
-#define AXIS_CURVE 0
+/*#define AXIS_CURVE 0
 
 #define WAVEFORM_UP_CURVE 1
 #define WAVEFORM_DOWN_CURVE 2
@@ -31,6 +31,7 @@
 #define CLIP_HI_CURVE 7 //6
 
 #define SWEEP_BAR_CURVE 5 //7
+*/
 
 //#define CURVE_FILL_ALPHA 0.2
 
@@ -64,14 +65,36 @@ USTClipperDisplay4::USTClipperDisplay4(BL_GUI_FLOAT sampleRate)
 #endif
     
     mGraph = NULL;
+
+    // Curves
+    mAxisCurve = NULL;
+    mWaveformUpCurve = NULL;
+    mWaveformDownCurve = NULL;
+    mWaveformClipUpCurve = NULL;
+    mWaveformClipDownCurve = NULL;
+    mClipLoCurve = NULL;
+    mClipHiCurve = NULL;
+    mSweepBarCurve = NULL;
+
+    CreateCurves();
     
     Reset(sampleRate);
 }
 
-USTClipperDisplay4::~USTClipperDisplay4() {}
+USTClipperDisplay4::~USTClipperDisplay4()
+{
+  delete mAxisCurve;
+  delete mWaveformUpCurve;
+  delete mWaveformDownCurve;
+  delete mWaveformClipUpCurve;
+  delete mWaveformClipDownCurve;
+  delete mClipLoCurve;
+  delete mClipHiCurve;
+  delete mSweepBarCurve;
+}
 
 void
-USTClipperDisplay4::SetGraph(GraphControl11 *graph)
+USTClipperDisplay4::SetGraph(GraphControl12 *graph)
 {
     mGraph = graph;
     
@@ -85,21 +108,22 @@ USTClipperDisplay4::SetGraph(GraphControl11 *graph)
         //mGraph->SetCurveColor(AXIS_CURVE, 232, 110, 36);
         
 #if ORANGE_COLOR_SCHEME
-        mGraph->SetCurveColor(AXIS_CURVE, 252, 79, 36);
+        mAxisCurve->SetColor(252, 79, 36);
 #endif
         
 #if BLUE_COLOR_SCHEME
-        mGraph->SetCurveColor(AXIS_CURVE, 170, 202, 209);
+        mAxisCurve->SetColor(170, 202, 209);
 #endif
-        
-        mGraph->SetCurveAlpha(AXIS_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(AXIS_CURVE, 2.0);
-        mGraph->SetCurveFill(AXIS_CURVE, false);
-        mGraph->SetCurveFillAlpha(AXIS_CURVE, CURVE_FILL_ALPHA);
-        mGraph->SetCurveYScale(AXIS_CURVE, false, 0.0, 1.0);
-        mGraph->SetCurveSingleValueH(AXIS_CURVE, true);
-        mGraph->SetCurveYScale(AXIS_CURVE, false, -2.0, 2.0);
-        mGraph->SetCurveSingleValueH(AXIS_CURVE, (BL_GUI_FLOAT)0.0);
+	
+        mAxisCurve->SetAlpha(1.0);
+        mAxisCurve->SetLineWidth(2.0);
+        mAxisCurve->SetFill(false);
+        mAxisCurve->SetFillAlpha(CURVE_FILL_ALPHA);
+        //mAxisCurve->SetYScale(false, 0.0, 1.0);
+        mAxisCurve->SetSingleValueH(true);
+        //mAxisCurve->SetYScale(false, -2.0, 2.0);
+	mAxisCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        mAxisCurve->SetSingleValueH((BL_GUI_FLOAT)0.0);
         
         // Waveform curves
         //
@@ -110,18 +134,18 @@ USTClipperDisplay4::SetGraph(GraphControl11 *graph)
         
         //mGraph->SetCurveDescription(WAVEFORM_UP_CURVE, "input", descrColor);
 #if (!ORANGE_COLOR_SCHEME && !BLUE_COLOR_SCHEME)
-        mGraph->SetCurveColor(WAVEFORM_UP_CURVE, 128, 128, 255);
+        mWaveformUpCurve->SetColor(128, 128, 255);
         
         // Dummy
-        mGraph->SetCurveColor(WAVEFORM_CLIP_UP_CURVE, 252, 228, 205);
+        mWaveformClipUpCurve->SetColor(252, 228, 205);
 #endif
         
 #if ORANGE_COLOR_SCHEME
         //mGraph->SetCurveColor(WAVEFORM_CURVE, 252, 228, 205);
-        mGraph->SetCurveColor(WAVEFORM_UP_CURVE, 252, 79, 36);
-        mGraph->SetCurveColor(WAVEFORM_DOWN_CURVE, 252, 79, 36);
+        mWaveformUpCurve->SetColor(252, 79, 36);
+        mWaveformDownCurve->SetColor(252, 79, 36);
         
-        mGraph->SetCurveColor(WAVEFORM_CLIP_UP_CURVE, 252, 228, 205);
+        mWaveformClipUpCurve->SetColor(252, 228, 205);
 #endif
         
 #if BLUE_COLOR_SCHEME
@@ -130,43 +154,43 @@ USTClipperDisplay4::SetGraph(GraphControl11 *graph)
         //mGraph->SetCurveColor(WAVEFORM_DOWN_CURVE, 170, 202, 209);
         
         // Orange
-        mGraph->SetCurveColor(WAVEFORM_UP_CURVE, 234, 101, 0);
-        mGraph->SetCurveColor(WAVEFORM_DOWN_CURVE, 234, 101, 0);
+        mWaveformUpCurve->SetColor(234, 101, 0);
+        mWaveformDownCurve->SetColor(234, 101, 0);
         
-        mGraph->SetCurveColor(WAVEFORM_CLIP_UP_CURVE, 113, 130, 182);
-        mGraph->SetCurveColor(WAVEFORM_CLIP_DOWN_CURVE, 113, 130, 182);
+        mWaveformClipUpCurve->SetColor(113, 130, 182);
+        mWaveformClipDownCurve->SetColor(113, 130, 182);
 #endif
         
-        mGraph->SetCurveAlpha(WAVEFORM_UP_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(WAVEFORM_UP_CURVE, -1.0); // Disable draw line over fill
-        mGraph->SetCurveFill(WAVEFORM_UP_CURVE, true, 0.5 - FILL_ORIGIN_Y_OFFSET);
-        mGraph->SetCurveFillAlpha(WAVEFORM_UP_CURVE, 1.0);
-        mGraph->SetCurveYScale(WAVEFORM_UP_CURVE, false, -2.0, 2.0);
+        mWaveformUpCurve->SetAlpha(1.0);
+        mWaveformUpCurve->SetLineWidth(-1.0); // Disable draw line over fill
+        mWaveformUpCurve->SetFill(true, 0.5 - FILL_ORIGIN_Y_OFFSET);
+        mWaveformUpCurve->SetFillAlpha(1.0);
+        mWaveformUpCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
         
         // Waveform down
         
         //mGraph->SetCurveColor(WAVEFORM_DOWN_CURVE, 252, 79, 36);
-        mGraph->SetCurveAlpha(WAVEFORM_DOWN_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(WAVEFORM_DOWN_CURVE, -1.0);
-        mGraph->SetCurveFillAlpha(WAVEFORM_DOWN_CURVE, 1.0);
-        mGraph->SetCurveFill(WAVEFORM_DOWN_CURVE, true, 0.5 + FILL_ORIGIN_Y_OFFSET);
-        mGraph->SetCurveYScale(WAVEFORM_DOWN_CURVE, false, -2.0, 2.0);
+        mWaveformDownCurve->SetAlpha(1.0);
+        mWaveformDownCurve->SetLineWidth(-1.0);
+        mWaveformDownCurve->SetFillAlpha(1.0);
+        mWaveformDownCurve->SetFill(true, 0.5 + FILL_ORIGIN_Y_OFFSET);
+        mWaveformDownCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
         
         // Waveform clip up
         //mGraph->SetCurveColor(WAVEFORM_CLIP_UP_CURVE, 252, 228, 205);
-        mGraph->SetCurveAlpha(WAVEFORM_CLIP_UP_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(WAVEFORM_CLIP_UP_CURVE, -1.0);
-        mGraph->SetCurveFillAlpha(WAVEFORM_CLIP_UP_CURVE, 1.0);
-        mGraph->SetCurveFill(WAVEFORM_CLIP_UP_CURVE, true, 0.5 - FILL_ORIGIN_Y_OFFSET);
-        mGraph->SetCurveYScale(WAVEFORM_CLIP_UP_CURVE, false, -2.0, 2.0);
+        mWaveformClipUpCurve->SetAlpha(1.0);
+        mWaveformClipUpCurve->SetLineWidth(-1.0);
+        mWaveformClipUpCurve->SetFillAlpha(1.0);
+        mWaveformClipUpCurve->SetFill(true, 0.5 - FILL_ORIGIN_Y_OFFSET);
+        mWaveformClipUpCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
         
         // Waveform clip down
         //mGraph->SetCurveColor(WAVEFORM_CLIP_DOWN_CURVE, 252, 228, 205);
-        mGraph->SetCurveAlpha(WAVEFORM_CLIP_DOWN_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(WAVEFORM_CLIP_DOWN_CURVE, -1.0);
-        mGraph->SetCurveFillAlpha(WAVEFORM_CLIP_DOWN_CURVE, 1.0);
-        mGraph->SetCurveFill(WAVEFORM_CLIP_DOWN_CURVE, true, 0.5 + FILL_ORIGIN_Y_OFFSET);
-        mGraph->SetCurveYScale(WAVEFORM_CLIP_DOWN_CURVE, false, -2.0, 2.0);
+        mWaveformClipDownCurve->SetAlpha(1.0);
+        mWaveformClipDownCurve->SetLineWidth(-1.0);
+        mWaveformClipDownCurve->SetFillAlpha(1.0);
+        mWaveformClipDownCurve->SetFill(true, 0.5 + FILL_ORIGIN_Y_OFFSET);
+        mWaveformClipDownCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
         
         // Clip Lo
         
@@ -174,21 +198,21 @@ USTClipperDisplay4::SetGraph(GraphControl11 *graph)
         //                            "threshold", descrColor);
         
 #if (!ORANGE_COLOR_SCHEME && !BLUE_COLOR_SCHEME)
-        mGraph->SetCurveColor(CLIP_LO_CURVE, 64, 64, 255);
-        mGraph->SetCurveColor(CLIP_HI_CURVE, 64, 64, 255);
+        mClipLoCurve->SetColor(64, 64, 255);
+        mClipHiCurveh->SetColor(64, 64, 255);
 #endif
         
 #if ORANGE_COLOR_SCHEME
-        mGraph->SetCurveColor(CLIP_LO_CURVE, 232, 110, 36);
-        mGraph->SetCurveColor(CLIP_HI_CURVE, 232, 110, 36);
+        mClipLoCurve->SetColor(232, 110, 36);
+        mClipHiCurve->SetColor(232, 110, 36);
 #endif
         
 #if BLUE_COLOR_SCHEME
         //mGraph->SetCurveColor(CLIP_LO_CURVE, 113, 130, 182);
         
         // Blue
-        mGraph->SetCurveColor(CLIP_LO_CURVE, 255, 255, 255);
-        mGraph->SetCurveColor(CLIP_HI_CURVE, 255, 255, 255);
+        mClipLoCurve->SetColor(255, 255, 255);
+        mClipHiCurve->SetColor(255, 255, 255);
         
         // Orange
         //mGraph->SetCurveColor(CLIP_LO_CURVE, 234, 101, 0);
@@ -196,48 +220,48 @@ USTClipperDisplay4::SetGraph(GraphControl11 *graph)
 #endif
         
         
-        mGraph->SetCurveAlpha(CLIP_LO_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(CLIP_LO_CURVE, 2.0);
+        mClipLoCurve->SetAlpha(1.0);
+        mClipLoCurve->SetLineWidth(2.0);
         
 #if FILL_CLIP_LINES
-        mGraph->SetCurveFill(CLIP_LO_CURVE, true);
+        mClipLoCurve->SetFill(true);
 #endif
         
         //mGraph->SetCurveFillAlpha(CLIP_LO_CURVE, CURVE_FILL_ALPHA);
-        mGraph->SetCurveFillAlphaUp(CLIP_LO_CURVE, CURVE_FILL_ALPHA); //
+        mClipLoCurve->SetFillAlphaUp(CURVE_FILL_ALPHA); //
         
-        mGraph->SetCurveYScale(CLIP_LO_CURVE, false, 0.0, 1.0);
-        mGraph->SetCurveSingleValueH(CLIP_LO_CURVE, true);
+        mClipLoCurve->SetYScale(Scale::LINEAR, 0.0, 1.0);
+        mClipLoCurve->SetSingleValueH(true);
         
-        mGraph->SetCurveYScale(CLIP_LO_CURVE, false, -2.0, 2.0);
-        mGraph->SetCurveSingleValueH(CLIP_LO_CURVE, (BL_GUI_FLOAT)-1.0);
+        mClipLoCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        mClipLoCurve->SetSingleValueH((BL_GUI_FLOAT)-1.0);
         
         // Clip Hi
         
         //mGraph->SetCurveDescription(GRAPH_THRESHOLD_CURVE,
         //                            "threshold", descrColor);
         
-        mGraph->SetCurveAlpha(CLIP_HI_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(CLIP_HI_CURVE, 2.0);
+        mClipHiCurve->SetAlpha(1.0);
+        mClipHiCurve->SetLineWidth(2.0);
         
 #if FILL_CLIP_LINES
-        mGraph->SetCurveFill(CLIP_HI_CURVE, true);
+        mClipHiCurve->SetFill(true);
 #endif
         
         //mGraph->SetCurveFillAlpha(CLIP_HI_CURVE, CURVE_FILL_ALPHA);
         //mGraph->SetCurveFillAlphaUp(CLIP_HI_CURVE, CURVE_FILL_ALPHA);
-        mGraph->SetCurveFillAlpha(CLIP_HI_CURVE, CURVE_FILL_ALPHA);//
+        mClipHiCurve->SetFillAlpha(CURVE_FILL_ALPHA);//
         
-        mGraph->SetCurveYScale(CLIP_HI_CURVE, false, 0.0, 1.0);
-        mGraph->SetCurveSingleValueH(CLIP_HI_CURVE, true);
-        mGraph->SetCurveYScale(CLIP_HI_CURVE, false, -2.0, 2.0);
-        mGraph->SetCurveSingleValueH(CLIP_HI_CURVE, (BL_GUI_FLOAT)1.0);
-        
+        //mClipHiCurve->SetYScale(Scale::LINEAR, 0.0, 1.0);
+        mClipHiCurve->SetSingleValueH(true);
+        mClipHiCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        mClipHiCurve->SetSingleValueH((BL_GUI_FLOAT)1.0);
+	  
         // Sweep bar
-        mGraph->SetCurveColor(SWEEP_BAR_CURVE, 255, 255, 255);
-        mGraph->SetCurveAlpha(SWEEP_BAR_CURVE, 1.0);
-        mGraph->SetCurveLineWidth(SWEEP_BAR_CURVE, 1.0);
-        mGraph->SetCurveSingleValueV(SWEEP_BAR_CURVE, true);
+        mSweepBarCurve->SetColor(255, 255, 255);
+        mSweepBarCurve->SetAlpha(1.0);
+        mSweepBarCurve->SetLineWidth(1.0);
+        mSweepBarCurve->SetSingleValueV(true);
         //mGraph->SetCurveXScale(SWEEP_BAR_CURVE, false);
     }
 }
@@ -269,13 +293,13 @@ USTClipperDisplay4::Reset(BL_GUI_FLOAT sampleRate)
 
     if (mGraph != NULL)
     {
-        mGraph->Resize(GRAPH_NUM_POINTS);
+        //mGraph->Resize(GRAPH_NUM_POINTS);
         
-        mGraph->SetCurveValues3(WAVEFORM_UP_CURVE, &mCurrentDecimValuesUp);
-        mGraph->SetCurveValues3(WAVEFORM_DOWN_CURVE, &mCurrentDecimValuesDown);
+        mWaveformUpCurve->SetValues4(mCurrentDecimValuesUp);
+        mWaveformDownCurve->SetValues4(mCurrentDecimValuesDown);
         
-        mGraph->SetCurveValues3(WAVEFORM_CLIP_UP_CURVE, &mCurrentDecimValuesUpClip);
-        mGraph->SetCurveValues3(WAVEFORM_CLIP_DOWN_CURVE, &mCurrentDecimValuesDownClip);
+        mWaveformClipUpCurve->SetValues4(mCurrentDecimValuesUpClip);
+        mWaveformClipDownCurve->SetValues4(mCurrentDecimValuesDownClip);
     }
 }
 
@@ -447,8 +471,8 @@ USTClipperDisplay4::AddSamplesZoom()
         BLUtils::ApplyParamShapeWaveform(&decimValuesDown, mZoom);
 #endif
         
-        mGraph->SetCurveValues3(WAVEFORM_UP_CURVE, &decimValuesUp);
-        mGraph->SetCurveValues3(WAVEFORM_DOWN_CURVE, &decimValuesDown);
+        mWaveformUpCurve->SetValues4(decimValuesUp);
+        mWaveformDownCurve->SetValues4(decimValuesDown);
     }
 }
 
@@ -468,8 +492,8 @@ USTClipperDisplay4::AddSamplesZoomClip()
         BLUtils::ApplyParamShapeWaveform(&decimValuesDown, mZoom);
 #endif
         
-        mGraph->SetCurveValues3(WAVEFORM_CLIP_UP_CURVE, &decimValuesUp);
-        mGraph->SetCurveValues3(WAVEFORM_CLIP_DOWN_CURVE, &decimValuesDown);
+        mWaveformClipUpCurve->SetValues4(decimValuesUp);
+        mWaveformClipDownCurve->SetValues4(decimValuesDown);
     }
 }
 
@@ -493,8 +517,8 @@ USTClipperDisplay4::SetClipValueZoom()
     
     if (mGraph != NULL)
     {
-        mGraph->SetCurveSingleValueH(CLIP_LO_CURVE, clipValue /*- 2.0*/);
-        mGraph->SetCurveSingleValueH(CLIP_HI_CURVE, /*2.0*/ - clipValue);
+        mClipLoCurve->SetSingleValueH(clipValue /*- 2.0*/);
+        mClipHiCurve->SetSingleValueH(/*2.0*/ - clipValue);
     }
 }
 
@@ -524,8 +548,21 @@ USTClipperDisplay4::UpdateSweepBar()
     if (mGraph != NULL)
     {
         BL_GUI_FLOAT pos = ((BL_GUI_FLOAT)mSweepPos)/GRAPH_NUM_POINTS;
-        mGraph->SetCurveSingleValueV(SWEEP_BAR_CURVE, pos);
+        mSweepBarCurve->SetSingleValueV(pos);
     }
+}
+
+void
+USTClipperDisplay4::CreateCurves()
+{
+  mAxisCurve = new GraphCurve5(GRAPH_NUM_POINTS);
+  mWaveformUpCurve = new GraphCurve5(GRAPH_NUM_POINTS);
+  mWaveformDownCurve = new GraphCurve5(GRAPH_NUM_POINTS);
+  mWaveformClipUpCurve = new GraphCurve5(GRAPH_NUM_POINTS);
+  mWaveformClipDownCurve = new GraphCurve5(GRAPH_NUM_POINTS);
+  mClipLoCurve = new GraphCurve5(GRAPH_NUM_POINTS);
+  mClipHiCurve = new GraphCurve5(GRAPH_NUM_POINTS);
+  mSweepBarCurve = new GraphCurve5(GRAPH_NUM_POINTS);
 }
 
 #endif // IGRAPHICS_NANOVG

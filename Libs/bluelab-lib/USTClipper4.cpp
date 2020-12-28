@@ -299,7 +299,7 @@ USTClipper4::~USTClipper4()
 }
 
 void
-USTClipper4::SetGraph(GraphControl11 *graph)
+USTClipper4::SetGraph(GraphControl12 *graph)
 {
     if (mClipperDisplay != NULL)
         mClipperDisplay->SetGraph(graph);

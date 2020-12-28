@@ -10,7 +10,7 @@
 
 #include <math.h>
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 
 #include <USTCircleGraphDrawer.h>
 #include <USTLissajousGraphDrawer.h>
@@ -111,8 +111,8 @@
 #define BLUE_COLOR_SCHEME 1
 
 // Curve to display points
-#define CURVE_POINTS0 0
-#define CURVE_POINTS1 1
+//#define CURVE_POINTS0 0
+//#define CURVE_POINTS1 1
 
 
 #define LISSAJOUS_SCALE 0.8
@@ -135,11 +135,24 @@ USTVectorscope5::USTVectorscope5(USTPluginInterface *plug, BL_FLOAT sampleRate)
     mFireworks = new USTFireworks(sampleRate);
 
     mMode = POLAR_SAMPLE; // NEW (the mode was not initialized)
+
+    // Curves
+    mGraph0Curve = NULL;
+    mGraph1Curve = NULL;
+    mGraph2Curves[0] = NULL;
+    mGraph2Curves[1] = NULL;
+
+    CreateCurves();
 }
 
 USTVectorscope5::~USTVectorscope5()
 {
     delete mFireworks;
+
+    delete mGraph0Curve;
+    delete mGraph1Curve;
+    delete mGraph2Curves[0];
+    delete mGraph2Curves[1];
 }
 
 void
@@ -267,7 +280,7 @@ USTVectorscope5::SetMode(Mode mode)
     mFireworks->Reset();
 }
 
-int
+/*int
 USTVectorscope5::GetNumCurves(int graphNum)
 {
     if (graphNum == POLAR_SAMPLE_MODE_ID)
@@ -284,8 +297,8 @@ USTVectorscope5::GetNumCurves(int graphNum)
     
     return -1;
 }
-
-int
+*/
+/*int
 USTVectorscope5::GetNumPoints(int graphNum)
 {
     if (graphNum == POLAR_SAMPLE_MODE_ID)
@@ -299,12 +312,12 @@ USTVectorscope5::GetNumPoints(int graphNum)
     
     return 0;
 }
-
+*/
 void
-USTVectorscope5::SetGraphs(GraphControl11 *graph0,
-                           GraphControl11 *graph1,
-                           GraphControl11 *graph2,
-                           GraphControl11 *graph3)
+USTVectorscope5::SetGraphs(GraphControl12 *graph0,
+                           GraphControl12 *graph1,
+                           GraphControl12 *graph2,
+                           GraphControl12 *graph3)
 {
     mGraphs[POLAR_SAMPLE_MODE_ID] = graph0;
     mGraphs[LISSAJOUS_MODE_ID] = graph1;
@@ -376,8 +389,7 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
         bool pointFlag = true;
         //bool pointFlag = false;
         
-        SetCurveStyle(mGraphs[POLAR_SAMPLE_MODE_ID],
-                      CURVE_POINTS0,
+        SetCurveStyle(mGraph0Curve,
                       GRAPH0_MIN_X, GRAPH0_MAX_X,
                       GRAPH0_MIN_Y, GRAPH0_MAX_Y,
                       pointFlag, POINT_SIZE_MODE0, //0.5, //1.0, // point size
@@ -388,14 +400,18 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
         mGraphs[POLAR_SAMPLE_MODE_ID]->SetDisablePointOffsetHack(true);
         
 #if HD_POLAR_SAMPLES
-        mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveWeightMultAlpha(CURVE_POINTS0, false);
+        //mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveWeightMultAlpha(CURVE_POINTS0, false);
+	mGraph0Curve->SetWeightMultAlpha(false);
         
         //int weightTargetColor[4] = { 255, 0, 0, 255 };
-        mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveWeightTargetColor(CURVE_POINTS0, weightTargetColor);
+        //mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveWeightTargetColor(CURVE_POINTS0, weightTargetColor);
+	mGraph0Curve->SetWeightTargetColor(weightTargetColor);
         
         // Red and trasparent as starting color
-        mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveAlpha(CURVE_POINTS0, 0.0);
-        mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveFillAlpha(CURVE_POINTS0, 0.0);
+        //mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveAlpha(CURVE_POINTS0, 0.0);
+        //mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveFillAlpha(CURVE_POINTS0, 0.0);
+	mGraph0Curve->SetAlpha(0.0);
+        mGraph0Curve->SetFillAlpha(0.0);
 #endif
     }
     
@@ -430,8 +446,7 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
         bool overlay = true;
         bool bevelFlag = false;
         
-        SetCurveStyle(mGraphs[LISSAJOUS_MODE_ID],
-                      CURVE_POINTS0,
+        SetCurveStyle(mGraph1Curve,
                       GRAPH2_MIN_X, GRAPH2_MAX_X,
                       GRAPH2_MIN_Y, GRAPH2_MAX_Y,
                       true, POINT_SIZE_MODE1, //0.5, //1.0, // point size
@@ -497,8 +512,7 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
         bool bevelFlag0 = false;
 #endif
         
-        SetCurveStyle(mGraphs[FIREWORKS_MODE_ID],
-                      CURVE_POINTS0,
+        SetCurveStyle(mGraph2Curves[0],
                       GRAPH1_MIN_X, GRAPH1_MAX_X,
                       GRAPH1_MIN_Y, GRAPH1_MAX_Y,
                       true/*false*/, LINE_SIZE_MODE2, //0.5, //1.0, // point size
@@ -508,8 +522,7 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
         
         bool fillFlag1 = false;
         bool bevelFlag1 = true;
-        SetCurveStyle(mGraphs[FIREWORKS_MODE_ID],
-                      CURVE_POINTS1,
+        SetCurveStyle(mGraph2Curves[1],
                       GRAPH1_MIN_X, GRAPH1_MAX_X,
                       GRAPH1_MIN_Y, GRAPH1_MAX_Y,
                       true/*false*/, LINE_SIZE2_MODE2, //0.5, //1.0, // point size
@@ -567,7 +580,8 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
         bool linesPolarFlag1 = false;
         bool bevelFlag0 = false;
 #endif
-        
+
+#if 0 // No need!
         SetCurveStyle(mGraphs[UPMIX_MODE_ID],
                       CURVE_POINTS0,
                       GRAPH1_MIN_X, GRAPH1_MAX_X,
@@ -587,7 +601,8 @@ USTVectorscope5::SetGraphs(GraphControl11 *graph0,
                       bevelFlag1,
                       pointColor1[0], pointColor1[1], pointColor1[2],
                       fillFlag1, alpha, pointsAsLines, overlayFlag, linesPolarFlag1);
-        
+#endif
+	
         mGraphs[UPMIX_MODE_ID]->SetDisablePointOffsetHack(true);
     }
 }
@@ -672,11 +687,10 @@ USTVectorscope5::AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples)
             
             if (polarSamplesResult[0]->GetSize() >= NUM_POINTS_POLAR_SAMPLES)
             {
-                mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS0,
-                                                                   *polarSamplesResult[0], *polarSamplesResult[1]);
+                mGraph0Curve->SetValuesPoint(*polarSamplesResult[0], *polarSamplesResult[1]);
             
 #if !HD_POLAR_SAMPLES
-                mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveOptimSameColor(CURVE_POINTS0, true);
+                mGraph0Curve->SetOptimSameColor(true);
 #else
                 // Color weights
                 WDL_TypedBuf<BL_GUI_FLOAT> colorWeights;
@@ -697,7 +711,7 @@ USTVectorscope5::AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples)
                     currentWeight += weightIncr;
                 }
             
-                mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveColorWeight(CURVE_POINTS0, colorWeights);
+                mGraph0Curve->SetColorWeight(colorWeights);
 #endif
             }
         }
@@ -745,19 +759,17 @@ USTVectorscope5::AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples)
             if (lissajousSamplesResult[0].GetSize() >= NUM_POINTS_LISSAJOUS)
             {
 #if 1
-                mGraphs[LISSAJOUS_MODE_ID]->SetCurveValuesPointEx(CURVE_POINTS0,
-                                              lissajousSamplesResult[0],
-                                              lissajousSamplesResult[1],
-                                              true, false, true);
+                mGraph1Curve->SetValuesPointEx(lissajousSamplesResult[0],
+					       lissajousSamplesResult[1],
+					       true, false, true);
 #endif
             
 #if 0
-                mGraphs[LISSAJOUS_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS,
-                                                                lissajousSamplesResult[0],
-                                                                lissajousSamplesResult[1]);
+                mGraph1Curve->SetValuesPoint(lissajousSamplesResult[0],
+					     lissajousSamplesResult[1]);
 #endif
             
-                mGraphs[LISSAJOUS_MODE_ID]->SetCurveOptimSameColor(CURVE_POINTS0, true);
+                mGraph1Curve->SetOptimSameColor(true);
             }
         }
     }
@@ -800,11 +812,9 @@ USTVectorscope5::AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples)
                 WDL_TypedBuf<BL_GUI_FLOAT> polarSamplesMax[2];
                 mFireworks->ComputePoints(fireworksInSamples, polarSamples, polarSamplesMax);
             
-                mGraphs[FIREWORKS_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS0,
-                                                                polarSamples[0], polarSamples[1]);
+                mGraph2Curves[0]->SetValuesPoint(polarSamples[0], polarSamples[1]);
             
-                mGraphs[FIREWORKS_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS1,
-                                                                polarSamplesMax[0], polarSamplesMax[1]);
+		mGraph2Curves[1]->SetValuesPoint(polarSamplesMax[0], polarSamplesMax[1]);
             }
         }
     }
@@ -822,8 +832,7 @@ USTVectorscope5::GetUpmixGraphDrawer()
 }
 
 void
-USTVectorscope5::SetCurveStyle(GraphControl11 *graph,
-                               int curveNum,
+USTVectorscope5::SetCurveStyle(GraphCurve5 *curve,
                                BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX,
                                BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY,
                                bool pointFlag,
@@ -834,33 +843,43 @@ USTVectorscope5::SetCurveStyle(GraphControl11 *graph,
                                bool pointsAsLines,
                                bool pointOverlay, bool linesPolarFlag)
 {
-    if (graph == NULL)
+    if (curve == NULL)
         return;
     
-    graph->SetCurveXScale(curveNum, false, minX, maxX);
-    graph->SetCurveYScale(curveNum, false, minY, maxY);
+    curve->SetXScale(Scale::LINEAR, minX, maxX);
+    curve->SetYScale(Scale::LINEAR, minY, maxY);
     
     if (!pointFlag)
-        graph->SetCurveLineWidth(curveNum, strokeSize);
+        curve->SetLineWidth(strokeSize);
     
     //
     if (pointFlag)
     {
-        graph->SetCurvePointSize(curveNum, strokeSize);
-        graph->SetCurvePointStyle(curveNum, true, linesPolarFlag, pointsAsLines);
-        graph->SetCurvePointOverlay(curveNum, pointOverlay);
+        curve->SetPointSize(strokeSize);
+        curve->SetPointStyle(true, linesPolarFlag, pointsAsLines);
+        curve->SetPointOverlay(pointOverlay);
     }
     
-    graph->SetCurveBevel(curveNum, bevelFlag);
+    curve->SetBevel(bevelFlag);
                           
-    graph->SetCurveColor(curveNum, r, g, b);
+    curve->SetColor(r, g, b);
     
     if (curveFill)
     {
-        graph->SetCurveFill(curveNum, curveFill);
+        curve->SetFill(curveFill);
     }
             
-    graph->SetCurveFillAlpha(curveNum, curveFillAlpha);
+    curve->SetFillAlpha(curveFillAlpha);
+}
+
+void
+USTVectorscope5::CreateCurves()
+{  
+  mGraph0Curve = new GraphCurve5(NUM_POINTS_POLAR_SAMPLES);
+  
+  mGraph1Curve = new GraphCurve5(NUM_POINTS_LISSAJOUS);
+  mGraph2Curves[0] = new GraphCurve5(NUM_POINTS_FIREWORKS);
+  mGraph2Curves[1] = new GraphCurve5(NUM_POINTS_FIREWORKS);
 }
 
 #endif // IGRAPHICS_NANOVG

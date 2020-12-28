@@ -11,14 +11,14 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 
 class USTPluginInterface;
 class USTUpmixGraphDrawer : public GraphCustomDrawer,
                             public GraphCustomControl
 {
 public:
-    USTUpmixGraphDrawer(USTPluginInterface *plug, GraphControl11 *graph);
+    USTUpmixGraphDrawer(USTPluginInterface *plug, GraphControl12 *graph);
     
     virtual ~USTUpmixGraphDrawer();
     
@@ -61,7 +61,7 @@ protected:
     bool mSourceIsSelected;
     
     USTPluginInterface *mPlug;
-    GraphControl11 *mGraph;
+    GraphControl12 *mGraph;
 };
 
 #endif // IGRAPHICS_NANOVG

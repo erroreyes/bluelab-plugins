@@ -12,6 +12,8 @@
 
 #include <USTPluginInterface.h>
 
+#include <GraphSwapColor.h>
+
 #include "USTUpmixGraphDrawer.h"
 
 #ifndef M_PI 
@@ -43,7 +45,8 @@
 #define MALIK_CIRCLE 1
 
 
-USTUpmixGraphDrawer::USTUpmixGraphDrawer(USTPluginInterface *plug, GraphControl11 *graph)
+USTUpmixGraphDrawer::USTUpmixGraphDrawer(USTPluginInterface *plug,
+                                         GraphControl12 *graph)
 {
     mGain = 0.0;
     mPan = 0.0;
