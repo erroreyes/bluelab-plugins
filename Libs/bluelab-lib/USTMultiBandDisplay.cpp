@@ -247,7 +247,7 @@ USTMultiBandDisplay::Update(int filterNum)
 #endif
     
     // Uselect all curves
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MB_NUM_CURVES/*8*/; i++)
     {
 #if (!ORANGE_COLOR_SCHEME && !BLUE_COLOR_SCHEME)
       mCurves[i]->SetColor(64, 64, 255);

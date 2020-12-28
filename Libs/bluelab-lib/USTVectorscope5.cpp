@@ -875,7 +875,7 @@ USTVectorscope5::SetCurveStyle(GraphCurve5 *curve,
 void
 USTVectorscope5::CreateCurves()
 {  
-  mGraph0Curve = new GraphCurve5(NUM_POINTS_POLAR_SAMPLES);
+  mGraph0Curve = new GraphCurve5(NUM_POINTS_POLAR_SAMPLES*INSERT_POINT_FACTOR);
   
   mGraph1Curve = new GraphCurve5(NUM_POINTS_LISSAJOUS);
   mGraph2Curves[0] = new GraphCurve5(NUM_POINTS_FIREWORKS);
