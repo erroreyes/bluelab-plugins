@@ -41,6 +41,8 @@ public:
     
     void AddClippedSamples(const WDL_TypedBuf<BL_FLOAT> &samples);
     
+    void SetEnabled(bool flag);
+    
     void SetDirty();
     
     void SetZoom(BL_GUI_FLOAT zoom);

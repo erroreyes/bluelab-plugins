@@ -122,7 +122,14 @@ USTClipperDisplay4::SetGraph(GraphControl12 *graph)
         //mAxisCurve->SetYScale(false, 0.0, 1.0);
         mAxisCurve->SetSingleValueH(true);
         //mAxisCurve->SetYScale(false, -2.0, 2.0);
-	mAxisCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        mAxisCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        
+        // Must set view size before value...
+        int width;
+        int height;
+        mGraph->GetSize(&width, &height);
+        mAxisCurve->SetViewSize(width, height);
+        
         mAxisCurve->SetSingleValueH((BL_GUI_FLOAT)0.0);
         
         // Waveform curves
@@ -228,12 +235,20 @@ USTClipperDisplay4::SetGraph(GraphControl12 *graph)
 #endif
         
         //mGraph->SetCurveFillAlpha(CLIP_LO_CURVE, CURVE_FILL_ALPHA);
+
+        // Doesn't fill low
+        mClipLoCurve->SetFillAlpha(0.0);
+        // Fill up only
         mClipLoCurve->SetFillAlphaUp(CURVE_FILL_ALPHA); //
         
-        mClipLoCurve->SetYScale(Scale::LINEAR, 0.0, 1.0);
+        //mClipLoCurve->SetYScale(Scale::LINEAR, 0.0, 1.0);
         mClipLoCurve->SetSingleValueH(true);
         
-        mClipLoCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        //mClipLoCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        mClipLoCurve->SetYScale(Scale::LINEAR, -2.0, 2.0); // NEW
+        
+        // Must set view size before value...
+        mClipLoCurve->SetViewSize(width, height);
         mClipLoCurve->SetSingleValueH((BL_GUI_FLOAT)-1.0);
         
         // Clip Hi
@@ -254,7 +269,11 @@ USTClipperDisplay4::SetGraph(GraphControl12 *graph)
         
         //mClipHiCurve->SetYScale(Scale::LINEAR, 0.0, 1.0);
         mClipHiCurve->SetSingleValueH(true);
-        mClipHiCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        //mClipHiCurve->SetYScale(Scale::LINEAR, -2.0, 2.0);
+        mClipHiCurve->SetYScale(Scale::LINEAR, -2.0, 2.0); // NEW
+        
+        // Must set view size before value...
+        mClipHiCurve->SetViewSize(width, height);
         mClipHiCurve->SetSingleValueH((BL_GUI_FLOAT)1.0);
 	  
         // Sweep bar
@@ -439,6 +458,22 @@ USTClipperDisplay4::SetDirty()
     {
         //mGraph->SetDirty(true);
         mGraph->SetDataChanged();
+    }
+}
+
+void
+USTClipperDisplay4::SetEnabled(bool flag)
+{
+    if (!flag)
+    {
+        // Rewind sweep line
+        if (mSweepBarCurve != NULL)
+            mSweepBarCurve->SetSingleValueV((BL_FLOAT)0.0);
+        
+        if (mGraph != NULL)
+        {
+            mGraph->SetDataChanged();
+        }
     }
 }
 

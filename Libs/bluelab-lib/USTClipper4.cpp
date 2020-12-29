@@ -345,6 +345,7 @@ USTClipper4::SetEnabled(bool flag)
     {
         Reset(mSampleRate, mCurrentBlockSize);
         
+        mClipperDisplay->SetEnabled(flag);
         mClipperDisplay->SetDirty();
     }
 }
