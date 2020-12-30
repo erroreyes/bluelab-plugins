@@ -21,6 +21,7 @@
 class BLSpectrogram4;
 class SpectrogramDisplayScroll3;
 class PanogramFftObj;
+class ChromaFftObj2;
 class SpectroExpeFftObj : public MultichannelProcess
 {
 public:
@@ -55,7 +56,18 @@ protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
 
+    void ComputePanoFreqLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
+                             WDL_TypedBuf<BL_FLOAT> *panoFreqLine);
+
+    void ComputeChromaFreqLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
+                               const WDL_TypedBuf<BL_FLOAT> phases[2],
+                               WDL_TypedBuf<BL_FLOAT> *chromaFreqLine);
+
+    
     //
+    BL_FLOAT mSampleRate;
+    int mBufferSize;
+    
     BLSpectrogram4 *mSpectrogram;
     SpectrogramDisplayScroll3 *mSpectroDisplay;
     
@@ -68,6 +80,7 @@ protected:
     Mode mMode;
 
     PanogramFftObj *mPanogramObj;
+    ChromaFftObj2 *mChromaObj;
 };
 
 #endif /* defined(__BL_SpectroExpe__SpectroExpeFftObj__) */

@@ -16,15 +16,20 @@
 #include <SpectrogramDisplayScroll3.h>
 
 #include <PanogramFftObj.h>
+#include <HistoMaskLine2.h>
+#include <ChromaFftObj2.h>
 
 #include "SpectroExpeFftObj.h"
 
 #define USE_AVG_LINES 0 //1
 
-SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling, int freqRes,
-                                     BL_FLOAT sampleRate)
+SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling,
+                                     int freqRes, BL_FLOAT sampleRate)
 : MultichannelProcess()
 {
+    mBufferSize = bufferSize;
+    mSampleRate = sampleRate;
+    
     mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
@@ -37,12 +42,15 @@ SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling, int freqR
     mMode = SPECTROGRAM;
 
     mPanogramObj = new PanogramFftObj(bufferSize, oversampling, freqRes, sampleRate);
+    mChromaObj = new ChromaFftObj2(bufferSize, oversampling, freqRes, sampleRate);
+    mChromaObj->SetSharpness(1.0); // Better than 0.0
 }
 
 SpectroExpeFftObj::~SpectroExpeFftObj()
 {
     delete mSpectrogram;
     delete mPanogramObj;
+    delete mChromaObj;
 }
 
 void
@@ -65,13 +73,32 @@ SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioF
     if (mLineCount % mSpeedMod == 0)
     {
       if (mMode == SPECTROGRAM)
-	AddSpectrogramLine(magns[0], phases[0]);
+          AddSpectrogramLine(magns[0], phases[0]);
       else if (mMode == PANOGRAM)
       {
-	WDL_TypedBuf<BL_FLOAT> panoLine;
-	mPanogramObj->MagnsToPanoLine(magns, &panoLine);
+          WDL_TypedBuf<BL_FLOAT> panoLine;
+          mPanogramObj->MagnsToPanoLine(magns, &panoLine);
 
-	AddSpectrogramLine(panoLine, phases[0]);
+          AddSpectrogramLine(panoLine, phases[0]);
+      }
+      else if (mMode == PANOGRAM_FREQ)
+      {
+          WDL_TypedBuf<BL_FLOAT> panoFreqLine;
+          ComputePanoFreqLine(magns, &panoFreqLine);
+          AddSpectrogramLine(panoFreqLine, phases[0]);
+      }
+      else if (mMode == CHROMAGRAM)
+      {
+          WDL_TypedBuf<BL_FLOAT> chromaLine;
+          mChromaObj->MagnsToChromaLine(magns[0], phases[0], &chromaLine);
+
+          AddSpectrogramLine(chromaLine, phases[0]);
+      }
+      else if (mMode == CHROMAGRAM_FREQ)
+      {
+          WDL_TypedBuf<BL_FLOAT> chromaFreqLine;
+          ComputeChromaFreqLine(magns, phases, &chromaFreqLine);
+          AddSpectrogramLine(chromaFreqLine, phases[0]);
       }
     }
     
@@ -84,6 +111,9 @@ SpectroExpeFftObj::Reset(int bufferSize, int oversampling,
 {
     MultichannelProcess::Reset(bufferSize, oversampling,
                                freqRes, sampleRate);
+    
+    mBufferSize = bufferSize;
+    mSampleRate = sampleRate;
     
     // ORIGIN
     //int numCols = mBufferSize/8;
@@ -106,6 +136,9 @@ SpectroExpeFftObj::Reset(int bufferSize, int oversampling,
     mLineCount = 0;
     
     mOverlapLines.clear();
+
+    mPanogramObj->Reset(bufferSize, oversampling, freqRes, sampleRate);
+    mChromaObj->Reset(bufferSize, oversampling, freqRes, sampleRate);;
 }
 
 BLSpectrogram4 *
@@ -191,6 +224,85 @@ SpectroExpeFftObj::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     else
         mSpectrogram->AddLine(magns, phases);
 #endif
+}
+
+void
+SpectroExpeFftObj::ComputePanoFreqLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
+                                       WDL_TypedBuf<BL_FLOAT> *panoFreqLine)
+{
+    WDL_TypedBuf<BL_FLOAT> panoLine;
+    HistoMaskLine2 maskLine(magns[0].GetSize()*2);
+    mPanogramObj->MagnsToPanoLine(magns, &panoLine, &maskLine);
+    
+    panoFreqLine->Resize(panoLine.GetSize());
+    BLUtils::FillAllZero(panoFreqLine);
+    
+    vector<int> maskValues;
+    maskLine.GetValues(&maskValues);
+    
+    for (int i = 0; i < maskValues.size(); i++)
+    {
+        int idx = maskValues[i];
+        if (idx == -1)
+            continue;
+        
+        BL_FLOAT t = 0.0;
+        if (maskValues.size() > 1)
+            t = ((BL_FLOAT)idx)/(maskValues.size() - 1);
+        
+        panoFreqLine->Get()[i] = t;
+    }
+}
+
+void
+SpectroExpeFftObj::ComputeChromaFreqLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
+                                         const WDL_TypedBuf<BL_FLOAT> phases[2],
+                                         WDL_TypedBuf<BL_FLOAT> *chromaFreqLine)
+{
+#if 0 // TEST: align the tune to the max amp frequency
+    // Find the max freq
+    int maxAmpIdx = BLUtils::FindMaxIndex(magns[0]);
+    BL_FLOAT hzPerBin = mSampleRate/mBufferSize;
+    BL_FLOAT maxFreq = maxAmpIdx*hzPerBin;
+    while(maxFreq > 50.0)
+        maxFreq *= 0.5;
+    mChromaObj->SetATune(maxFreq);
+#endif
+    
+    WDL_TypedBuf<BL_FLOAT> chromaLine;
+    HistoMaskLine2 maskLine(magns[0].GetSize()*2);
+    mChromaObj->MagnsToChromaLine(magns[0], phases[0], &chromaLine, &maskLine);
+    
+    chromaFreqLine->Resize(chromaLine.GetSize());
+    //BLUtils::FillAllZero(chromaFreqLine);
+    BLUtils::FillAllValue(chromaFreqLine, (BL_FLOAT)-1.0);
+    
+    vector<int> maskValues;
+    maskLine.GetValues(&maskValues);
+    
+    for (int i = 0; i < maskValues.size(); i++)
+    {
+        int idx = maskValues[i];
+        if (idx == -1)
+            continue;
+        
+#if 0 // Just this => makes a chroma constant pattern
+        BL_FLOAT t = 0.0;
+        if (maskValues.size() > 1)
+            t = ((BL_FLOAT)idx)/(maskValues.size() - 1);
+        
+        chromaFreqLine->Get()[i] = t;
+#endif
+        
+#if 1 // Use chroma intensities, projected back
+        if (chromaFreqLine->Get()[idx] < 0.0)
+            chromaFreqLine->Get()[idx] = 0.0;
+        chromaFreqLine->Get()[idx] += chromaLine.Get()[i];
+#endif
+    }
+    
+    // Fill holes
+    BLUtils::FillMissingValues2(chromaFreqLine, true, (BL_FLOAT)-1.0);
 }
 
 #endif // IGRAPHICS_NANOVG
