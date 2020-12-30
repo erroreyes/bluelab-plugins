@@ -1,13 +1,13 @@
 //
-//  GhostViewerFftObj.h
-//  BL-GhostViewer
+//  SpectroExpeFftObj.h
+//  BL-SpectroExpe
 //
 //  Created by Pan on 02/06/18.
 //
 //
 
-#ifndef __BL_GhostViewer__GhostViewerFftObj__
-#define __BL_GhostViewer__GhostViewerFftObj__
+#ifndef __BL_SpectroExpe__SpectroExpeFftObj__
+#define __BL_SpectroExpe__SpectroExpeFftObj__
 
 #include <BLTypes.h>
 
@@ -17,19 +17,19 @@
 //
 
 // SpectrogramDisplayScroll => SpectrogramDisplayScroll3
-
+// SpectroExpeFftObj: From GhostViewerFftObj
 class BLSpectrogram4;
 class SpectrogramDisplayScroll3;
-class GhostViewerFftObj : public ProcessObj
+class SpectroExpeFftObj : public MultichannelProcess
 {
 public:
-    GhostViewerFftObj(int bufferSize, int oversampling, int freqRes,
+    SpectroExpeFftObj(int bufferSize, int oversampling, int freqRes,
                       BL_FLOAT sampleRate);
     
-    virtual ~GhostViewerFftObj();
-    
-    void ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                          const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer = NULL);
+    virtual ~SpectroExpeFftObj();
+
+    void ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
+                         const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer);
     
     void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
     
@@ -55,4 +55,4 @@ protected:
     int mSpeedMod;
 };
 
-#endif /* defined(__BL_GhostViewer__GhostViewerFftObj__) */
+#endif /* defined(__BL_SpectroExpe__SpectroExpeFftObj__) */

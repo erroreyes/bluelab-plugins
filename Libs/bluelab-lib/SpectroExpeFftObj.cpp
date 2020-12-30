@@ -1,6 +1,6 @@
 //
-//  GhostViewerFftObj.cpp
-//  BL-GhostViewer
+//  SpectroExpeFftObj.cpp
+//  BL-SpectroExpe
 //
 //  Created by Pan on 02/06/18.
 //
@@ -15,61 +15,67 @@
 #include <SpectrogramDisplay.h>
 #include <SpectrogramDisplayScroll3.h>
 
-#include "GhostViewerFftObj.h"
+#include "SpectroExpeFftObj.h"
 
 #define USE_AVG_LINES 0 //1
 
-GhostViewerFftObj::GhostViewerFftObj(int bufferSize, int oversampling, int freqRes,
+SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling, int freqRes,
                                      BL_FLOAT sampleRate)
-: ProcessObj(bufferSize)
+: MultichannelProcess()
 {
     mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
     
-    ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
+    MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
     mLineCount = 0;
     
     mSpeedMod = 1;
 }
 
-GhostViewerFftObj::~GhostViewerFftObj()
+SpectroExpeFftObj::~SpectroExpeFftObj()
 {
     delete mSpectrogram;
 }
 
 void
-GhostViewerFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                                    const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
+SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
+				   const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer)
 {
-    BLUtils::TakeHalf(ioBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples[2];
+    fftSamples[0] = *(*ioFftSamples)[0];
+    fftSamples[1] = *(*ioFftSamples)[1];
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
+    WDL_TypedBuf<BL_FLOAT> magns[2];
+    WDL_TypedBuf<BL_FLOAT> phases[2];
+    
+    for (int i = 0; i < 2; i++)
+    {
+        BLUtils::TakeHalf(&fftSamples[i]);
+        BLUtils::ComplexToMagnPhase(&magns[i], &phases[i], fftSamples[i]);
+    }
     
     if (mLineCount % mSpeedMod == 0)
-        AddSpectrogramLine(magns, phases);
+      AddSpectrogramLine(magns[0], phases[0]);
     
     mLineCount++;
-    
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
 }
 
 void
-GhostViewerFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate)
+SpectroExpeFftObj::Reset(int bufferSize, int oversampling,
+                         int freqRes, BL_FLOAT sampleRate)
 {
-    ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
+    MultichannelProcess::Reset(bufferSize, oversampling,
+                               freqRes, sampleRate);
     
     // ORIGIN
     //int numCols = mBufferSize/8;
     
-    // TODO: modify this in GhostViewer too
+    // TODO: modify this in SpectroExpe too
     // NEW
     // Prefer this, so the scroll speed won't be modified when
     // the overlapping changes
-    int numCols = mBufferSize/(32/mOverlapping);
+    int numCols = bufferSize/(32/oversampling);
     
     // Adjust to the sample rate to avoid scrolling
     // 2 times faster when we go from 44100 to 88200
@@ -78,7 +84,7 @@ GhostViewerFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT
     srCoeff = bl_round(srCoeff);
     numCols *= srCoeff;
     
-    mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
+    mSpectrogram->Reset(sampleRate, bufferSize/4, numCols);
     
     mLineCount = 0;
     
@@ -86,25 +92,25 @@ GhostViewerFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT
 }
 
 BLSpectrogram4 *
-GhostViewerFftObj::GetSpectrogram()
+SpectroExpeFftObj::GetSpectrogram()
 {
     return mSpectrogram;
 }
 
 void
-GhostViewerFftObj::SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay)
+SpectroExpeFftObj::SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }
 
 void
-GhostViewerFftObj::SetSpeedMod(int speedMod)
+SpectroExpeFftObj::SetSpeedMod(int speedMod)
 {
     mSpeedMod = speedMod;
 }
 
 void
-GhostViewerFftObj::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
+SpectroExpeFftObj::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                                       const WDL_TypedBuf<BL_FLOAT> &phases)
 {
 #if USE_AVG_LINES
