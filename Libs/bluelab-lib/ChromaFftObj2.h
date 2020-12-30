@@ -29,6 +29,7 @@
 
 class BLSpectrogram4;
 class SpectrogramDisplayScroll3;
+class HistoMaskLine2;
 
 #if USE_FREQ_OBJ
 class FreqAdjustObj3;
@@ -57,17 +58,25 @@ public:
 
     void SetSpeedMod(int speedMod);
     
+    // For external objects (such as SpectroExpe)
+    void MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
+                           const WDL_TypedBuf<BL_FLOAT> &phases,
+                           WDL_TypedBuf<BL_FLOAT> *chromaLine,
+                           HistoMaskLine2 *maskLine = NULL);
+    
 protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
     
     void MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                           WDL_TypedBuf<BL_FLOAT> *chromaLine);
+                           WDL_TypedBuf<BL_FLOAT> *chromaLine,
+			   HistoMaskLine2 *maskLine = NULL);
     
 #if USE_FREQ_OBJ
-    void MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                           const WDL_TypedBuf<BL_FLOAT> &realFreqs,
-                           WDL_TypedBuf<BL_FLOAT> *chromaLine);
+    void MagnsToChromaLineFreqs(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                const WDL_TypedBuf<BL_FLOAT> &realFreqs,
+                                WDL_TypedBuf<BL_FLOAT> *chromaLine,
+				HistoMaskLine2 *maskLine = NULL);
 #endif
     
     BL_FLOAT ComputeC0Freq();

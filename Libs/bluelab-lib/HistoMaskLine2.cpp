@@ -59,3 +59,9 @@ HistoMaskLine2::Apply(WDL_TypedBuf<BL_FLOAT> *values,
     
     *values = newValues;
 }
+
+void
+HistoMaskLine2::GetValues(vector<int> *values) 
+{
+  *values = mBuffer;
+}

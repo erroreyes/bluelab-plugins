@@ -54,7 +54,7 @@ public:
     void SetATune(BL_FLOAT aTune);
     
     void SetSharpness(BL_FLOAT sharpness);
-    
+
 protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);

@@ -99,6 +99,19 @@ BLDebug::DumpData(const char *filename, const WDL_TypedBuf<int> &buf)
 }
 
 void
+BLDebug::DumpData(const char *filename, const vector<int> &buf)
+{
+    char fullFilename[MAX_PATH];
+    sprintf(fullFilename, BASE_FILE"%s", filename);
+    
+    FILE *file = fopen(fullFilename, "w");
+    for (int i = 0; i < buf.size(); i++)
+        fprintf(file, "%d ", buf[i]);
+    
+    fclose(file);
+}
+
+void
 BLDebug::DumpData(const char *filename, const WDL_TypedBuf<WDL_FFT_COMPLEX> &buf)
 {
     char fullFilename[MAX_PATH];

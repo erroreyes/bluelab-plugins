@@ -36,6 +36,7 @@ public:
     static void DumpData(const char *filename, const int *data, int size);
     
     static void DumpData(const char *filename, const WDL_TypedBuf<int> &buf);
+    static void DumpData(const char *filename, const vector<int> &buf);
     
     static void DumpData(const char *filename, const WDL_TypedBuf<WDL_FFT_COMPLEX> &buf);
     

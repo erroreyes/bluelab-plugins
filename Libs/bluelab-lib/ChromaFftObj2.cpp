@@ -13,6 +13,7 @@
 #include <BLUtils.h>
 
 #include <SpectrogramDisplayScroll3.h>
+#include <HistoMaskLine2.h>
 
 #include "ChromaFftObj2.h"
 
@@ -44,7 +45,7 @@ ChromaFftObj2::ChromaFftObj2(int bufferSize, int oversampling, int freqRes,
     
     mATune = 440.0;
     mSharpness = 0.0;
-
+    
     mSpeedMod = 1;
     
 #if USE_FREQ_OBJ
@@ -86,7 +87,7 @@ ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 #if !USE_FREQ_OBJ
       MagnsToChromaLine(magns, &chromaLine);
 #else
-      MagnsToChromaLine(magns, realFreqs, &chromaLine);
+      MagnsToChromaLineFreqs(magns, realFreqs, &chromaLine);
 #endif
       
       AddSpectrogramLine(chromaLine, phases);
@@ -150,6 +151,27 @@ ChromaFftObj2::SetSharpness(BL_FLOAT sharpness)
     
     // Force re-creating the window
     mSmoothWin.Resize(0);
+}
+
+void
+ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                 const WDL_TypedBuf<BL_FLOAT> &phases,
+                                 WDL_TypedBuf<BL_FLOAT> *chromaLine,
+                                 HistoMaskLine2 *maskLine)
+{
+#if USE_FREQ_OBJ
+  // Must update the freq obj at each step
+  // (otherwise the detection will be very bad if mSpeedMod != 1)
+  WDL_TypedBuf<BL_FLOAT> realFreqs;
+  mFreqObj->ComputeRealFrequencies(phases, &realFreqs);
+#endif
+ 
+    // DEBUG
+#if 1 //!USE_FREQ_OBJ
+  MagnsToChromaLine(magns, chromaLine, maskLine);
+#else
+  MagnsToChromaLineFreqs(magns, realFreqs, chromaLine, maskLine);
+#endif
 }
 
 void
@@ -219,7 +241,8 @@ ChromaFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 
 void
 ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                 WDL_TypedBuf<BL_FLOAT> *chromaLine)
+                                 WDL_TypedBuf<BL_FLOAT> *chromaLine,
+                                 HistoMaskLine2 *maskLine)
 {
 // Corresponding to A 440
 //#define C0_TONE 16.35160
@@ -260,14 +283,39 @@ ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         
         if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
             chromaLine->Get()[binNum] += magnVal;
+
+        if (maskLine != NULL)
+        {
+            if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
+                maskLine->AddValue(binNum, i);
+        }
     }
     
+#if 0 // ORIG: before SpectroExpe
     // Smooth the chroma line
     if (mSmoothWin.GetSize() == 0)
     {
         int winSize = chromaLine->GetSize()/12;
         Window::MakeHanning(winSize, &mSmoothWin);
     }
+#endif
+    
+#if 1 // New: manage sharpness
+    // Initial, leaks a lot
+    int divisor = 12;
+    divisor = (1.0 - mSharpness)*MIN_SMOOTH_DIVISOR + mSharpness*MAX_SMOOTH_DIVISOR;
+    if (divisor <= 0)
+        divisor = 1;
+    if (divisor > chromaLine->GetSize())
+        divisor = chromaLine->GetSize();
+    
+    // Smooth the chroma line
+    if (mSmoothWin.GetSize() == 0)
+    {
+        int windowSize = chromaLine->GetSize()/divisor;
+        Window::MakeHanning(windowSize, &mSmoothWin);
+    }
+#endif
     
     WDL_TypedBuf<BL_FLOAT> smoothLine;
     BLUtils::SmoothDataWin(&smoothLine, *chromaLine, mSmoothWin);
@@ -277,9 +325,10 @@ ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 
 #if USE_FREQ_OBJ
 void
-ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                 const WDL_TypedBuf<BL_FLOAT> &realFreqs,
-                                 WDL_TypedBuf<BL_FLOAT> *chromaLine)
+ChromaFftObj2::MagnsToChromaLineFreqs(const WDL_TypedBuf<BL_FLOAT> &magns,
+                                      const WDL_TypedBuf<BL_FLOAT> &realFreqs,
+                                      WDL_TypedBuf<BL_FLOAT> *chromaLine,
+                                      HistoMaskLine2 *maskLine)
 {
     BL_FLOAT c0Freq = ComputeC0Freq();
     
@@ -316,6 +365,12 @@ ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         
         if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
             chromaLine->Get()[binNum] += magnVal;
+
+        if (maskLine != NULL)
+        {
+            if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
+                maskLine->AddValue(binNum, i);
+        }
     }
     
     // Initial, leaks a lot

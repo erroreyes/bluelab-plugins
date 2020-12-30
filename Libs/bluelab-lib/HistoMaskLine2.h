@@ -30,6 +30,8 @@ public:
     
     void Apply(WDL_TypedBuf<BL_FLOAT> *values,
                int startIndex, int endIndex);
+
+    void GetValues(vector<int> *values);
     
 protected:
     vector<int> mBuffer;
