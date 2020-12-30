@@ -20,9 +20,19 @@
 // SpectroExpeFftObj: From GhostViewerFftObj
 class BLSpectrogram4;
 class SpectrogramDisplayScroll3;
+class PanogramFftObj;
 class SpectroExpeFftObj : public MultichannelProcess
 {
 public:
+    enum Mode
+    {
+        SPECTROGRAM,
+        PANOGRAM,
+        PANOGRAM_FREQ,
+        CHROMAGRAM,
+        CHROMAGRAM_FREQ
+    };
+    
     SpectroExpeFftObj(int bufferSize, int oversampling, int freqRes,
                       BL_FLOAT sampleRate);
     
@@ -39,13 +49,14 @@ public:
     
     void SetSpeedMod(int speedMod);
     
+    void SetMode(Mode mode);
+    
 protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
 
     //
     BLSpectrogram4 *mSpectrogram;
-    
     SpectrogramDisplayScroll3 *mSpectroDisplay;
     
     long mLineCount;
@@ -53,6 +64,10 @@ protected:
     deque<WDL_TypedBuf<BL_FLOAT> > mOverlapLines;
     
     int mSpeedMod;
+    
+    Mode mMode;
+
+    PanogramFftObj *mPanogramObj;
 };
 
 #endif /* defined(__BL_SpectroExpe__SpectroExpeFftObj__) */

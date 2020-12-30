@@ -15,6 +15,8 @@
 #include <SpectrogramDisplay.h>
 #include <SpectrogramDisplayScroll3.h>
 
+#include <PanogramFftObj.h>
+
 #include "SpectroExpeFftObj.h"
 
 #define USE_AVG_LINES 0 //1
@@ -31,11 +33,16 @@ SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling, int freqR
     mLineCount = 0;
     
     mSpeedMod = 1;
+    
+    mMode = SPECTROGRAM;
+
+    mPanogramObj = new PanogramFftObj(bufferSize, oversampling, freqRes, sampleRate);
 }
 
 SpectroExpeFftObj::~SpectroExpeFftObj()
 {
     delete mSpectrogram;
+    delete mPanogramObj;
 }
 
 void
@@ -54,9 +61,19 @@ SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioF
         BLUtils::TakeHalf(&fftSamples[i]);
         BLUtils::ComplexToMagnPhase(&magns[i], &phases[i], fftSamples[i]);
     }
-    
+
     if (mLineCount % mSpeedMod == 0)
-      AddSpectrogramLine(magns[0], phases[0]);
+    {
+      if (mMode == SPECTROGRAM)
+	AddSpectrogramLine(magns[0], phases[0]);
+      else if (mMode == PANOGRAM)
+      {
+	WDL_TypedBuf<BL_FLOAT> panoLine;
+	mPanogramObj->MagnsToPanoLine(magns, &panoLine);
+
+	AddSpectrogramLine(panoLine, phases[0]);
+      }
+    }
     
     mLineCount++;
 }
@@ -107,6 +124,12 @@ void
 SpectroExpeFftObj::SetSpeedMod(int speedMod)
 {
     mSpeedMod = speedMod;
+}
+
+void
+SpectroExpeFftObj::SetMode(Mode mode)
+{
+    mMode = mode;
 }
 
 void

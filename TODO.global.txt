@@ -50,4 +50,5 @@ Visual Studio 2013 on Windows 7 => is ok!
 Platform Toolset: Visual Studio 2013 - Windows Xp (v120p)
 => need Xp SP3 + 3D graphics driver for execution (and suppress GetTickCount64())
 
-TODO: UST => fix threads with fiwes from Air/Ghost + pass thread sanitizer
+- Why is it so long to display a plug the first time (we have black windows for some time before the GUI is displayed (that was not the case with iPlug1)
+

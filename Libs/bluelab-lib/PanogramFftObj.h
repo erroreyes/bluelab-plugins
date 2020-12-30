@@ -43,16 +43,17 @@ public:
     void SetPlayFftObjs(PanogramPlayFftObj *objs[2]);
     
     void SetEnabled(bool flag);
+
+    // Set public for SpectroExpe
+    void MagnsToPanoLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
+                         WDL_TypedBuf<BL_FLOAT> *panoLine,
+                         HistoMaskLine2 *maskLine = NULL);
     
 protected:
     int GetNumCols();
     
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
-    
-    void MagnsToPanoLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
-                         WDL_TypedBuf<BL_FLOAT> *panoLine,
-                         HistoMaskLine2 *maskLine = NULL);
     
     //
     
