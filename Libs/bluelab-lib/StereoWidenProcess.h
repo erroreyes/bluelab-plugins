@@ -30,7 +30,14 @@ public:
     // For SoundMetaViewer
     static void StereoWiden(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioSamples,
                             BL_FLOAT widthFactor);
-    
+
+    static void ComputeStereoWidth(const WDL_TypedBuf<BL_FLOAT> magns[2],
+				   const WDL_TypedBuf<BL_FLOAT> phases[2],
+				   WDL_TypedBuf<BL_FLOAT> *width);
+      
+    static BL_FLOAT ComputeStereoWidth(BL_FLOAT magn0, BL_FLOAT magn1,
+				       BL_FLOAT phase0, BL_FLOAT phase1);
+      
     // Correct mehod for balance (no pan law)
     static void Balance(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
                         BL_FLOAT balance);
@@ -58,6 +65,8 @@ protected:
                             const WDL_FFT_COMPLEX &angle0, WDL_FFT_COMPLEX &angle1);
 #endif
 
+    static BL_FLOAT ComputeStereoWidth(BL_FLOAT l, BL_FLOAT r, WDL_FFT_COMPLEX angle0);
+    
     // For SoundMetaViewer
     static void StereoWiden(WDL_FFT_COMPLEX *left, WDL_FFT_COMPLEX *right, BL_FLOAT widthFactor);
 };

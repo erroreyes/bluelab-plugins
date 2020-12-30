@@ -19,9 +19,13 @@
 #include <HistoMaskLine2.h>
 #include <ChromaFftObj2.h>
 
+#include <StereoWidenProcess.h>
+
 #include "SpectroExpeFftObj.h"
 
 #define USE_AVG_LINES 0 //1
+
+#define STEREO_WIDTH_FACTOR 1000.0
 
 SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling,
                                      int freqRes, BL_FLOAT sampleRate)
@@ -99,6 +103,15 @@ SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioF
           WDL_TypedBuf<BL_FLOAT> chromaFreqLine;
           ComputeChromaFreqLine(magns, phases, &chromaFreqLine);
           AddSpectrogramLine(chromaFreqLine, phases[0]);
+      }
+      else if (mMode == WIDTH)
+      {
+          WDL_TypedBuf<BL_FLOAT> width;
+          StereoWidenProcess::ComputeStereoWidth(magns, phases, &width);
+          
+          BLUtils::MultValues(&width, (BL_FLOAT)STEREO_WIDTH_FACTOR);
+
+          AddSpectrogramLine(width, phases[0]);
       }
     }
     

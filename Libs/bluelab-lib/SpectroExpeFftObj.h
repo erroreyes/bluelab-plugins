@@ -31,7 +31,8 @@ public:
         PANOGRAM,
         PANOGRAM_FREQ,
         CHROMAGRAM,
-        CHROMAGRAM_FREQ
+        CHROMAGRAM_FREQ,
+	WIDTH
     };
     
     SpectroExpeFftObj(int bufferSize, int oversampling, int freqRes,

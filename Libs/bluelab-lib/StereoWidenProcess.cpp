@@ -201,6 +201,49 @@ StereoWidenProcess::StereoWiden(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioSamp
     }
 }
 
+// NOTE: Totally ignore phases
+void
+StereoWidenProcess::ComputeStereoWidth(const WDL_TypedBuf<BL_FLOAT> magns[2],
+				       const WDL_TypedBuf<BL_FLOAT> phases[2],
+				       WDL_TypedBuf<BL_FLOAT> *width)
+{
+  width->Resize(magns[0].GetSize());
+
+  WDL_FFT_COMPLEX angle0 = StereoWidenProcess::StereoWidenComputeAngle0();
+
+  for (int i = 0; i < width->GetSize(); i++)
+  {
+    BL_FLOAT l = magns[0].Get()[i];
+    BL_FLOAT r = magns[1].Get()[i];
+
+    BL_FLOAT w = ComputeStereoWidth(l, r, angle0);
+      
+    // Normalize
+    //BL_FLOAT mono = (l + r)*0.5;
+    //if (mono > BL_EPS)
+    //    w /= mono;
+      
+    width->Get()[i] = w;
+  }
+}
+
+BL_FLOAT
+StereoWidenProcess::ComputeStereoWidth(BL_FLOAT l, BL_FLOAT r, WDL_FFT_COMPLEX angle0)
+{
+  // Init
+  WDL_FFT_COMPLEX signal0;
+  signal0.re = l;
+  signal0.im = r;
+    
+  // Rotate
+  WDL_FFT_COMPLEX signal1;
+  COMP_MULT(signal0, angle0, signal1);
+
+  BL_FLOAT w = std::fabs(signal1.im);
+			 
+  return w;
+}
+
 // Correct formula for balance
 // (Le livre des techniques du son - Tome 2 - p227)
 //
