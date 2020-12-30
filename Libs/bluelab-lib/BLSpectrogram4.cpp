@@ -42,10 +42,11 @@ BLSpectrogram4::BLSpectrogram4(BL_FLOAT sampleRate,
     
     mDisplayMagns = true;
     
+    mScale = new Scale();
+    
+    mValueScale = Scale::DB;
     //mYLogScale = false;
     mYScale = Scale::MEL;
-    
-    mScale = new Scale();
     
     mDisplayPhasesX = false;
     mDisplayPhasesY = false;
@@ -128,6 +129,12 @@ BLSpectrogram4::SetDisplayMagns(bool flag)
 #if OPTIM_SPECTROGRAM2
     mSpectroDataChanged = true;
 #endif
+}
+
+void
+BLSpectrogram4::SetValueScale(Scale::Type scale)
+{
+    mValueScale = scale;
 }
 
 #if 0
@@ -314,8 +321,19 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     
     // Convert amp to dB
     // (Works like a charm !)
-    WDL_TypedBuf<BL_FLOAT> dbMagns;
-    BLUtils::AmpToDBNorm(&dbMagns, magns0, (BL_FLOAT)1e-15, (BL_FLOAT)-120.0);
+    //WDL_TypedBuf<BL_FLOAT> dbMagns;
+    //BLUtils::AmpToDBNorm(&dbMagns, magns0, (BL_FLOAT)1e-15, (BL_FLOAT)-120.0);
+    WDL_TypedBuf<BL_FLOAT> dbMagns = magns0;
+    if (mValueScale == Scale::DB)
+    {
+        for (int i = 0; i < magns0.GetSize(); i++)
+        {
+            BL_FLOAT val = magns0.Get()[i];
+            val = Scale::ApplyScale(mValueScale, val, (BL_FLOAT)-120.0, (BL_FLOAT)0.0);
+            dbMagns.Get()[i] = val;
+        }
+    }
+    
     mMagns.push_back(dbMagns);
     mPhases.push_back(phases0);
     

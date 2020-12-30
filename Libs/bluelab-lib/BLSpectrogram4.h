@@ -44,6 +44,7 @@ public:
     void TouchColorMap();
     void TouchData();
     
+    void SetValueScale(Scale::Type scale);
     //void SetYLogScale(bool flag);
     void SetYScale(Scale::Type yScale);
     
@@ -153,6 +154,7 @@ protected:
     
     //bool mYLogScale;
     Scale::Type mYScale;
+    Scale::Type mValueScale;
     
     bool mDisplayMagns;
     
