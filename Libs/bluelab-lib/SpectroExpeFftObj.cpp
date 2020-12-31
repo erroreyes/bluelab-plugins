@@ -27,6 +27,8 @@
 
 #define STEREO_WIDTH_FACTOR 1000.0
 
+#define TWO_PI 6.28318530717959
+
 SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling,
                                      int freqRes, BL_FLOAT sampleRate)
 : MultichannelProcess()
@@ -104,7 +106,7 @@ SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioF
           ComputeChromaFreqLine(magns, phases, &chromaFreqLine);
           AddSpectrogramLine(chromaFreqLine, phases[0]);
       }
-      else if (mMode == WIDTH)
+      else if (mMode == STEREO_WIDTH)
       {
           WDL_TypedBuf<BL_FLOAT> width;
           StereoWidenProcess::ComputeStereoWidth(magns, phases, &width);
@@ -112,6 +114,18 @@ SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioF
           BLUtils::MultValues(&width, (BL_FLOAT)STEREO_WIDTH_FACTOR);
 
           AddSpectrogramLine(width, phases[0]);
+      }
+      else if (mMode == DUET_MAGNS)
+      {
+          WDL_TypedBuf<BL_FLOAT> duetMagnsLine;
+          ComputeDuetMagns(magns, &duetMagnsLine);
+          AddSpectrogramLine(duetMagnsLine, phases[0]);
+      }
+      else if (mMode == DUET_PHASES)
+      {
+          WDL_TypedBuf<BL_FLOAT> duetPhasesLine;
+          ComputeDuetPhases(magns, &duetPhasesLine);
+          AddSpectrogramLine(duetPhasesLine, phases[0]);
       }
     }
     
@@ -316,6 +330,59 @@ SpectroExpeFftObj::ComputeChromaFreqLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
     
     // Fill holes
     BLUtils::FillMissingValues2(chromaFreqLine, true, (BL_FLOAT)-1.0);
+}
+
+void
+SpectroExpeFftObj::ComputeDuetMagns(WDL_TypedBuf<BL_FLOAT> magns[2],
+				    WDL_TypedBuf<BL_FLOAT> *duetMagnsLine)
+{
+    duetMagnsLine->Resize(magns[0].GetSize());
+    
+  for (int i = 0; i < magns[0].GetSize(); i++)
+  {
+    // Alpha
+    BL_FLOAT magn0 = magns[0].Get()[i];
+    BL_FLOAT magn1 = magns[1].Get()[i];
+        
+    //
+    BL_FLOAT alpha = 0.0;
+    if ((magn0 > BL_EPS) && (magn1 > BL_EPS))
+    {
+      if (magn0 >= magn1)
+      {
+          alpha = magn1/magn0;
+          
+          alpha = ((1.0 - alpha) + 1.0)*0.5;
+      }
+            
+      if (magn1 > magn0)
+      {
+          alpha = magn0/magn1;
+          
+          alpha = alpha*0.5;
+      }
+    }
+    
+    duetMagnsLine->Get()[i] = alpha;
+  }
+}
+
+void
+SpectroExpeFftObj::ComputeDuetPhases(WDL_TypedBuf<BL_FLOAT> phases[2],
+				     WDL_TypedBuf<BL_FLOAT> *duetPhasesLine)
+{
+    duetPhasesLine->Resize(phases[0].GetSize());
+    
+  for (int i = 0; i < phases[0].GetSize(); i++)
+  {
+    // Delta
+    BL_FLOAT phase0 = phases[0].Get()[i];
+    BL_FLOAT phase1 = phases[1].Get()[i];
+    
+    BL_FLOAT delta = (phase0 - phase1)*(1.0/TWO_PI);
+
+    duetPhasesLine->Get()[i] = delta;
+  }       
 }
 
 #endif // IGRAPHICS_NANOVG

@@ -32,7 +32,9 @@ public:
         PANOGRAM_FREQ,
         CHROMAGRAM,
         CHROMAGRAM_FREQ,
-	WIDTH
+	STEREO_WIDTH,
+	DUET_MAGNS,
+	DUET_PHASES
     };
     
     SpectroExpeFftObj(int bufferSize, int oversampling, int freqRes,
@@ -63,8 +65,13 @@ protected:
     void ComputeChromaFreqLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
                                const WDL_TypedBuf<BL_FLOAT> phases[2],
                                WDL_TypedBuf<BL_FLOAT> *chromaFreqLine);
-
     
+    void ComputeDuetMagns(WDL_TypedBuf<BL_FLOAT> magns[2],
+			  WDL_TypedBuf<BL_FLOAT> *duetMagnsLine);
+    
+    void ComputeDuetPhases(WDL_TypedBuf<BL_FLOAT> phases[2],
+			   WDL_TypedBuf<BL_FLOAT> *duetPhasesLine);
+
     //
     BL_FLOAT mSampleRate;
     int mBufferSize;
