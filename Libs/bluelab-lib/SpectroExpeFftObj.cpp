@@ -28,7 +28,11 @@
 #define USE_AVG_LINES 0 //1
 
 #define PANOGRAM_FREQ_FACTOR 0.8
-#define STEREO_WIDTH_FACTOR 100.0 //1000.0
+// 100 is good for spectro value dB scale
+//#define STEREO_WIDTH_FACTOR 100.0 //1000.0
+// 100 is good for spectro value linear scale
+#define STEREO_WIDTH_FACTOR 1000.0
+
 #define DUET_MAGNS_FACTOR 0.8
 #define DUET_PHASES_FACTOR 5000.0 //1000.0
 
