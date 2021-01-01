@@ -23,11 +23,14 @@
 
 #include "SpectroExpeFftObj.h"
 
+#define TWO_PI 6.28318530717959
+
 #define USE_AVG_LINES 0 //1
 
-#define STEREO_WIDTH_FACTOR 1000.0
-
-#define TWO_PI 6.28318530717959
+#define PANOGRAM_FREQ_FACTOR 0.8
+#define STEREO_WIDTH_FACTOR 100.0 //1000.0
+#define DUET_MAGNS_FACTOR 0.8
+#define DUET_PHASES_FACTOR 5000.0 //1000.0
 
 SpectroExpeFftObj::SpectroExpeFftObj(int bufferSize, int oversampling,
                                      int freqRes, BL_FLOAT sampleRate)
@@ -91,6 +94,9 @@ SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioF
       {
           WDL_TypedBuf<BL_FLOAT> panoFreqLine;
           ComputePanoFreqLine(magns, &panoFreqLine);
+          
+          BLUtils::MultValues(&panoFreqLine, (BL_FLOAT)PANOGRAM_FREQ_FACTOR);
+          
           AddSpectrogramLine(panoFreqLine, phases[0]);
       }
       else if (mMode == CHROMAGRAM)
@@ -119,12 +125,18 @@ SpectroExpeFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioF
       {
           WDL_TypedBuf<BL_FLOAT> duetMagnsLine;
           ComputeDuetMagns(magns, &duetMagnsLine);
+          
+          BLUtils::MultValues(&duetMagnsLine, (BL_FLOAT)DUET_MAGNS_FACTOR);
+          
           AddSpectrogramLine(duetMagnsLine, phases[0]);
       }
       else if (mMode == DUET_PHASES)
       {
           WDL_TypedBuf<BL_FLOAT> duetPhasesLine;
           ComputeDuetPhases(magns, &duetPhasesLine);
+          
+          //BLUtils::MultValues(&duetPhasesLine, (BL_FLOAT)DUET_PHASES_FACTOR);
+          
           AddSpectrogramLine(duetPhasesLine, phases[0]);
       }
     }
@@ -380,7 +392,9 @@ SpectroExpeFftObj::ComputeDuetPhases(WDL_TypedBuf<BL_FLOAT> phases[2],
     BL_FLOAT phase1 = phases[1].Get()[i];
     
     BL_FLOAT delta = (phase0 - phase1)*(1.0/TWO_PI);
-
+      
+      delta = (delta*DUET_PHASES_FACTOR + 1.0)*0.5;
+      
     duetPhasesLine->Get()[i] = delta;
   }       
 }

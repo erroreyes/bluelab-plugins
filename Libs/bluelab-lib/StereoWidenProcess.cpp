@@ -240,8 +240,8 @@ StereoWidenProcess::ComputeStereoWidth(BL_FLOAT l, BL_FLOAT r, WDL_FFT_COMPLEX a
   COMP_MULT(signal0, angle0, signal1);
 
   BL_FLOAT w = std::fabs(signal1.im);
-			 
-  return w;
+
+    return w;
 }
 
 // Correct formula for balance
