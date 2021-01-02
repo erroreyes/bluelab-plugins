@@ -389,12 +389,16 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
     step *= 2.0;
     
     // Start label
-    tm = ((int)(tm/step))*step;
+    tm = 0.0;
+    if (step > BL_EPS)
+        tm = ((int)(tm/step))*step;
 
     for (int i = 0; i < MAX_NUM_LABELS; i++)
     {
         // Parameter
-        BL_FLOAT t = (tm - startTime)/timeDuration;
+        BL_FLOAT t = 0.0;
+        if (timeDuration > BL_EPS)
+            t = (tm - startTime)/timeDuration;
         
         sprintf(hAxisData[i][0], "%g", t);
         

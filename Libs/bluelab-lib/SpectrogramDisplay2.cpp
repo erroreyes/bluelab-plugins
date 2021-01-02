@@ -47,6 +47,9 @@ SpectrogramDisplay2::SpectrogramDisplay2(SpectrogramDisplayState *state)
     mNvgColormapImage = 0;
     
     mNeedUpdateBGSpectrogramData = false;
+    
+    mNeedUpdateColormapData = false;
+    
     mNvgBGSpectroImage = 0;
     
     mShowSpectrogram = false;
