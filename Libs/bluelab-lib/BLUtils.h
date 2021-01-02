@@ -19,7 +19,7 @@
 #include <deque>
 using namespace std;
 
-#include <lice.h>
+//#include <lice.h>
 
 #include "IPlug_include_in_plug_hdr.h"
 
@@ -1351,7 +1351,7 @@ public:
     static void ComputeDerivative(WDL_TypedBuf<FLOAT_TYPE> *ioValues);
     
     // #bl-iplug2: ok
-    static void SwapColors(LICE_MemBitmap *bmp);
+    //static void SwapColors(LICE_MemBitmap *bmp);
     
     // See: http://paulbourke.net/miscellaneous/correlate/
     template <typename FLOAT_TYPE>

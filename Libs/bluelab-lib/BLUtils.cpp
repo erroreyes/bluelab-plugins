@@ -10394,7 +10394,7 @@ BLUtils::ComputeDerivative(WDL_TypedBuf<FLOAT_TYPE> *ioValues)
 template void BLUtils::ComputeDerivative(WDL_TypedBuf<float> *ioValues);
 template void BLUtils::ComputeDerivative(WDL_TypedBuf<double> *ioValues);
 
-void
+/*void
 BLUtils::SwapColors(LICE_MemBitmap *bmp)
 {
     int w = bmp->getWidth();
@@ -10413,7 +10413,7 @@ BLUtils::SwapColors(LICE_MemBitmap *bmp)
         
         pix = LICE_RGBA(b, g, r, a);
     }
-}
+}*/
 
 // See: http://paulbourke.net/miscellaneous/correlate/
 template <typename FLOAT_TYPE>
