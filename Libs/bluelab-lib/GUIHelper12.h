@@ -194,8 +194,10 @@ public:
     void GetGraphCurveColorGreen(int color[4]);
     void GetGraphCurveColorLightBlue(int color[4]);
     float GetGraphCurveFillAlpha();
-
+    float GetGraphCurveFillAlphaLight();
+    
     void GetGraphCurveColorGray(int color[4]);
+    void GetGraphCurveColorRed(int color[4]);
     
     static void ResetParameter(Plugin *plug, int paramIdx);
     
@@ -205,11 +207,12 @@ public:
     static bool PromptForFile(Plugin *plug, EFileAction action, WDL_String *result,
                               char* dir = "", char* extensions = "");
     
-protected:
+    // NOTE: set it public, can be useful
     ITextControl * CreateTitle(IGraphics *graphics, float x, float y,
                                const char *title, Size size,
                                EAlign align = EAlign::Center);
-    
+
+protected:
     ITextControl *CreateText(IGraphics *graphics, float x, float y,
                              const char *textStr, const IText &text,
                              float offsetX, float offsetY,
@@ -316,8 +319,10 @@ protected:
     IColor mGraphCurveColorGreen;
     IColor mGraphCurveColorLightBlue;
     float mGraphCurveFillAlpha;
+    float mGraphCurveFillAlphaLight;
 
     IColor mGraphCurveColorGray;
+    IColor mGraphCurveColorRed;
 };
 
 #endif /* GUIHelper12_hpp */

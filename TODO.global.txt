@@ -52,3 +52,16 @@ Platform Toolset: Visual Studio 2013 - Windows Xp (v120p)
 
 - Why is it so long to display a plug the first time (we have black windows for some time before the GUI is displayed (that was not the case with iPlug1)
 
+TODO: test very optimized nanovg: https://github.com/zlgopen/awtk/tree/master/3rd/nanovg
+
+PERFORMANCES/FPS: really consider passing everything to 25fps! (
+we can gain x2 performances - See Ghost -)
+
+Undefined behavior sanitizer on old XCode: 
+add -fsanitize=undefined on cflags an linker flags
+
+TODO for all plugs at the end: pass thread sanitizer & undefined behavior sanitizer & address sanitizer
+
+TODO: for all plugins, check that the display is not redisplayed every time (with debug blinking rectangles). check that is only displayed whn there is new data.
+
+Website: Emrah => add a category menu (for the moment this is not practical)

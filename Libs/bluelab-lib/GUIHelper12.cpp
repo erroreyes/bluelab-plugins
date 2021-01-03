@@ -158,8 +158,10 @@ GUIHelper12::GUIHelper12(Style style)
         mGraphCurveColorGreen = IColor(255, 194, 243, 61);
         mGraphCurveColorLightBlue = IColor(255, 200, 200, 255);
         mGraphCurveFillAlpha = 0.5;
+        mGraphCurveFillAlphaLight = 0.2;
 
         mGraphCurveColorGray = IColor(255, 64, 64, 64);
+        mGraphCurveColorRed = IColor(255, 255, 64, 64);
     }
 }
 
@@ -955,6 +957,12 @@ GUIHelper12::GetGraphCurveFillAlpha()
     return mGraphCurveFillAlpha;
 }
 
+float
+GUIHelper12::GetGraphCurveFillAlphaLight()
+{
+    return mGraphCurveFillAlphaLight;
+}
+
 void
 GUIHelper12::GetGraphCurveColorGray(int color[4])
 {
@@ -962,6 +970,15 @@ GUIHelper12::GetGraphCurveColorGray(int color[4])
   color[1] = mGraphCurveColorGray.G;
   color[2] = mGraphCurveColorGray.B;
   color[3] = mGraphCurveColorGray.A;
+}
+
+void
+GUIHelper12::GetGraphCurveColorRed(int color[4])
+{
+    color[0] = mGraphCurveColorRed.R;
+    color[1] = mGraphCurveColorRed.G;
+    color[2] = mGraphCurveColorRed.B;
+    color[3] = mGraphCurveColorRed.A;
 }
 
 void
