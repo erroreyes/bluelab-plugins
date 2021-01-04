@@ -154,6 +154,9 @@ ImpulseResponseExtractor::AddSamples2(ImpulseResponseExtractor *ext0,
 {
     if (ext1 == NULL)
     {
+        if (ext0 == NULL)
+            return;
+        
         ext0->AddSamples(samples0, nFrames, outResponse0);
     
         return;

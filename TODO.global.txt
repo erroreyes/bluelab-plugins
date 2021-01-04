@@ -65,3 +65,4 @@ TODO for all plugs at the end: pass thread sanitizer & undefined behavior saniti
 TODO: for all plugins, check that the display is not redisplayed every time (with debug blinking rectangles). check that is only displayed whn there is new data.
 
 Website: Emrah => add a category menu (for the moment this is not practical)
+Website: click -> do not open in new windows (except if linking to another website)
