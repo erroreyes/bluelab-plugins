@@ -169,7 +169,7 @@ public:
     void SetHAxis(GraphAxis2 *axis);
     void SetVAxis(GraphAxis2 *axis);
     
-    void SetXScale(bool dBFlag, BL_GUI_FLOAT minX = 0.0, BL_GUI_FLOAT maxX = 1.0);
+    //void SetXScale(bool dBFlag, BL_GUI_FLOAT minX = 0.0, BL_GUI_FLOAT maxX = 1.0);
     
     void SetAutoAdjust(bool flag, BL_GUI_FLOAT smoothCoeff);
     
@@ -339,9 +339,9 @@ protected:
     int mSepY0Color[4];
     
     // X dB scale
-    bool mXdBScale;
-    BL_GUI_FLOAT mMinX;
-    BL_GUI_FLOAT mMaxX;
+    //bool mXdBScale;
+    //BL_GUI_FLOAT mMinX;
+    //BL_GUI_FLOAT mMaxX;
 
     GraphAxis2 *mHAxis;
     GraphAxis2 *mVAxis;

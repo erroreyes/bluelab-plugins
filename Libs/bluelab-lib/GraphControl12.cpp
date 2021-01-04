@@ -123,9 +123,9 @@ GraphControl12::GraphControl12(Plugin *pPlug, IGraphics *graphics,
     mSepY0Color[3] = 0;
     
     // dB Scale
-	mXdBScale = false;
-    mMinX = 0.0;
-	mMaxX = 1.0;
+	//mXdBScale = false;
+    //mMinX = 0.0;
+	//mMaxX = 1.0;
     
     SetClearColor(0, 0, 0, 255);
         
@@ -322,7 +322,7 @@ GraphControl12::SetVAxis(GraphAxis2 *axis)
     mVAxis = axis;
 }
 
-void
+/*void
 GraphControl12::SetXScale(bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
 {
     mXdBScale = dbFlag;
@@ -332,6 +332,7 @@ GraphControl12::SetXScale(bool dbFlag, BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX)
     
     mDataChanged = true;
 }
+*/
 
 void
 GraphControl12::SetAutoAdjust(bool flag, BL_GUI_FLOAT smoothCoeff)
