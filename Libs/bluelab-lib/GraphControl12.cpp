@@ -171,6 +171,15 @@ GraphControl12::~GraphControl12()
         curve->SetGraph(NULL);
     }
     
+    if (mHAxis != NULL)
+    {
+        mHAxis->SetGraph(NULL);
+    }
+    if (mHAxis != NULL)
+    {
+        mHAxis->SetGraph(NULL);
+    }
+    
     for (int i = 0; i < mCustomDrawers.size(); i++)
     {
         GraphCustomDrawer *drawer = mCustomDrawers[i];
@@ -314,12 +323,16 @@ void
 GraphControl12::SetHAxis(GraphAxis2 *axis)
 {
     mHAxis = axis;
+    
+    mHAxis->SetGraph(this);
 }
 
 void
 GraphControl12::SetVAxis(GraphAxis2 *axis)
 {
     mVAxis = axis;
+    
+    mVAxis->SetGraph(this);
 }
 
 /*void

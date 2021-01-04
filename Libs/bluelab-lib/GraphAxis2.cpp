@@ -10,10 +10,14 @@
 #include <GraphSwapColor.h>
 #include <Scale.h>
 
+#include <GraphControl12.h>
+
 #include "GraphAxis2.h"
 
 GraphAxis2::GraphAxis2()
 {
+    mGraph = NULL;
+    
     for (int i = 0; i < 4; i++)
         mColor[i] = 0;
     
@@ -81,6 +85,8 @@ GraphAxis2::InitHAxis(Scale::Type scale,
     
     InitAxis(axisColor, axisLabelColor,
              axisOverlayColor, axisLinesOverlayColor, lineWidth);
+    
+    NotifyGraph();
 }
 
 void
@@ -113,6 +119,8 @@ GraphAxis2::InitVAxis(Scale::Type scale,
     InitAxis(axisColor, axisLabelColor,
              axisOverlayColor, axisLinesOverlayColor,
              lineWidth);
+    
+    NotifyGraph();
 }
 
 void
@@ -120,6 +128,8 @@ GraphAxis2::SetMinMaxValues(BL_GUI_FLOAT minVal, BL_GUI_FLOAT maxVal)
 {
     mMinVal = minVal;
     mMaxVal = maxVal;
+    
+    NotifyGraph();
 }
 
 void
@@ -146,6 +156,8 @@ GraphAxis2::SetData(char *data[][2], int numData)
         
         mValues.push_back(aData);
     }
+    
+    NotifyGraph();
 }
 
 void
@@ -153,6 +165,8 @@ GraphAxis2::SetBounds(BL_FLOAT bounds[2])
 {
     mBounds[0] = bounds[0];
     mBounds[1] = bounds[1];
+    
+    NotifyGraph();
 }
 
 void
@@ -209,4 +223,20 @@ GraphAxis2::InitAxis(int axisColor[4], int axisLabelColor[4],
     }
     
     mLineWidth = lineWidth;
+    
+    NotifyGraph();
+}
+
+void
+GraphAxis2::SetGraph(GraphControl12 *graph)
+{
+    mGraph = graph;
+}
+
+void
+GraphAxis2::NotifyGraph()
+{
+    if (mGraph != NULL)
+        // Notify the graph
+        mGraph->SetDataChanged();
 }

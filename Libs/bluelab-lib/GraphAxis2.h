@@ -18,6 +18,7 @@ using namespace std;
 
 #include "IPlug_include_in_plug_hdr.h"
 
+class GraphControl12;
 class GraphAxis2
 {
 public:
@@ -55,6 +56,11 @@ public:
 
     
 protected:
+    friend class GraphControl12;
+    void SetGraph(GraphControl12 *graph);
+    
+    void NotifyGraph();
+    
     void InitAxis(int axisColor[4],
                   int axisLabelColor[4],
                   int axisLabelOverlayColor[4],
@@ -102,6 +108,8 @@ protected:
     BL_GUI_FLOAT mLineWidth;
     
     BL_GUI_FLOAT mBounds[2];
+    
+    GraphControl12 *mGraph;
 };
 
 #endif
