@@ -59,6 +59,7 @@ we can gain x2 performances - See Ghost -)
 
 Undefined behavior sanitizer on old XCode: 
 add -fsanitize=undefined on cflags an linker flags
+“other linker flags” + “apple llvm 8 custom compiler flags”
 
 TODO for all plugs at the end: pass thread sanitizer & undefined behavior sanitizer & address sanitizer
 
@@ -66,3 +67,6 @@ TODO: for all plugins, check that the display is not redisplayed every time (wit
 
 Website: Emrah => add a category menu (for the moment this is not practical)
 Website: click -> do not open in new windows (except if linking to another website)
+
+TODO: add the mechanism for NotifyGraph() from curves & axes to all other objects
+(custom drawer…)
