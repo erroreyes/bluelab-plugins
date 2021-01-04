@@ -389,7 +389,7 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
     step *= 2.0;
     
     // Start label
-    tm = 0.0;
+    //tm = 0.0;
     if (step > BL_EPS)
         tm = ((int)(tm/step))*step;
 
