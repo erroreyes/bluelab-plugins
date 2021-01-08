@@ -193,7 +193,7 @@ ImpulseResponseExtractor::AddWithDecimation(const WDL_TypedBuf<BL_FLOAT> &sample
         WDL_TypedBuf<BL_FLOAT> decimSamples;
     
         // In Utils, decimation factor is inverted
-        BLUtils::DecimateSamples(&decimSamples, samples, 1.0/decFactor);
+        BLUtils::DecimateSamples(&decimSamples, samples, (BL_FLOAT)1.0/decFactor);
     
         outSamples->Add(decimSamples.Get(), decimSamples.GetSize());
     }

@@ -19,7 +19,7 @@
 #define USE_SPECTRO_SCROLL 1
 
 class BLSpectrogram4;
-class SpectrogramDisplayScroll2;
+class SpectrogramDisplayScroll3;
 
 class InfrasonicViewerFftObj2 : public ProcessObj
 {
@@ -38,7 +38,7 @@ public:
     BLSpectrogram4 *GetSpectrogram();
     
 #if USE_SPECTRO_SCROLL
-    void SetSpectrogramDisplay(SpectrogramDisplayScroll2 *spectroDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay);
 #else
     void SetSpectrogramDisplay(SpectrogramDisplay *spectroDisplay);
 #endif
@@ -60,7 +60,7 @@ protected:
     BLSpectrogram4 *mSpectrogram;
     
 #if USE_SPECTRO_SCROLL
-    SpectrogramDisplayScroll2 *mSpectroDisplay;
+    SpectrogramDisplayScroll3 *mSpectroDisplay;
 #else
     SpectrogramDisplay *mSpectroDisplay;
 #endif

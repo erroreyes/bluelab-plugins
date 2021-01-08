@@ -28,7 +28,7 @@
 // (useful for >= 1000ms)
 #define DISCARD_MAX_SAMPLES 2048
 
-ImpulseResponseSet::ImpulseResponseSet(long responseSize, double sampleRate)
+ImpulseResponseSet::ImpulseResponseSet(long responseSize, BL_FLOAT sampleRate)
 {
     mResponseSize = responseSize;
   
@@ -38,7 +38,7 @@ ImpulseResponseSet::ImpulseResponseSet(long responseSize, double sampleRate)
 ImpulseResponseSet::~ImpulseResponseSet() {}
 
 void
-ImpulseResponseSet::Reset(long responseSize, double sampleRate)
+ImpulseResponseSet::Reset(long responseSize, BL_FLOAT sampleRate)
 {
     mResponseSize = responseSize;
   
@@ -48,13 +48,13 @@ ImpulseResponseSet::Reset(long responseSize, double sampleRate)
 }
 
 void
-ImpulseResponseSet::SetSampleRate(double sampleRate)
+ImpulseResponseSet::SetSampleRate(BL_FLOAT sampleRate)
 {
     mSampleRate = sampleRate;
 }
 
 void
-ImpulseResponseSet::AddImpulseResponse(const WDL_TypedBuf<double> &impulseResponse)
+ImpulseResponseSet::AddImpulseResponse(const WDL_TypedBuf<BL_FLOAT> &impulseResponse)
 {
     if (impulseResponse.GetSize() != mResponseSize)
         return;
@@ -63,18 +63,18 @@ ImpulseResponseSet::AddImpulseResponse(const WDL_TypedBuf<double> &impulseRespon
 }
 
 void
-ImpulseResponseSet::GetLastImpulseResponse(WDL_TypedBuf<double> *impulseResponse)
+ImpulseResponseSet::GetLastImpulseResponse(WDL_TypedBuf<BL_FLOAT> *impulseResponse)
 {
     if (mResponses.empty())
         return;
   
-    const WDL_TypedBuf<double> &lastResp = mResponses[mResponses.size() - 1];
+    const WDL_TypedBuf<BL_FLOAT> &lastResp = mResponses[mResponses.size() - 1];
   
     *impulseResponse = lastResp;
 }
 
 void
-ImpulseResponseSet::GetAvgImpulseResponse(WDL_TypedBuf<double> *impulseResponse)
+ImpulseResponseSet::GetAvgImpulseResponse(WDL_TypedBuf<BL_FLOAT> *impulseResponse)
 {
     if (mResponses.empty())
         return;
@@ -84,21 +84,21 @@ ImpulseResponseSet::GetAvgImpulseResponse(WDL_TypedBuf<double> *impulseResponse)
   
     for (int i = 0; i < mResponses.size(); i++)
     {
-        const WDL_TypedBuf<double> &resp = mResponses[i];
+        const WDL_TypedBuf<BL_FLOAT> &resp = mResponses[i];
     
         for (int j = 0; j < impulseResponse->GetSize(); j++)
         {
-            double val = resp.Get()[j];
+            BL_FLOAT val = resp.Get()[j];
       
             impulseResponse->Get()[j] += val;
         }
     }
   
-    double div = (double)mResponses.size();
+    BL_FLOAT div = (BL_FLOAT)mResponses.size();
   
     for (int j = 0; j < impulseResponse->GetSize(); j++)
     {
-        double val = impulseResponse->Get()[j];
+        BL_FLOAT val = impulseResponse->Get()[j];
         val /= div;
     
         impulseResponse->Get()[j] = val;
@@ -118,10 +118,10 @@ ImpulseResponseSet::GetSize() const
 }
 
 void
-ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *response,
+ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<BL_FLOAT> *response,
                                          long responseSize,
-                                         double decimFactor,
-                                         double sampleRate)
+                                         BL_FLOAT decimFactor,
+                                         BL_FLOAT sampleRate)
 {
     // Do we have new instant responses ready ?
     if (response->GetSize() == 0)
@@ -138,13 +138,13 @@ ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *response,
 }
 
 void
-ImpulseResponseSet::AlignImpulseResponseSamples(WDL_TypedBuf<double> *response,
-                                                long responseSize, double sampleRate)
+ImpulseResponseSet::AlignImpulseResponseSamples(WDL_TypedBuf<BL_FLOAT> *response,
+                                                long responseSize, BL_FLOAT sampleRate)
 {
     if (response->GetSize() == 0)
         return;
   
-    double coeff = 1.0;
+    BL_FLOAT coeff = 1.0;
 #if FIX_ALIGN_SR
     coeff = sampleRate/REF_SAMPLE_RATE;
 #endif
@@ -155,8 +155,8 @@ ImpulseResponseSet::AlignImpulseResponseSamples(WDL_TypedBuf<double> *response,
 }
 
 void
-ImpulseResponseSet::AlignImpulseResponses(WDL_TypedBuf<double> responses[2],
-                                          long responseSize, double sampleRate)
+ImpulseResponseSet::AlignImpulseResponses(WDL_TypedBuf<BL_FLOAT> responses[2],
+                                          long responseSize, BL_FLOAT sampleRate)
 {
     // Do we have new instant responses ready ?
     if (responses[0].GetSize() == 0)
@@ -183,7 +183,7 @@ ImpulseResponseSet::AlignImpulseResponses(WDL_TypedBuf<double> responses[2],
 }
 
 void
-ImpulseResponseSet::NormalizeImpulseResponses(WDL_TypedBuf<double> responses[2])
+ImpulseResponseSet::NormalizeImpulseResponses(WDL_TypedBuf<BL_FLOAT> responses[2])
 {
     // Do we have new instant responses ready ?
     if (responses[0].GetSize() == 0)
@@ -204,17 +204,17 @@ ImpulseResponseSet::NormalizeImpulseResponses(WDL_TypedBuf<double> responses[2])
 void
 ImpulseResponseSet::AlignImpulseResponsesAll(ImpulseResponseSet *impRespSets[2],
                                              long responseSize,
-                                             double sampleRate)
+                                             BL_FLOAT sampleRate)
 {
     for (int i = 0; i < impRespSets[0]->mResponses.size(); i++)
     {
-        WDL_TypedBuf<double> resp0 = impRespSets[0]->mResponses[i];
+        WDL_TypedBuf<BL_FLOAT> resp0 = impRespSets[0]->mResponses[i];
     
-        WDL_TypedBuf<double> resp1;
+        WDL_TypedBuf<BL_FLOAT> resp1;
         if (!impRespSets[1]->mResponses.empty())
             resp1 = impRespSets[1]->mResponses[i];
     
-        WDL_TypedBuf<double> responses[2] = { resp0, resp1 };
+        WDL_TypedBuf<BL_FLOAT> responses[2] = { resp0, resp1 };
     
         AlignImpulseResponses(responses, responseSize, sampleRate);
     }
@@ -223,12 +223,12 @@ ImpulseResponseSet::AlignImpulseResponsesAll(ImpulseResponseSet *impRespSets[2],
 void
 ImpulseResponseSet::AlignImpulseResponsesAll(ImpulseResponseSet *impRespSet,
                                              long responseSize,
-                                             double decimationFactor,
-                                             double sampleRate)
+                                             BL_FLOAT decimationFactor,
+                                             BL_FLOAT sampleRate)
 {
     for (int i = 0; i < impRespSet->mResponses.size(); i++)
     {
-        WDL_TypedBuf<double> &resp = impRespSet->mResponses[i];
+        WDL_TypedBuf<BL_FLOAT> &resp = impRespSet->mResponses[i];
     
         AlignImpulseResponse(&resp, responseSize, decimationFactor, sampleRate);
     }
@@ -373,8 +373,8 @@ ImpulseResponseSet::DiscardBadImpulseResponses2(ImpulseResponseSet *respSet0,
 // If we choosed directly 64 samples, this cut the bugger part
 // of the responses
 void
-ImpulseResponseSet::MakeFades(WDL_TypedBuf<double> *impulseResponse,
-                              long maxSize, double decimFactor)
+ImpulseResponseSet::MakeFades(WDL_TypedBuf<BL_FLOAT> *impulseResponse,
+                              long maxSize, BL_FLOAT decimFactor)
 {
     if (impulseResponse->GetSize() == 0)
         return;
@@ -388,7 +388,7 @@ ImpulseResponseSet::MakeFades(WDL_TypedBuf<double> *impulseResponse,
     // Fade in
     for (int i = 0; i < fadeInSizeSamples; i++)
     {
-        double coeff = ((double)i)/(fadeInSizeSamples - 1);
+        BL_FLOAT coeff = ((BL_FLOAT)i)/(fadeInSizeSamples - 1);
     
         if (i >= impulseResponse->GetSize())
             break;
@@ -400,7 +400,7 @@ ImpulseResponseSet::MakeFades(WDL_TypedBuf<double> *impulseResponse,
     int totalFadeSize = fadeOutSizeSamples + numDiscardSamples;
     for (int i = 0; i < totalFadeSize; i++)
     {
-        double coeff = 1.0 - ((double)i)/(fadeOutSizeSamples - 1);
+        BL_FLOAT coeff = 1.0 - ((BL_FLOAT)i)/(fadeOutSizeSamples - 1);
         if (coeff < 0.0)
             coeff = 0.0;
     
@@ -413,24 +413,24 @@ ImpulseResponseSet::MakeFades(WDL_TypedBuf<double> *impulseResponse,
 }
 
 void
-ImpulseResponseSet::NormalizeImpulseResponse(WDL_TypedBuf<double> *impulseResponse)
+ImpulseResponseSet::NormalizeImpulseResponse(WDL_TypedBuf<BL_FLOAT> *impulseResponse)
 {
-    double maxVal = GetMax(*impulseResponse);
+    BL_FLOAT maxVal = GetMax(*impulseResponse);
   
     if (maxVal <= 0.0)
         return;
   
-    double coeff = 1.0/maxVal;
+    BL_FLOAT coeff = 1.0/maxVal;
   
     MultImpulseResponse(impulseResponse, coeff);
 }
 
 void
-ImpulseResponseSet::NormalizeImpulseResponse2(WDL_TypedBuf<double> *impulseResponse0,
-                                              WDL_TypedBuf<double> *impulseResponse1)
+ImpulseResponseSet::NormalizeImpulseResponse2(WDL_TypedBuf<BL_FLOAT> *impulseResponse0,
+                                              WDL_TypedBuf<BL_FLOAT> *impulseResponse1)
 {
-    double maxVal0 = GetMax(*impulseResponse0);
-    double maxVal1 = GetMax(*impulseResponse1);
+    BL_FLOAT maxVal0 = GetMax(*impulseResponse0);
+    BL_FLOAT maxVal1 = GetMax(*impulseResponse1);
   
     if (maxVal0 <= 0.0)
         return;
@@ -442,16 +442,16 @@ ImpulseResponseSet::NormalizeImpulseResponse2(WDL_TypedBuf<double> *impulseRespo
         return;
 #endif
   
-    double maxVal = (maxVal0 > maxVal1) ? maxVal0 : maxVal1;
+    BL_FLOAT maxVal = (maxVal0 > maxVal1) ? maxVal0 : maxVal1;
   
-    double coeff = 1.0/maxVal;
+    BL_FLOAT coeff = 1.0/maxVal;
   
     MultImpulseResponse(impulseResponse0, coeff);
     MultImpulseResponse(impulseResponse1, coeff);
 }
 
 void
-ImpulseResponseSet::DenoiseImpulseResponse(WDL_TypedBuf<double> *impulseResponse)
+ImpulseResponseSet::DenoiseImpulseResponse(WDL_TypedBuf<BL_FLOAT> *impulseResponse)
 {
     // Set the tail to 0 as long it is only noise (hiss)
     // And make the transition with a fade out
@@ -469,13 +469,13 @@ ImpulseResponseSet::DenoiseImpulseResponse(WDL_TypedBuf<double> *impulseResponse
         // Short response, do not remove noise
         return;
   
-    const double noiseThreshold = DBToAmp(NOISE_THRESHOLD_DB);
+    const BL_FLOAT noiseThreshold = DBToAmp(NOISE_THRESHOLD_DB);
   
-    double winAvg = BLUtils::ComputeAbsAvg(*impulseResponse,
+    BL_FLOAT winAvg = BLUtils::ComputeAbsAvg(*impulseResponse,
                                            respSize - 1 - WINDOW_SIZE,
                                            respSize - 1);
   
-    double lastIndex = 0;
+    BL_FLOAT lastIndex = 0;
   
     // Start from the end, and stop as soon as we get above the threshold
     for (int i = respSize - 1 - WINDOW_SIZE; i >= 0; i--)
@@ -497,13 +497,13 @@ ImpulseResponseSet::DenoiseImpulseResponse(WDL_TypedBuf<double> *impulseResponse
     
         int id1 = i + WINDOW_SIZE;
     
-        double val0 = impulseResponse->Get()[id0];
-        double val1 = impulseResponse->Get()[id1];
+        BL_FLOAT val0 = impulseResponse->Get()[id0];
+        BL_FLOAT val1 = impulseResponse->Get()[id1];
     
         val0 = fabs(val0);
         val1 = fabs(val1);
     
-        double sum = winAvg*WINDOW_SIZE;
+        BL_FLOAT sum = winAvg*WINDOW_SIZE;
         sum -= val1;
         sum += val0;
     
@@ -513,8 +513,8 @@ ImpulseResponseSet::DenoiseImpulseResponse(WDL_TypedBuf<double> *impulseResponse
     if ((lastIndex > 0) && (lastIndex < respSize - 1))
     {
         // Make fade out and then zero the noisy tail
-        double fadeStart = ((double)lastIndex)/respSize;
-        double fadeEnd = ((double)lastIndex + WINDOW_SIZE)/respSize;
+        BL_FLOAT fadeStart = ((BL_FLOAT)lastIndex)/respSize;
+        BL_FLOAT fadeEnd = ((BL_FLOAT)lastIndex + WINDOW_SIZE)/respSize;
         bool fadeIn = false;
     
         BLUtils::Fade(impulseResponse, fadeStart, fadeEnd, fadeIn);
@@ -522,13 +522,13 @@ ImpulseResponseSet::DenoiseImpulseResponse(WDL_TypedBuf<double> *impulseResponse
 }
 
 
-double
-ImpulseResponseSet::GetMax(const WDL_TypedBuf<double> &buf)
+BL_FLOAT
+ImpulseResponseSet::GetMax(const WDL_TypedBuf<BL_FLOAT> &buf)
 {
-    double maxVal = 0.0;
+    BL_FLOAT maxVal = 0.0;
     for (int i = 0; i < buf.GetSize(); i++)
     {
-        double val = buf.Get()[i];
+        BL_FLOAT val = buf.Get()[i];
     
         val = fabs(val);
         if (val > maxVal)
@@ -539,11 +539,11 @@ ImpulseResponseSet::GetMax(const WDL_TypedBuf<double> &buf)
 }
 
 void
-ImpulseResponseSet::MultImpulseResponse(WDL_TypedBuf<double> *buf, double val)
+ImpulseResponseSet::MultImpulseResponse(WDL_TypedBuf<BL_FLOAT> *buf, BL_FLOAT val)
 {
     for (int i = 0; i < buf->GetSize(); i++)
     {
-        double bufVal = buf->Get()[i];
+        BL_FLOAT bufVal = buf->Get()[i];
     
         bufVal *= val;
     
@@ -552,7 +552,7 @@ ImpulseResponseSet::MultImpulseResponse(WDL_TypedBuf<double> *buf, double val)
 }
 
 void
-ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *impulseResponse,
+ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<BL_FLOAT> *impulseResponse,
                                          long indexForMax)
 {
     // Align
@@ -560,7 +560,7 @@ ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *impulseResponse,
     
     if (maxIndex < indexForMax)
     {
-        WDL_TypedBuf<double> newResponse;
+        WDL_TypedBuf<BL_FLOAT> newResponse;
       
         int numZeros = indexForMax - maxIndex;
         if (numZeros < 0)
@@ -579,7 +579,7 @@ ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *impulseResponse,
     
         for (int i = 0; i < size; i++)
         {
-            double val = impulseResponse->Get()[i];
+            BL_FLOAT val = impulseResponse->Get()[i];
             newResponse.Add(val);
         }
       
@@ -588,7 +588,7 @@ ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *impulseResponse,
     else
         if (maxIndex > indexForMax)
         {
-            WDL_TypedBuf<double> newResponse;
+            WDL_TypedBuf<BL_FLOAT> newResponse;
 
             int numZeros = maxIndex - indexForMax;
             if (numZeros < 0)
@@ -597,7 +597,7 @@ ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *impulseResponse,
             // Shift left and pad with zeros
             for (int i = numZeros; i < impulseResponse->GetSize(); i++)
             {
-                double val = impulseResponse->Get()[i];
+                BL_FLOAT val = impulseResponse->Get()[i];
                 newResponse.Add(val);
             }
     
@@ -609,8 +609,8 @@ ImpulseResponseSet::AlignImpulseResponse(WDL_TypedBuf<double> *impulseResponse,
 }
 
 void
-ImpulseResponseSet::AlignImpulseResponse2(WDL_TypedBuf<double> *impulseResponse0,
-                                          WDL_TypedBuf<double> *impulseResponse1,
+ImpulseResponseSet::AlignImpulseResponse2(WDL_TypedBuf<BL_FLOAT> *impulseResponse0,
+                                          WDL_TypedBuf<BL_FLOAT> *impulseResponse1,
                                           long indexForMax)
 {
     // indexForMax will be the index for the first response
@@ -648,12 +648,12 @@ ImpulseResponseSet::DiscardBadImpulseResponses(vector<long> *respToDiscard,
     if (mResponses.size() < MIN_RESP_DISCARD)
         return;
   
-    WDL_TypedBuf<double> avgResponse;
+    WDL_TypedBuf<BL_FLOAT> avgResponse;
     GetAvgImpulseResponse(&avgResponse);
   
 #if USE_MAX
     // Find the max different impulse response
-    double maxSigma = 0.0;
+    BL_FLOAT maxSigma = 0.0;
     long maxIndex = -1;
 #endif
   
@@ -661,10 +661,10 @@ ImpulseResponseSet::DiscardBadImpulseResponses(vector<long> *respToDiscard,
   
     for (int i = 0; i < mResponses.size(); i++)
     {
-        const WDL_TypedBuf<double> &resp = mResponses[i];
+        const WDL_TypedBuf<BL_FLOAT> &resp = mResponses[i];
     
         // Sigma is in [0, 1]
-        double sigma = ComputeSigma(resp, avgResponse, discardMaxSamples);
+        BL_FLOAT sigma = ComputeSigma(resp, avgResponse, discardMaxSamples);
     
 #if USE_MAX
         if (sigma > maxSigma)
@@ -715,7 +715,7 @@ ImpulseResponseSet::RemoveResponses(const vector<long> &indicesToRemove)
 }
 
 long
-ImpulseResponseSet::FindMaxValIndex(const WDL_TypedBuf<double> &buf,
+ImpulseResponseSet::FindMaxValIndex(const WDL_TypedBuf<BL_FLOAT> &buf,
                                     int maxIndexSearch)
 {
     int maxLengthSearch = (maxIndexSearch == -1) ? buf.GetSize() : maxIndexSearch;
@@ -724,14 +724,14 @@ ImpulseResponseSet::FindMaxValIndex(const WDL_TypedBuf<double> &buf,
  
     // Compute max position
     long maxIndex = 0;
-    double maxVal = 0.0;
+    BL_FLOAT maxVal = 0.0;
   
     for (int i = 0; i < maxLengthSearch; i++)
     {
         if (i >= buf.GetSize())
             break;
     
-        double val = buf.Get()[i];
+        BL_FLOAT val = buf.Get()[i];
         val = fabs(val);
   
         if (val > maxVal)
@@ -745,9 +745,9 @@ ImpulseResponseSet::FindMaxValIndex(const WDL_TypedBuf<double> &buf,
     return maxIndex;
 }
 
-double
-ImpulseResponseSet::ComputeSigma(const WDL_TypedBuf<double> &impulseResponse,
-                                 const WDL_TypedBuf<double> &avgResponse,
+BL_FLOAT
+ImpulseResponseSet::ComputeSigma(const WDL_TypedBuf<BL_FLOAT> &impulseResponse,
+                                 const WDL_TypedBuf<BL_FLOAT> &avgResponse,
                                  long maxSamples)
 {
     // In case of big responses, step will be > 1
@@ -757,15 +757,15 @@ ImpulseResponseSet::ComputeSigma(const WDL_TypedBuf<double> &impulseResponse,
         // The response size is smaller than the maximum
         step = 1;
   
-    double sigma = 0.0;
+    BL_FLOAT sigma = 0.0;
     long numValues = 0;
   
     for (int i = 0; i < impulseResponse.GetSize(); i += step)
     {
-        double samp = impulseResponse.Get()[i];
-        double avg = avgResponse.Get()[i];
+        BL_FLOAT samp = impulseResponse.Get()[i];
+        BL_FLOAT avg = avgResponse.Get()[i];
     
-        double diff = fabs(samp - avg);
+        BL_FLOAT diff = fabs(samp - avg);
     
         sigma += diff;
     
