@@ -10,6 +10,7 @@
 using namespace std;
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 #include <DebugGraph.h>
 
 #include <PartialTracker4.h>
