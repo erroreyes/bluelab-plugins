@@ -12,6 +12,7 @@
 
 #include "GraphAmpAxis.h"
 
+#ifdef IGRAPHICS_NANOVG
 
 GraphAmpAxis::GraphAmpAxis(bool displayLines, Density density)
 {
@@ -195,4 +196,6 @@ GraphAmpAxis::UpdateDensity10dB()
         free(AXIS_DATA[i][1]);
     }
 }
+
+#endif
 

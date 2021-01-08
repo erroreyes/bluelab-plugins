@@ -15,6 +15,7 @@
 
 #include "GraphFreqAxis2.h"
 
+#ifdef IGRAPHICS_NANOVG
 
 GraphFreqAxis2::GraphFreqAxis2(bool displayLines,
                                Scale::Type scale)
@@ -198,4 +199,6 @@ GraphFreqAxis2::Update()
         free(AXIS_DATA[i][1]);
     }
 }
+
+#endif
 

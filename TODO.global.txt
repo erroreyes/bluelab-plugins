@@ -70,3 +70,7 @@ Website: click -> do not open in new windows (except if linking to another websi
 
 TODO: add the mechanism for NotifyGraph() from curves & axes to all other objects
 (custom drawer…)
+
+Website: don’t forget on website to create an image with a spaceship an Earth planet, with (animated) BL plugins around.
+
+Heads for spatializer: find 3d model of female dummy head, and render it!

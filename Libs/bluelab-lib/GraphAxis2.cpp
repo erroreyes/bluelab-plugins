@@ -14,6 +14,8 @@
 
 #include "GraphAxis2.h"
 
+#ifdef IGRAPHICS_NANOVG
+
 GraphAxis2::GraphAxis2()
 {
     mGraph = NULL;
@@ -240,3 +242,5 @@ GraphAxis2::NotifyGraph()
         // Notify the graph
         mGraph->SetDataChanged();
 }
+
+#endif
