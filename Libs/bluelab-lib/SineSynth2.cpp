@@ -109,14 +109,14 @@ SineSynth2::Reset(int bufferSize, BL_FLOAT sampleRate, int overlapping)
 }
 
 void
-SineSynth2::SetPartials(const vector<PartialTracker4::Partial> &partials)
+SineSynth2::SetPartials(const vector<PartialTracker5::Partial> &partials)
 {
     mPrevPartials = mPartials;
     
     mPartials.clear();
     for (int i = 0; i < partials.size(); i++)
     {
-        const PartialTracker4::Partial &pt = partials[i];
+        const PartialTracker5::Partial &pt = partials[i];
         
         Partial p;
         p.mAmpDB = pt.mAmpDB;
@@ -378,14 +378,14 @@ SineSynth2::ComputeSamplesPartials(WDL_TypedBuf<BL_FLOAT> *samples)
     
     for (int i = 0; i < mPartials.size(); i++)
     {
-        PartialTracker4::Partial partial;
+        PartialTracker5::Partial partial;
         
         BL_FLOAT phase = 0.0;
         int prevPartialIdx = FindPrevPartialIdx(i);
         if (prevPartialIdx != -1)
             phase = mPrevPartials[prevPartialIdx].mPhase;
         
-        //const PartialTracker4::Partial &partial = mPartials[i]; // OLD
+        //const PartialTracker5::Partial &partial = mPartials[i]; // OLD
         for (int j = 0; j < samples->GetSize()/mOverlapping; j++)
         {
             // Get interpolated partial
@@ -801,7 +801,7 @@ SineSynth2::FindPartial(BL_FLOAT freq)
     
     for (int i = 0; i < mPartials.size(); i++)
     {
-        const PartialTracker4::Partial &p = mPartials[i];
+        const PartialTracker5::Partial &p = mPartials[i];
         
         if ((freq > p.mFreq - step) &&
             (freq < p.mFreq + step))
@@ -816,9 +816,9 @@ SineSynth2::FindPartial(BL_FLOAT freq)
 // Interpolate in db
 #if 0
 void
-SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
+SineSynth2::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
 {
-    const PartialTracker4::Partial &currentPartial = mPartials[index];
+    const PartialTracker5::Partial &currentPartial = mPartials[index];
     
     int prevPartialIdx = FindPrevPartialIdx(index);
     
@@ -826,7 +826,7 @@ SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
 
     // Manage decrease of dead partials
     //
-    if ((currentPartial.mState == PartialTracker4::Partial::DEAD) &&
+    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
          currentPartial.mWasAlive)
     {
         // Decrease progressively the amplitude
@@ -835,7 +835,7 @@ SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
         if (prevPartialIdx != -1)
             // Interpolate
         {
-            const PartialTracker4::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
             
             BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
             if (t0 <= 1.0)
@@ -848,17 +848,17 @@ SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
     // Manage interpolation of freq and amp
     //
 #if 0 // Origin
-    if (currentPartial.mState == PartialTracker4::Partial::ALIVE)
+    if (currentPartial.mState == PartialTracker5::Partial::ALIVE)
 #else // More continuous
-    if ((currentPartial.mState != PartialTracker4::Partial::DEAD) &&
+    if ((currentPartial.mState != PartialTracker5::Partial::DEAD) &&
          currentPartial.mWasAlive)
 #endif
     {
         if (prevPartialIdx != -1)
         {
-            const PartialTracker4::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
             
-            if (prevPartial.mState == PartialTracker4::Partial::ALIVE)
+            if (prevPartial.mState == PartialTracker5::Partial::ALIVE)
             {
                 result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
                 result->mAmpDB = (1.0 - t)*prevPartial.mAmpDB + t*currentPartial.mAmpDB;
@@ -885,9 +885,9 @@ SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
 #if 0
 // Interpolate in amp
 void
-SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
+SineSynth2::GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t)
 {
-    const PartialTracker4::Partial &currentPartial = mPartials[index];
+    const PartialTracker5::Partial &currentPartial = mPartials[index];
     
     int prevPartialIdx = FindPrevPartialIdx(index);
     
@@ -895,7 +895,7 @@ SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
     
     // Manage decrease of dead partials
     //
-    if ((currentPartial.mState == PartialTracker4::Partial::DEAD) &&
+    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
         currentPartial.mWasAlive)
     {
         // Decrease progressively the amplitude
@@ -904,7 +904,7 @@ SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
         if (prevPartialIdx != -1)
             // Interpolate
         {
-            const PartialTracker4::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
             
             BL_FLOAT t0 = t/SYNTH_DEAD_PARTIAL_DECREASE;
             if (t0 <= 1.0)
@@ -922,17 +922,17 @@ SineSynth2::GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t)
     // Manage interpolation of freq and amp
     //
 #if 0 // Origin
-    if (currentPartial.mState == PartialTracker4::Partial::ALIVE)
+    if (currentPartial.mState == PartialTracker5::Partial::ALIVE)
 #else // More continuous
-        if ((currentPartial.mState != PartialTracker4::Partial::DEAD) &&
+        if ((currentPartial.mState != PartialTracker5::Partial::DEAD) &&
             currentPartial.mWasAlive)
 #endif
         {
             if (prevPartialIdx != -1)
             {
-                const PartialTracker4::Partial &prevPartial = mPrevPartials[prevPartialIdx];
+                const PartialTracker5::Partial &prevPartial = mPrevPartials[prevPartialIdx];
                 
-                if (prevPartial.mState == PartialTracker4::Partial::ALIVE)
+                if (prevPartial.mState == PartialTracker5::Partial::ALIVE)
                 {
                     result->mFreq = (1.0 - t)*prevPartial.mFreq + t*currentPartial.mFreq;
                     
@@ -970,13 +970,13 @@ SineSynth2::FindPrevPartialIdx(int currentPartialIdx)
     if (currentPartialIdx >= mPartials.size())
         return -1;
     
-    const PartialTracker4::Partial &currentPartial = mPartials[currentPartialIdx];
+    const PartialTracker5::Partial &currentPartial = mPartials[currentPartialIdx];
     
     // Find the corresponding prev partial
     int prevPartialIdx = -1;
     for (int i = 0; i < mPrevPartials.size(); i++)
     {
-        const PartialTracker4::Partial &prevPartial = mPrevPartials[i];
+        const PartialTracker5::Partial &prevPartial = mPrevPartials[i];
         if (prevPartial.mId == currentPartial.mId)
         {
             prevPartialIdx = i;
@@ -1046,7 +1046,7 @@ SineSynth2::GetPartial(Partial *result, int index, BL_FLOAT t)
 #if 0 // TEST
     // Manage decrease of dead partials
     //
-    if ((currentPartial.mState == PartialTracker4::Partial::DEAD) &&
+    if ((currentPartial.mState == PartialTracker5::Partial::DEAD) &&
          currentPartial.mWasAlive)
     {
         // Decrease progressively the amplitude
@@ -1055,7 +1055,7 @@ SineSynth2::GetPartial(Partial *result, int index, BL_FLOAT t)
         if (prevPartialIdx != -1)
             // Interpolate
         {
-            const PartialTracker4::Partial &prevPartial = mSASPrevPartials[prevPartialIdx];
+            const PartialTracker5::Partial &prevPartial = mSASPrevPartials[prevPartialIdx];
             
             BL_FLOAT t0 = t/DEAD_PARTIAL_DECREASE;
             if (t0 <= 1.0)

@@ -15,7 +15,7 @@ using namespace std;
 #include <SmoothAvgHistogram.h>
 #include <CMA2Smoother.h>
 
-#include <PartialTracker4.h>
+#include <PartialTracker5.h>
 
 #include <FftProcessObj16.h>
 
@@ -26,7 +26,7 @@ using namespace std;
 #endif
 
 
-class PartialTracker4;
+class PartialTracker5;
 class SineSynth2;
 class FilterIIRLow12dB;
 
@@ -65,15 +65,15 @@ protected:
     void DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                         const WDL_TypedBuf<BL_FLOAT> &phases);
     
-    void GeneratePhantomPartials(const vector<PartialTracker4::Partial> &partials,
-                                 vector<PartialTracker4::Partial> *newPartials);
+    void GeneratePhantomPartials(const vector<PartialTracker5::Partial> &partials,
+                                 vector<PartialTracker5::Partial> *newPartials);
 
-    void GenerateSubPartials(const vector<PartialTracker4::Partial> &partials,
-                             vector<PartialTracker4::Partial> *newPartials);
+    void GenerateSubPartials(const vector<PartialTracker5::Partial> &partials,
+                             vector<PartialTracker5::Partial> *newPartials);
     
     void IncreaseInitialFreq(WDL_TypedBuf<BL_FLOAT> *result,
                              const WDL_TypedBuf<BL_FLOAT> &magns,
-                             const vector<PartialTracker4::Partial> &partials);
+                             const vector<PartialTracker5::Partial> &partials);
     
     void IncreaseAllFreqs(WDL_TypedBuf<BL_FLOAT> *ioBuffer, BL_FLOAT mix);
 
@@ -83,7 +83,7 @@ protected:
     //BL_FLOAT mOversampling;
     //BL_FLOAT mSampleRate;
     
-    PartialTracker4 *mPartialTracker;
+    PartialTracker5 *mPartialTracker;
     SineSynth2 *mPhantomSynth;
     SineSynth2 *mSubSynth;
     

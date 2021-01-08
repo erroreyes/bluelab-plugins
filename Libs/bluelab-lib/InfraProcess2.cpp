@@ -13,7 +13,7 @@ using namespace std;
 #include <BLDebug.h>
 #include <DebugGraph.h>
 
-#include <PartialTracker4.h>
+#include <PartialTracker5.h>
 #include <SineSynth2.h>
 
 #include <FilterIIRLow12dB.h>
@@ -112,7 +112,7 @@ InfraProcess2::InfraProcess2(int bufferSize,
     
     mSampleRate = sampleRate;
     
-    mPartialTracker = new PartialTracker4(bufferSize, sampleRate, overlapping);
+    mPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
     
     mPartialTracker->SetMaxDetectFreq(MAX_DETECT_FREQ);
     
@@ -236,9 +236,13 @@ InfraProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
 #if INCREASE_INITIAL_FREQ
     // Get partials
-    vector<PartialTracker4::Partial> partials;
+    vector<PartialTracker5::Partial> partials;
     mPartialTracker->GetPartials(&partials);
-    sort(partials.begin(), partials.end(), PartialTracker4::Partial::FreqLess);
+    // NEW
+    mPartialTracker->DenormPartials(&partials);
+    mPartialTracker->PartialsAmpToAmpDB(&partials);
+    
+    sort(partials.begin(), partials.end(), PartialTracker5::Partial::FreqLess);
 
     // Increase initial freq
     WDL_TypedBuf<BL_FLOAT> increasedInitial;
@@ -271,18 +275,22 @@ void
 InfraProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                       const WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
-    vector<PartialTracker4::Partial> partials;
+    vector<PartialTracker5::Partial> partials;
     mPartialTracker->GetPartials(&partials);
     
+    // New
+    mPartialTracker->DenormPartials(&partials);
+    mPartialTracker->PartialsAmpToAmpDB(&partials);
+    
 #if KEEP_ONLY_FIRST_DETECTED_PARTIAL
-    sort(partials.begin(), partials.end(), PartialTracker4::Partial::FreqLess);
+    sort(partials.begin(), partials.end(), PartialTracker5::Partial::FreqLess);
 #endif
     
     // Phantom
     WDL_TypedBuf<BL_FLOAT> phantomSynthBuffer;
     BLUtils::ResizeFillZeros(&phantomSynthBuffer, ioBuffer->GetSize());
     
-    vector<PartialTracker4::Partial> phantomPartials;
+    vector<PartialTracker5::Partial> phantomPartials;
     GeneratePhantomPartials(partials, &phantomPartials);
     mPhantomSynth->SetPartials(phantomPartials);
     mPhantomSynth->ComputeSamples(&phantomSynthBuffer);
@@ -317,7 +325,7 @@ InfraProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     WDL_TypedBuf<BL_FLOAT> subSynthBuffer;
     BLUtils::ResizeFillZeros(&subSynthBuffer, ioBuffer->GetSize());
     
-    vector<PartialTracker4::Partial> subPartials;
+    vector<PartialTracker5::Partial> subPartials;
     GenerateSubPartials(partials, &subPartials);
     mSubSynth->SetPartials(subPartials);
     mSubSynth->ComputeSamples(&subSynthBuffer);
@@ -433,14 +441,14 @@ InfraProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
 
 // Generate higher partials
 void
-InfraProcess2::GeneratePhantomPartials(const vector<PartialTracker4::Partial> &partials,
-                                      vector<PartialTracker4::Partial> *newPartials)
+InfraProcess2::GeneratePhantomPartials(const vector<PartialTracker5::Partial> &partials,
+                                      vector<PartialTracker5::Partial> *newPartials)
 {
     newPartials->clear();
     
     for (int i = 0; i < partials.size(); i++)
     {
-        const PartialTracker4::Partial p = partials[i];
+        const PartialTracker5::Partial p = partials[i];
      
         if (p.mFreq > MIN_PHANTOM_FREQ_PARTIAL)
             break;
@@ -458,7 +466,7 @@ InfraProcess2::GeneratePhantomPartials(const vector<PartialTracker4::Partial> &p
         }
         
 #if ADD_INITIAL_FREQ_PARTIAL
-        PartialTracker4::Partial initP = p;
+        PartialTracker5::Partial initP = p;
         initP.mAmpDB = p.mAmpDB + INITIAL_INCREASE_DB;
         initP.mFreq = p.mFreq;
         initP.mId = i + PHANTOM_PARTIAL_ID_OFFSET;
@@ -481,7 +489,7 @@ InfraProcess2::GeneratePhantomPartials(const vector<PartialTracker4::Partial> &p
         
         while(partialNum < PHANTOM_NUM_PARTIALS)
         {
-            PartialTracker4::Partial p0 = p;
+            PartialTracker5::Partial p0 = p;
             p0.mFreq = freq;
             // Prefer choosing "i" to avoid problems when ids are blinking
             p0.mId = i + (partialNum + 2)*PHANTOM_PARTIAL_ID_OFFSET;
@@ -509,14 +517,14 @@ InfraProcess2::GeneratePhantomPartials(const vector<PartialTracker4::Partial> &p
 
 // Generate higher partials
 void
-InfraProcess2::GenerateSubPartials(const vector<PartialTracker4::Partial> &partials,
-                                  vector<PartialTracker4::Partial> *newPartials)
+InfraProcess2::GenerateSubPartials(const vector<PartialTracker5::Partial> &partials,
+                                  vector<PartialTracker5::Partial> *newPartials)
 {
     newPartials->clear();
     
     for (int i = 0; i < partials.size(); i++)
     {
-        const PartialTracker4::Partial p = partials[i];
+        const PartialTracker5::Partial p = partials[i];
         
         BL_FLOAT subFreq = p.mFreq;
         
@@ -530,7 +538,7 @@ InfraProcess2::GenerateSubPartials(const vector<PartialTracker4::Partial> &parti
         if (ampDB > 0.0)
             ampDB = 0.0;
         
-        PartialTracker4::Partial p0 = p;
+        PartialTracker5::Partial p0 = p;
         p0.mFreq = subFreq;
         // Prefer choosing "i" to avoid problems when ids are blinking
         p0.mId = i + SUB_PARTIAL_ID_OFFSET;
@@ -550,7 +558,7 @@ InfraProcess2::GenerateSubPartials(const vector<PartialTracker4::Partial> &parti
 void
 InfraProcess2::IncreaseInitialFreq(WDL_TypedBuf<BL_FLOAT> *result,
                                   const WDL_TypedBuf<BL_FLOAT> &magns,
-                                  const vector<PartialTracker4::Partial> &partials)
+                                  const vector<PartialTracker5::Partial> &partials)
 {
     result->Resize(magns.GetSize());
     BLUtils::FillAllZero(result);
@@ -561,7 +569,7 @@ InfraProcess2::IncreaseInitialFreq(WDL_TypedBuf<BL_FLOAT> *result,
     BL_FLOAT dbCoeff = BLUtils::DBToAmp(INITIAL_INCREASE_DB);
     
     // Partials must be sorted by frequency
-    const PartialTracker4::Partial &p = partials[0];
+    const PartialTracker5::Partial &p = partials[0];
     
     for (int i = p.mLeftIndex; i <= p.mRightIndex; i++)
     {

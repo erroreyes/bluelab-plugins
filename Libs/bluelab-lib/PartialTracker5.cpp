@@ -2426,6 +2426,17 @@ PartialTracker5::DenormData(WDL_TypedBuf<BL_FLOAT> *data)
 }
 
 void
+PartialTracker5::PartialsAmpToAmpDB(vector<PartialTracker5::Partial> *partials)
+{
+    for (int i = 0; i < partials->size(); i++)
+    {
+        PartialTracker5::Partial &partial = (*partials)[i];
+        
+        partial.mAmpDB = BLUtils::AmpToDB(partial.mAmp);
+    }
+}
+
+void
 PartialTracker5::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
                                       bool reverse)
 {

@@ -79,7 +79,14 @@ public:
         // When detecting and filtering, mFreq and mAmp are "scaled and normalized"
         // After processing, we can compute the real frequencies in Hz and amp in dB.
         BL_FLOAT mFreq;
-        BL_FLOAT mAmp;
+        union{
+            // Inside PartialTracker5
+            BL_FLOAT mAmp;
+            
+            // After, outside PartialTracker5, if external classes need amp in dB
+            // Need to call DenormPartials() then PartialsAmpToAmpDB()
+            BL_FLOAT mAmpDB;
+        };
         BL_FLOAT mPhase;
         
         BL_FLOAT mPeakHeight;
@@ -158,6 +165,8 @@ public:
     
     void DenormPartials(vector<PartialTracker5::Partial> *partials);
     void DenormData(WDL_TypedBuf<BL_FLOAT> *data);
+    
+    void PartialsAmpToAmpDB(vector<PartialTracker5::Partial> *partials);
     
 protected:
     // Pre process

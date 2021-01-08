@@ -12,7 +12,7 @@
 #include <vector>
 using namespace std;
 
-#include <PartialTracker4.h>
+#include <PartialTracker5.h>
 
 // SineSynth: from SASFrame
 //
@@ -43,7 +43,7 @@ public:
     
     void Reset(int bufferSize, BL_FLOAT sampleRate, int overlapping);
     
-    void SetPartials(const vector<PartialTracker4::Partial> &partials);
+    void SetPartials(const vector<PartialTracker5::Partial> &partials);
     
     void ComputeSamples(WDL_TypedBuf<BL_FLOAT> *samples);
     
@@ -71,7 +71,7 @@ protected:
     // Versions to interpolate over time
     bool FindPartial(BL_FLOAT freq);
 
-    void GetPartial(PartialTracker4::Partial *result, int index, BL_FLOAT t);
+    void GetPartial(PartialTracker5::Partial *result, int index, BL_FLOAT t);
 #endif
     
     int FindPrevPartialIdx(int currentPartialIdx);
