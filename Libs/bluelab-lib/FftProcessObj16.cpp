@@ -58,8 +58,8 @@ ProcessObj::ProcessObj(int bufferSize)
 {
     mBufferSize = bufferSize;
     
-    mTrackInput = false;
-    mTrackOutput = false;
+    //mTrackInput = false;
+    //mTrackOutput = false;
 }
     
 ProcessObj::~ProcessObj() {}

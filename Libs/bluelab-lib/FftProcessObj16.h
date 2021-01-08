@@ -123,8 +123,8 @@ protected:
     //FifoDecimator mInput;
     //FifoDecimator mOutput;
     
-    bool mTrackInput;
-    bool mTrackOutput;
+    //bool mTrackInput;
+    //bool mTrackOutput;
     
     int mBufferSize;
     
