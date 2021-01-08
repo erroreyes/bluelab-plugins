@@ -78,10 +78,10 @@ protected:
     void IncreaseAllFreqs(WDL_TypedBuf<BL_FLOAT> *ioBuffer, BL_FLOAT mix);
 
     
-    int mBufferSize;
-    BL_FLOAT mOverlapping;
-    BL_FLOAT mOversampling;
-    BL_FLOAT mSampleRate;
+    //int mBufferSize;
+    //BL_FLOAT mOverlapping;
+    //BL_FLOAT mOversampling;
+    //BL_FLOAT mSampleRate;
     
     PartialTracker4 *mPartialTracker;
     SineSynth2 *mPhantomSynth;

@@ -16,7 +16,7 @@ using namespace std;
 
 #include "../../WDL/fft.h"
 
-#include <FifoDecimator.h>
+//#include <FifoDecimator.h>
 
 #include "BufProcessObj.h"
 
@@ -70,7 +70,7 @@ public:
     
     virtual void Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate);
 
-    virtual void Reset();
+    //virtual void Reset();
     
     //
     // Callbacks
@@ -111,17 +111,17 @@ public:
     // Tracking
     //
     
-    virtual void SetTrackIO(int maxNumPoints, BL_FLOAT decimFactor,
-                            bool trackInput, bool trackOutput);
+    //virtual void SetTrackIO(int maxNumPoints, BL_FLOAT decimFactor,
+    //                        bool trackInput, bool trackOutput);
     
-    virtual void GetCurrentInput(WDL_TypedBuf<BL_FLOAT> *outInput);
+    //virtual void GetCurrentInput(WDL_TypedBuf<BL_FLOAT> *outInput);
     
-    virtual void GetCurrentOutput(WDL_TypedBuf<BL_FLOAT> *outOutput);
+    //virtual void GetCurrentOutput(WDL_TypedBuf<BL_FLOAT> *outOutput);
     
 protected:
     // For tracking
-    FifoDecimator mInput;
-    FifoDecimator mOutput;
+    //FifoDecimator mInput;
+    //FifoDecimator mOutput;
     
     bool mTrackInput;
     bool mTrackOutput;

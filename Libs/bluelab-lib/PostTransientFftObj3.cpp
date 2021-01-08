@@ -155,7 +155,7 @@ PostTransientFftObj3::Reset()
         ProcessObj *transObj = GetTransObj(i);
         
         if (transObj != NULL)
-            transObj->Reset();
+            transObj->Reset(mBufferSize, mOverlapping, mFreqRes, mSampleRate);
     }
 }
 

@@ -74,7 +74,7 @@ RebalanceProcessFftObjComp3::Reset(int bufferSize, int oversampling,
 void
 RebalanceProcessFftObjComp3::Reset()
 {
-    ProcessObj::Reset();
+    //ProcessObj::Reset();
     
     mSoftMasking->Reset();
     

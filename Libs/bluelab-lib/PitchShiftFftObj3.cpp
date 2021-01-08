@@ -150,7 +150,8 @@ PitchShiftFftObj3::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT
 void
 PitchShiftFftObj3::Reset()
 {
-    ProcessObj::Reset();
+    //ProcessObj::Reset();
+    ProcessObj::Reset(mBufferSize, mOverlapping, mFreqRes, mSampleRate);
     
     mFreqObj.Reset(mBufferSize, mOverlapping, mFreqRes, mSampleRate);
 }

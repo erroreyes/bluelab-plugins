@@ -81,7 +81,7 @@ RebalanceProcessFftObjComp2::Reset(int bufferSize, int oversampling,
 void
 RebalanceProcessFftObjComp2::Reset()
 {
-    ProcessObj::Reset();
+    //ProcessObj::Reset();
     
 #if FORCE_SAMPLE_RATE
     ResetResamplers();

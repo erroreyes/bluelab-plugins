@@ -53,8 +53,8 @@
 #define FIX_TOO_MANY_INPUT_CHANNELS 1
 
 ProcessObj::ProcessObj(int bufferSize)
-: mInput(true),
-  mOutput(true)
+//: mInput(true),
+//  mOutput(true)
 {
     mBufferSize = bufferSize;
     
@@ -76,16 +76,16 @@ ProcessObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sample
     if (sampleRate > 0)
         mSampleRate = sampleRate;
     
-    Reset();
+    //Reset();
 }
 
-void
+/*void
 ProcessObj::Reset()
 {
     // Tracking
     mInput.Reset();
     mOutput.Reset();
-}
+}*/
 
 void
 ProcessObj::ProcessInputSamplesPre(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
@@ -95,7 +95,7 @@ void
 ProcessObj::PreProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                     const WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
-    mInput.AddValues(*ioBuffer);
+    //mInput.AddValues(*ioBuffer);
 }
     
 void
@@ -118,26 +118,27 @@ void
 ProcessObj::ProcessSamplesBufferEnergy(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                        const WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
-    mOutput.AddValues(*ioBuffer);
+    //mOutput.AddValues(*ioBuffer);
 }
 
 void
 ProcessObj::ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer) {}
 
-void
+/*void
 ProcessObj::SetTrackIO(int maxNumPoints, BL_FLOAT decimFactor,
                        bool trackInput, bool trackOutput)
 {
     mTrackInput = trackInput;
     mTrackOutput = trackOutput;
         
-    if (mTrackInput)
-        mInput.SetParams(maxNumPoints, decimFactor);
+    //if (mTrackInput)
+    //    mInput.SetParams(maxNumPoints, decimFactor);
         
-    if (mTrackOutput)
-        mOutput.SetParams(maxNumPoints, decimFactor);
-}
-    
+    //if (mTrackOutput)
+    //    mOutput.SetParams(maxNumPoints, decimFactor);
+}*/
+
+/*
 void
 ProcessObj::GetCurrentInput(WDL_TypedBuf<BL_FLOAT> *outInput)
 {
@@ -149,6 +150,7 @@ ProcessObj::GetCurrentOutput(WDL_TypedBuf<BL_FLOAT> *outOutput)
 {
     mOutput.GetValues(outOutput);
 }
+*/
 
 ///
 

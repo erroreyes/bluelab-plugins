@@ -74,3 +74,5 @@ TODO: add the mechanism for NotifyGraph() from curves & axes to all other object
 Website: don’t forget on website to create an image with a spaceship an Earth planet, with (animated) BL plugins around.
 
 Heads for spatializer: find 3d model of female dummy head, and render it!
+
+ProcessObj: remove mInput and mOutput (not used, was used for Shaper display only)

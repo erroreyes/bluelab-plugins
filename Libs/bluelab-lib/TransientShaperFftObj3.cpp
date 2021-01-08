@@ -75,8 +75,8 @@ TransientShaperFftObj3::TransientShaperFftObj3(int bufferSize, int oversampling,
     
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
-    mInput.SetParams(decimNumPoints, decimFactor, true);
-    mOutput.SetParams(decimNumPoints, decimFactor, true);
+    //mInput.SetParams(decimNumPoints, decimFactor, true);
+    //mOutput.SetParams(decimNumPoints, decimFactor, true);
     
 #if FORCE_SAMPLE_RATE
     InitResamplers();
@@ -94,7 +94,7 @@ TransientShaperFftObj3::~TransientShaperFftObj3()
 void
 TransientShaperFftObj3::Reset()
 {
-    ProcessObj::Reset();
+    //ProcessObj::Reset();
     
     if (mTransientness != NULL)
         mTransientness->Reset();
@@ -453,8 +453,8 @@ TransientShaperFftObj3::SetTrackIO(int maxNumPoints, BL_FLOAT decimFactor,
                                    bool trackInput, bool trackOutput,
                                    bool trackTransientness)
 {
-    ProcessObj::SetTrackIO(maxNumPoints, decimFactor,
-                           trackInput, trackOutput);
+    //ProcessObj::SetTrackIO(maxNumPoints, decimFactor,
+    //                       trackInput, trackOutput);
     
     if (mTransientness != NULL)
         delete mTransientness;

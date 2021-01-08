@@ -54,6 +54,7 @@
 
 
 // TransientShaper
+class FifoDecimator;
 class TransientShaperFftObj3 : public ProcessObj
 {
 public:
