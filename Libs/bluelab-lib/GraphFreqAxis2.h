@@ -33,9 +33,15 @@ public:
     void SetBounds(BL_FLOAT bounds[2]);
     
     void Reset(int bufferSize, BL_FLOAT sampleRate);
+    void SetMaxFreq(BL_FLOAT maxFreq);
     
 protected:
     void Update();
+    
+    void UpdateAxis(int numAxisData,
+                    const float freqs[],
+                    const char *labels[],
+                    BL_FLOAT minHzValue, BL_FLOAT maxHzValue);
     
     //
     GraphAxis2 *mGraphAxis;
@@ -46,6 +52,8 @@ protected:
     bool mDisplayLines;
     
     Scale::Type mScale;
+
+    BL_FLOAT mMaxFreq;
 };
 
 #endif /* defined(__BL_InfrasonicViewer__GraphFreqAxis2__) */
