@@ -16,8 +16,17 @@
 
 #define USE_SPECTRO_NEAREST 0
 
+// NEW: InfrasonicViewer port to iPlug2
+#define FIX_JITTER_INFRASONIC_VIEWER 1
+
 // Number of columns we hide on the left
+#if !FIX_JITTER_INFRASONIC_VIEWER
+// Do we need it for GhostVeiwer etc... ?
 #define MARGIN_COEFF 8
+#else
+// Must be set to 1 for InfrasonicViewer!
+#define MARGIN_COEFF 1
+#endif
 
 // Avoids black column of 1 pixel on the right
 // (increase of 2 pixels on the right)
