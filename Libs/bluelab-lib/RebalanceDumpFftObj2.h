@@ -30,12 +30,26 @@ public:
                          const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer) override;
     
     bool HasEnoughData();
-    void GetData(WDL_TypedBuf<BL_FLOAT> cols[REBALANCE_NUM_SPECTRO_COLS]);
+    
+    // Mono spectrogram
+    void GetSpectrogramData(WDL_TypedBuf<BL_FLOAT> cols[REBALANCE_NUM_SPECTRO_COLS]);
+    // Stereo width "spectrogram"
+    void GetStereoData(WDL_TypedBuf<BL_FLOAT> cols[REBALANCE_NUM_SPECTRO_COLS]);
     
 protected:
+    // Spectrogram
+    void ProcessSpectrogramData(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
+                                const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer);
+
+    // Stereo data
+    void ProcessStereoData(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
+                           const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer);
+
+    //
     int mNumInputCols;
     
-    deque<WDL_TypedBuf<BL_FLOAT> > mCols;
+    deque<WDL_TypedBuf<BL_FLOAT> > mSpectroCols;
+    deque<WDL_TypedBuf<BL_FLOAT> > mStereoCols;
     
     BL_FLOAT mSampleRate;
     

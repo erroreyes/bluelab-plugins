@@ -260,10 +260,17 @@ RebalanceProcessor::HasEnoughDumpData()
 }
 
 void
-RebalanceProcessor::GetDumpData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTRO_COLS])
+RebalanceProcessor::GetSpectroData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTRO_COLS])
 {
     if (mDumpObj != NULL)
-        mDumpObj->GetData(data);
+        mDumpObj->GetSpectrogramData(data);
+}
+
+void
+RebalanceProcessor::GetStereoData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTRO_COLS])
+{
+    if (mDumpObj != NULL)
+        mDumpObj->GetStereoData(data);
 }
 
 void

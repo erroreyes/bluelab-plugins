@@ -57,7 +57,9 @@ public:
     // Dump
     //
     bool HasEnoughDumpData();
-    void GetDumpData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTRO_COLS]);
+    
+    void GetSpectroData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTRO_COLS]);
+    void GetStereoData(WDL_TypedBuf<BL_FLOAT> data[REBALANCE_NUM_SPECTRO_COLS]);
     
     // Debug
     void SetDbgThreshold(BL_FLOAT thrs);
