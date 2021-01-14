@@ -8,6 +8,13 @@
 #include <BLBitmap.h>
 #include <BLUtils.h>
 
+#if 0
+TODO: for resizing think about using https://raw.githubusercontent.com/nothings/stb/master/stb_image_resize.h
+(it is currently used by #bluela bin darknet)
+Because the current implementation is hackish and was copied/pasted from somewhere else,
+with risky modifications.
+#endif
+
 BLBitmap::BLBitmap(int width, int height, int bpp,
                    unsigned char *data)
 {

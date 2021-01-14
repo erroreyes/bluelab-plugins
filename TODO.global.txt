@@ -76,3 +76,10 @@ Website: don’t forget on website to create an image with a spaceship an Earth 
 Heads for spatializer: find 3d model of female dummy head, and render it!
 
 ProcessObj: remove mInput and mOutput (not used, was used for Shaper display only)
+
+- OPTIM: to optimize, pre-allocate all BL_FLOAT wdl buffers and grow them if needed
+=> e.g when dumping in Rebalance, there are 128MB allocated and freed at each song
+(many buffers that are grown inside functions, and freed at the end, everywhere)
+And create a super class for buffer Add/ConsumeLeft (with an internal cursor)
+- and for deque<WDL buf>, use vector + shift and assign the last element
+(check that when we assign the same size, it is not reallocated)
