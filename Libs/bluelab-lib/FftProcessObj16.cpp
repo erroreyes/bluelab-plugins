@@ -52,6 +52,11 @@
 // Done during Rebalance update
 #define FIX_TOO_MANY_INPUT_CHANNELS 1
 
+// BUG: when output was null, the internal buffer grown more and more
+#define FIX_NULL_OUT_MEMLEAK 1
+
+#define OPTIM_CONSUME_LEFT 1
+
 ProcessObj::ProcessObj(int bufferSize)
 //: mInput(true),
 //  mOutput(true)
@@ -336,6 +341,9 @@ protected:
     
 private:
     ProcessObjChannel *mScChan;
+    
+    WDL_TypedBuf<BL_FLOAT> mTmpBuffer0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuffer1;
 };
 
 ProcessObjChannel::ProcessObjChannel(ProcessObj *processObj, int bufferSize)
@@ -798,6 +806,7 @@ ProcessObjChannel::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
     if (numRequestedLat < 0)
         numRequestedLat = 0;
     
+#if !FIX_NULL_OUT_MEMLEAK
     if (output != NULL)
     {
         output->Resize(numRequested);
@@ -828,6 +837,39 @@ ProcessObjChannel::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
             return true;
         }
     }
+#else
+    if (output != NULL)
+    {
+        output->Resize(numRequested);
+        BLUtils::FillAllZero(output);
+    }
+    if (numRequestedLat <= numOutSamples) // Just in case
+    {
+        // get only the necessary samples
+        WDL_TypedBuf<BL_FLOAT> buf;
+        GetResultOutBuffer(&buf, numRequestedLat);
+            
+        if (output != NULL)
+        {
+            // Write to output, the correct number of samples,
+            // and at the correct position
+#if !OPTIM_SIMD
+            for (int i = 0; i < numRequestedLat; i++)
+            {
+                output->Get()[mCurrentLatency + i] = buf.Get()[i];
+            }
+#else
+            memcpy(&output->Get()[mCurrentLatency],
+                   buf.Get(),
+                   numRequestedLat*sizeof(BL_FLOAT));
+#endif
+        }
+            
+        mCurrentLatency = 0;
+            
+        return true;
+    }
+#endif
     
     return false;
 }
@@ -1125,6 +1167,8 @@ ProcessObjChannel::NextSamplesBuffer()
     }
 }
 
+#if !OPTIM_CONSUME_LEFT 
+// ORIGIN (allocate and free much memory)
 void
 ProcessObjChannel::NextOutBuffer()
 {
@@ -1163,6 +1207,68 @@ ProcessObjChannel::NextOutBuffer()
     BLUtils::ResizeFillZeros(&mResultSum,
                            mResultSum.GetSize() + mShift);
 }
+#endif
+
+#if OPTIM_CONSUME_LEFT
+// NEW: try to optimize memory
+void
+ProcessObjChannel::NextOutBuffer()
+{
+    if (mResultSum.GetSize() < mBufferSize)
+        return;
+    
+    // Let the possiblity to modify, or even resample
+    // the result, before adding it to the object
+    if (mTmpBuffer0.GetSize() != mShift)
+        mTmpBuffer0.Resize(mShift);
+    
+    //samplesToAdd.Add(mResultSum.Get(), mShift);
+    WDL_TypedBuf<BL_FLOAT> &samplesToAdd = mTmpBuffer0;
+    memcpy(samplesToAdd.Get(), mResultSum.Get(), mShift*sizeof(BL_FLOAT));
+    
+    if (mProcessObj != NULL)
+    {
+        mProcessObj->ProcessSamplesPost(&samplesToAdd);
+    }
+    mResultOut.Add(samplesToAdd.Get(), samplesToAdd.GetSize());
+    
+    //
+    
+    if (mResultSum.GetSize() == mShift)
+    {
+        mResultSum.Resize(0);
+    
+        // Grow the output with zeros
+        BLUtils::ResizeFillZeros(&mResultSum,
+                                 mResultSum.GetSize() + mShift);
+    }
+    else if (mResultSum.GetSize() > mBufferSize)
+    {
+        if (mTmpBuffer1.GetSize() != mResultSum.GetSize())
+            mTmpBuffer1.Resize(mResultSum.GetSize());
+        // Copy the intersting data at the beginning
+        memcpy(mTmpBuffer1.Get(),
+               &mResultSum.Get()[mShift],
+               (mResultSum.GetSize() - mShift)*sizeof(BL_FLOAT));
+       
+        // Fill the end with zeros
+        memset(&mTmpBuffer1.Get()[mTmpBuffer1.GetSize() - mShift],
+               0, mShift*sizeof(BL_FLOAT));
+        
+        // Copy the result
+        memcpy(mResultSum.Get(),
+               mTmpBuffer1.Get(),
+               mResultSum.GetSize()*sizeof(BL_FLOAT));
+        
+        // Resize down, skipping left
+        //BLUtils::ConsumeLeft(&mResultSum, mShift);
+        
+        // Grow the output with zeros
+        //BLUtils::ResizeFillZeros(&mResultSum,
+        //                         mResultSum.GetSize() + mShift);
+    }
+}
+#endif
 
 void
 ProcessObjChannel::GetResultOutBuffer(WDL_TypedBuf<BL_FLOAT> *output,
@@ -2101,11 +2207,28 @@ bool
 FftProcessObj16::GetResults(vector<WDL_TypedBuf<BL_FLOAT> > *outputs,
                            int numRequested)
 {
-    int numInputChannels = mChannels.size() - mNumScInputs;
+    int numInputChannels = (int)mChannels.size() - mNumScInputs;
     
     bool resultReady = true;
     for (int i = 0; i < numInputChannels; i++)
     {
+#if FIX_NULL_OUT_MEMLEAK
+        if (outputs == NULL)
+        {
+            bool res = mChannels[i]->GetResult(NULL, numRequested);
+            
+            // Do not take into account an empty channels
+            // when checking if the data is available
+            // (this would be false every time)
+            if (mChannels[i]->IsEmpty())
+                res = true;
+            
+            resultReady = resultReady && res;
+            
+            continue;
+        }
+#endif
+        
         if (i < outputs->size())
         {
             WDL_TypedBuf<BL_FLOAT> &out = (*outputs)[i];
@@ -2174,7 +2297,7 @@ FftProcessObj16::Process(const vector<WDL_TypedBuf<BL_FLOAT> > &inputs,
     }
     
 #if FIX_TOO_MANY_INPUT_CHANNELS
-    int numInputChannels = mChannels.size() - mNumScInputs;
+    int numInputChannels = (int)mChannels.size() - mNumScInputs;
     if (inputs0.size() > numInputChannels)
         inputs0.resize(numInputChannels);
 #endif
@@ -2184,7 +2307,9 @@ FftProcessObj16::Process(const vector<WDL_TypedBuf<BL_FLOAT> > &inputs,
     ProcessSamples();
     
     bool res = true;
+#if !FIX_NULL_OUT_MEMLEAK
     if (outputs != NULL)
+#endif
     {
         int numRequested = inputs0[0].GetSize();
         res = GetResults(outputs, numRequested);
