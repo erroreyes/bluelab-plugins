@@ -1,6 +1,9 @@
 #ifndef _IKEYBOARDCONTROL_
 #define _IKEYBOARDCONTROL_
 
+// #bluelab
+// From iPlug1 IKeyboardControl
+
 /*
 
 IKeyboardControl
@@ -89,226 +92,231 @@ been declared, so it is propbably best to include it in your plug-in's main
 
 class IKeyboardControl: public IControl
 {
-public:
-  IKeyboardControl(IPlugBase* pPlug, int x, int y, int minNote, int nOctaves, IBitmap* pRegularKeys, IBitmap* pSharpKey, const int *pKeyCoords = 0):
+ public:
+ IKeyboardControl(IPluginBase* pPlug, int x, int y, int minNote, int nOctaves,
+                  IBitmap pRegularKeys, IBitmap pSharpKey, const int *pKeyCoords = 0):
     IControl(pPlug, IRECT(x, y, pRegularKeys), -1),
     mMinNote(minNote), mNumOctaves(nOctaves), mRegularKeys(*pRegularKeys), mSharpKey(*pSharpKey),
     mOctaveWidth(pRegularKeys->W * 7), mMaxKey(nOctaves * 12), mKey(-1)
-  {
-    memcpy(mKeyCoords, pKeyCoords, 12 * sizeof(int));
-    mRECT.R += nOctaves * mOctaveWidth;
-    mTargetRECT.R = mRECT.R;
-
-    mDblAsSingleClick = true;
-  }
-
-  ~IKeyboardControl() {}
-
-  // Returns the key currently playing, or -1 if no key is playing.
-  inline int GetKey() const {return mKey; }
-  // Returns the Note On velocity of the key currently playing.
-  inline int GetVelocity() const { return 1 + int(mVelocity * 126. + 0.5); }
-  // Returns the velocity as a floating point value.
-  inline double GetReal() const { return mVelocity; }
-
-  virtual void OnMouseDown(int x, int y, IMouseMod* pMod)
-  {
-    if (pMod->R) return;
-
-    // Skip if this key is already being played using the mouse.
-    int key = GetMouseKey(x, y);
-    if (key == mKey) return;
-
-    if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote)) return;
-
-    mKey = key;
-
-    //Update the keyboard in the GUI.
-    SetDirty();
-  }
-
-  virtual void OnMouseUp(int x, int y, IMouseMod* pMod)
-  {
-    // Skip if no key is playing.
-    if (mKey < 0) return;
-    mKey = -1;
-
-    // Update the keyboard in the GUI.
-    SetDirty();
-  }
-
-  virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod)
-  {
-    //if(y < mTargetRECT.T || y >= mTargetRECT.B);
-    OnMouseDown(x, y, pMod);
-  }
-
-  virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, double d) {}
-
-  // Draws only the keys that are currently playing.
-  virtual bool Draw(IGraphics* pGraphics)
-  {
-    // Skip if no keys are playing.
-    if (((PLUG_CLASS_NAME*)mPlug)->GetNumKeys() == 0 && mKey == -1) return true;
-
-    // "Regular" keys
-    IRECT r(mRECT.L, mRECT.T, mRECT.L + mRegularKeys.W, mRECT.B);
-    int key = 0;
-    while (key < mMaxKey)
     {
-      // Draw the key.
-      int note = key % 12;
-      if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey) DrawKey(pGraphics, &r, key, note, false);
-
-      // Next, please!
-      key += mNextKey[note];
-      r.L += mRegularKeys.W;
-      r.R += mRegularKeys.W;
+        memcpy(mKeyCoords, pKeyCoords, 12 * sizeof(int));
+        mRECT.R += nOctaves * mOctaveWidth;
+        mTargetRECT.R = mRECT.R;
+        
+        mDblAsSingleClick = true;
     }
-    // Draw the high C.
-    if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey) DrawKey(pGraphics, &r, key, 0, false);
-
-    // Flat/sharp keys
-    int l = mRECT.L;
-    r.B = mRECT.T + mSharpKey.H / mSharpKey.N;
-    key = 1;
-    while (true)
-    {
-      // Draw the key.
-      int note = key % 12;
-
-      r.L = l + mKeyCoords[note];
-      r.R = r.L + mSharpKey.W;
-      if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey) DrawKey(pGraphics, &r, key, note, true);
-
-      // Next, please!
-      key += mNextKey[note];
-      if (key > mMaxKey) break;
-      if (note == 10) l += mOctaveWidth;
-    }
-
-    return true;
-  }
-
-  // Niko
-  const LICE_IBitmap *DrawGL(bool update = false) { return NULL; }
-  void ResetGL() {}
     
-protected:
-  virtual void DrawKey(IGraphics* pGraphics, IRECT* pR, int key, int note, bool sharp)
-  {
+    ~IKeyboardControl() {}
+
+    // Returns the key currently playing, or -1 if no key is playing.
+    inline int GetKey() const {return mKey; }
+    // Returns the Note On velocity of the key currently playing.
+    inline int GetVelocity() const { return 1 + int(mVelocity * 126. + 0.5); }
+    // Returns the velocity as a floating point value.
+    inline BL_FLOAT GetReal() const { return mVelocity; }
+
+    virtual void OnMouseDown(float x, float y, const IMouseMod &pMod) override
+    {
+        if (pMod.R) return;
+
+        // Skip if this key is already being played using the mouse.
+        int key = GetMouseKey(x, y);
+        if (key == mKey) return;
+
+        if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote)) return;
+
+        mKey = key;
+        
+        //Update the keyboard in the GUI.
+        SetDirty();
+    }
+
+    virtual void OnMouseUp(float x, float y, const IMouseMod &pMod) override
+    {
+        // Skip if no key is playing.
+        if (mKey < 0) return;
+        mKey = -1;
+
+        // Update the keyboard in the GUI.
+        SetDirty();
+    }
+
+    virtual void OnMouseDrag(float x, float y, float dX, float dY,
+                             const IMouseMod &pMod) override
+    {
+        //if(y < mTargetRECT.T || y >= mTargetRECT.B);
+        OnMouseDown(x, y, pMod);
+    }
+
+    virtual void OnMouseWheel(float x, float y, const IMouseMod &pMod, float d) override {}
+    
+    // Draws only the keys that are currently playing.
+    virtual bool Draw(IGraphics &pGraphics)
+    {
+        // Skip if no keys are playing.
+        if (((PLUG_CLASS_NAME*)mPlug)->GetNumKeys() == 0 && mKey == -1) return true;
+        
+        // "Regular" keys
+        IRECT r(mRECT.L, mRECT.T, mRECT.L + mRegularKeys.W, mRECT.B);
+        int key = 0;
+        while (key < mMaxKey)
+        {
+            // Draw the key.
+            int note = key % 12;
+            if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey)
+                DrawKey(pGraphics, &r, key, note, false);
+            
+            // Next, please!
+            key += mNextKey[note];
+            r.L += mRegularKeys.W;
+            r.R += mRegularKeys.W;
+        }
+        // Draw the high C.
+        if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey)
+            DrawKey(pGraphics, &r, key, 0, false);
+        
+        // Flat/sharp keys
+        int l = mRECT.L;
+        r.B = mRECT.T + mSharpKey.H / mSharpKey.N;
+        key = 1;
+        while (true)
+        {
+            // Draw the key.
+            int note = key % 12;
+
+            r.L = l + mKeyCoords[note];
+            r.R = r.L + mSharpKey.W;
+            if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey)
+                DrawKey(pGraphics, &r, key, note, true);
+
+            // Next, please!
+            key += mNextKey[note];
+            if (key > mMaxKey) break;
+            if (note == 10) l += mOctaveWidth;
+        }
+        
+        return true;
+    }
+    
+ protected:
+    virtual void DrawKey(IGraphics* pGraphics, IRECT* pR, int key, int note, bool sharp)
+    {
+        if (sharp)
+            pGraphics->DrawBitmap(&mSharpKey, pR, 0, &mBlend);
+        else
+            pGraphics->DrawBitmap(&mRegularKeys, pR, key < mMaxKey ? mBitmapN[note] : 6,
+                                  &mBlend);
+    }
+
+    /* Override the above method if e.g. you want to draw the 1st octave
+    // using different bitmaps:
+    
+    virtual void DrawKey(IGraphics* pGraphics, IRECT* pR, int key, int note, bool sharp)
+    {
     if (sharp)
-      pGraphics->DrawBitmap(&mSharpKey, pR, 0, &mBlend);
-    else
-      pGraphics->DrawBitmap(&mRegularKeys, pR, key < mMaxKey ? mBitmapN[note] : 6, &mBlend);
-  }
-
-  /* Override the above method if e.g. you want to draw the 1st octave
-  // using different bitmaps:
-
-  virtual void DrawKey(IGraphics* pGraphics, IRECT* pR, int key, int note, bool sharp)
-  {
-    if (sharp)
     {
-      pGraphics->DrawBitmap(&mSharpKey, pR, key < 12 ? 1 : 2, &mBlend);
+    pGraphics->DrawBitmap(&mSharpKey, pR, key < 12 ? 1 : 2, &mBlend);
     }
     else
     {
-      int n;
-      if (key < mMaxKey)
-      {
-        n = mBitmapN[note];
-        if (key >= 12) n += 5;
-      }
-      else
-      {
-        n = 11;
-      }
-      pGraphics->DrawBitmap(&mRegularKeys, pR, n, &mBlend);
-    }
-  }
-
-  */
-
-  // Returns the key number at the (x, y) coordinates.
-  int GetMouseKey(int x, int y)
-  {
-    // Skip if the coordinates are outside the keyboard's rectangle.
-    if (x < mTargetRECT.L || x >= mTargetRECT.R || y < mTargetRECT.T || y >= mTargetRECT.B) return -1;
-    x -= mTargetRECT.L;
-    y -= mTargetRECT.T;
-
-    // Calculate the octave.
-    int octave = x / mOctaveWidth;
-    x -= octave * mOctaveWidth;
-
-    // Flat/sharp key
-    int note;
-    int h = mSharpKey.H / mSharpKey.N;
-
-    if (y < h && octave < mNumOctaves)
+    int n;
+    if (key < mMaxKey)
     {
-      // C#
-      if (x < mKeyCoords[1]) goto RegularKey;
-      if (x < mKeyCoords[1] + mSharpKey.W)
-      {
-        note = 1;
-        goto CalcVelocity;
-      }
-      // D#
-      if (x < mKeyCoords[3]) goto RegularKey;
-      if (x < mKeyCoords[3] + mSharpKey.W)
-      {
-        note = 3;
-        goto CalcVelocity;
-      }
-      // F#
-      if (x < mKeyCoords[6]) goto RegularKey;
-      if (x < mKeyCoords[6] + mSharpKey.W)
-      {
-        note = 6;
-        goto CalcVelocity;
-      }
-      // G#
-      if (x < mKeyCoords[8]) goto RegularKey;
-      if (x < mKeyCoords[8] + mSharpKey.W)
-      {
-        note = 8;
-        goto CalcVelocity;
-      }
-      // A#
-      if (x < mKeyCoords[10]) goto RegularKey;
-      if (x < mKeyCoords[10] + mSharpKey.W)
-      {
-        note = 10;
-        goto CalcVelocity;
-      }
+    n = mBitmapN[note];
+    if (key >= 12) n += 5;
     }
-
-  RegularKey:
+    else
     {
-      h = mRECT.H();
-      int n = x / mRegularKeys.W;
-      note = n * 2;
-      if (n >= 3) note--;
+    n = 11;
+    }
+    pGraphics->DrawBitmap(&mRegularKeys, pR, n, &mBlend);
+    }
+    }
+    
+    */
+    
+    // Returns the key number at the (x, y) coordinates.
+    int GetMouseKey(int x, int y)
+    {
+        // Skip if the coordinates are outside the keyboard's rectangle.
+        if (x < mTargetRECT.L || x >= mTargetRECT.R ||
+            y < mTargetRECT.T || y >= mTargetRECT.B)
+            return -1;
+        
+        x -= mTargetRECT.L;
+        y -= mTargetRECT.T;
+
+        // Calculate the octave.
+        int octave = x / mOctaveWidth;
+        x -= octave * mOctaveWidth;
+
+        // Flat/sharp key
+        int note;
+        int h = mSharpKey.H / mSharpKey.N;
+        
+        if (y < h && octave < mNumOctaves)
+        {
+            // C#
+            if (x < mKeyCoords[1]) goto RegularKey;
+            if (x < mKeyCoords[1] + mSharpKey.W)
+            {
+                note = 1;
+                goto CalcVelocity;
+            }
+            // D#
+            if (x < mKeyCoords[3]) goto RegularKey;
+            if (x < mKeyCoords[3] + mSharpKey.W)
+            {
+                note = 3;
+                goto CalcVelocity;
+            }
+            // F#
+            if (x < mKeyCoords[6]) goto RegularKey;
+            if (x < mKeyCoords[6] + mSharpKey.W)
+            {
+                note = 6;
+                goto CalcVelocity;
+            }
+            // G#
+            if (x < mKeyCoords[8]) goto RegularKey;
+            if (x < mKeyCoords[8] + mSharpKey.W)
+            {
+                note = 8;
+                goto CalcVelocity;
+            }
+            // A#
+            if (x < mKeyCoords[10]) goto RegularKey;
+            if (x < mKeyCoords[10] + mSharpKey.W)
+            {
+                note = 10;
+                goto CalcVelocity;
+            }
+        }
+
+    RegularKey:
+        {
+            h = mRECT.H();
+            int n = x / mRegularKeys.W;
+            note = n * 2;
+            if (n >= 3) note--;
+        }
+        
+    CalcVelocity:
+        // Calculate the velocity depeding on the vertical coordinate
+        // relative to the key height.
+        mVelocity = (BL_FLOAT)y / (BL_FLOAT)h;
+
+        return note + octave * 12;
     }
 
-  CalcVelocity:
-    // Calculate the velocity depeding on the vertical coordinate
-    // relative to the key height.
-    mVelocity = (double)y / (double)h;
+    static const int mNextKey[12];
+    static const int mBitmapN[12];
 
-    return note + octave * 12;
-  }
-
-  static const int mNextKey[12];
-  static const int mBitmapN[12];
-
-  IBitmap mRegularKeys, mSharpKey;
-  int mKeyCoords[12];
-  int mOctaveWidth, mNumOctaves;
-  int mKey, mMinNote, mMaxKey;
-  double mVelocity;
+    IBitmap mRegularKeys, mSharpKey;
+    int mKeyCoords[12];
+    int mOctaveWidth, mNumOctaves;
+    int mKey, mMinNote, mMaxKey;
+    BL_FLOAT mVelocity;
 };
 
 
