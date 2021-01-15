@@ -99,7 +99,8 @@ class IKeyboardControl: public IControl
                   IBitmap pRegularKeys, IBitmap pSharpKey, const int *pKeyCoords = 0):
     IControl(IRECT(x, y, pRegularKeys), -1),
     mMinNote(minNote), mNumOctaves(nOctaves), mRegularKeys(pRegularKeys), mSharpKey(pSharpKey),
-    mOctaveWidth(pRegularKeys.W() * 7), mMaxKey(nOctaves * 12), mKey(-1)
+    mOctaveWidth(pRegularKeys.W() * 7), mMaxKey(nOctaves * 12), mKey(-1),
+    mPlug(pPlug)
     {
         memcpy(mKeyCoords, pKeyCoords, 12 * sizeof(int));
         mRECT.R += nOctaves * mOctaveWidth;
