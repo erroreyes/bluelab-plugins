@@ -343,7 +343,7 @@ GraphFreqAxis2::Update()
 
 void
 GraphFreqAxis2::UpdateAxis(int numAxisData,
-                           const float freqs[],
+                           const BL_FLOAT freqs[],
                            const char *labels[],
                            BL_FLOAT minHzValue, BL_FLOAT maxHzValue)
 {
