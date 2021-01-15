@@ -3,10 +3,12 @@
 
 #include <BLTypes.h>
 
+#include <PlaySelectPluginInterface.h>
+
 // Zoom on the pointer inside of on the bar (for zoom center)
 #define ZOOM_ON_POINTER 1
 
-class GhostPluginInterface
+class GhostPluginInterface : public PlaySelectPluginInterface
 {
  public:
   enum PlugMode
@@ -26,35 +28,14 @@ class GhostPluginInterface
     
   GhostPluginInterface();
   virtual ~GhostPluginInterface();
-    
-  virtual void UpdateSelection(BL_FLOAT x0, BL_FLOAT y0,
-                               BL_FLOAT x1, BL_FLOAT y1,
-                               bool updateCenterPos,
-                               bool activateDrawSelection = false,
-                               bool updateCustomControl = false) = 0;
 
   virtual enum PlugMode GetMode() = 0;
 
   virtual void GetGraphSize(int *width, int *height) = 0;
 
-  virtual bool IsBarActive() = 0;
-  virtual void SetBarActive(bool flag) = 0;
-  virtual void SetBarPos(BL_FLOAT x) = 0;
-  virtual void ResetPlayBar() = 0;
-
-  virtual void StartPlay() = 0;
-  virtual void StopPlay() = 0;
-  virtual bool PlayStarted() = 0;
-  virtual void ClearBar() = 0;
-    
-  virtual bool IsSelectionActive() = 0;
-  virtual void UpdateZoomSelection(BL_FLOAT selection[4],
-                                   BL_FLOAT zoomChange) = 0;
-  virtual void SelectionChanged() = 0;
+  // Ghost
   virtual void BeforeSelTranslation() = 0;
   virtual void AfterSelTranslation() = 0;
-    
-  virtual bool PlayBarOutsideSelection() = 0;
     
   virtual void UpdateZoom(BL_FLOAT zoomChange) = 0;
   virtual void SetZoomCenter(int x) = 0;
