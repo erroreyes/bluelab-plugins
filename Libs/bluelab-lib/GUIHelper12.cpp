@@ -1084,12 +1084,16 @@ GUIHelper12::CreateValue(IGraphics *graphics,
                          int paramIdx)
 {
     // Bitmap
-    float width;
-    float height;
-    CreateBitmap(graphics, x, y, bitmapFname,
-                 mValueTextOffsetX, mValueTextOffsetY,
-                 &width, &height);
+    //float width;
+    //float height;
+    //CreateBitmap(graphics, x, y, bitmapFname,
+    //             mValueTextOffsetX, mValueTextOffsetY,
+    //             &width, &height);
 
+    IBitmap bitmap = graphics->LoadBitmap(bitmapFname, 1);
+    float width = bitmap.W();
+    float height = bitmap.H()/bitmap.N();
+    
     // Value
     IRECT bounds(x - width/2.0 + mValueTextOffsetX,
                  y + mValueTextOffsetY,
