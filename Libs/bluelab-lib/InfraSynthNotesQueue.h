@@ -4,6 +4,8 @@
 #include <vector>
 using namespace std;
 
+#include <randomsequence.h>
+
 #include <BLTypes.h>
 
 #include <Oscillator.h>
@@ -12,8 +14,6 @@ using namespace std;
 #include <SineSynthSimple.h>
 
 #include <InfraSynthProcess.h>
-
-#include <RandomSequenceOfUnique.h>
 
 #include <InfraSynth_defs.h>
 

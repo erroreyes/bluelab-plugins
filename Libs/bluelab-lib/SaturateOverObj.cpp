@@ -19,7 +19,7 @@ SaturateOverObj::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
         BL_FLOAT input = ioBuffer->Get()[i];
         BL_FLOAT output = 0.0;
         
-        InfraSynth::ComputeSaturation(input, &output, mRatio);
+        ComputeSaturation(input, &output, mRatio);
         
         ioBuffer->Get()[i] = output;
     }

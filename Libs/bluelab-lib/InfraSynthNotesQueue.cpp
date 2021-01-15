@@ -2,7 +2,7 @@
 
 #include "InfraSynthNotesQueue.h"
 
-NotesQueue::NotesQueue(BL_FLOAT sampleRate)
+InfraSynthNotesQueue::InfraSynthNotesQueue(BL_FLOAT sampleRate)
 {
     mSampleRate = sampleRate;
     
@@ -46,7 +46,7 @@ NotesQueue::NotesQueue(BL_FLOAT sampleRate)
     mGenNoise = true;
 }
 
-NotesQueue::~NotesQueue()
+InfraSynthNotesQueue::~InfraSynthNotesQueue()
 {
     for (int i = 0; i < mNotes.size(); i++)
     {
@@ -58,7 +58,7 @@ NotesQueue::~NotesQueue()
 }
 
 void
-NotesQueue::Reset()
+InfraSynthNotesQueue::Reset()
 {
     for (int i = 0; i < mNotes.size(); i++)
     {
@@ -70,7 +70,7 @@ NotesQueue::Reset()
 }
 
 void
-NotesQueue::SetSampleRate(BL_FLOAT sampleRate)
+InfraSynthNotesQueue::SetSampleRate(BL_FLOAT sampleRate)
 {
     mSampleRate = sampleRate;
     
@@ -84,13 +84,13 @@ NotesQueue::SetSampleRate(BL_FLOAT sampleRate)
 }
 
 void
-NotesQueue::SetInfraSynthProcess(InfraSynthProcess *process)
+InfraSynthNotesQueue::SetInfraSynthProcess(InfraSynthProcess *process)
 {
     mInfraSynthProcess = process;
 }
 
 void
-NotesQueue::AddNote(int keyNumber,
+InfraSynthNotesQueue::AddNote(int keyNumber,
                     BL_FLOAT freq, BL_FLOAT velocity,
                     BL_FLOAT a, BL_FLOAT d, BL_FLOAT s, BL_FLOAT r,
                     bool muteMainOsc, bool useFixedPhantomFreq)
@@ -206,7 +206,7 @@ NotesQueue::AddNote(int keyNumber,
 }
 
 void
-NotesQueue::ReleaseNote(int keyNumber)
+InfraSynthNotesQueue::ReleaseNote(int keyNumber)
 {
     for (int i = 0; i < mNotes.size(); i++)
     {
@@ -222,7 +222,7 @@ NotesQueue::ReleaseNote(int keyNumber)
 }
 
 BL_FLOAT
-NotesQueue::NextSample(BL_FLOAT *resPhantomSamp,
+InfraSynthNotesQueue::NextSample(BL_FLOAT *resPhantomSamp,
                        BL_FLOAT *resSubSamp,
                        BL_FLOAT *resNoiseSamp)
 {
@@ -419,14 +419,14 @@ NotesQueue::NextSample(BL_FLOAT *resPhantomSamp,
 }
 
 void
-NotesQueue::Update()
+InfraSynthNotesQueue::Update()
 {
     RemoveFinishedNotes();
 }
 
 #if ADSR_SMOOTH_FEATURE
 void
-NotesQueue::SetADSRSmoothFactor(BL_FLOAT smoothFactor)
+InfraSynthNotesQueue::SetADSRSmoothFactor(BL_FLOAT smoothFactor)
 {
     mADSRSmoothFactor = smoothFactor;
 }
@@ -434,80 +434,80 @@ NotesQueue::SetADSRSmoothFactor(BL_FLOAT smoothFactor)
 
 #if ADSR_ADVANCED_PARAMS_FEATURE
 void
-NotesQueue::SetAttackPeak(BL_FLOAT gain)
+InfraSynthNotesQueue::SetAttackPeak(BL_FLOAT gain)
 {
     mAttackPeak = gain;
 }
 
 void
-NotesQueue::SetAttackShape(BL_FLOAT shape)
+InfraSynthNotesQueue::SetAttackShape(BL_FLOAT shape)
 {
     mAttackShape = shape;
 }
 
 void
-NotesQueue::SetDecayPeak(BL_FLOAT peak)
+InfraSynthNotesQueue::SetDecayPeak(BL_FLOAT peak)
 {
     mDecayPeak = peak;
 }
 
 void
-NotesQueue::SetDecayShape(BL_FLOAT shape)
+InfraSynthNotesQueue::SetDecayShape(BL_FLOAT shape)
 {
     mDecayShape = shape;
 }
 
 void
-NotesQueue::SetSustainDelay(BL_FLOAT delay)
+InfraSynthNotesQueue::SetSustainDelay(BL_FLOAT delay)
 {
     mSustainDelay = delay;
 }
 
 void
-NotesQueue::SetSustainShape(BL_FLOAT shape)
+InfraSynthNotesQueue::SetSustainShape(BL_FLOAT shape)
 {
     mSustainShape = shape;
 }
 
 void
-NotesQueue::SetReleaseShape(BL_FLOAT shape)
+InfraSynthNotesQueue::SetReleaseShape(BL_FLOAT shape)
 {
     mReleaseShape = shape;
 }
 
 void
-NotesQueue::SetEnd(BL_FLOAT end)
+InfraSynthNotesQueue::SetEnd(BL_FLOAT end)
 {
     mEnd = end;
 }
 
 void
-NotesQueue::SetEndPeak(BL_FLOAT endPeak)
+InfraSynthNotesQueue::SetEndPeak(BL_FLOAT endPeak)
 {
     mEndPeak = endPeak;
 }
 
 void
-NotesQueue::SetEndShape(BL_FLOAT endShape)
+InfraSynthNotesQueue::SetEndShape(BL_FLOAT endShape)
 {
     mEndShape = endShape;
 }
 #endif
 
 void
-NotesQueue::SetMainOscMix(BL_FLOAT mix)
+InfraSynthNotesQueue::SetMainOscMix(BL_FLOAT mix)
 {
     mMainOscMix = mix;
 }
 
 void
-NotesQueue::SetNoiseMix(BL_FLOAT mix)
+InfraSynthNotesQueue::SetNoiseMix(BL_FLOAT mix)
 {
     mNoiseMix = mix;
 }
 
 void
-NotesQueue::SetOscSync(bool flag)
+InfraSynthNotesQueue::SetOscSync(bool flag)
 {
     mOscSync = flag;
     
@@ -518,13 +518,13 @@ NotesQueue::SetOscSync(bool flag)
 }
 
 void
-NotesQueue::SetGenNoise(bool flag)
+InfraSynthNotesQueue::SetGenNoise(bool flag)
 {
     mGenNoise = flag;
 }
 
 void
-NotesQueue::RemoveFinishedNotes()
+InfraSynthNotesQueue::RemoveFinishedNotes()
 {
     // First, remove finished notes
     vector<Note *> newNotes;
@@ -540,7 +540,7 @@ NotesQueue::RemoveFinishedNotes()
 }
 
 BL_FLOAT
-NotesQueue::ComputeNoiseNorm()
+InfraSynthNotesQueue::ComputeNoiseNorm()
 {
 #define MAX_NOISE_VALUE UINT_MAX
 #define MAX_NOISE_VALUE_INV 1.0/MAX_NOISE_VALUE
@@ -552,7 +552,7 @@ NotesQueue::ComputeNoiseNorm()
 
 
 BL_FLOAT
-NotesQueue::ComputeNoiseSamp()
+InfraSynthNotesQueue::ComputeNoiseSamp()
 {
     BL_FLOAT n = ComputeNoiseNorm();
     

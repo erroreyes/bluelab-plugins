@@ -4,6 +4,8 @@
 // #bluelab
 // From iPlug1 IKeyboardControl
 
+#include <SynthPluginInterface.h>
+
 /*
 
 IKeyboardControl
@@ -93,11 +95,11 @@ been declared, so it is propbably best to include it in your plug-in's main
 class IKeyboardControl: public IControl
 {
  public:
- IKeyboardControl(IPluginBase* pPlug, int x, int y, int minNote, int nOctaves,
+ IKeyboardControl(SynthPluginInterface* pPlug, int x, int y, int minNote, int nOctaves,
                   IBitmap pRegularKeys, IBitmap pSharpKey, const int *pKeyCoords = 0):
-    IControl(pPlug, IRECT(x, y, pRegularKeys), -1),
-    mMinNote(minNote), mNumOctaves(nOctaves), mRegularKeys(*pRegularKeys), mSharpKey(*pSharpKey),
-    mOctaveWidth(pRegularKeys->W * 7), mMaxKey(nOctaves * 12), mKey(-1)
+    IControl(IRECT(x, y, pRegularKeys), -1),
+    mMinNote(minNote), mNumOctaves(nOctaves), mRegularKeys(pRegularKeys), mSharpKey(pSharpKey),
+    mOctaveWidth(pRegularKeys.W() * 7), mMaxKey(nOctaves * 12), mKey(-1)
     {
         memcpy(mKeyCoords, pKeyCoords, 12 * sizeof(int));
         mRECT.R += nOctaves * mOctaveWidth;
@@ -123,7 +125,7 @@ class IKeyboardControl: public IControl
         int key = GetMouseKey(x, y);
         if (key == mKey) return;
 
-        if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote)) return;
+        if (mPlug->GetKeyStatus(key + mMinNote)) return;
 
         mKey = key;
         
@@ -151,33 +153,33 @@ class IKeyboardControl: public IControl
     virtual void OnMouseWheel(float x, float y, const IMouseMod &pMod, float d) override {}
     
     // Draws only the keys that are currently playing.
-    virtual bool Draw(IGraphics &pGraphics)
+    virtual void Draw(IGraphics &pGraphics) override
     {
         // Skip if no keys are playing.
-        if (((PLUG_CLASS_NAME*)mPlug)->GetNumKeys() == 0 && mKey == -1) return true;
+        if (mPlug->GetNumKeys() == 0 && mKey == -1) return;
         
         // "Regular" keys
-        IRECT r(mRECT.L, mRECT.T, mRECT.L + mRegularKeys.W, mRECT.B);
+        IRECT r(mRECT.L, mRECT.T, mRECT.L + mRegularKeys.W(), mRECT.B);
         int key = 0;
         while (key < mMaxKey)
         {
             // Draw the key.
             int note = key % 12;
-            if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey)
-                DrawKey(pGraphics, &r, key, note, false);
+            if (mPlug->GetKeyStatus(key + mMinNote) || key == mKey)
+                DrawKey(&pGraphics, &r, key, note, false);
             
             // Next, please!
             key += mNextKey[note];
-            r.L += mRegularKeys.W;
-            r.R += mRegularKeys.W;
+            r.L += mRegularKeys.W();
+            r.R += mRegularKeys.W();
         }
         // Draw the high C.
-        if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey)
-            DrawKey(pGraphics, &r, key, 0, false);
+        if (mPlug->GetKeyStatus(key + mMinNote) || key == mKey)
+            DrawKey(&pGraphics, &r, key, 0, false);
         
         // Flat/sharp keys
         int l = mRECT.L;
-        r.B = mRECT.T + mSharpKey.H / mSharpKey.N;
+        r.B = mRECT.T + mSharpKey.H() / mSharpKey.N();
         key = 1;
         while (true)
         {
@@ -185,26 +187,24 @@ class IKeyboardControl: public IControl
             int note = key % 12;
 
             r.L = l + mKeyCoords[note];
-            r.R = r.L + mSharpKey.W;
-            if (((PLUG_CLASS_NAME*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey)
-                DrawKey(pGraphics, &r, key, note, true);
+            r.R = r.L + mSharpKey.W();
+            if (((SynthPluginInterface*)mPlug)->GetKeyStatus(key + mMinNote) || key == mKey)
+                DrawKey(&pGraphics, &r, key, note, true);
 
             // Next, please!
             key += mNextKey[note];
             if (key > mMaxKey) break;
             if (note == 10) l += mOctaveWidth;
         }
-        
-        return true;
     }
     
  protected:
     virtual void DrawKey(IGraphics* pGraphics, IRECT* pR, int key, int note, bool sharp)
     {
         if (sharp)
-            pGraphics->DrawBitmap(&mSharpKey, pR, 0, &mBlend);
+            pGraphics->DrawBitmap(mSharpKey, *pR, 0, &mBlend);
         else
-            pGraphics->DrawBitmap(&mRegularKeys, pR, key < mMaxKey ? mBitmapN[note] : 6,
+            pGraphics->DrawBitmap(mRegularKeys, *pR, key < mMaxKey ? mBitmapN[note] : 6,
                                   &mBlend);
     }
 
@@ -252,41 +252,41 @@ class IKeyboardControl: public IControl
 
         // Flat/sharp key
         int note;
-        int h = mSharpKey.H / mSharpKey.N;
+        int h = mSharpKey.H() / mSharpKey.N();
         
         if (y < h && octave < mNumOctaves)
         {
             // C#
             if (x < mKeyCoords[1]) goto RegularKey;
-            if (x < mKeyCoords[1] + mSharpKey.W)
+            if (x < mKeyCoords[1] + mSharpKey.W())
             {
                 note = 1;
                 goto CalcVelocity;
             }
             // D#
             if (x < mKeyCoords[3]) goto RegularKey;
-            if (x < mKeyCoords[3] + mSharpKey.W)
+            if (x < mKeyCoords[3] + mSharpKey.W())
             {
                 note = 3;
                 goto CalcVelocity;
             }
             // F#
             if (x < mKeyCoords[6]) goto RegularKey;
-            if (x < mKeyCoords[6] + mSharpKey.W)
+            if (x < mKeyCoords[6] + mSharpKey.W())
             {
                 note = 6;
                 goto CalcVelocity;
             }
             // G#
             if (x < mKeyCoords[8]) goto RegularKey;
-            if (x < mKeyCoords[8] + mSharpKey.W)
+            if (x < mKeyCoords[8] + mSharpKey.W())
             {
                 note = 8;
                 goto CalcVelocity;
             }
             // A#
             if (x < mKeyCoords[10]) goto RegularKey;
-            if (x < mKeyCoords[10] + mSharpKey.W)
+            if (x < mKeyCoords[10] + mSharpKey.W())
             {
                 note = 10;
                 goto CalcVelocity;
@@ -296,7 +296,7 @@ class IKeyboardControl: public IControl
     RegularKey:
         {
             h = mRECT.H();
-            int n = x / mRegularKeys.W;
+            int n = x / mRegularKeys.W();
             note = n * 2;
             if (n >= 3) note--;
         }
@@ -317,6 +317,8 @@ class IKeyboardControl: public IControl
     int mOctaveWidth, mNumOctaves;
     int mKey, mMinNote, mMaxKey;
     BL_FLOAT mVelocity;
+    
+    SynthPluginInterface *mPlug;
 };
 
 
