@@ -54,7 +54,8 @@ public:
     void GetSelection(BL_FLOAT *x0, BL_FLOAT *y0,
                       BL_FLOAT *x1, BL_FLOAT *y1);
     
-    void UpdateZoomSelection(BL_FLOAT zoomChange);
+    //void UpdateZoomSelection(BL_FLOAT zoomChange);
+    void UpdateZoom(BL_FLOAT zoomChange);
     
     bool IsSelectionActive();
     
