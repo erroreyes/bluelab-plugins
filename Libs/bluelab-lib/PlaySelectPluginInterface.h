@@ -30,6 +30,9 @@ class PlaySelectPluginInterface
     virtual void SetSelectionActive(bool flag) = 0;
     
     virtual void UpdatePlayBar() = 0;
+
+    //
+    virtual void GetGraphSize(int *width, int *height) = 0;
 };
 
 #endif

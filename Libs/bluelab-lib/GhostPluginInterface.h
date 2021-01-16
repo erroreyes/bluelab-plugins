@@ -31,8 +31,6 @@ class GhostPluginInterface : public PlaySelectPluginInterface
 
   virtual enum PlugMode GetMode() = 0;
 
-  virtual void GetGraphSize(int *width, int *height) = 0;
-
   // Ghost
   virtual void BeforeSelTranslation() = 0;
   virtual void AfterSelTranslation() = 0;

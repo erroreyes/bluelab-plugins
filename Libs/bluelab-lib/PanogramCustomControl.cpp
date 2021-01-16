@@ -9,7 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 //#include <Panogram.h>
-#include <SpectrogramDisplayScroll.h>
+#include <SpectrogramDisplayScroll3.h>
 
 #include "PanogramCustomControl.h"
 
@@ -17,7 +17,7 @@
 #define SELECTION_BORDER_SIZE 8
 
 
-PanogramCustomControl::PanogramCustomControl(PanogramPlugInterface *plug)
+PanogramCustomControl::PanogramCustomControl(PlaySelectPluginInterface *plug)
 {
     mPlug = plug;
     
@@ -67,7 +67,7 @@ PanogramCustomControl::Resize(int prevWidth, int prevHeight,
 }
 
 void
-PanogramCustomControl::SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay)
+PanogramCustomControl::SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }

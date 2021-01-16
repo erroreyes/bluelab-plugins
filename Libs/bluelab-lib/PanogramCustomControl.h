@@ -13,13 +13,13 @@
 
 #include <GraphControl12.h>
 
-#include <PanogramPlugInterface.h>
+#include <PlaySelectPluginInterface.h>
 
-class SpectrogramDisplayScroll;
+class SpectrogramDisplayScroll3;
 class PanogramCustomControl : public GraphCustomControl
 {
 public:
-    PanogramCustomControl(PanogramPlugInterface *plug);
+    PanogramCustomControl(PlaySelectPluginInterface *plug);
     
     virtual ~PanogramCustomControl() {}
     
@@ -28,7 +28,7 @@ public:
     void Resize(int prevWidth, int prevHeight,
                 int newWidth, int newHeight);
     
-    void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay);
     
     virtual void OnMouseDown(float x, float y, const IMouseMod &mod);
     virtual void OnMouseUp(float x, float y, const IMouseMod &mod);
@@ -48,7 +48,7 @@ protected:
     bool BorderSelected();
     
     //
-    PanogramPlugInterface *mPlug;
+    PlaySelectPluginInterface *mPlug;
     
     // Used to detect pure mouse up, without drag
     bool mPrevMouseDrag;
@@ -64,7 +64,7 @@ protected:
     
     bool mBorderSelected[4];
     
-    SpectrogramDisplayScroll *mSpectroDisplay;
+    SpectrogramDisplayScroll3 *mSpectroDisplay;
     
     // Detect if we actually made the mouse down insde the spectrogram
     // (FIXES: mouse up on resize button to a bigger size, and then the mouse up

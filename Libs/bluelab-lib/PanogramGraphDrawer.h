@@ -19,6 +19,9 @@ public:
     PanogramGraphDrawer();
     
     virtual ~PanogramGraphDrawer();
+
+    // The graph will destroy it automatically
+    bool IsOwnedByGraph() override { return true; }
     
     // Draw after everything
     void PostDraw(NVGcontext *vg, int width, int height);

@@ -11,7 +11,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-class Panogram;
+#include <GraphControl12.h>
 
 class PanogramCustomDrawer : public GraphCustomDrawer
 {
@@ -22,6 +22,9 @@ public:
     virtual ~PanogramCustomDrawer() {}
     
     void Reset();
+    
+    // The graph will destroy it automatically
+    bool IsOwnedByGraph() override { return true; }
     
     // Implement one of the two methods, depending on when
     // you whant to draw
