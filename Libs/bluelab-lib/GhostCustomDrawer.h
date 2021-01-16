@@ -30,7 +30,7 @@ public:
     
     State *GetState();
     
-    // The graph will destry it automatically
+    // The graph will destroy it automatically
     bool IsOwnedByGraph() override { return true; }
     
     // Draw after everything
