@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include "PanogramGraphDrawer.h"
 
 

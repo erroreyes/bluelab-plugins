@@ -83,3 +83,5 @@ ProcessObj: remove mInput and mOutput (not used, was used for Shaper display onl
 And create a super class for buffer Add/ConsumeLeft (with an internal cursor)
 - and for deque<WDL buf>, use vector + shift and assign the last element
 (check that when we assign the same size, it is not reallocated)
+
+- ParamSmooth -> “CParamSmooth” + denormalize

@@ -10,12 +10,13 @@
 
 #include <randomsequence.h>
 
-#include <FastRTConvolver2.h>
-#include <FFTProcessObj16.h>
+//#include <FastRTConvolver2.h>
+#include <FastRTConvolver3.h>
+#include <FftProcessObj16.h>
 #include <DelayObj4.h>
 
-#include <Utils.h>
-#include <Debug.h>
+#include <BLUtils.h>
+#include <BLDebug.h>
 
 #include "PseudoStereoObj2.h"
 
@@ -55,8 +56,8 @@ PseudoStereoObj2::PseudoStereoObj2(BL_FLOAT sampleRate, BL_FLOAT width)
     WDL_TypedBuf<BL_FLOAT> ir;
     GenerateIR(&ir);
     
-    mConvolverL = new FastRTConvolver2(BUFFER_SIZE, ir);
-    mConvolverR = new FastRTConvolver2(BUFFER_SIZE, ir, FastRTConvolver2::BYPASS);
+    mConvolverL = new FastRTConvolver3(BUFFER_SIZE, sampleRate, ir);
+    mConvolverR = new FastRTConvolver3(BUFFER_SIZE, sampleRate, ir, FastRTConvolver3::BYPASS);
     
     //int blockSize = BUFFER_SIZE;
     //mConvolver->Reset(blockSize);
@@ -82,8 +83,8 @@ PseudoStereoObj2::Reset(BL_FLOAT sampleRate, int blockSize)
 {
     mSampleRate = sampleRate;
     
-    mConvolverL->Reset(blockSize);
-    mConvolverR->Reset(blockSize);
+    mConvolverL->Reset(sampleRate, blockSize);
+    mConvolverR->Reset(sampleRate, blockSize);
     
     SetIRSize(sampleRate);
     
@@ -169,7 +170,7 @@ PseudoStereoObj2::ProcessSamples(vector<WDL_TypedBuf<BL_FLOAT> > *samplesVec)
     if (samplesVec->size() != 2)
         return;
     
-    Utils::StereoToMono(samplesVec);
+    BLUtils::StereoToMono(samplesVec);
     
     WDL_TypedBuf<BL_FLOAT> mono = (*samplesVec)[0];
     ProcessSamples(mono, &(*samplesVec)[0], &(*samplesVec)[1]);
@@ -239,7 +240,7 @@ void
 PseudoStereoObj2::SetIRSize(BL_FLOAT sampleRate)
 {
     mIRSize = IR_SIZE*(sampleRate/44100.0);
-    mIRSize = Utils::NextPowerOfTwo(mIRSize);
+    mIRSize = BLUtils::NextPowerOfTwo(mIRSize);
 }
 
 void
@@ -255,19 +256,19 @@ PseudoStereoObj2::UpdateDelay()
 void
 PseudoStereoObj2::NormalizeIR(WDL_TypedBuf<BL_FLOAT> *ir)
 {
-    BL_FLOAT sum = Utils::ComputeSum(*ir);
+    BL_FLOAT sum = BLUtils::ComputeSum(*ir);
     
 #define EPS 1e-10
     if (std::fabs(sum) > EPS)
     {
-        Utils::MultValues(ir, 1.0/sum);
+        BLUtils::MultValues(ir, (BL_FLOAT)(1.0/sum));
     }
 }
 
 void
 PseudoStereoObj2::AdjustGain(WDL_TypedBuf<BL_FLOAT> *samples)
 {
-    BL_FLOAT gain = DBToAmp(GAIN_ADJUST_DB);
+    BL_FLOAT gain = BLUtils::DBToAmp(GAIN_ADJUST_DB);
     
-    Utils::MultValues(samples, gain);
+    BLUtils::MultValues(samples, gain);
 }

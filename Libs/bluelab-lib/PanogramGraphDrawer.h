@@ -11,7 +11,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 
 class PanogramGraphDrawer : public GraphCustomDrawer
 {

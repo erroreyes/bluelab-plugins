@@ -15,7 +15,7 @@
 //
 
 class BLSpectrogram4;
-class SpectrogramDisplayScroll;
+class SpectrogramDisplayScroll3;
 class HistoMaskLine2;
 class PanogramPlayFftObj;
 
@@ -34,7 +34,7 @@ public:
     
     BLSpectrogram4 *GetSpectrogram();
     
-    void SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay);
+    void SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay);
     
     void SetSharpness(BL_FLOAT sharpness);
     
@@ -59,7 +59,7 @@ protected:
     
     BLSpectrogram4 *mSpectrogram;
     
-    SpectrogramDisplayScroll *mSpectroDisplay;
+    SpectrogramDisplayScroll3 *mSpectroDisplay;
     
     long mLineCount;
     

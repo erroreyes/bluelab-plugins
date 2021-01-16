@@ -135,7 +135,8 @@ GhostCustomDrawer::GetSelection(BL_FLOAT *x0, BL_FLOAT *y0,
 void
 GhostCustomDrawer::UpdateZoomSelection(BL_FLOAT zoomChange)
 {
-    mPlug->UpdateZoomSelection(mState->mSelection, zoomChange);
+    //mPlug->UpdateZoomSelection(mState->mSelection, zoomChange);
+    mPlug->UpdateZoom(zoomChange);
 }
 
 bool

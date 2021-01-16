@@ -21,8 +21,12 @@
 // Renamed PseudoStereoObj(2 ??) => USTPseudoStereoObj
 // PseudoStereoObj2: from USTPseudoStereoObj
 // - use FastRTConvolver2
+//
+// - then use FastRTConvolver3
+//
 
-class FastRTConvolver2;
+//class FastRTConvolver2;
+class FastRTConvolver3;
 class DelayObj4;
 
 class PseudoStereoObj2
@@ -62,10 +66,10 @@ protected:
     BL_FLOAT mWidth;
     
     // Real convolver
-    FastRTConvolver2 *mConvolverL;
+    FastRTConvolver3 *mConvolverL;
     
     // Dummy convolver, for latency
-    FastRTConvolver2 *mConvolverR;
+    FastRTConvolver3 *mConvolverR;
     
     DelayObj4 *mDelayObj;
 };

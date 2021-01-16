@@ -7,7 +7,7 @@
 //
 
 #ifndef BLVumeter2SidesControl_h
-#define BLVumeterControl_h
+#define BLVumeter2SidesControl_h
 
 #include <IGraphics.h>
 #include <IControl.h>

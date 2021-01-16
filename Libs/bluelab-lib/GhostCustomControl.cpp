@@ -470,11 +470,18 @@ GhostCustomControl::BorderSelected()
     return false;
 }
 
-void
+/*void
 GhostCustomControl::UpdateZoomSelection(BL_FLOAT zoomChange)
 {
     mPlug->UpdateZoomSelection(mSelection, zoomChange);
+}*/
+
+void
+GhostCustomControl::UpdateZoom(BL_FLOAT zoomChange)
+{
+    mPlug->UpdateZoom(zoomChange);
 }
+
 
 void
 GhostCustomControl::GetSelection(BL_FLOAT selection[4])

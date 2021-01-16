@@ -10,7 +10,7 @@
 
 #include <BLSpectrogram4.h>
 #include <Window.h>
-#include <SpectrogramDisplayScroll.h>
+#include <SpectrogramDisplayScroll3.h>
 #include <HistoMaskLine2.h>
 #include <PanogramPlayFftObj.h>
 #include <BLUtils.h>
@@ -144,7 +144,7 @@ PanogramFftObj::GetSpectrogram()
 }
 
 void
-PanogramFftObj::SetSpectrogramDisplay(SpectrogramDisplayScroll *spectroDisplay)
+PanogramFftObj::SetSpectrogramDisplay(SpectrogramDisplayScroll3 *spectroDisplay)
 {
     mSpectroDisplay = spectroDisplay;
 }

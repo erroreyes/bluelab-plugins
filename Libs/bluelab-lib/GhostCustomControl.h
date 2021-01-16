@@ -36,7 +36,8 @@ public:
     virtual void OnMouseOver(float x, float y, const IMouseMod &pMod) override {}
     virtual void OnMouseOut() override {}
     
-    void UpdateZoomSelection(BL_FLOAT zoomChange);
+    //void UpdateZoomSelection(BL_FLOAT zoomChange);
+    void UpdateZoom(BL_FLOAT zoomChange);
     
     void GetSelection(BL_FLOAT selection[4]);
     void SetSelection(BL_FLOAT x0, BL_FLOAT y0,

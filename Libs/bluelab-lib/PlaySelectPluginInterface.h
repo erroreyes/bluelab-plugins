@@ -8,6 +8,7 @@ class PlaySelectPluginInterface
     virtual void SetBarActive(bool flag) = 0;
     virtual bool IsBarActive() = 0;
     virtual void SetBarPos(BL_FLOAT x) = 0;
+    virtual BL_FLOAT GetBarPos() = 0;
     virtual void ResetPlayBar() = 0;
     virtual void ClearBar() = 0;
     
@@ -26,7 +27,9 @@ class PlaySelectPluginInterface
     virtual bool PlayBarOutsideSelection() = 0;
 
     virtual void BarSetSelection(int x) = 0;
-    virtual void SetSelectionActive(bool flag = 0);
+    virtual void SetSelectionActive(bool flag) = 0;
+    
+    virtual void UpdatePlayBar() = 0;
 };
 
 #endif
