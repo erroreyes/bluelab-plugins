@@ -86,3 +86,5 @@ And create a super class for buffer Add/ConsumeLeft (with an internal cursor)
 
 - ParamSmooth -> “CParamSmooth” + denormalize
 - TimeAxis6 (instead of 5) everywhere!
+
+- TODO: Indent everything correcly with emacs
