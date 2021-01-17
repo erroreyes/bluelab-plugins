@@ -66,7 +66,8 @@ public:
                               const char *tfBitmapFname,
                               const char *title = NULL,
                               Size titleSize = SIZE_DEFAULT,
-                              ICaptionControl **caption = NULL);
+                              ICaptionControl **caption = NULL,
+                              bool createValue = true);
     
 #ifdef IGRAPHICS_NANOVG
     GraphControl12 *CreateGraph(Plugin *plug, IGraphics *graphics,
@@ -212,6 +213,11 @@ public:
                                const char *title, Size size,
                                EAlign align = EAlign::Center);
 
+    // public for Precedence
+    ITextControl *CreateValueText(IGraphics *graphics,
+                                  float x, float y,
+                                  const char *textValue);
+    
 protected:
     ITextControl *CreateText(IGraphics *graphics, float x, float y,
                              const char *textStr, const IText &text,
@@ -222,9 +228,6 @@ protected:
                                  float x, float y,
                                  const char *bitmapFname,
                                  int paramIdx);
-    
-    ITextControl *CreateValueText(IGraphics *graphics, float x, float y,
-                                  int paramIdx);
 
     float GetTextWidth(IGraphics *graphics, const IText &text, const char *textStr);
     

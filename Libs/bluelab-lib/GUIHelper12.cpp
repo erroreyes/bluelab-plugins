@@ -175,7 +175,8 @@ GUIHelper12::CreateKnob(IGraphics *graphics,
                         const char *tfBitmapFname,
                         const char *title,
                         Size titleSize,
-                        ICaptionControl **caption)
+                        ICaptionControl **caption,
+                        bool createValue)
 {
     IBitmap bitmap = graphics->LoadBitmap(bitmapFname, nStates);
     IBKnobControl *knob = new IBKnobControl(x, y, bitmap, paramIdx);
@@ -189,14 +190,17 @@ GUIHelper12::CreateKnob(IGraphics *graphics,
             CreateTitle(graphics, x + bitmap.W()/2, y, title, titleSize);
         }
     }
-    
-    ICaptionControl *caption0 =
-                CreateValue(graphics,
-                            x + bitmap.W()/2, y + bitmap.H()/bitmap.N(),
-                            tfBitmapFname,
-                            paramIdx);
-    if (caption != NULL)
-        *caption = caption0;
+
+    if (createValue)
+    {
+        ICaptionControl *caption0 =
+        CreateValue(graphics,
+                    x + bitmap.W()/2, y + bitmap.H()/bitmap.N(),
+                    tfBitmapFname,
+                    paramIdx);
+        if (caption != NULL)
+            *caption = caption0;
+    }
     
     return knob;
 }
@@ -1046,6 +1050,31 @@ GUIHelper12::CreateTitle(IGraphics *graphics, float x, float y,
     
     return control;
 }
+
+ITextControl *
+GUIHelper12::CreateValueText(IGraphics *graphics,
+                             float x, float y,
+                             const char *textValue)
+{
+    IText text(mValueTextSize, mValueTextColor, mValueTextFont,
+               EAlign::Center, EVAlign::Middle, 0.0,
+               mValueTextBGColor, mValueTextFGColor);
+    
+    float width = GetTextWidth(graphics, text, textValue);
+    // Align center
+    x -= width/2.0;
+    
+    float textOffsetX = 0.0;
+    float textOffsetY = 0.0;
+    
+    ITextControl *control = CreateText(graphics, x, y,
+                                       textValue, text,
+                                       textOffsetX, textOffsetY);
+    
+    control->SetInteractionDisabled(true);
+    
+    return control;
+}    
 
 float
 GUIHelper12::GetTextWidth(IGraphics *graphics, const IText &text, const char *textStr)
