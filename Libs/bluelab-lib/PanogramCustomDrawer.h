@@ -16,10 +16,25 @@
 class PanogramCustomDrawer : public GraphCustomDrawer
 {
 public:
+    struct State
+    {
+        bool mBarActive;
+        BL_FLOAT mBarPos;
+        
+        bool mSelectionActive;
+        BL_FLOAT mSelection[4];
+        
+        bool mPlayBarActive;
+        BL_FLOAT mPlayBarPos;
+    };
+    
     PanogramCustomDrawer(Plugin *plug,
-                         BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1);
+                         BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
+                         State *state);
     
     virtual ~PanogramCustomDrawer() {}
+    
+    State *GetState();
     
     void Reset();
     
@@ -69,16 +84,10 @@ protected:
     void DrawSelection(NVGcontext *vg, int width, int height);
     void DrawPlayBar(NVGcontext *vg, int width, int height);
     
+    //
     Plugin *mPlug;
     
-    bool mBarActive;
-    BL_FLOAT mBarPos;
-    
-    bool mSelectionActive;
-    BL_FLOAT mSelection[4];
-    
-    bool mPlayBarActive;
-    BL_FLOAT mPlayBarPos;
+    State *mState;
     
     BL_FLOAT mBounds[4];
 };

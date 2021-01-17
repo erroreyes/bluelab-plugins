@@ -21,32 +21,45 @@
 
 
 PanogramCustomDrawer::PanogramCustomDrawer(Plugin *plug,
-                                           BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
+                                           BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1,
+                                           State *state)
 {
-    mPlug = plug;
+    mState = state;
+    if (mState == NULL)
+    {
+        mState = new State();
+        
+        Reset();
+    }
     
+    mPlug = plug;
+
     // Warning: y is reversed ??
     mBounds[0] = x0;
     mBounds[1] = y0;
     mBounds[2] = x1;
     mBounds[3] = y1;
-    
-    Reset();
+}
+
+PanogramCustomDrawer::State *
+PanogramCustomDrawer::GetState()
+{
+    return mState;
 }
 
 void
 PanogramCustomDrawer::Reset()
 {
-    mBarActive = false;
-    mBarPos = 0.0;
+    mState->mBarActive = false;
+    mState->mBarPos = 0.0;
     
-    mPlayBarActive = false;
-    mPlayBarPos = 0.0;
+    mState->mPlayBarActive = false;
+    mState->mPlayBarPos = 0.0;
     
-    mSelectionActive = false;
+    mState->mSelectionActive = false;
     
     for (int i = 0; i < 4; i++)
-        mSelection[i] = 0.0;
+        mState->mSelection[i] = 0.0;
 }
 
 void
@@ -62,49 +75,49 @@ PanogramCustomDrawer::PostDraw(NVGcontext *vg, int width, int height)
 void
 PanogramCustomDrawer::ClearBar()
 {
-    mBarActive = false;
+    mState->mBarActive = false;
 }
 
 void
 PanogramCustomDrawer::ClearSelection()
 {
-    mSelectionActive = false;
+    mState->mSelectionActive = false;
 }
 
 void
 PanogramCustomDrawer::SetBarPos(BL_FLOAT pos)
 {
-    mBarPos = pos;
+    mState->mBarPos = pos;
     
     // Set play bar to the same position, to start
-    mPlayBarPos = pos;
+    mState->mPlayBarPos = pos;
     
-    mBarActive = true;
-    mSelectionActive = false;
+    mState->mBarActive = true;
+    mState->mSelectionActive = false;
 }
 
 void
 PanogramCustomDrawer::SetSelectionActive(bool flag)
 {
-    mSelectionActive = flag;
+    mState->mSelectionActive = flag;
 }
 
 BL_FLOAT
 PanogramCustomDrawer::GetBarPos()
 {
-    return mBarPos;
+    return mState->mBarPos;
 }
 
 void
 PanogramCustomDrawer::SetBarActive(bool flag)
 {
-    mBarActive = flag;
+    mState->mBarActive = flag;
 }
 
 bool
 PanogramCustomDrawer::IsBarActive()
 {
-    return mBarActive;
+    return mState->mBarActive;
 }
 
 void
@@ -124,68 +137,69 @@ PanogramCustomDrawer::SetSelection(BL_FLOAT x0, BL_FLOAT y0,
     if (y1 > mBounds[3])
         y1 = mBounds[3];
     
-    mSelection[0] = x0;
-    mSelection[1] = y0;
-    mSelection[2] = x1;
-    mSelection[3] = y1;
+    mState->mSelection[0] = x0;
+    mState->mSelection[1] = y0;
+    mState->mSelection[2] = x1;
+    mState->mSelection[3] = y1;
 }
 
 void
 PanogramCustomDrawer::GetSelection(BL_FLOAT *x0, BL_FLOAT *y0,
                                    BL_FLOAT *x1, BL_FLOAT *y1)
 {
-    *x0 = mSelection[0];
-    *y0 = mSelection[1];
+    *x0 = mState->mSelection[0];
+    *y0 = mState->mSelection[1];
     
-    *x1 = mSelection[2];
-    *y1 = mSelection[3];
+    *x1 = mState->mSelection[2];
+    *y1 = mState->mSelection[3];
 }
 
 bool
 PanogramCustomDrawer::IsSelectionActive()
 {
-    return mSelectionActive;
+    return mState->mSelectionActive;
 }
 
 BL_FLOAT
 PanogramCustomDrawer::GetPlayBarPos()
 {
-    return mPlayBarPos;
+    return mState->mPlayBarPos;
 }
 
 void
 PanogramCustomDrawer::SetPlayBarPos(BL_FLOAT pos, bool activate)
 {
-    mPlayBarPos = pos;
+    mState->mPlayBarPos = pos;
     
     if (activate)
-        mPlayBarActive = true;
+        mState->mPlayBarActive = true;
 }
 
 bool
 PanogramCustomDrawer::IsPlayBarActive()
 {
-    return mPlayBarActive;
+    return mState->mPlayBarActive;
 }
 
 void
 PanogramCustomDrawer::SetPlayBarActive(bool flag)
 {
-    mPlayBarActive = flag;
+    mState->mPlayBarActive = flag;
 }
 
 void
 PanogramCustomDrawer::SetSelPlayBarPos(BL_FLOAT pos)
 {
-    mPlayBarPos = mSelection[0] + pos*(mSelection[2] - mSelection[0]);
+    mState->mPlayBarPos = mState->mSelection[0] +
+                            pos*(mState->mSelection[2] - mState->mSelection[0]);
     
-    mPlayBarActive = true;
+    mState->mPlayBarActive = true;
 }
 
 void
 PanogramCustomDrawer::DrawBar(NVGcontext *vg, int width, int height)
 {
-    if (!mBarActive)
+    if (!mState->mBarActive)
         return;
     
     BL_FLOAT strokeWidths[2] = { 3.0, 2.0 };
@@ -204,7 +218,7 @@ PanogramCustomDrawer::DrawBar(NVGcontext *vg, int width, int height)
         nvgBeginPath(vg);
         
         // Draw the line
-        BL_FLOAT x = mBarPos*width;
+        BL_FLOAT x = mState->mBarPos*width;
         
         BL_GUI_FLOAT b1f = (1.0 - mBounds[1])*height;
         BL_GUI_FLOAT b3f = (1.0 - mBounds[3])*height;
@@ -223,7 +237,7 @@ PanogramCustomDrawer::DrawBar(NVGcontext *vg, int width, int height)
 void
 PanogramCustomDrawer::DrawSelection(NVGcontext *vg, int width, int height)
 {
-    if (!mSelectionActive)
+    if (!mState->mSelectionActive)
         return;
     
     BL_FLOAT strokeWidths[2] = { 3.0, 2.0 };
@@ -241,20 +255,20 @@ PanogramCustomDrawer::DrawSelection(NVGcontext *vg, int width, int height)
         // Draw the circle
         nvgBeginPath(vg);
         
-        BL_GUI_FLOAT s1f = (1.0 - mSelection[1])*height;
-        BL_GUI_FLOAT s3f = (1.0 - mSelection[3])*height;
+        BL_GUI_FLOAT s1f = (1.0 - mState->mSelection[1])*height;
+        BL_GUI_FLOAT s3f = (1.0 - mState->mSelection[3])*height;
 #if GRAPH_CONTROL_FLIP_Y
         s1f = height - s1f;
         s3f = height - s3f;
 #endif
         
         // Draw the line
-        nvgMoveTo(vg, mSelection[0]*width, s1f);
+        nvgMoveTo(vg, mState->mSelection[0]*width, s1f);
         
-        nvgLineTo(vg, mSelection[2]*width, s1f);
-        nvgLineTo(vg, mSelection[2]*width, s3f);
-        nvgLineTo(vg, mSelection[0]*width, s3f);
-        nvgLineTo(vg, mSelection[0]*width, s1f);
+        nvgLineTo(vg, mState->mSelection[2]*width, s1f);
+        nvgLineTo(vg, mState->mSelection[2]*width, s3f);
+        nvgLineTo(vg, mState->mSelection[0]*width, s3f);
+        nvgLineTo(vg, mState->mSelection[0]*width, s1f);
         
         nvgStroke(vg);
     }
@@ -263,7 +277,7 @@ PanogramCustomDrawer::DrawSelection(NVGcontext *vg, int width, int height)
 void
 PanogramCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
 {
-    if (!mPlayBarActive)
+    if (!mState->mPlayBarActive)
         return;
     
     BL_FLOAT strokeWidths[2] = { 2.0, 1.0 };
@@ -283,11 +297,11 @@ PanogramCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
         nvgBeginPath(vg);
         
         // Draw the line
-        BL_FLOAT x = mPlayBarPos*width;
+        BL_FLOAT x = mState->mPlayBarPos*width;
         
 #if FIX_PLAY_BAR_OUTSIDE_RIGHT
-        if (x > mSelection[2]*width - 3)
-            x = mSelection[2]*width - 3;
+        if (x > mState->mSelection[2]*width - 3)
+            x = mState->mSelection[2]*width - 3;
 #endif
         
 #if !CLIP_PLAY_BAR
@@ -297,8 +311,8 @@ PanogramCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
         
         BL_GUI_FLOAT b1f = (1.0 - mBounds[1])*height;
         BL_GUI_FLOAT b3f = (1.0 - mBounds[3])*height;
-        BL_GUI_FLOAT s1f = (1.0 - mSelection[1])*height;
-        BL_GUI_FLOAT s3f = (1.0 - mSelection[3])*height;
+        BL_GUI_FLOAT s1f = (1.0 - mState->mSelection[1])*height;
+        BL_GUI_FLOAT s3f = (1.0 - mState->mSelection[3])*height;
 #if GRAPH_CONTROL_FLIP_Y
         b1f = height - b1f;
         b3f = height - b3f;
@@ -307,7 +321,7 @@ PanogramCustomDrawer::DrawPlayBar(NVGcontext *vg, int width, int height)
         s3f = height - s3f;
 #endif
         
-        if (!mSelectionActive)
+        if (!mState->mSelectionActive)
         {
             nvgMoveTo(vg, x, b1f);
             nvgLineTo(vg, x, b3f);
