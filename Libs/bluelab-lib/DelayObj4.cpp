@@ -28,7 +28,7 @@ DelayObj4::DelayObj4(BL_FLOAT delay)
     mWritePos = mDelayLine.GetSize() - 1;
     if (mWritePos < 0)
         mWritePos = 0;
-    
+
     SetDelay(delay);
 }
 

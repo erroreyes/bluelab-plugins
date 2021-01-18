@@ -23,7 +23,7 @@ public:
                    Scale::Type scale = Scale::MEL);
     
     virtual ~GraphFreqAxis2();
-    
+
     void Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
               bool horizontal,
               int bufferSize, BL_FLOAT sampleRate,

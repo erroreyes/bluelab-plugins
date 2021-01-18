@@ -8,8 +8,9 @@
 
 #if IGRAPHICS_NANOVG
 
-#include <MultiViewer.h>
-#include <BLReverb.H>
+//#include <MultiViewer.h>
+#include <MultiViewer2.h>
+#include <BLReverb.h>
 
 #include <BLUtils.h>
 
@@ -24,7 +25,7 @@
 #define TIME_OFFSET_PERCENT 0.1
 
 
-BLReverbViewer::BLReverbViewer(BLReverb *reverb, MultiViewer *viewer,
+BLReverbViewer::BLReverbViewer(BLReverb *reverb, MultiViewer2 *viewer,
                                BL_FLOAT durationSeconds, BL_FLOAT sampleRate)
 {
     mReverb = reverb;

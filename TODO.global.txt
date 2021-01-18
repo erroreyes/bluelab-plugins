@@ -88,3 +88,5 @@ And create a super class for buffer Add/ConsumeLeft (with an internal cursor)
 - TimeAxis6 (instead of 5) everywhere!
 
 - TODO: Indent everything correcly with emacs
+
+NOTE: emacs: installed auto-complete with melpa

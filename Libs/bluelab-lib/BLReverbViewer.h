@@ -12,12 +12,13 @@
 #ifdef IGRAPHICS_NANOVG
 
 class BLReverb;
-class MultiViewer;
+//class MultiViewer;
+class MultiViewer2;
 
 class BLReverbViewer
 {
 public:
-    BLReverbViewer(BLReverb *reverb, MultiViewer *viewer,
+    BLReverbViewer(BLReverb *reverb, MultiViewer2 *viewer,
                    BL_FLOAT durationSeconds, BL_FLOAT sampleRate);
     
     virtual ~BLReverbViewer();
@@ -30,7 +31,7 @@ public:
     
 protected:
     BLReverb *mReverb;
-    MultiViewer *mViewer;
+    MultiViewer2 *mViewer;
     
     BL_FLOAT mDurationSeconds;
     BL_FLOAT mSampleRate;
