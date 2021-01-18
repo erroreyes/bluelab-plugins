@@ -35,6 +35,9 @@ MultiViewer2::MultiViewer2(BL_FLOAT sampleRate, int bufferSize)
     mBufferSize = bufferSize;
     
     mGUIHelper = NULL;
+    mGraph = NULL;
+    
+    mSpectroDisplay = NULL;
     
     //
     mSamplesToSpectro = new SamplesToSpectrogram(sampleRate);
@@ -74,14 +77,16 @@ MultiViewer2::Reset(BL_FLOAT sampleRate, int bufferSize)
     mBufferSize = bufferSize;
     
     //
-    mTimeAxis->Init(mGraph, mHAxis, mGUIHelper, mBufferSize, 1.0, TIME_AXIS_NUM_LABELS);
+    if ((mGraph != NULL) && (mGUIHelper != NULL))
+    {
+        mTimeAxis->Init(mGraph, mHAxis, mGUIHelper, mBufferSize, 1.0, TIME_AXIS_NUM_LABELS);
     
-    int graphWidth;
-    int graphHeight;
-    mGraph->GetSize(&graphWidth, &graphHeight);
+        int graphWidth;
+        int graphHeight;
+        mGraph->GetSize(&graphWidth, &graphHeight);
     
-    mFreqAxis->Init(mVAxis, mGUIHelper, false, mBufferSize, mSampleRate, graphWidth);
-    
+        mFreqAxis->Init(mVAxis, mGUIHelper, false, mBufferSize, mSampleRate, graphWidth);
+    }
     //
     UpdateFrequencyScale();
     
@@ -94,7 +99,11 @@ MultiViewer2::SetGraph(GraphControl12 *graph,
                        GUIHelper12 *guiHelper)
 {
     mGraph = graph;
+    mSpectroDisplay = spectroDisplay;
     mGUIHelper = guiHelper;
+    
+    if (mGraph == NULL)
+        return;
     
     if ((mGraph != NULL) && (mGUIHelper != NULL))
     {
@@ -185,8 +194,14 @@ MultiViewer2::SetSamples(const WDL_TypedBuf<BL_FLOAT> &samples)
 {
     mSamplesToSpectro->SetSamples(samples);
 
-    mWaveformCurves[0]->SetValues4(samples);
-    mWaveformCurves[1]->SetValues4(samples);
+    if (mSpectroDisplay != NULL)
+        mSpectroDisplay->UpdateSpectrogram();
+    
+    if (mWaveformCurves[0] != NULL)
+        mWaveformCurves[0]->SetValues4(samples);
+    
+    if (mWaveformCurves[1] != NULL)
+        mWaveformCurves[1]->SetValues4(samples);
 }
 
 void
@@ -199,7 +214,6 @@ MultiViewer2::UpdateFrequencyScale()
     BL_FLOAT maxHzValue;
     BLUtils::GetMinMaxFreqAxisValues(&minHzValue, &maxHzValue,
                                      BUFFER_SIZE, mSampleRate);
-   
     mFreqAxis->SetMaxFreq(maxHzValue);
 }
 

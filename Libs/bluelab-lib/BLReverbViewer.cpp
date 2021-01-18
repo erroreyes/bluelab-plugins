@@ -54,8 +54,9 @@ BLReverbViewer::SetDuration(BL_FLOAT durationSeconds)
     
     mViewer->SetTime(mDurationSeconds, mDurationSeconds*(1.0 - TIME_OFFSET_PERCENT));
     
+    // NOTE: originally commented...
     // We zoomed with the mouse (do not update the spectrogram each time)
-    //Update();
+    Update();
 }
 
 void

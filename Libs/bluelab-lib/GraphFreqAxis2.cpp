@@ -256,7 +256,8 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
 void
 GraphFreqAxis2::SetBounds(BL_FLOAT bounds[2])
 {
-    mGraphAxis->SetBounds(bounds);
+    if (mGraphAxis != NULL)
+        mGraphAxis->SetBounds(bounds);
 }
 
 void
@@ -265,7 +266,8 @@ GraphFreqAxis2::Reset(int bufferSize, BL_FLOAT sampleRate)
     mBufferSize = bufferSize;
     mSampleRate = sampleRate;
     
-    mGraphAxis->SetMinMaxValues(0.0, sampleRate*0.5);
+    if (mGraphAxis != NULL)
+        mGraphAxis->SetMinMaxValues(0.0, sampleRate*0.5);
     
     Update();
 }
@@ -275,7 +277,8 @@ GraphFreqAxis2::SetMaxFreq(BL_FLOAT maxFreq)
 {
     mMaxFreq = maxFreq;
 
-    mGraphAxis->SetMinMaxValues(0.0, mMaxFreq);
+    if (mGraphAxis != NULL)
+        mGraphAxis->SetMinMaxValues(0.0, mMaxFreq);
     
     Update();
 }
@@ -372,7 +375,8 @@ GraphFreqAxis2::UpdateAxis(int numAxisData,
             sprintf(axisData[i*2 + 1], "");
     }
 
-    mGraphAxis->SetData((char *(*)[2])axisData, numAxisData);
+    if (mGraphAxis != NULL)
+        mGraphAxis->SetData((char *(*)[2])axisData, numAxisData);
     
     for (int i = 0; i < numAxisData; i++)
     {
