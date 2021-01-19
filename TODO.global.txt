@@ -90,3 +90,6 @@ And create a super class for buffer Add/ConsumeLeft (with an internal cursor)
 - TODO: Indent everything correcly with emacs
 
 NOTE: emacs: installed auto-complete with melpa
+
+TODO: mae a classe bl_queue, with a push_pop() method, all in once, no memory alloc
+a vector inside, with shift().
