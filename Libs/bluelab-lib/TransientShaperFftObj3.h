@@ -9,7 +9,8 @@
 #ifndef __BL_Shaper__TransientShaperFftObj3__
 #define __BL_Shaper__TransientShaperFftObj3__
 
-#include "FftProcessObj16.h"
+#include <FifoDecimator.h>
+#include <FftProcessObj16.h>
 
 // Detection of "s" and "p" is good at 44100Hz
 // but at 88200Hz, it is not so good (worse selaration)
@@ -91,6 +92,10 @@ public:
 #if FORCE_SAMPLE_RATE
     void ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer);
 #endif
+
+    //
+    void ProcessSamplesBufferEnergy(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
+                                    const WDL_TypedBuf<BL_FLOAT> *scBuffer);
     
     void GetCurrentTransientness(WDL_TypedBuf<BL_FLOAT> *outTransientness);
     
@@ -103,9 +108,12 @@ public:
                     bool trackTransientness);
     
     void GetTransientness(WDL_TypedBuf<BL_FLOAT> *outTransientness);
+
+    //
+    void GetCurrentInput(WDL_TypedBuf<BL_FLOAT> *outInput);
+    void GetCurrentOutput(WDL_TypedBuf<BL_FLOAT> *outOutput);
     
 protected:
-
     // NOTE: we can't compute a transientness normalized from the gain of the signal...
     // ... because transientness doesn't depend on the gain
     
@@ -151,6 +159,10 @@ protected:
     
     // Unused
     //WDL_TypedBuf<BL_FLOAT> mTransSmoothWin;
+
+    // For tracking
+    FifoDecimator mInput;
+    FifoDecimator mOutput;
 };
 
 #endif /* defined(__BL_Shaper__TransientShaperFftObj3__) */

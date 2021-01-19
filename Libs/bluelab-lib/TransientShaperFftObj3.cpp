@@ -62,7 +62,9 @@ TransientShaperFftObj3::TransientShaperFftObj3(int bufferSize, int oversampling,
                                                int freqRes, BL_FLOAT sampleRate,
                                                int decimNumPoints, BL_FLOAT decimFactor,
                                                bool doApplyTransients)
-: ProcessObj(bufferSize)
+: ProcessObj(bufferSize),
+mInput(true),
+mOutput(true)
 {
     mPrecision = 0.0;
     mSoftHard = 0.0;
@@ -109,6 +111,10 @@ TransientShaperFftObj3::Reset()
     mSamplesIn.Resize(0);
     mTransientnessBuf.Resize(0);
 #endif
+
+    // 
+    mInput.Reset();
+    mOutput.Reset();
 }
 
 void
@@ -347,9 +353,17 @@ TransientShaperFftObj3::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
         
         ApplyTransientness(ioBuffer, mCurrentTransientness);
     }
+
+    mInput.AddValues(*ioBuffer);
+}
+#else
+void
+TransientShaperFftObj3::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
+                                             WDL_TypedBuf<BL_FLOAT> *scBuffer)
+{
+    mInput.AddValues(*ioBuffer);
 }
 #endif
-
 
 #if FORCE_SAMPLE_RATE
 #if !FORCE_SAMPLE_RATE_KEEP_QUALITY
@@ -449,6 +463,13 @@ TransientShaperFftObj3::ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
 #endif
 
 void
+TransientShaperFftObj3::ProcessSamplesBufferEnergy(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
+                                                   const WDL_TypedBuf<BL_FLOAT> *scBuffer)
+{
+    mOutput.AddValues(*ioBuffer);
+}
+
+void
 TransientShaperFftObj3::SetTrackIO(int maxNumPoints, BL_FLOAT decimFactor,
                                    bool trackInput, bool trackOutput,
                                    bool trackTransientness)
@@ -464,6 +485,13 @@ TransientShaperFftObj3::SetTrackIO(int maxNumPoints, BL_FLOAT decimFactor,
     {
         mTransientness = new FifoDecimator(maxNumPoints, decimFactor, false);
     }
+
+    // ??
+    if (trackInput)
+        mInput.SetParams(maxNumPoints, decimFactor);
+    
+    if (trackOutput)
+        mOutput.SetParams(maxNumPoints, decimFactor);
 }
 
 void
@@ -471,6 +499,18 @@ TransientShaperFftObj3::GetTransientness(WDL_TypedBuf<BL_FLOAT> *outTransientnes
 {
     if (mTransientness != NULL)
         mTransientness->GetValues(outTransientness);
+}
+
+void
+TransientShaperFftObj3::GetCurrentInput(WDL_TypedBuf<BL_FLOAT> *outInput)
+{
+    mInput.GetValues(outInput);
+}
+    
+void
+TransientShaperFftObj3::GetCurrentOutput(WDL_TypedBuf<BL_FLOAT> *outOutput)
+{
+    mOutput.GetValues(outOutput);
 }
 
 void
