@@ -13,6 +13,8 @@ using namespace std;
 
 #include <StlInsertSorted.h>
 
+#include <GraphSwapColor.h>
+
 #include <BLDebug.h>
 
 #ifndef M_PI

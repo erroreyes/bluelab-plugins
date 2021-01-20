@@ -42,7 +42,7 @@
 //const char *_ORXXKey = "izwal";
 const char *_ORXXKey = "yoko";
 
-WavesRender::WavesRender(WavesPluginInterface *plug,
+WavesRender::WavesRender(View3DPluginInterface *plug,
                          GraphControl12 *graphControl,
                          int bufferSize, BL_FLOAT sampleRate)
 {

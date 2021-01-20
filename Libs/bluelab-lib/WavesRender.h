@@ -20,7 +20,7 @@ using namespace std;
 //#include <LinesRender.h>
 #include <LinesRender2.h>
 
-#include <WavesPluginInterface.h>
+#include <View3DPluginInterface.h>
 
 // Sides
 //#define MAX_ANGLE_0 70.0
@@ -44,7 +44,7 @@ class Axis3D;
 class WavesRender : public GraphCustomControl
 {
 public:
-    WavesRender(WavesPluginInterface *plug,
+    WavesRender(View3DPluginInterface *plug,
                 GraphControl12 *graphControl,
                 int bufferSize, BL_FLOAT sampleRate);
     
@@ -102,7 +102,7 @@ protected:
     void UpdateAmpsAxis(bool dbScale);
     
     //
-    WavesPluginInterface *mPlug;
+    View3DPluginInterface *mPlug;
     
     GraphControl12 *mGraph;
     LinesRender2 *mLinesRender;

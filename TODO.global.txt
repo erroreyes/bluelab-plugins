@@ -95,3 +95,5 @@ TODO: mae a classe bl_queue, with a push_pop() method, all in once, no memory al
 a vector inside, with shift().
 
 TODO: if the bug Cubase/Ableton 10 + Windows 10 + Intel + OpenGL is not solved, try Direct X for nanovg
+
+BUG (maybe): the first time we click on a text value, this is buggy, we need to click a second time

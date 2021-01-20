@@ -276,8 +276,8 @@ CameraOrientation::StepTo(CameraOrientation *result,
 }
 
 
-SMVVolRender3::SMVVolRender3(SoundMetaViewerPluginInterface *plug,
-                             GraphControl11 *graphControl,
+SMVVolRender3::SMVVolRender3(View3DPluginInterface *plug,
+                             GraphControl12 *graphControl,
                              int bufferSize, BL_FLOAT sampleRate)
 {
     mPlug = plug;
@@ -288,8 +288,12 @@ SMVVolRender3::SMVVolRender3(SoundMetaViewerPluginInterface *plug,
     mSampleRate = sampleRate;
     
     mRayCaster = new RayCaster2(NUM_SLICES0, NUM_POINTS_SLICE0);
-    mGraph->AddCustomDrawer(mRayCaster);
-    mGraph->AddCustomControl(this);
+    
+    if (mGraph != NULL)
+    {
+        mGraph->AddCustomDrawer(mRayCaster);
+        mGraph->AddCustomControl(this);
+    }
     
     // Selection
     mMouseIsDown = false;
@@ -335,6 +339,18 @@ SMVVolRender3::~SMVVolRender3()
     delete mStartOrientation;
     delete mEndOrientation;
     delete mPrevUserOrientation;
+}
+
+void
+SMVVolRender3::SetGraph(GraphControl12 *graph)
+{
+    mGraph = graph;
+    
+    if (mGraph != NULL)
+    {
+        mGraph->AddCustomDrawer(mRayCaster);
+        mGraph->AddCustomControl(this);
+    }
 }
 
 void
@@ -398,12 +414,15 @@ SMVVolRender3::AddCurveValuesWeight(const WDL_TypedBuf<BL_FLOAT> &xValues,
     
     if (!skipDisplay)
     {
-        // Without that, the volume rendering is not displayed
+        if (mGraph != NULL)
+        {
+            // Without that, the volume rendering is not displayed
 #if !FIX_FREEZE_GUI
-        mGraph->SetDirty(true);
+            mGraph->SetDirty(true);
 #else
-        //mGraph->SetDirty(false);
-        mGraph->SetDataChanged();
+            //mGraph->SetDirty(false);
+            mGraph->SetDataChanged();
+        }
 #endif
     }
 }
@@ -486,9 +505,12 @@ SMVVolRender3::OnMouseUp(float x, float y, const IMouseMod &mod)
         
             mRayCaster->ResetSelection();
             
-            // Must do that to draw the selection when the volume is not updated
-            //mGraph->SetDirty(true);
-            mGraph->SetDataChanged();
+            if (mGraph != NULL)
+            {
+                // Must do that to draw the selection when the volume is not updated
+                //mGraph->SetDirty(true);
+                mGraph->SetDataChanged();
+            }
         }
 #if FIX_SELECTION_MESS
         }
@@ -538,10 +560,13 @@ SMVVolRender3::OnMouseDrag(float x, float y, float dX, float dY,
         
             UpdateSelection();
             
-            // Must do that to draw the selection when the volume is not updated
-            //mGraph->SetDirty(true);
-            mGraph->SetDataChanged();
-        
+            if (mGraph != NULL)
+            {
+                // Must do that to draw the selection when the volume is not updated
+                //mGraph->SetDirty(true);
+                mGraph->SetDataChanged();
+            }
+            
             return;
         }
         else
@@ -574,9 +599,12 @@ SMVVolRender3::OnMouseDrag(float x, float y, float dX, float dY,
             
             UpdateSelection();
             
-            // Must do that to redraw the selection when the volume is not updated
-            //mGraph->SetDirty(true);
-            mGraph->SetDataChanged();
+            if (mGraph != NULL)
+            {
+                // Must do that to redraw the selection when the volume is not updated
+                //mGraph->SetDirty(true);
+                mGraph->SetDataChanged();
+            }
             
             return;
         }
@@ -629,9 +657,12 @@ SMVVolRender3::OnMouseDrag(float x, float y, float dX, float dY,
             
             mRayCaster->TranslateVolumeSelection(trans);
             
-            // Refresh the view
-            //mGraph->SetDirty(true);
-            mGraph->SetDataChanged();
+            if (mGraph != NULL)
+            {
+                // Refresh the view
+                //mGraph->SetDirty(true);
+                mGraph->SetDataChanged();
+            }
             
             return;
         }
@@ -663,12 +694,15 @@ SMVVolRender3::OnMouseDrag(float x, float y, float dX, float dY,
     
     mPlug->SetCameraAngles(mAngle0, mAngle1);
     
-    // Camera changed
-    //
-    // Without that, the camera point of view is not modified if
-    // the sound is not playing
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        // Camera changed
+        //
+        // Without that, the camera point of view is not modified if
+        // the sound is not playing
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void //bool
@@ -693,8 +727,11 @@ SMVVolRender3::OnMouseDblClick(float x, float y, const IMouseMod &mod)
     mRayCaster->SetCameraFov(DEFAULT_CAMERA_FOV);
     mPlug->SetCameraFov(DEFAULT_CAMERA_FOV/*fov*/);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
     
     //return true;
 }
@@ -772,8 +809,11 @@ SMVVolRender3::OnMouseWheel(float x, float y,
     
     mRayCaster->ZoomChanged(zoomChange);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
     
     BL_FLOAT angle = mRayCaster->GetCameraFov();
     mPlug->SetCameraFov(angle);
@@ -828,9 +868,12 @@ SMVVolRender3::OnGUIIdle()
         }
     }
     
-    // Force graph update
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        // Force graph update
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 // Not used anymore
@@ -855,8 +898,11 @@ SMVVolRender3::SetSpeedT(BL_FLOAT speed)
     AdaptQualityT(speed);
 #endif
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -868,8 +914,11 @@ SMVVolRender3::SetQualityT(BL_FLOAT quality)
     //int numSlices = (1.0 - quality)*NUM_SLICES0 + quality*NUM_SLICES1;
     //mRayCaster->SetQualityT(numSlices);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -882,8 +931,11 @@ SMVVolRender3::SetQuality(BL_FLOAT quality)
     SetQualityT(quality);
 #endif
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -906,9 +958,12 @@ SMVVolRender3::SetColormap(int colormapId)
 {
     mRayCaster->SetColorMap(colormapId);
     
-    // Without that, the colormap is not applied until we play
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        // Without that, the colormap is not applied until we play
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -916,8 +971,11 @@ SMVVolRender3::SetInvertColormap(bool flag)
 {
     mRayCaster->SetInvertColormap(flag);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -925,8 +983,11 @@ SMVVolRender3::SetColormapRange(BL_FLOAT range)
 {
     mRayCaster->SetColormapRange(range);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -934,8 +995,11 @@ SMVVolRender3::SetColormapContrast(BL_FLOAT contrast)
 {
     mRayCaster->SetColormapContrast(contrast);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 // Not used anymore
@@ -944,8 +1008,11 @@ SMVVolRender3::SetPointSize(BL_FLOAT size)
 {
     mRayCaster->SetPointSize(size);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 //#if 0
@@ -956,8 +1023,11 @@ SMVVolRender3::SetAlphaCoeff(BL_FLOAT coeff)
     //mRayCaster->SetAlphaScale(coeff/100.0);
     mRayCaster->SetAlphaCoeff(coeff/100.0);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 //#endif
 
@@ -966,8 +1036,11 @@ SMVVolRender3::SetThreshold(BL_FLOAT threshold)
 {
     mRayCaster->SetThreshold(threshold);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -975,8 +1048,11 @@ SMVVolRender3::SetThresholdCenter(BL_FLOAT thresholdCenter)
 {
     mRayCaster->SetThresholdCenter(thresholdCenter);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -984,8 +1060,12 @@ SMVVolRender3::SetClipFlag(bool flag)
 {
     mRayCaster->SetClipFlag(flag);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1063,8 +1143,11 @@ SMVVolRender3::SetPlayBarPos(BL_FLOAT t)
 {
     mRayCaster->SetPlayBarPos(t);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1072,8 +1155,11 @@ SMVVolRender3::SetAxis(int idx, Axis3D *axis)
 {
     mRayCaster->SetAxis(idx, axis);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 RayCaster2 *
@@ -1087,8 +1173,11 @@ SMVVolRender3::SetRenderAlgo(int algo)
 {
     mRayCaster->SetRenderAlgo((RayCaster2::RenderAlgo)algo);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1096,8 +1185,11 @@ SMVVolRender3::SetRenderAlgoParam(BL_FLOAT renderParam)
 {
     mRayCaster->SetRenderAlgoParam(renderParam);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1105,8 +1197,11 @@ SMVVolRender3::SetAutoQuality(bool flag)
 {
     mRayCaster->SetAutoQuality(flag);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1116,8 +1211,11 @@ SMVVolRender3::SetCamAngle0(BL_FLOAT angle)
     
     mRayCaster->SetCameraAngles(mAngle0, mAngle1);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1127,8 +1225,11 @@ SMVVolRender3::SetCamAngle1(BL_FLOAT angle)
     
     mRayCaster->SetCameraAngles(mAngle0, mAngle1);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1136,8 +1237,11 @@ SMVVolRender3::SetCamFov(BL_FLOAT angle)
 {
     mRayCaster->SetCameraFov(angle);
     
-    //mGraph->SetDirty(true);
-    mGraph->SetDataChanged();
+    if (mGraph != NULL)
+    {
+        //mGraph->SetDirty(true);
+        mGraph->SetDataChanged();
+    }
 }
 
 void
@@ -1236,16 +1340,19 @@ SMVVolRender3::BorderSelected()
 void
 SMVVolRender3::UpdateSelection()
 {
-    int width = mGraph->GetRECT().W();
-    int height = mGraph->GetRECT().H();
+    if (mGraph != NULL)
+    {
+        int width = mGraph->GetRECT().W();
+        int height = mGraph->GetRECT().H();
     
-    RC_FLOAT selection[4];
-    selection[0] = ((BL_FLOAT)mSelection[0])/width;
-    selection[1] = ((BL_FLOAT)mSelection[1])/height;
-    selection[2] = ((BL_FLOAT)mSelection[2])/width;
-    selection[3] = ((BL_FLOAT)mSelection[3])/height;
+        RC_FLOAT selection[4];
+        selection[0] = ((BL_FLOAT)mSelection[0])/width;
+        selection[1] = ((BL_FLOAT)mSelection[1])/height;
+        selection[2] = ((BL_FLOAT)mSelection[2])/width;
+        selection[3] = ((BL_FLOAT)mSelection[3])/height;
     
-    mRayCaster->SetSelection(selection);
+        mRayCaster->SetSelection(selection);
+    }
 }
 
 void
@@ -1256,13 +1363,16 @@ SMVVolRender3::UpdateSelectionRC()
     
     if (selectionValid)
     {
-        int width = mGraph->GetRECT().W();
-        int height = mGraph->GetRECT().H();
+        if (mGraph != NULL)
+        {
+            int width = mGraph->GetRECT().W();
+            int height = mGraph->GetRECT().H();
     
-        mSelection[0] = selection[0]*width;
-        mSelection[1] = selection[1]*height;
-        mSelection[2] = selection[2]*width;
-        mSelection[3] = selection[3]*height;
+            mSelection[0] = selection[0]*width;
+            mSelection[1] = selection[1]*height;
+            mSelection[2] = selection[2]*width;
+            mSelection[3] = selection[3]*height;
+        }
     }
 }
 

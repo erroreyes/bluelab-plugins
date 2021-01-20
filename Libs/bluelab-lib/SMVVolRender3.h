@@ -15,8 +15,8 @@
 #include <deque>
 using namespace std;
 
-#include <GraphControl11.h>
-#include <SoundMetaViewerPluginInterface.h>
+#include <GraphControl12.h>
+#include <View3DPluginInterface.h>
 
 // Camera angles
 //
@@ -58,11 +58,13 @@ class Axis3D;
 class SMVVolRender3 : public GraphCustomControl
 {
 public:
-    SMVVolRender3(SoundMetaViewerPluginInterface *plug,
-                  GraphControl11 *graphControl,
+    SMVVolRender3(View3DPluginInterface *plug,
+                  GraphControl12 *graphControl,
                   int bufferSize, BL_FLOAT sampleRate);
     
     virtual ~SMVVolRender3();
+    
+    void SetGraph(GraphControl12 *graph);
     
     void Reset(BL_FLOAT sampleRate);
     
@@ -73,18 +75,18 @@ public:
     
     // Control
     virtual void OnMouseDown(float x, float y,
-                             const IMouseMod &mod);
-    virtual void OnMouseUp(float x, float y, const IMouseMod &mod);
+                             const IMouseMod &mod) override;
+    virtual void OnMouseUp(float x, float y, const IMouseMod &mod) override;
     virtual void OnMouseDrag(float x, float y, float dX, float dY,
-                             const IMouseMod &mod);
+                             const IMouseMod &mod) override;
     virtual /*bool*/ void OnMouseDblClick(float x, float y,
-                                 const IMouseMod &mod);
+                                          const IMouseMod &mod) override;
     virtual bool OnKeyDown(float x, float y, const IKeyPress& key) override;
     
     virtual void OnMouseWheel(float x, float y,
-                              const IMouseMod &mod, float d);
+                              const IMouseMod &mod, float d) override;
     
-    virtual void OnGUIIdle();
+    virtual void OnGUIIdle() override;
     
     // Quality parameters
     virtual void SetQualityXY(BL_FLOAT quality);
@@ -181,7 +183,7 @@ protected:
     void AdaptQualityT(BL_FLOAT speed);
 
     //
-    GraphControl11 *mGraph;
+    GraphControl12 *mGraph;
     RayCaster2 *mRayCaster;
     
     // Selection
@@ -221,7 +223,7 @@ protected:
     BL_FLOAT mSampleRate;
     
     // Plug
-    SoundMetaViewerPluginInterface *mPlug;
+    View3DPluginInterface *mPlug;
 };
 
 #endif // IGRAPHICS_NANOVG
