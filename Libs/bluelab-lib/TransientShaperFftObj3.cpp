@@ -77,8 +77,9 @@ mOutput(true)
     
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
-    //mInput.SetParams(decimNumPoints, decimFactor, true);
-    //mOutput.SetParams(decimNumPoints, decimFactor, true);
+    //
+    mInput.SetParams(decimNumPoints, decimFactor, true);
+    mOutput.SetParams(decimNumPoints, decimFactor, true);
     
 #if FORCE_SAMPLE_RATE
     InitResamplers();
@@ -341,6 +342,8 @@ void
 TransientShaperFftObj3::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
                                              WDL_TypedBuf<BL_FLOAT> *scBuffer)
 {
+    mInput.AddValues(*ioBuffer);
+    
     if (mDoApplyTransients)
     {
 #if BYPASS_IF_NOCHANGE
@@ -354,7 +357,7 @@ TransientShaperFftObj3::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
         ApplyTransientness(ioBuffer, mCurrentTransientness);
     }
 
-    mInput.AddValues(*ioBuffer);
+    //mInput.AddValues(*ioBuffer);
 }
 #else
 void
