@@ -93,3 +93,5 @@ NOTE: emacs: installed auto-complete with melpa
 
 TODO: mae a classe bl_queue, with a push_pop() method, all in once, no memory alloc
 a vector inside, with shift().
+
+TODO: if the bug Cubase/Ableton 10 + Windows 10 + Intel + OpenGL is not solved, try Direct X for nanovg
