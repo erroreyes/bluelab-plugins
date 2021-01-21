@@ -10948,6 +10948,9 @@ BLUtils::BinsToChromaBins(int numBins, WDL_TypedBuf<FLOAT_TYPE> *chromaBins,
 {
     chromaBins->Resize(numBins);
     
+    if (numBins == 0)
+        return;
+    
     // Corresponding to A 440
     //#define C0_TONE 16.35160
     
