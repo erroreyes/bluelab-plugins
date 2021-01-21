@@ -25,10 +25,20 @@ using namespace std;
 
 #define LOG_2 0.693147180559945
 
+// Flip final voxels image over y
+// (since iPlug2)
+#define FIX_FLIP_IMAGE_IPLUG2 1
+
+#define FIX_CAMERA_IPLUG2 1
+#if FIX_CAMERA_IPLUG2
+#define USE_NEWEST_GLM 0
+#else
 // Necessary if PROJECT_POINT_SIMD is set
 //
 // glm-0.9.9.7 instead of glm-master
-#define USE_NEWEST_GLM 1 //0 //1
+//
+// NOTE: set to 0 after port to iPlug2
+#define USE_NEWEST_GLM 1 //0 //1 //0
 #if USE_NEWEST_GLM
 
 // Mac only
@@ -36,6 +46,7 @@ using namespace std;
 #define GLM_FUNC_QUALIFIER
 #define GLM_FUNC_DECL
 
+#endif
 #endif
 
 // AVX: Does not optimize... (even with RC_FLOAT=float)
@@ -274,7 +285,7 @@ CameraModelProjMat(int winWidth, int winHeight,
     // Avoid gimbal lock (since RC_FLOAT is float)
     if (angle1 > 90.0 - GIMBAL_LOCK_EPS)
         angle1 = 90.0 - GIMBAL_LOCK_EPS;
-        
+    
     glm::vec3 pos(0.0f, 0.0, -2.0f);
     glm::vec3 target(0.0f, 0.37f, 0.0f);
     
@@ -3946,8 +3957,14 @@ RayCaster2::RenderTexture(NVGcontext *vg, int width, int height,
                     continue;
                 if (k >= height)
                     continue;
-                    
+                
+#if !FIX_FLIP_IMAGE_IPLUG2
                 *((int *)&mImageData.Get()[(j + k*width)*4]) = *((int *)&p.mRGBA);
+#else
+                // Flip over y
+                *((int *)&mImageData.Get()[(j + (height - k - 1)*width)*4]) =
+                    *((int *)&p.mRGBA);
+#endif
             }
     }
         
