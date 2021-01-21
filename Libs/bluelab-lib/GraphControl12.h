@@ -130,6 +130,7 @@ public:
     virtual void OnMouseWheel(float x, float y,
                               const IMouseMod &mod, float d) {};
     virtual bool OnKeyDown(float x, float y, const IKeyPress& key) { return false; }
+    virtual bool OnKeyUp(float x, float y, const IKeyPress& key) { return false; }
     
     virtual void OnMouseOver(float x, float y, const IMouseMod &mod) {}
     virtual void OnMouseOut() {}
@@ -203,6 +204,8 @@ public:
     void OnMouseDblClick(float x, float y, const IMouseMod &mod) override;
     void OnMouseWheel(float x, float y, const IMouseMod &mod, float d) override;
     bool OnKeyDown(float x, float y, const IKeyPress& key) override;
+    // NEW iPlug2
+    bool OnKeyUp(float x, float y, const IKeyPress& key) override;
     
     void OnMouseOver(float x, float y, const IMouseMod &mod) override;
     void OnMouseOut() override;

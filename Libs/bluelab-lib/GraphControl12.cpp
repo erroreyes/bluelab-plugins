@@ -626,6 +626,29 @@ GraphControl12::OnKeyDown(float x, float y, const IKeyPress& key)
     return res;
 }
 
+bool
+GraphControl12::OnKeyUp(float x, float y, const IKeyPress& key)
+{
+    WDL_MutexLock lock(&mMutex);
+    
+    // #bl-iplug2
+    IControl::OnKeyUp(x, y, key);
+    
+#if CUSTOM_CONTROL_FIX
+    x -= mRECT.L;
+    y -= mRECT.T;
+#endif
+    
+    bool res = false;
+    for (int i = 0; i < mCustomControls.size(); i++)
+    {
+        GraphCustomControl *control = mCustomControls[i];
+        res = control->OnKeyUp(x, y, key);
+    }
+    
+    return res;
+}
+
 void
 GraphControl12::OnMouseOver(float x, float y, const IMouseMod &mod)
 {

@@ -82,6 +82,7 @@ public:
     virtual /*bool*/ void OnMouseDblClick(float x, float y,
                                           const IMouseMod &mod) override;
     virtual bool OnKeyDown(float x, float y, const IKeyPress& key) override;
+    virtual bool OnKeyUp(float x, float y, const IKeyPress& key) override;
     
     virtual void OnMouseWheel(float x, float y,
                               const IMouseMod &mod, float d) override;

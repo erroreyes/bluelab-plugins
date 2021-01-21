@@ -158,6 +158,7 @@ public:
     virtual void OnMouseWheel(float x, float y,
                               const IMouseMod &mod, float d) {};
     virtual bool OnKeyDown(float x, float y, const IKeyPress& key) { return false; }
+    virtual bool OnKeyUp(float x, float y, const IKeyPress& key) { return false; }
     
     virtual void OnMouseOver(float x, float y, const IMouseMod &mod) {}
     virtual void OnMouseOut() {}

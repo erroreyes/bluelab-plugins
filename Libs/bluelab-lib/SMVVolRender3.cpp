@@ -80,6 +80,11 @@
 // just after pressing
 #define FIX_STEP_ANIM_FREEZE 1
 
+// NOTE: since iPlug2, it seems not possible anymore to detect "Cmd" press only,
+// with VST at the minimum
+// So choose to press "x" instead
+#define FIX_KEY_PRESS_IPLUG2 1
+
 #if 0
 TEST: discard points with a too low intensity => doesn't work well
 #endif
@@ -736,6 +741,7 @@ SMVVolRender3::OnMouseDblClick(float x, float y, const IMouseMod &mod)
     //return true;
 }
 
+#if !FIX_KEY_PRESS_IPLUG2 // iPlug1
 bool
 SMVVolRender3::OnKeyDown(float x, float y, const IKeyPress& key)
 {    
@@ -798,6 +804,93 @@ SMVVolRender3::OnKeyDown(float x, float y, const IKeyPress& key)
     
     return false;
 }
+#endif
+
+// iPlug2
+#if FIX_KEY_PRESS_IPLUG2
+bool
+SMVVolRender3::OnKeyDown(float x, float y, const IKeyPress& key)
+{
+    bool cmdPressed = false;
+    
+#if !FIX_KEY_PRESS_IPLUG2
+    // Detect "cmd" pressed or released
+    if (key.C && !mPrevCmdPressed)
+#else
+    // 'x'
+    if ((key.VK == 88) && !mPrevCmdPressed)
+#endif
+    {
+        cmdPressed = true;
+        mPrevCmdPressed = true;
+    }
+    
+    if (cmdPressed && !mIsSteppingOrientation)
+    {
+        mPrevUserOrientation->SetValue(mAngle0, mAngle1);
+        
+        mStartOrientation->SetValue(mAngle0, mAngle1);
+        
+        BL_FLOAT angle0;
+        BL_FLOAT angle1;
+        CameraOrientation::FindNeasrestAlignedOrientation(mAngle0, mAngle1,
+                                                          &angle0, &angle1);
+        mEndOrientation->SetValue(angle0, angle1);
+        
+        mIsSteppingOrientation = true;
+    }
+    
+    if (cmdPressed)
+        return true;
+    
+    return false;
+}
+
+bool
+SMVVolRender3::OnKeyUp(float x, float y, const IKeyPress& key)
+{
+    bool cmdReleased = false;
+
+#if !FIX_KEY_PRESS_IPLUG2
+    if (!key.C && mPrevCmdPressed)
+#else
+    // 'x'
+    if ((key.VK == 88) && mPrevCmdPressed)
+#endif
+    {
+        cmdReleased = true;
+        mPrevCmdPressed = false;
+    }
+    
+#if !FIX_STEP_ANIM_FREEZE
+    if (cmdReleased && !mIsSteppingOrientation)
+#else
+    if (cmdReleased)
+    // Cmd release during animation => start reverse animation
+#endif
+    {
+        BL_FLOAT prevAngle0;
+        BL_FLOAT prevAngle1;
+        mPrevUserOrientation->GetValue(&prevAngle0, &prevAngle1);
+            
+        mStartOrientation->SetValue(mAngle0, mAngle1);
+        mEndOrientation->SetValue(prevAngle0, prevAngle1);
+            
+        mIsSteppingOrientation = true;
+            
+        // Cmd released, disable selection
+        mIsSelecting = false;
+            
+        // Disable selection 2D
+        mRayCaster->DisableSelection();
+    }
+    
+    if (cmdReleased)
+        return true;
+    
+    return false;
+}
+#endif
 
 void
 SMVVolRender3::OnMouseWheel(float x, float y,
