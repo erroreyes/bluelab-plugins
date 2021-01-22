@@ -97,3 +97,15 @@ a vector inside, with shift().
 TODO: if the bug Cubase/Ableton 10 + Windows 10 + Intel + OpenGL is not solved, try Direct X for nanovg
 
 BUG (maybe): the first time we click on a text value, this is buggy, we need to click a second time
+
+TODO: un-denormalize input of each plugin, just at the beginning
+
+NOTE: Windows / Reboot
+- reboot shortcut: Win + x, u, u
+- if windows does not boot: go to linux and do: 
+ntfsfix (on ntfs) partition and dosfsck (on dos partition)
+- windows safe mode: hard reboot several times => then choose “startup option”, 
+reboot again, press “4” for safe mode boot
+
+TODO: for all plugins, set output data to zero at the beginning, for all plugins
+
