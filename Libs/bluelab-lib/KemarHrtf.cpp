@@ -12,7 +12,7 @@
 #include "Hrtf.h"
 #include <BLUtils.h>
 
-#include "KemarHRTF.h"
+#include "KemarHrtf.h"
 
 #define IMPULSE_SIZE 128
 
