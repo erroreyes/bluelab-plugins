@@ -109,3 +109,7 @@ reboot again, press “4” for safe mode boot
 
 TODO: for all plugins, set output data to zero at the beginning, for all plugins
 
+(mT = 0.457364351, mText = "-60dB")
+164.651169
+
+

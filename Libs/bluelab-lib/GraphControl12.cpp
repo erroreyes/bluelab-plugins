@@ -1020,7 +1020,9 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                         y -= OVERLAY_OFFSET*0.5;
                     
                     BL_GUI_FLOAT yf = y;
-#if 0 //GRAPH_CONTROL_FLIP_Y
+                    // NOTE: set from 0 to GRAPH_CONTROL_FLIP_Y for SpectralDiff
+                    // (when using [-119dB-10dB), so the lines are well aligned with the labels)
+#if GRAPH_CONTROL_FLIP_Y // 0 ??
                     yf = height - yf;
 #endif
                     // Draw a horizontal line
@@ -2517,7 +2519,7 @@ GraphControl12::Draw(IGraphics &graphics)
     
         // BUG fixed here!
         glViewport(vp[0], vp[1], vp[2], vp[3]);
-    
+               
         glBindFramebuffer(GL_FRAMEBUFFER, mInitialFBO);
     
         float graphicsWidth = graphics.WindowWidth();
