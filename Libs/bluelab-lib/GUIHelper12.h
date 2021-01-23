@@ -209,9 +209,9 @@ public:
                               char* dir = "", char* extensions = "");
     
     // NOTE: set it public, can be useful
-    ITextControl * CreateTitle(IGraphics *graphics, float x, float y,
-                               const char *title, Size size,
-                               EAlign align = EAlign::Center);
+    ITextControl *CreateTitle(IGraphics *graphics, float x, float y,
+                              const char *title, Size size,
+                              EAlign align = EAlign::Center);
 
     // public for Precedence
     ITextControl *CreateValueText(IGraphics *graphics,
