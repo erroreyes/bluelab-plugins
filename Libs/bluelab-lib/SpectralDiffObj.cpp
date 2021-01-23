@@ -11,6 +11,7 @@ SpectralDiffObj::SpectralDiffObj(int bufferSize, int oversampling, int freqRes,
 
 SpectralDiffObj::~SpectralDiffObj() {}
 
+#if 0 // OLD
 void
 SpectralDiffObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                                   const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
@@ -71,6 +72,69 @@ SpectralDiffObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
   
 #if !NO_SOUND_OUTPUT
     BLUtils::MagnPhaseToComplex(ioBuffer, resultMagnsSym, signalPhases);
+#endif
+}
+#endif
+
+// NEW
+void
+SpectralDiffObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+                                  const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
+{
+    WDL_TypedBuf<WDL_FFT_COMPLEX> halfBuffer = *ioBuffer;
+    BLUtils::TakeHalf(&halfBuffer);
+    
+    // Signal
+    WDL_TypedBuf<BL_FLOAT> signalMagns;
+    WDL_TypedBuf<BL_FLOAT> signalPhases;
+    BLUtils::ComplexToMagnPhase(&signalMagns, &signalPhases, halfBuffer);
+    
+    // Side chain in input
+    mOutSignal0 = signalMagns;
+    
+    // Sc signal
+    WDL_TypedBuf<WDL_FFT_COMPLEX> halfScBuffer = *scBuffer;
+    BLUtils::TakeHalf(&halfScBuffer);
+    
+    WDL_TypedBuf<BL_FLOAT> scMagns;
+    WDL_TypedBuf<BL_FLOAT> scPhases;
+    if (scBuffer != NULL)
+    {
+        // We have sidechain
+        BLUtils::ComplexToMagnPhase(&scMagns, &scPhases, halfScBuffer);
+        
+        mOutSignal1 = scMagns;
+    }
+    
+    WDL_TypedBuf<BL_FLOAT> resultMagns;
+    resultMagns.Resize(signalMagns.GetSize());
+
+    for (int i = 0; i < resultMagns.GetSize(); i++)
+    {
+        BL_FLOAT signalMagn = signalMagns.Get()[i];
+        BL_FLOAT newMagn = signalMagn;
+        
+        if (scMagns.GetSize() == resultMagns.GetSize())
+        // We have sidechain
+        {
+            BL_FLOAT scMagn = scMagns.Get()[i];
+                
+            newMagn = scMagn - signalMagn;
+            newMagn = fabs(newMagn);
+                
+            if (newMagn > 1.0)
+                newMagn = 1.0;
+        }
+            
+        resultMagns.Get()[i] = newMagn;
+    }
+    
+    // Result
+    mOutDiff = resultMagns;
+    
+#if !NO_SOUND_OUTPUT
+    BLUtils::MagnPhaseToComplex(ioBuffer, resultMagnsSym, signalPhases);
+    BLUtils::FillSecondHalf(ioBuffer);
 #endif
 }
 
