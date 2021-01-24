@@ -29,7 +29,7 @@ public:
             if (v1[0] < minX)
                 minX = v1[0];
             if (v2[0] < minX)
-            minX = v2[0];
+                minX = v2[0];
         
             if (v0[0] > maxX)
                 maxX = v0[0];

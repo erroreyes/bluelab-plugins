@@ -112,4 +112,6 @@ TODO: for all plugins, set output data to zero at the beginning, for all plugins
 (mT = 0.457364351, mText = "-60dB")
 164.651169
 
-
+- TODO: make a plugin like PEEL: kind of Panogram with frequency separation
+selection, to isolate or to mute
+https://www.youtube.com/watch?v=bIh7HGKgO24
