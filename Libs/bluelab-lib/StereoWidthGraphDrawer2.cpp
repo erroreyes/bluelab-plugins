@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include "StereoWidthGraphDrawer2.h"
 
 #define OFFSET_X 6.0 //2.0
@@ -53,14 +55,14 @@ StereoWidthGraphDrawer2::PostDraw(NVGcontext *vg, int width, int height)
     SWAP_COLOR(fontColor); // ?
     
     // Left
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              FONT_SIZE + OFFSET_X, FONT_SIZE/2 + OFFSET_Y,
                              width, height,
                              FONT_SIZE, "L", fontColor,
                              NVG_ALIGN_CENTER, NVG_ALIGN_MIDDLE /*NVG_ALIGN_BOTTOM*/);
     
     // Right
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              width - FONT_SIZE - OFFSET_X, FONT_SIZE/2 + OFFSET_Y,
                              width, height,
                              FONT_SIZE, "R", fontColor,

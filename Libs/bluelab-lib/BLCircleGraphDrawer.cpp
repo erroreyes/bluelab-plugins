@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include "BLCircleGraphDrawer.h"
 
 #define FIX_CIRCLE_DRAWER_BOTTOM_LINE 1
@@ -115,7 +117,7 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 
     
     // Left
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              (1.0 - COS_PI4)*RADIUS*radiusRatio + OFFSET_X - TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
@@ -123,7 +125,7 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
                              halignL, NVG_ALIGN_MIDDLE);
     
     // Right
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              (1.0 + COS_PI4)*RADIUS*radiusRatio + OFFSET_X + TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
@@ -132,7 +134,7 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
     if (mTitleSet)
     {
-        GraphControl11::DrawText(vg,
+        GraphControl12::DrawText(vg,
                                  TITLE_POS_X, height - TITLE_POS_Y,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,

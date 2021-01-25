@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include "BLLissajousGraphDrawer.h"
 
 #define TITLE_POS_X FONT_SIZE*0.5
@@ -158,14 +160,14 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     BL_FLOAT textY = height/2.0 - FONT_SIZE/2.0 - FONT_SIZE/4.0;
     
     // Left
-    GraphControl11::DrawText(vg, FONT_SIZE + TEXT_OFFSET_X,
+    GraphControl12::DrawText(vg, FONT_SIZE + TEXT_OFFSET_X,
                              textY + FONT_SIZE/2 + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, leftText, fontColor,
                              NVG_ALIGN_CENTER, NVG_ALIGN_MIDDLE);
     
     // Right
-    GraphControl11::DrawText(vg, width - FONT_SIZE - TEXT_OFFSET_X,
+    GraphControl12::DrawText(vg, width - FONT_SIZE - TEXT_OFFSET_X,
                              textY + FONT_SIZE/2 + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, rightText, fontColor,
@@ -173,7 +175,7 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
     if (mTitleSet)
     {
-        GraphControl11::DrawText(vg,
+        GraphControl12::DrawText(vg,
                                  TITLE_POS_X, height - TITLE_POS_Y,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,

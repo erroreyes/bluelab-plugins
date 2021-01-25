@@ -21,8 +21,6 @@ using namespace std;
 // Modes
 #define NUM_MODES 5
 
-// Fireworks has 2 curves.
-// And Upmix has no curve
 #define POLAR_SAMPLE_MODE_ID    0
 #define LISSAJOUS_MODE_ID       1
 #define FIREWORKS_MODE_ID       2
@@ -35,7 +33,6 @@ class BLFireworks;
 class BLUpmixGraphDrawer;
 class StereoWidthGraphDrawer3;
 class SourceComputer;
-class GraphCurve5;
 
 class BLVectorscopePlug
 {
@@ -112,10 +109,6 @@ protected:
     BLVectorscopePlug *mPlug;
     
     GraphControl12 *mGraphs[NUM_MODES];
-    
-    // Fireworks has 2 curves.
-    // And Upmix has no curve
-    GraphCurve5 *mCurves[NUM_MODES];
     
     BLCircleGraphDrawer *mCircleDrawerPolarSamples;
     BLCircleGraphDrawer *mCircleDrawerFireworks;

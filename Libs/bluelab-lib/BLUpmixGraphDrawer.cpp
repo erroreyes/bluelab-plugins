@@ -9,6 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <BLVectorscope.h>
+#include <GraphSwapColor.h>
 
 #include "BLUpmixGraphDrawer.h"
 
@@ -44,7 +45,8 @@
 #define FIX_PT_ALT_DRAG_UPMIX 1
 
 
-BLUpmixGraphDrawer::BLUpmixGraphDrawer(BLVectorscopePlug *plug, GraphControl11 *graph,
+BLUpmixGraphDrawer::BLUpmixGraphDrawer(BLVectorscopePlug *plug,
+                                       GraphControl12 *graph,
                                        const char *title)
 {
     mGain = 0.0;
@@ -170,7 +172,7 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
     if (mTitleSet)
     {
-        GraphControl11::DrawText(vg,
+        GraphControl12::DrawText(vg,
                                  TITLE_POS_X, height - TITLE_POS_Y,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,

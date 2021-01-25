@@ -11,7 +11,6 @@
 #include <math.h>
 
 #include <GraphControl12.h>
-#include <GraphCurve5.h>
 
 #include <BLCircleGraphDrawer.h>
 #include <BLLissajousGraphDrawer.h>
@@ -33,7 +32,7 @@
 #endif
 
 // NOTE: can gain 10% CPU by setting to 1024
-// (but the display will be a bit too quick)
+// (but the display will be a bit too quick
 #define NUM_POINTS 4096
 
 #define NUM_CURVES_GRAPH0 1
@@ -109,9 +108,6 @@ BLVectorscope::BLVectorscope(BLVectorscopePlug *plug,
     for (int i = 0; i < NUM_MODES; i++)
         mGraphs[i] = NULL;
     
-    for (int i = 0; i < NUM_MODES; i++)
-        mCurves[i] = new GraphCurve5(NUM_POINTS);
-    
     mFireworks = new BLFireworks(sampleRate);
     
     mSourceComputer = new SourceComputer(sampleRate);
@@ -124,9 +120,6 @@ BLVectorscope::~BLVectorscope()
     delete mFireworks;
     
     delete mSourceComputer;
-    
-    for (int i = 0; i < NUM_MODES; i++)
-        delete mCurves[i];
 }
 
 void
@@ -275,11 +268,6 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
     mGraphs[FIREWORKS_MODE_ID] = graph2;
     mGraphs[UPMIX_MODE_ID] = graph3;
     mGraphs[SOURCE_MODE_ID] = graph4;
-    
-    for (int i = 0; i < NUM_MODES; i++)
-    {
-        mGraphs[i]->AddCurve(mCurves[i]);
-    }
     
     //
     if (mGraphs[POLAR_SAMPLE_MODE_ID] != NULL)
@@ -518,9 +506,7 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
             // Adjust to the circle graph drawer
             BLUtils::MultValues(&polarSamples[1], (BL_FLOAT)SCALE_POLAR_Y);
             
-            //mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS0, polarSamples[0], polarSamples[1]);
-            
-            mCurves[POLAR_SAMPLE_MODE_ID]->SetValuesPoint(polarSamples[0], polarSamples[1]);
+            mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS0, polarSamples[0], polarSamples[1]);
         }
     }
     
@@ -535,13 +521,10 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
             BLUtils::MultValues(&lissajousSamples[0], (BL_FLOAT)LISSAJOUS_SCALE);
             BLUtils::MultValues(&lissajousSamples[1], (BL_FLOAT)LISSAJOUS_SCALE);
             
-            //mGraphs[LISSAJOUS_MODE_ID]->SetCurveValuesPointEx(CURVE_POINTS0,
-            //                                                  lissajousSamples[0],
-            //                                                  lissajousSamples[1],
-            //                                                  true, false, true);
-            mCurves[LISSAJOUS_MODE_ID]->SetValuesPointEx(lissajousSamples[0],
-                                                         lissajousSamples[1],
-                                                         true, false, true);
+            mGraphs[LISSAJOUS_MODE_ID]->SetCurveValuesPointEx(CURVE_POINTS0,
+                                                              lissajousSamples[0],
+                                                              lissajousSamples[1],
+                                                              true, false, true);
         }
     }
     
@@ -559,12 +542,11 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
             BLUtils::MultValues(&polarSamples[1], (BL_FLOAT)SCALE_POLAR_Y);
             BLUtils::MultValues(&polarSamplesMax[1], (BL_FLOAT)SCALE_POLAR_Y);
             
-            mCurves[FIREWORKS_MODE_ID]->SetValuesPoint(polarSamples[0], polarSamples[1]);
+            mGraphs[FIREWORKS_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS0,
+                                            polarSamples[0], polarSamples[1]);
             
-            /*mGraphs[FIREWORKS_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS1,
-                                            polarSamplesMax[0], polarSamplesMax[1]);*/
-            mCurves[FIREWORKS_MODE_ID + 1]->SetValuesPoint(polarSamplesMax[0],
-                                                           polarSamplesMax[1]);
+            mGraphs[FIREWORKS_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS1,
+                                            polarSamplesMax[0], polarSamplesMax[1]);
         }
     }
     
@@ -585,7 +567,8 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
             // Adjust to the circle graph drawer
             BLUtils::MultValues(&polarSamples[1], (BL_FLOAT)SCALE_POLAR_Y);
             
-            mCurves[SOURCE_MODE_ID]->SetValuesPoint(polarSamples[0], polarSamples[1]);
+            mGraphs[SOURCE_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS0,
+                                                         polarSamples[0], polarSamples[1]);
         }
     }
 }
@@ -598,56 +581,44 @@ BLVectorscope::GetUpmixGraphDrawer()
 
 void
 BLVectorscope::SetCurveStyle(GraphControl12 *graph,
-                             int curveNum,
-                             BL_FLOAT minX, BL_FLOAT maxX,
-                             BL_FLOAT minY, BL_FLOAT maxY,
-                             bool pointFlag,
-                             BL_FLOAT strokeSize,
-                             bool bevelFlag,
-                             int r, int g, int b,
-                             bool curveFill, BL_FLOAT curveFillAlpha,
-                             bool pointsAsLines,
-                             bool pointOverlay, bool linesPolarFlag)
+                               int curveNum,
+                               BL_FLOAT minX, BL_FLOAT maxX,
+                               BL_FLOAT minY, BL_FLOAT maxY,
+                               bool pointFlag,
+                               BL_FLOAT strokeSize,
+                               bool bevelFlag,
+                               int r, int g, int b,
+                               bool curveFill, BL_FLOAT curveFillAlpha,
+                               bool pointsAsLines,
+                               bool pointOverlay, bool linesPolarFlag)
 {
     if (graph == NULL)
         return;
     
-    //graph->SetCurveXScale(curveNum, false, minX, maxX);
-    //graph->SetCurveYScale(curveNum, false, minY, maxY);
-    
-    mCurves[curveNum]->SetXScale(Scale::LINEAR, minX, maxX);
-    mCurves[curveNum]->SetYScale(Scale::LINEAR, minY, maxY);
+    graph->SetCurveXScale(curveNum, false, minX, maxX);
+    graph->SetCurveYScale(curveNum, false, minY, maxY);
     
     if (!pointFlag)
-        //graph->SetCurveLineWidth(curveNum, strokeSize);
-        mCurves[curveNum]->SetLineWidth(strokeSize);
+        graph->SetCurveLineWidth(curveNum, strokeSize);
     
     //
     if (pointFlag)
     {
-        //graph->SetCurvePointSize(curveNum, strokeSize);
-        //graph->SetCurvePointStyle(curveNum, true, linesPolarFlag, pointsAsLines);
-        //graph->SetCurvePointOverlay(curveNum, pointOverlay);
-        
-        mCurves[curveNum]->SetPointSize(strokeSize);
-        mCurves[curveNum]->SetPointStyle(true, linesPolarFlag, pointsAsLines);
-        mCurves[curveNum]->SetPointOverlay(pointOverlay);
+        graph->SetCurvePointSize(curveNum, strokeSize);
+        graph->SetCurvePointStyle(curveNum, true, linesPolarFlag, pointsAsLines);
+        graph->SetCurvePointOverlay(curveNum, pointOverlay);
     }
     
-    //graph->SetCurveBevel(curveNum, bevelFlag);
-    mCurves[curveNum]->SetBevel(bevelFlag);
-    
-    //graph->SetCurveColor(curveNum, r, g, b);
-    mCurves[curveNum]->SetColor(r, g, b);
+    graph->SetCurveBevel(curveNum, bevelFlag);
+                          
+    graph->SetCurveColor(curveNum, r, g, b);
     
     if (curveFill)
     {
-        //graph->SetCurveFill(curveNum, curveFill);
-        mCurves[curveNum]->SetFill(curveFill);
+        graph->SetCurveFill(curveNum, curveFill);
     }
             
-    //graph->SetCurveFillAlpha(curveNum, curveFillAlpha);
-    mCurves[curveNum]->SetFillAlpha(curveFillAlpha);
+    graph->SetCurveFillAlpha(curveNum, curveFillAlpha);
 }
 
 #endif // IGRAPHICS_NANOVG

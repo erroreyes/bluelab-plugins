@@ -11,7 +11,7 @@
 
 #ifdef IGRAPHICS_NANOVG
 
-#include <GraphControl11.h>
+#include <GraphControl12.h>
 
 class BLVectorscopePlug;
 
@@ -21,7 +21,7 @@ class BLUpmixGraphDrawer : public GraphCustomDrawer,
                             public GraphCustomControl
 {
 public:
-    BLUpmixGraphDrawer(BLVectorscopePlug *plug, GraphControl11 *graph,
+    BLUpmixGraphDrawer(BLVectorscopePlug *plug, GraphControl12 *graph,
                        const char *title = NULL);
     
     virtual ~BLUpmixGraphDrawer();
@@ -53,7 +53,7 @@ protected:
 
     //
     BLVectorscopePlug *mPlug;
-    GraphControl11 *mGraph;
+    GraphControl12 *mGraph;
     
     //
     BL_FLOAT mGain;

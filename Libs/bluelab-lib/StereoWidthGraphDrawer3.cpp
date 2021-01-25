@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include "StereoWidthGraphDrawer3.h"
 
 #define FIX_CIRCLE_DRAWER_BOTTOM_LINE 1
@@ -90,7 +92,7 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
     int halignR = NVG_ALIGN_LEFT;
     
     // Left
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              (1.0 - COS_PI4)*RADIUS*radiusRatio + OFFSET_X - TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
@@ -98,7 +100,7 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
                              halignL, NVG_ALIGN_MIDDLE /*NVG_ALIGN_BOTTOM*/);
     
     // Right
-    GraphControl11::DrawText(vg,
+    GraphControl12::DrawText(vg,
                              (1.0 + COS_PI4)*RADIUS*radiusRatio + OFFSET_X + TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
@@ -107,7 +109,7 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
     
     if (mTitleSet)
     {
-        GraphControl11::DrawText(vg,
+        GraphControl12::DrawText(vg,
                                  TITLE_POS_X, height - TITLE_POS_Y,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,
