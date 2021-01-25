@@ -278,7 +278,8 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
     
     for (int i = 0; i < NUM_MODES; i++)
     {
-        mGraphs[i]->AddCurve(mCurves[i]);
+        if (mGraphs[i] != NULL)
+            mGraphs[i]->AddCurve(mCurves[i]);
     }
     
     //

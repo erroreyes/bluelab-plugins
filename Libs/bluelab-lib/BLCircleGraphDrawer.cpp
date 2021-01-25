@@ -58,11 +58,21 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
     // Draw the circle
     nvgBeginPath(vg);
+    
+#if !GRAPH_CONTROL_FLIP_Y
     nvgCircle(vg, width/2.0, 0.0, width/2.0 - OFFSET_X);
-        
+#else
+    nvgCircle(vg, width/2.0, height - OFFSET_Y, width/2.0 - OFFSET_X);
+#endif
+    
     // Draw line
+#if !GRAPH_CONTROL_FLIP_Y
     nvgMoveTo(vg, OFFSET_X, OFFSET_Y);
     nvgLineTo(vg, width - OFFSET_X, OFFSET_Y);
+#else
+    nvgMoveTo(vg, OFFSET_X, height - OFFSET_Y);
+    nvgLineTo(vg, width - OFFSET_X, height - OFFSET_Y);
+#endif
     
     nvgClosePath(vg);
     
@@ -115,7 +125,6 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     int halignL = NVG_ALIGN_RIGHT;
     int halignR = NVG_ALIGN_LEFT;
 
-    
     // Left
     GraphControl12::DrawText(vg,
                              (1.0 - COS_PI4)*RADIUS*radiusRatio + OFFSET_X - TEXT_OFFSET_X,
@@ -135,7 +144,8 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     if (mTitleSet)
     {
         GraphControl12::DrawText(vg,
-                                 TITLE_POS_X, height - TITLE_POS_Y,
+                                 TITLE_POS_X,
+                                 height - TITLE_POS_Y,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,
                                  NVG_ALIGN_LEFT, NVG_ALIGN_TOP);
