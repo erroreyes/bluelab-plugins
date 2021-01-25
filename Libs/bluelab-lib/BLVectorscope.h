@@ -29,6 +29,13 @@ using namespace std;
 #define UPMIX_MODE_ID           3
 #define SOURCE_MODE_ID          4
 
+#define POLAR_SAMPLE_CURVE_ID   0
+#define LISSAJOUS_CURVE_ID      1
+#define FIREWORKS_CURVE0_ID     2
+#define FIREWORKS_CURVE1_ID     3
+#define SOURCE_CURVE_ID         4
+
+
 class BLCircleGraphDrawer;
 class BLLissajousGraphDrawer;
 class BLFireworks;
