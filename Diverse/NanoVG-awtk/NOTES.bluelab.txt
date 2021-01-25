@@ -1,0 +1,6 @@
+Optimized version:
+https://github.com/zlgopen/awtk/blob/master/3rd/nanovg/gl/nanovg_gl_utils.h
+https://programmer.group/nanovg-optimized-notes-the-secret-of-five-fold-performance-improvement.html
+
+Commit:
+https://github.com/zlgopen/awtk/commit/d11ae27ff0d8f8ad8fad0330efa0b97fbcba4604

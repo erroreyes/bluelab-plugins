@@ -1,0 +1,3 @@
+https://github.com/memononen/nanovg/tree/master/src
+
+Commit: https://github.com/memononen/nanovg/commit/0bfd2c21ccf78e248cbcb5c3b5ad5c9d3be34e93
