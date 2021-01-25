@@ -36,12 +36,6 @@
 // (but the display will be a bit too quick)
 #define NUM_POINTS 4096
 
-#define NUM_CURVES_GRAPH0 1
-#define NUM_CURVES_GRAPH1 1
-#define NUM_CURVES_GRAPH2 2
-#define NUM_CURVES_GRAPH3 0
-#define NUM_CURVES_GRAPH4 1
-
 // Bounds
 //
 
@@ -96,9 +90,6 @@
 
 //
 #define LISSAJOUS_SCALE 0.8
-
-// Crash Protools (mac), when the plugin is just inserted
-#define FIX_PROTOOLS_CRASH_AT_INSERT 1
 
 
 BLVectorscope::BLVectorscope(BLVectorscopePlug *plug,
@@ -165,13 +156,6 @@ BLVectorscope::SetMode(Mode mode)
                 mGraphs[i]->SetInteractionDisabled(true);
                 mGraphs[i]->SetClean();
             }
-            
-            // NEW
-#if !FIX_PROTOOLS_CRASH_AT_INSERT
-            //mGraphs[i]->SetDirty(true);
-#else
-            //mGraphs[i]->SetDirty(false);
-#endif
         }
     }
     
@@ -236,33 +220,6 @@ BLVectorscope::OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod
     mPlug->VectorscopeUpdateDWidthCB(dwidth);
 }
 
-int
-BLVectorscope::GetNumCurves(int graphNum)
-{
-    if (graphNum == POLAR_SAMPLE_MODE_ID)
-        return NUM_CURVES_GRAPH0;
-    
-    if (graphNum == LISSAJOUS_MODE_ID)
-        return NUM_CURVES_GRAPH1;
-    
-    if (graphNum == FIREWORKS_MODE_ID)
-        return NUM_CURVES_GRAPH2;
-    
-    if (graphNum == UPMIX_MODE_ID)
-        return NUM_CURVES_GRAPH3;
-    
-    if (graphNum == SOURCE_MODE_ID)
-        return NUM_CURVES_GRAPH4;
-    
-    return -1;
-}
-
-int
-BLVectorscope::GetNumPoints(int graphNum)
-{
-    return NUM_POINTS;
-}
-
 void
 BLVectorscope::SetGraphs(GraphControl12 *graph0,
                          GraphControl12 *graph1,
@@ -270,17 +227,12 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
                          GraphControl12 *graph3,
                          GraphControl12 *graph4)
 {
+    // Assign
     mGraphs[POLAR_SAMPLE_MODE_ID] = graph0;
     mGraphs[LISSAJOUS_MODE_ID] = graph1;
     mGraphs[FIREWORKS_MODE_ID] = graph2;
     mGraphs[UPMIX_MODE_ID] = graph3;
     mGraphs[SOURCE_MODE_ID] = graph4;
-    
-    /*for (int i = 0; i < NUM_MODES; i++)
-    {
-        if (mGraphs[i] != NULL)
-            mGraphs[i]->AddCurve(mCurves[i]);
-    }*/
     
     // Fireworks has 2 curves.
     // And Upmix has no curve
@@ -323,7 +275,6 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         // Style
         //
         int pointColor[3] = { 113, 130, 182 };
-        //int pointColor[3] = { 153, 176, 246 };
         
         // To display lines instead of points
         bool pointsAsLines = false;
@@ -356,7 +307,6 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         // Style
         //
         int pointColor[3] = { 113, 130, 182 };
-        //int pointColor[3] = { 153, 176, 246 };
         
         // To display lines instead of points
         bool pointsAsLines = false;
@@ -387,7 +337,6 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         
         // Style
         //
-        //int pointColor0[3] = { 113, 130, 182 };
         int pointColor0[3] = { 153, 176, 246 };
         int pointColor1[3] = { 255, 255, 255 };
         
@@ -405,7 +354,7 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
                       FIREWORKS_CURVE0_ID,
                       GRAPH1_MIN_X, GRAPH1_MAX_X,
                       GRAPH1_MIN_Y, GRAPH1_MAX_Y,
-                      true/*false*/, LINE_SIZE_MODE2,
+                      true, LINE_SIZE_MODE2,
                       bevelFlag0,
                       pointColor0[0], pointColor0[1], pointColor0[2],
                       fillFlag0, alpha, pointsAsLines, overlayFlag, linesPolarFlag0);
@@ -416,7 +365,7 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
                       FIREWORKS_CURVE1_ID,
                       GRAPH1_MIN_X, GRAPH1_MAX_X,
                       GRAPH1_MIN_Y, GRAPH1_MAX_Y,
-                      true/*false*/, LINE_SIZE2_MODE2,
+                      true, LINE_SIZE2_MODE2,
                       bevelFlag1,
                       pointColor1[0], pointColor1[1], pointColor1[2],
                       fillFlag1, alpha, pointsAsLines, overlayFlag, linesPolarFlag1);
@@ -433,44 +382,6 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         mUpmixDrawer = new BLUpmixGraphDrawer(mPlug, mGraphs[UPMIX_MODE_ID], "GRID");
         mGraphs[UPMIX_MODE_ID]->AddCustomDrawer(mUpmixDrawer);
         
-#if 0
-        // Style
-        //
-        int pointColor0[3] = { 193, 229, 237 };
-        //int pointColor1[3] = { 113, 130, 182 };
-        int pointColor1[3] = { 153, 176, 246 };
-        
-        // To display lines instead of points
-        bool pointsAsLines = false;
-        BL_FLOAT alpha = 1.0;
-        bool overlayFlag = false;
-    
-        bool fillFlag0 = false;
-        bool linesPolarFlag0 = true;
-        bool linesPolarFlag1 = false;
-        bool bevelFlag0 = false;
-        
-        SetCurveStyle(mGraphs[UPMIX_MODE_ID],
-                      CURVE_POINTS0,
-                      GRAPH1_MIN_X, GRAPH1_MAX_X,
-                      GRAPH1_MIN_Y, GRAPH1_MAX_Y,
-                      true/*false*/, LINE_SIZE_MODE2,
-                      bevelFlag0,
-                      pointColor0[0], pointColor0[1], pointColor0[2],
-                      fillFlag0, alpha, pointsAsLines, overlayFlag, linesPolarFlag0);
-        
-        bool fillFlag1 = false;
-        bool bevelFlag1 = true;
-        SetCurveStyle(mGraphs[UPMIX_MODE_ID],
-                      CURVE_POINTS1,
-                      GRAPH1_MIN_X, GRAPH1_MAX_X,
-                      GRAPH1_MIN_Y, GRAPH1_MAX_Y,
-                      true/*false*/, LINE_SIZE2_MODE2,
-                      bevelFlag1,
-                      pointColor1[0], pointColor1[1], pointColor1[2],
-                      fillFlag1, alpha, pointsAsLines, overlayFlag, linesPolarFlag1);
-        
-#endif
         mGraphs[UPMIX_MODE_ID]->SetDisablePointOffsetHack(true);
     }
     
@@ -487,7 +398,6 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         // Style
         //
         int pointColor[3] = { 113, 130, 182 };
-        //int pointColor[3] = { 153, 176, 246 };
         
         // To display lines instead of points
         bool pointsAsLines = false;
@@ -538,8 +448,6 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
             // Adjust to the circle graph drawer
             BLUtils::MultValues(&polarSamples[1], (BL_FLOAT)SCALE_POLAR_Y);
             
-            //mGraphs[POLAR_SAMPLE_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS0, polarSamples[0], polarSamples[1]);
-            
             mCurves[POLAR_SAMPLE_MODE_ID]->SetValuesPoint(polarSamples[0], polarSamples[1]);
         }
     }
@@ -555,10 +463,6 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
             BLUtils::MultValues(&lissajousSamples[0], (BL_FLOAT)LISSAJOUS_SCALE);
             BLUtils::MultValues(&lissajousSamples[1], (BL_FLOAT)LISSAJOUS_SCALE);
             
-            //mGraphs[LISSAJOUS_MODE_ID]->SetCurveValuesPointEx(CURVE_POINTS0,
-            //                                                  lissajousSamples[0],
-            //                                                  lissajousSamples[1],
-            //                                                  true, false, true);
             mCurves[LISSAJOUS_MODE_ID]->SetValuesPointEx(lissajousSamples[0],
                                                          lissajousSamples[1],
                                                          true, false, true);
@@ -581,8 +485,6 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
             
             mCurves[FIREWORKS_MODE_ID]->SetValuesPoint(polarSamples[0], polarSamples[1]);
             
-            /*mGraphs[FIREWORKS_MODE_ID]->SetCurveValuesPoint(CURVE_POINTS1,
-                                            polarSamplesMax[0], polarSamplesMax[1]);*/
             mCurves[FIREWORKS_MODE_ID + 1]->SetValuesPoint(polarSamplesMax[0],
                                                            polarSamplesMax[1]);
         }
@@ -632,41 +534,29 @@ BLVectorscope::SetCurveStyle(GraphControl12 *graph,
     if (graph == NULL)
         return;
     
-    //graph->SetCurveXScale(curveNum, false, minX, maxX);
-    //graph->SetCurveYScale(curveNum, false, minY, maxY);
-    
     mCurves[curveNum]->SetXScale(Scale::LINEAR, minX, maxX);
     mCurves[curveNum]->SetYScale(Scale::LINEAR, minY, maxY);
     
     if (!pointFlag)
-        //graph->SetCurveLineWidth(curveNum, strokeSize);
         mCurves[curveNum]->SetLineWidth(strokeSize);
     
     //
     if (pointFlag)
     {
-        //graph->SetCurvePointSize(curveNum, strokeSize);
-        //graph->SetCurvePointStyle(curveNum, true, linesPolarFlag, pointsAsLines);
-        //graph->SetCurvePointOverlay(curveNum, pointOverlay);
-        
         mCurves[curveNum]->SetPointSize(strokeSize);
         mCurves[curveNum]->SetPointStyle(true, linesPolarFlag, pointsAsLines);
         mCurves[curveNum]->SetPointOverlay(pointOverlay);
     }
     
-    //graph->SetCurveBevel(curveNum, bevelFlag);
     mCurves[curveNum]->SetBevel(bevelFlag);
     
-    //graph->SetCurveColor(curveNum, r, g, b);
     mCurves[curveNum]->SetColor(r, g, b);
     
     if (curveFill)
     {
-        //graph->SetCurveFill(curveNum, curveFill);
         mCurves[curveNum]->SetFill(curveFill);
     }
             
-    //graph->SetCurveFillAlpha(curveNum, curveFillAlpha);
     mCurves[curveNum]->SetFillAlpha(curveFillAlpha);
 }
 

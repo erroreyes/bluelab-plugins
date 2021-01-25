@@ -84,9 +84,6 @@ public:
     void OnMouseDown(float x, float y, const IMouseMod &mod);
     void OnMouseUp(float x, float y, const IMouseMod &mod);
     void OnMouseDrag(float x, float y, float dX, float dY, const IMouseMod &mod);
-    
-    int GetNumCurves(int graphNum);
-    int GetNumPoints(int graphNum);
 
     void SetGraphs(GraphControl12 *graph0,
                    GraphControl12 *graph1,
