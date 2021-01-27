@@ -29,3 +29,18 @@ faster dd: use option bs=16M (or 1M)
 
 To see contents of iso on linux: there is a command line to mount them
 
+---
+Installed on xubuntu to compile linux branch:
+
+libxcb-util0-dev
+libxcb-image0-dev
+libxcb1-dev
+
+libxcb-glx0-dev libxcb-icccm4-dev libxcb-randr0-dev 
+libxcb-sync-dev libxcb-xinput-dev
+
+libasound2-dev
+libpulse-dev
+
+--
+Linux: after rebasing branch bluelab over the iPlug2 linux branch, IPlugControls compiles and executes, but all the texts are reversed
