@@ -164,7 +164,9 @@
 #define HAVE_SYS_WAIT_H 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#define HAVE_UNISTD_H 1
+//#define HAVE_UNISTD_H 1
+// #bluelab, for linux
+#define HAVE_UNISTD_H 0
 
 /* Define to 1 or 0, depending whether the compiler supports simple visibility
    declarations. */

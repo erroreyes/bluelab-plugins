@@ -6,7 +6,7 @@
 //
 //
 
-#include "MinMAxAvgHistogram.h"
+#include "MinMaxAvgHistogram.h"
 
 
 MinMaxAvgHistogram::MinMaxAvgHistogram(int size, BL_FLOAT smoothCoeff,

@@ -13,7 +13,7 @@
 #include <FilterIIRLow12dBNX.h>
 #include <FilterButterworthLPFNX.h>
 #include <FilterSincConvoLPF.h>
-#include <FilterFFTLowPass.h>
+#include <FilterFftLowPass.h>
 
 #include <BLUtils.h>
 

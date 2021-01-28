@@ -6,7 +6,7 @@
 //
 //
 
-#include <LUFSMEter.h>
+#include <LUFSMeter.h>
 
 #include <BLUtils.h>
 #include <ParamSmoother.h>

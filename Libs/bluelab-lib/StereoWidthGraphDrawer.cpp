@@ -8,6 +8,8 @@
 
 #ifdef IGRAPHICS_NANOVG
 
+#include <GraphSwapColor.h>
+
 #include "StereoWidthGraphDrawer.h"
 
 #define OFFSET_X 6.0 //2.0

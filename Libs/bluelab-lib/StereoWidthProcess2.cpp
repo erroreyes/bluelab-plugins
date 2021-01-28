@@ -1,4 +1,4 @@
-#//
+//
 //  StereoWidthProcess2.cpp
 //  BL-PitchShift
 //
@@ -15,7 +15,7 @@
 // Debug
 #include "GraphControl11.h"
 #include <KemarHrtf.h>
-#include <HRTF.h>
+#include <Hrtf.h>
 
 //#include <FftConvolver7.h>
 #include <FftConvolver6.h>

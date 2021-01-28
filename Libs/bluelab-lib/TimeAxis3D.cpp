@@ -9,6 +9,7 @@
 #ifdef IGRAPHICS_NANOVG
 
 #include <math.h>
+#include <string.h>
 
 #include <Axis3D.h>
 

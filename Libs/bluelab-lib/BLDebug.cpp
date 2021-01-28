@@ -17,12 +17,14 @@
 
 #ifdef __APPLE__
 #define BASE_FILE "/Users/applematuer/Documents/BlueLabAudio-Debug/"
-#else
+#endif
+
 #ifdef WIN32 
 #define BASE_FILE "C:/Tmp/BlueLabAudio-Debug/"
-#else
-NOT IMPLEMENTED
 #endif
+
+#ifdef __linux__
+#define BASE_FILE "/home/niko/Documents/BlueLabAudio-Debug/"
 #endif
 
 void

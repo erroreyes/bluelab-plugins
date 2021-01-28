@@ -25,6 +25,8 @@
 
 #include <GraphTimeAxis4.h>
 
+#include <GraphSwapColor.h>
+
 #include "GraphControl11.h"
 
 //#define GRAPH_FONT "font"

@@ -1,6 +1,6 @@
 #include <BLUtils.h>
 
-#include <BLReverb.H>
+#include <BLReverb.h>
 
 #define DIRAC_VALUE 1.0
 

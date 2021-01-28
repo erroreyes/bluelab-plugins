@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BLtypes.h>
+#include <BLTypes.h>
 
 #ifndef DCT_FLOAT
 #define DCT_FLOAT double

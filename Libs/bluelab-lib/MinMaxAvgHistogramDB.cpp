@@ -7,7 +7,7 @@
 //
 
 #include <BLUtils.h>
-#include "MinMAxAvgHistogramDB.h"
+#include "MinMaxAvgHistogramDB.h"
 
 
 MinMaxAvgHistogramDB::MinMaxAvgHistogramDB(int size, BL_FLOAT smoothCoeff, BL_FLOAT defaultValue,

@@ -14,6 +14,8 @@
 #define GLSL_COLORMAP 0
 #include <ColorMap4.h>
 
+#include <GraphSwapColor.h>
+
 #include <BLUtils.h>
 
 #include <QuadTree.h>

@@ -9,6 +9,10 @@
 #ifndef UST_ScopedNoDenormals2_h
 #define UST_ScopedNoDenormals2_h
 
+#include "bl_config.h"
+
+#if BL_FIX_FLT_DENORMAL_OBJ
+
 #define BL_USE_SSE_INTRINSICS 1 //0 //1
 #define BL_INTEL 1 // Must also be set
 
@@ -89,5 +93,7 @@ private:
     intptr_t fpsr;
 #endif
 };
+
+#endif
 
 #endif

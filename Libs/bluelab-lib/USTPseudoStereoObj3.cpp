@@ -11,7 +11,7 @@
 #include <randomsequence.h>
 
 #include <FastRTConvolver3.h>
-#include <FFTProcessObj16.h>
+#include <FftProcessObj16.h>
 #include <DelayObj4.h>
 
 #include <BLUtils.h>

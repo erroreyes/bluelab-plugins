@@ -10,6 +10,7 @@
 
 #include <BLUtils.h>
 #include <GraphControl11.h>
+#include <GraphSwapColor.h>
 
 #include "MiniView.h"
 

@@ -166,7 +166,7 @@ LRCrossoverFilter::processBlock(BL_FLOAT * in, BL_FLOAT * outHP, BL_FLOAT * outL
         lptemp.ym1=tempy;
         outLP[i] = tempy;
         
-        assert(!isnan(outLP[i]));
+        assert(!std::isnan(outLP[i]));
     }
 }
 
@@ -224,7 +224,7 @@ LRCrossoverFilter::process(BL_FLOAT in, BL_FLOAT * outHP, BL_FLOAT * outLP)
     lptemp.ym1=tempy;
     *outLP = tempy;
         
-    assert(!isnan(*outLP));
+    assert(!std::isnan(*outLP));
 }
 
 //

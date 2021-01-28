@@ -1,4 +1,4 @@
-#include <Colormap4.h>
+#include <ColorMap4.h>
 #include <BLImage.h>
 #include <BLUtils.h>
 
