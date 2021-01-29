@@ -123,3 +123,6 @@ M-x visit-tags-table
 M-. to go to defintion
 
 (magit-log-current)
+
+valgrind --vgdb=yes --vgdb-error=0 ./reaper
+
