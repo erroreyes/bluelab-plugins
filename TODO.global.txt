@@ -117,3 +117,9 @@ selection, to isolate or to mute
 https://www.youtube.com/watch?v=bIh7HGKgO24
 
 For memory tracking of all plugins on Linux, use HeapTrack!
+
+emacs tags:
+M-x visit-tags-table
+M-. to go to defintion
+
+(magit-log-current)
