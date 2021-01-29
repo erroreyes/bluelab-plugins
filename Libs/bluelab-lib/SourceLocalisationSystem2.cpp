@@ -6,7 +6,11 @@
 //
 //
 
+// For iPlug2, commented lice code
+#define DISABLE_LICE 1
+#if !DISABLE_LICE
 #include <lice.h>
+#endif
 
 #include <DelayLinePhaseShift.h>
 
@@ -662,7 +666,8 @@ SourceLocalisationSystem2::DBG_DumpCoincidence(const char *fileName,
     sprintf(fileNamePPM, "%s.ppm", fileName);
     PPMFile::SavePPM(fileNamePPM, image, width, height, 1, 256.0*colorCoeff);
 #else
-    
+
+#if !DISABLE_LICE
     // #bl-iplug2
     //LICE_IBitmap *bmp = new LICE_MemBitmap(width, height, 1);
     LICE_IBitmap *bmp = NULL;
@@ -677,6 +682,7 @@ SourceLocalisationSystem2::DBG_DumpCoincidence(const char *fileName,
         
         pixels[i] = LICE_RGBA(pix, pix, pix, 255);
     }
+#endif
     
     char fileNamePNG[256];
     sprintf(fileNamePNG, "%s.png", fileName);
@@ -687,8 +693,11 @@ SourceLocalisationSystem2::DBG_DumpCoincidence(const char *fileName,
 #if 0
     LICE_WritePNG(fullFilename, bmp, true);
 #endif
-    
+
+#if !DISABLE_LICE
     delete bmp;
+#endif
+    
 #endif
 }
 

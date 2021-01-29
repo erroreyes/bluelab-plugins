@@ -6,7 +6,11 @@
 //
 //
 
+// For iPlug2, commented lice code
+#define DISABLE_LICE 1
+#if !DISABLE_LICE
 #include <lice.h>
+#endif
 
 #include <DelayLinePhaseShift2.h>
 
@@ -1414,7 +1418,8 @@ SourceLocalisationSystem3::GenerateStencilMasks()
             int width = mStencilMasks[i].size();
             int height = mStencilMasks[i][0].GetSize();
             BL_FLOAT colorCoeff = 1.0; //10000.0;
-            
+
+#if !DISABLE_LICE
             LICE_IBitmap *bmp = new LICE_MemBitmap(width, height, 1);
             LICE_pixel *pixels = bmp->getBits();
             for (int i = 0; i < width*height; i++)
@@ -1426,6 +1431,7 @@ SourceLocalisationSystem3::GenerateStencilMasks()
                 
                 pixels[i] = LICE_RGBA(pix, pix, pix, 255);
             }
+#endif
             
             char fileNamePNG[256];
             sprintf(fileNamePNG, "mask-%d.png", i);
@@ -1436,7 +1442,10 @@ SourceLocalisationSystem3::GenerateStencilMasks()
 #if 0
             LICE_WritePNG(fullFilename, bmp, true);
 #endif
+            
+#if !DISABLE_LICE
             delete bmp;
+#endif
         }
 #endif
     }
@@ -1519,7 +1528,8 @@ SourceLocalisationSystem3::DBG_DumpCoincidence(const char *fileName,
         }
     }
 #endif
-    
+
+#if !DISABLE_LICE
     // png
     // #bl-iplug2
     //LICE_IBitmap *bmp = new LICE_MemBitmap(width, height, 1);
@@ -1535,6 +1545,7 @@ SourceLocalisationSystem3::DBG_DumpCoincidence(const char *fileName,
         
         pixels[i] = LICE_RGBA(pix, pix, pix, 255);
     }
+#endif
     
     char fileNamePNG[256];
     sprintf(fileNamePNG, "%s.png", fileName);
@@ -1545,8 +1556,10 @@ SourceLocalisationSystem3::DBG_DumpCoincidence(const char *fileName,
 #if 0
     LICE_WritePNG(fullFilename, bmp, true);
 #endif
-    
+
+#if !DISABLE_LICE
     delete bmp;
+#endif
 }
 
 void
