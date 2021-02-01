@@ -130,3 +130,12 @@ gdb -i=mi ~/Documents/Apps/reaper_linux_x86_64/REAPER/reaper
 
 -j3
 export CMAKE_BUILD_PARALLEL_LEVEL=3
+
+emacs:
+M-x customize-group auto-complete
+
+TODO(later): use "param groups" (Mickael)
+-> useful for automation, or for DAW guis ("UI")
+
+xcb github:
+https://github.com/xkbcommon/libxkbcommon/blob/master/xkbcommon/xkbcommon.h

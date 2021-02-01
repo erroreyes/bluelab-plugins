@@ -44,3 +44,6 @@ libpulse-dev
 
 --
 Linux: after rebasing branch bluelab over the iPlug2 linux branch, IPlugControls compiles and executes, but all the texts are reversed
+
+-- installed for compiling bl linus fixes
+sudo apt-get install libxkbcommon-x11-dev
