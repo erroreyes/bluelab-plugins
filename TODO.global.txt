@@ -159,6 +159,7 @@ pGraphics->AttachTextEntryControl();
 
 - TODO: check denormal class in WDL
 - TODO: check fastqueue in WDL (is it a fast deque ?)
+or use a ring buffer (cyclic queue)
 - TODO: iPlug/Extra/Smoothers => for param smoother !!!
 (not sure it will work like this, maybe need some modification)
 
