@@ -1962,6 +1962,21 @@ template void BLUtils::SamplesAntiClipping(WDL_TypedBuf<float> *samples, float m
 template void BLUtils::SamplesAntiClipping(WDL_TypedBuf<double> *samples, double maxValue);
 
 void
+BLUtils::PlugInits()
+{
+    // Necessary on Linux. Otherwise with the APP version of plug,
+    // locale could be another country such as FR, and for example
+    // the digit separation would be ',' instad of ".".
+    // This would make fail functions such as atof() e.g
+    // and this would show a ',' in the knob values instead of a '.'
+#if __linux__
+#ifdef APP_API
+    setlocale(LC_ALL, "C");
+#endif
+#endif
+}
+
+void
 BLUtils::BypassPlug(double **inputs, double **outputs, int nFrames)
 {
     if ((inputs[0] != NULL) && (outputs[0] != NULL))

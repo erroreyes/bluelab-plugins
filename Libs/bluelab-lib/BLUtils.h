@@ -259,6 +259,7 @@ public:
     static void SamplesAntiClipping(WDL_TypedBuf<FLOAT_TYPE> *samples, FLOAT_TYPE maxValue);
     
     // Plugin operations
+    static void PlugInits();
     
     static void BypassPlug(double **inputs, double **outputs, int nFrames);
     
