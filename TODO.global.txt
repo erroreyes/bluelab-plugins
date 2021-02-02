@@ -141,12 +141,12 @@ xcb github:
 https://github.com/xkbcommon/libxkbcommon/blob/master/xkbcommon/xkbcommon.h
 
 ----------
-- TODO: for all plugs, re-order the resources in bl_config.h,
 - TODO: add resources to CMakeList
 - TODO: for all plugs, GetScaleForScreen(2 params)
 - TODO: for many plugs, replace OnIdle() by OnGUIIdle() (for vst3 with OnIdle() disabled
 - TODO: for all plugs, add after attach background:
 pGraphics->AttachTextEntryControl();
+- TODO: MUTEX => MUTEX; (macro)
 
 - TODO: detect "Cmd" on Linux?
 
@@ -169,3 +169,7 @@ by 0x42F15F8D: xcbt_connect_init (xcbt.c:478)
 ==101199==    by 0x42F1635C: xcbt_connect (xcbt.c:536)
 ==101199==    by 0x42ED7C17: iplug::igraphics::IGraphicsLinux::OpenWindow(void*) (IGraphicsLinux.cpp:459)
 -------
+
+ln -s ../../BL-Plugins/BL-Chroma
+
+NOTE: in App mode, the first time, there is a popup to say to check soundcard settings in preferences (very good!). Check preference file (.ini ?)

@@ -988,8 +988,34 @@ GUIHelper12::GetGraphCurveColorRed(int color[4])
 void
 GUIHelper12::RefreshAllParameters(Plugin *plug, int numParams)
 {
+#ifndef __linux__
     for (int i = 0; i < numParams; i++)
         plug->SendParameterValueFromAPI(i, plug->GetParam(i)->Value(), false);
+#else // __linux__
+    IGraphics *graphics = plug->GetUI();
+    if (graphics == NULL)
+        return;
+    
+    for (int i = 0; i < numParams; i++)
+    {
+        double normValue = plug->GetParam(i)->GetNormalized();
+
+        for (int j = 0; j < graphics->NControls(); j++)
+        {
+            IControl *control = graphics->GetControl(j);
+            if (control == NULL)
+                continue;
+
+            int idx = control->GetParamIdx();
+
+            if (idx == i)
+            {
+                control->SetValue(normValue);
+                control->SetDirty(false);
+            }
+        }
+    }
+#endif
 }
 
 bool
