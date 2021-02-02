@@ -139,3 +139,33 @@ TODO(later): use "param groups" (Mickael)
 
 xcb github:
 https://github.com/xkbcommon/libxkbcommon/blob/master/xkbcommon/xkbcommon.h
+
+----------
+- TODO: for all plugs, re-order the resources in bl_config.h,
+- TODO: add resources to CMakeList
+- TODO: for all plugs, GetScaleForScreen(2 params)
+- TODO: for many plugs, replace OnIdle() by OnGUIIdle() (for vst3 with OnIdle() disabled
+- TODO: for all plugs, add after attach background:
+pGraphics->AttachTextEntryControl();
+
+- TODO: detect "Cmd" on Linux?
+
+- PROBLEM(little): when launchin app, there is a quick white blinking just before the app displays
+(TODO => set default color to black, not white)
+
+- TODO: think of compiling Linux LV2 format too
+
+- TODO: for all plugs: INF => BL_INF
+
+- TODO: check denormal class in WDL
+- TODO: check fastqueue in WDL (is it a fast deque ?)
+- TODO: iPlug/Extra/Smoothers => for param smoother !!!
+(not sure it will work like this, maybe need some modification)
+
+- BUG: Cairo, crash when quitting
+
+NOTE: there are memory leaks on Linux:
+by 0x42F15F8D: xcbt_connect_init (xcbt.c:478)
+==101199==    by 0x42F1635C: xcbt_connect (xcbt.c:536)
+==101199==    by 0x42ED7C17: iplug::igraphics::IGraphicsLinux::OpenWindow(void*) (IGraphicsLinux.cpp:459)
+-------
