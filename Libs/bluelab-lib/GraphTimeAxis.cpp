@@ -152,7 +152,7 @@ GraphTimeAxis::Update(BL_FLOAT currentTime)
             int millis = tm - seconds*1000;
             
             // Default
-            sprintf(hAxisData[i][1], "0s", seconds, millis);
+            sprintf(hAxisData[i][1], "0s");
             
             if ((seconds != 0) && (millis != 0))
                 sprintf(hAxisData[i][1], "%ds %dms", seconds, millis);

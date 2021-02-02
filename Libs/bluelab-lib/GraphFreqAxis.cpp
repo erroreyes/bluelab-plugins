@@ -44,7 +44,7 @@ GraphFreqAxis::Init(GraphControl11 *graph,
         DUMMY_AXIS_DATA[i][1] = (char *)malloc(255);
     }
     
-    sprintf(DUMMY_AXIS_DATA[0][1], "");
+    sprintf(DUMMY_AXIS_DATA[0][1], " ");
     sprintf(DUMMY_AXIS_DATA[1][1], "100Hz");
     sprintf(DUMMY_AXIS_DATA[2][1], "500Hz");
     sprintf(DUMMY_AXIS_DATA[3][1], "1KHz");
@@ -52,7 +52,7 @@ GraphFreqAxis::Init(GraphControl11 *graph,
     sprintf(DUMMY_AXIS_DATA[5][1], "5KHz");
     sprintf(DUMMY_AXIS_DATA[6][1], "10KHz");
     sprintf(DUMMY_AXIS_DATA[7][1], "20KHz");
-    sprintf(DUMMY_AXIS_DATA[8][1], "");
+    sprintf(DUMMY_AXIS_DATA[8][1], " ");
     
     BL_FLOAT freqs[NUM_DUMMY_AXIS_DATA] =
                         { 50.0, 100.0, 500.0, 1000.0, 2000.0,
@@ -128,7 +128,7 @@ GraphFreqAxis::Update()
         AXIS_DATA[i][1] = (char *)malloc(255);
     }
     
-    sprintf(AXIS_DATA[0][1], "");
+    sprintf(AXIS_DATA[0][1], " ");
     sprintf(AXIS_DATA[1][1], "100Hz");
     sprintf(AXIS_DATA[2][1], "500Hz");
     sprintf(AXIS_DATA[3][1], "1KHz");
@@ -138,7 +138,7 @@ GraphFreqAxis::Update()
     sprintf(AXIS_DATA[7][1], "20KHz");
     sprintf(AXIS_DATA[8][1], "40KHz");
     sprintf(AXIS_DATA[9][1], "80KHz");
-    sprintf(AXIS_DATA[10][1], "");
+    sprintf(AXIS_DATA[10][1], " ");
     
     BL_FLOAT freqs[NUM_AXIS_DATA] =
                     { 50.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0,
@@ -165,7 +165,7 @@ GraphFreqAxis::Update()
         
         // We are over the sample rate, make empty label
         if (freqs[i] > 1.0)
-            sprintf(AXIS_DATA[i][1], "");
+            sprintf(AXIS_DATA[i][1], " ");
     }
     
     mGraph->ReplaceVAxis(AXIS_DATA, NUM_AXIS_DATA);

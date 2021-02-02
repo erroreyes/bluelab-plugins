@@ -578,22 +578,22 @@ WavesRender::CreateFreqsAxis()
     mFreqsAxis = NULL;
     
     // Create axis
-#define NUM_AXIS_DATA 11 //9 //7 //8
-    char *labels[NUM_AXIS_DATA] =
+#define NUM_AXIS_DATA_FREQ 11 //9 //7 //8
+    char *labels[NUM_AXIS_DATA_FREQ] =
     {
         /*"1Hz",*/ "", "100Hz", "500Hz", "1KHz", "2KHz",
         "5KHz", "10KHz", "20KHz", "40KHZ", "80KHz", ""
     };
     
     // Scale the axis normalized values
-    BL_FLOAT freqs[NUM_AXIS_DATA] =
+    BL_FLOAT freqs[NUM_AXIS_DATA_FREQ] =
     {
         1.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0,
         10000.0, 20000.0, 40000.0, 80000.0, 160000.0
     };
     
-    BL_FLOAT normPos[NUM_AXIS_DATA];
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+    BL_FLOAT normPos[NUM_AXIS_DATA_FREQ];
+    for (int i = 0; i < NUM_AXIS_DATA_FREQ; i++)
     {
         BL_FLOAT freq = freqs[i];
         freq = FreqToMelNorm(freq);
@@ -607,7 +607,7 @@ WavesRender::CreateFreqsAxis()
     BL_FLOAT p1[3] = { 0.5, 0.0, 0.5 + AXIS_OFFSET_Z };
     
     // Create the axis
-    mFreqsAxis = new Axis3D(labels, normPos, NUM_AXIS_DATA, p0, p1);
+    mFreqsAxis = new Axis3D(labels, normPos, NUM_AXIS_DATA_FREQ, p0, p1);
     mFreqsAxis->SetDoOverlay(true);
     mFreqsAxis->SetPointProjector(mLinesRender);
     
@@ -646,27 +646,26 @@ WavesRender::UpdateAmpsAxis(bool dBScale)
     
     // For linear scale
     //
-#define NUM_AXIS_DATA 5
-    char *labels[NUM_AXIS_DATA] =
+#define NUM_AXIS_DATA_LINEAR 5
+    char *labels[NUM_AXIS_DATA_LINEAR] =
     {
         "-20dB", "-15dB", "-10dB", "-5dB", "0dB"
     };
     
     // Scale the axis normalized values
-    BL_FLOAT ampsDB[NUM_AXIS_DATA] =
+    BL_FLOAT ampsDB[NUM_AXIS_DATA_LINEAR] =
     {
         -20.0, -15.0, -10.0, -5.0, 0.0
     };
 
-    BL_FLOAT normPos[NUM_AXIS_DATA];
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+    BL_FLOAT normPos[NUM_AXIS_DATA_LINEAR];
+    for (int i = 0; i < NUM_AXIS_DATA_LINEAR; i++)
     {
         BL_FLOAT ampDB = ampsDB[i];
         BL_FLOAT amp = DBToAmp(ampDB);
         
         normPos[i] = amp;
     }
-    
     
     // 3D extremities of the axis
     BL_FLOAT p0[3] = { -0.5, 0.0, 0.5 + AXIS_OFFSET_Z };
@@ -676,7 +675,7 @@ WavesRender::UpdateAmpsAxis(bool dBScale)
     if (mAmpsAxis == NULL)
     {
         if (!dBScale)
-            mAmpsAxis = new Axis3D(labels, normPos, NUM_AXIS_DATA, p0, p1);
+            mAmpsAxis = new Axis3D(labels, normPos, NUM_AXIS_DATA_LINEAR, p0, p1);
         else
             mAmpsAxis = new Axis3D(labelsDBScale, normPosDBScale, NUM_AXIS_DATA_DBSCALE, p0, p1);
         
@@ -688,7 +687,7 @@ WavesRender::UpdateAmpsAxis(bool dBScale)
     else
     {
         if (!dBScale)
-            mAmpsAxis->UpdateLabels(labels, normPos, NUM_AXIS_DATA, p0, p1);
+            mAmpsAxis->UpdateLabels(labels, normPos, NUM_AXIS_DATA_LINEAR, p0, p1);
         else
             mAmpsAxis->UpdateLabels(labelsDBScale, normPosDBScale, NUM_AXIS_DATA_DBSCALE, p0, p1);
     }

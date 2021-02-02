@@ -25,7 +25,7 @@ class FilterSincConvoLPF;
 class FilterFftLowPass;
 
 // Good, but less steep than sinc
-#define USE_RBJ_FILTER 0
+#define OVERSAMP_USE_RBJ_FILTER 0
 
 // Test: Use NIIRFilterLow12dB
 // Good, but less steep than sinc
@@ -85,7 +85,7 @@ protected:
     OVERSAMPLER_CLASS *mUpOversampler;
     OVERSAMPLER_CLASS *mDownOversampler;
     
-#if USE_RBJ_FILTER
+#if OVERSAMP_USE_RBJ_FILTER
     FilterRBJNX *mFilter;
 #endif
     

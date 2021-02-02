@@ -92,6 +92,7 @@
 
 // DEBUG: 10. ORIGIN: 2
 #if POLAR_SAMPLES_INSERT_POINTS // DEBUG: 10
+#undef POINT_SIZE_MODE0
 #define POINT_SIZE_MODE0 2.0 //10.0 //2.0 //1.0 //2.0
 #endif
 

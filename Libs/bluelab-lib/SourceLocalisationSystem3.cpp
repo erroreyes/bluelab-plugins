@@ -29,7 +29,7 @@
 //#define CUTOFF_FREQ 22050.0
 
 // Low pass filter
-#define LOW_PASS_FREQ 100.0 //700.0 //100.0
+//#define LOW_PASS_FREQ 100.0 //700.0 //100.0
 #define LOW_PASS_FREQ 10.0 /// Motor
 
 // ORIG (makes several detections with a single sine sweep source)
@@ -484,9 +484,9 @@ SourceLocalisationSystem3::ComputeAmpCoincidences(const WDL_TypedBuf<WDL_FFT_COM
         BL_FLOAT r = COMP_MAGN(sampRight);
         
 #if FIX_EPS_MAGNS
-#define EPS 1e-10
+        //#define EPS 1e-10
         
-        if ((std::fabs(l) < EPS) && (std::fabs(r) < EPS))
+        if ((std::fabs(l) <BL_EPS10) && (std::fabs(r) < BL_EPS10))
             continue;
 #endif
         
@@ -550,7 +550,7 @@ SourceLocalisationSystem3::ComputeDiff(WDL_TypedBuf<WDL_FFT_COMPLEX> *resultDiff
 void
 SourceLocalisationSystem3::FindMinima(vector<WDL_TypedBuf<BL_FLOAT> > *coincidence)
 {
-#define INF 1e15;
+    //#define INF 1e15;
     
     // Cutoff
     int numBins = (CUTOFF_FREQ/mSampleRate)*mBufferSize;
@@ -558,7 +558,7 @@ SourceLocalisationSystem3::FindMinima(vector<WDL_TypedBuf<BL_FLOAT> > *coinciden
     for (int i = 0; i < numBins; i++)
     {
         int minIndex = 0;
-        BL_FLOAT minVal = INF;
+        BL_FLOAT minVal = BL_INF;
         
         for (int j = 0; j < mNumBands; j++)
         {
@@ -586,9 +586,9 @@ SourceLocalisationSystem3::FindMinima(vector<WDL_TypedBuf<BL_FLOAT> > *coinciden
 void
 SourceLocalisationSystem3::FindMinima2(WDL_TypedBuf<BL_FLOAT> *coincidence)
 {
-#define INF 1e15;
+    //#define INF 1e15;
     
-    BL_FLOAT minVal = INF;
+    BL_FLOAT minVal = BL_INF;
     for (int i = 0; i < coincidence->GetSize(); i++)
     {
         BL_FLOAT co = coincidence->Get()[i];
@@ -640,8 +640,8 @@ SourceLocalisationSystem3::NormalizeMinima(WDL_TypedBuf<BL_FLOAT> *coincidence)
     BLUtils::FindMinima(*coincidence, &minima, (BL_FLOAT)(THRS*2.0));
     
     // Find extrema
-    BL_FLOAT minVal = INF;
-    BL_FLOAT maxVal = -INF;
+    BL_FLOAT minVal = BL_INF;
+    BL_FLOAT maxVal = -BL_INF;
     for (int i = 0; i < coincidence->GetSize(); i++)
     {
         BL_FLOAT val = coincidence->Get()[i];
@@ -812,7 +812,7 @@ SourceLocalisationSystem3::FreqIntegrateStencil(const vector<WDL_TypedBuf<BL_FLO
 #define PENALITY 0.0
 //#define PENALITY -0.1 // Better
 //#define PENALITY -0.2 // Far better
-#define EPS 1e-15
+//#define EPS 1e-15
     
     localization->Resize(coincidence.size());
     
@@ -848,7 +848,7 @@ SourceLocalisationSystem3::FreqIntegrateStencil(const vector<WDL_TypedBuf<BL_FLO
                     
                     sum += val;
                     
-                    if (val < EPS)
+                    if (val < BL_EPS)
                         sum += PENALITY;
                     
                     //numPoints++;
@@ -879,7 +879,7 @@ void
 SourceLocalisationSystem3::FreqIntegrateStencilCalmes(const vector<WDL_TypedBuf<BL_FLOAT> > &coincidence,
                                                       WDL_TypedBuf<BL_FLOAT> *localization)
 {
-#define INF 1e15
+    //#define INF 1e15
     
     localization->Resize(coincidence.size());
  
@@ -901,7 +901,7 @@ SourceLocalisationSystem3::FreqIntegrateStencilCalmes(const vector<WDL_TypedBuf<
     {
         // Find the best azimuth index for a given frequency
         int bestBandIdx = 0;
-        BL_FLOAT bestBandVal = INF;
+        BL_FLOAT bestBandVal = BL_INF;
         
         // Bands
         for (int j = 0; j < coincidence.size(); j++)
@@ -1245,7 +1245,7 @@ void
 SourceLocalisationSystem3::MaskDilation(vector<WDL_TypedBuf<BL_FLOAT> > *mask)
 {
 #define MASK_DILATION_VALUE 0.5 //0.0 //1.0
-#define EPS 1e-15
+    //#define EPS 1e-15
     
     if (mask->empty())
         return;
@@ -1262,7 +1262,7 @@ SourceLocalisationSystem3::MaskDilation(vector<WDL_TypedBuf<BL_FLOAT> > *mask)
         {
             BL_FLOAT val = maskCopy[i].Get()[j];
             
-            if (std::fabs(val) < EPS)
+            if (std::fabs(val) < BL_EPS)
             {
                 BL_FLOAT prevVal = 0.0;
                 if (i - 1 >= 0)

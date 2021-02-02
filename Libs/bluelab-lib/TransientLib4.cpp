@@ -31,10 +31,10 @@ TransientLib4::DetectTransients(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
                                 BL_FLOAT mix,
                                 WDL_TypedBuf<BL_FLOAT> *transientIntensityMagns)
 {
-#define LOG_MAGN_COEFF 10000.0
+#define LOG_MAGN_COEFF0 10000.0
     
 // ln(10000) = 9 !
-#define THRESHOLD_COEFF 9.0
+#define THRESHOLD_COEFF0 9.0
     
     // Compute transients probability (and other things...)
     int bufSize = ioFftBuf->GetSize();
@@ -67,7 +67,7 @@ TransientLib4::DetectTransients(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
         
         BL_FLOAT phase = 0.0;
         if (std::fabs(re) > 0.0)
-	  phase = std::atan2(im, re);
+            phase = std::atan2(im, re);
         
         BL_FLOAT phaseDiff = phase - prev;
         prev = phase;
@@ -85,8 +85,8 @@ TransientLib4::DetectTransients(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
         BL_FLOAT transPos = ((BL_FLOAT)bufSize)*phaseDiff/(2.0*M_PI);
         
         // Must use a coeff, since magn is < 1.0
-        BL_FLOAT weight = std::log(1.0 + magn*LOG_MAGN_COEFF);
-        if (weight > threshold*THRESHOLD_COEFF)
+        BL_FLOAT weight = std::log(1.0 + magn*LOG_MAGN_COEFF0);
+        if (weight > threshold*THRESHOLD_COEFF0)
         {
             transientIntensityMagns->Get()[(int)transPos] += weight;
         }
@@ -97,7 +97,7 @@ TransientLib4::DetectTransients(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
         // NOTE: this is not logical, this leads only to threholding the fft
         // depending on the intensity
         // ... but it seems to work
-        if (weight > threshold*THRESHOLD_COEFF)
+        if (weight > threshold*THRESHOLD_COEFF0)
             transientMagns.Get()[i] = magn;
         else
             strippedMagns.Get()[i] = magn;
@@ -114,8 +114,8 @@ TransientLib4::DetectTransients(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
         BL_FLOAT newMagn = mix*strippedMagns.Get()[i] + (1.0 - mix)*transientMagns.Get()[i];
         
         // With that, the result output is at the same scale as the input
-#define CORRECTION_COEFF 2.0
-        newMagn *= CORRECTION_COEFF;
+#define CORRECTION_COEFF0 2.0
+        newMagn *= CORRECTION_COEFF0;
         
         BLUtils::MagnPhaseToComplex(&comp, newMagn, phase);
         
@@ -132,8 +132,8 @@ TransientLib4::DetectTransientsSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
                                       WDL_TypedBuf<BL_FLOAT> *outTransients,
                                       WDL_TypedBuf<BL_FLOAT> *outSmoothedTransients)
 {
-#define ZERO_POS 0.1
-#define THRS_EPS 1e-5
+#define ZERO_POS_SMOOTH 0.1
+#define THRS_EPS_SMOOTH 1e-5
     
     // Set threshold from normalized to dB
     threshold = (1.0 - threshold)*TRANSIENT_INF_LOG;
@@ -238,7 +238,7 @@ TransientLib4::DetectTransientsSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
     
     NormalizeCurve(&smoothedTransients);
     
-    BLUtils::AddValues(&smoothedTransients, (BL_FLOAT)ZERO_POS);
+    BLUtils::AddValues(&smoothedTransients, (BL_FLOAT)ZERO_POS_SMOOTH);
     
     //
     // Get the contribution of each source bin depending on the curve
@@ -250,7 +250,7 @@ TransientLib4::DetectTransientsSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
         BL_FLOAT smoothTrans = smoothedTransients.Get()[i];
         vector<int> &trToMagn = transToMagn[i];
         
-        if (smoothTrans > ZERO_POS + THRS_EPS)
+        if (smoothTrans > ZERO_POS_SMOOTH + THRS_EPS_SMOOTH)
         // This is transient !
         {
             for (int j = 0; j < trToMagn.size(); j++)
@@ -280,8 +280,8 @@ TransientLib4::DetectTransientsSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
     // Apply a coefficient
     // So at mix == 0.5, we will keep the same volume
     // Otherwise, we will loose half of the volume
-#define COEFF 2.0
-    BLUtils::MultValues(&newMagns, (BL_FLOAT)COEFF);
+#define COEFF_SMOOTH 2.0
+    BLUtils::MultValues(&newMagns, (BL_FLOAT)COEFF_SMOOTH);
     
     //
     // Convert back to complex
@@ -312,19 +312,19 @@ TransientLib4::DetectTransientsSmooth(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
     //
 #if DEBUG_GRAPH
     
-#define GRAPH_MIN 0.0 
-#define GRAPH_WEIGHT_MAX -TRANSIENT_INF_LOG
+#define GRAPH_MIN_SMOOTH 0.0 
+#define GRAPH_WEIGHT_MAX_SMOOTH -TRANSIENT_INF_LOG
     
     DebugGraph::SetCurveValues(weightsKeep, 0,
-                               GRAPH_MIN, GRAPH_WEIGHT_MAX,
+                               GRAPH_MIN_SMOOTH, GRAPH_WEIGHT_MAX_SMOOTH,
                                1.0, 0, 255, 0);
     
     DebugGraph::SetCurveValues(weightsThrow, 1,
-                               GRAPH_MIN, GRAPH_WEIGHT_MAX,
+                               GRAPH_MIN_SMOOTH, GRAPH_WEIGHT_MAX_SMOOTH,
                                1.0, 255, 0, 255);
     
     DebugGraph::SetCurveSingleValue(-TRANSIENT_INF_LOG + threshold, 2,
-                                    GRAPH_MIN, GRAPH_WEIGHT_MAX,
+                                    GRAPH_MIN_SMOOTH, GRAPH_WEIGHT_MAX_SMOOTH,
                                     2.0,
                                     150, 150, 255,
                                     true, 0.2);
@@ -423,15 +423,16 @@ TransientLib4::DetectTransientsSmooth2(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
     //
     
     // First, multpiply by a big constant coeff
-#define CURVE_COEFF 500.0
-    BLUtils::MultValues(&smoothedTransients, (BL_FLOAT)CURVE_COEFF);
+#define CURVE_COEFF_SMOOTH2 500.0
+    BLUtils::MultValues(&smoothedTransients, (BL_FLOAT)CURVE_COEFF_SMOOTH2);
     
     // Compute a scale, depending on the precision
     // Because when precision is high, some values are not very smoothed,
     // so they are big
-#define PRECISION0_COEFF 1.0
-#define PRECISION1_COEFF 0.2
-    BL_FLOAT scaleCoeff = (1.0 - precision)*PRECISION0_COEFF + precision*PRECISION1_COEFF;
+#define PRECISION0_COEFF_SMOOTH2 1.0
+#define PRECISION1_COEFF_SMOOTH2 0.2
+    BL_FLOAT scaleCoeff = (1.0 - precision)*PRECISION0_COEFF_SMOOTH2 +
+    precision*PRECISION1_COEFF_SMOOTH2;
     
     BLUtils::MultValues(&smoothedTransients, scaleCoeff);
     
@@ -452,14 +453,15 @@ TransientLib4::DetectTransientsSmooth2(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
       //
       // Works great !
       // (transient amplification and attenuation seems better)
-#define SMOOTH_COEFF 0.8
+#define SMOOTH_COEFF_SMOOTH2 0.8
         
         if ((outSmoothedTransients != NULL) &&
             (outSmoothedTransients->GetSize() == smoothedTransients.GetSize()))
             // We have previous values
         {
             BL_FLOAT prevSmoothTrans = outSmoothedTransients->Get()[i];
-            smoothTrans = SMOOTH_COEFF*prevSmoothTrans + (1.0 - SMOOTH_COEFF)*smoothTrans;
+            smoothTrans = SMOOTH_COEFF_SMOOTH2*prevSmoothTrans +
+            (1.0 - SMOOTH_COEFF_SMOOTH2)*smoothTrans;
             smoothedTransients.Get()[i] = smoothTrans;
         }
         
@@ -503,8 +505,8 @@ TransientLib4::DetectTransientsSmooth2(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
     // Apply a coefficient
     // So at mix == 0.5, we will keep the same volume
     // Otherwise, we will loose half of the volume
-#define COEFF 2.0
-    BLUtils::MultValues(&newMagns, (BL_FLOAT)COEFF);
+#define COEFF_SMOOTH2 2.0
+    BLUtils::MultValues(&newMagns, (BL_FLOAT)COEFF_SMOOTH2);
     
     //
     // Convert back to complex
@@ -528,7 +530,8 @@ TransientLib4::DetectTransientsSmooth2(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
     {
         *outTransients = transients;
         
-        BLUtils::MultValues(outTransients, (BL_FLOAT)(CURVE_COEFF*scaleCoeff));
+        BLUtils::MultValues(outTransients,
+                            (BL_FLOAT)(CURVE_COEFF_SMOOTH2*scaleCoeff));
     }
     
     if (outSmoothedTransients != NULL)
@@ -539,19 +542,19 @@ TransientLib4::DetectTransientsSmooth2(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioFftBuf,
     //
 #if DEBUG_GRAPH
     
-#define GRAPH_MIN 0.0
-#define GRAPH_WEIGHT_MAX -TRANSIENT_INF_LOG
+#define GRAPH_MIN_SMOOTH2 0.0
+#define GRAPH_WEIGHT_MAX_SMOOTH2 -TRANSIENT_INF_LOG
     
     DebugGraph::SetCurveValues(weightsKeep, 0,
-                               GRAPH_MIN, GRAPH_WEIGHT_MAX,
+                               GRAPH_MIN_SMOOTH2, GRAPH_WEIGHT_MAX_SMOOTH2,
                                1.0, 0, 255, 0);
     
     DebugGraph::SetCurveValues(weightsThrow, 1,
-                               GRAPH_MIN, GRAPH_WEIGHT_MAX,
+                               GRAPH_MIN_SMOOTH2, GRAPH_WEIGHT_MAX_SMOOTH2,
                                1.0, 255, 0, 255);
     
     DebugGraph::SetCurveSingleValue(-TRANSIENT_INF_LOG + threshold, 2,
-                                    GRAPH_MIN, GRAPH_WEIGHT_MAX,
+                                    GRAPH_MIN_SMOOTH2, GRAPH_WEIGHT_MAX_SMOOTH2,
                                     2.0,
                                     150, 150, 255,
                                     true, 0.2);
@@ -570,11 +573,11 @@ TransientLib4::ComputeTransientness(const WDL_TypedBuf<BL_FLOAT> &magns,
                                     BL_FLOAT smoothFactor,
                                     WDL_TypedBuf<BL_FLOAT> *transientness)
 {
-#define DB_THRESHOLD -64.0
-#define DB_EPS 1e-15
+#define DB_THRESHOLD_TR -64.0
+#define DB_EPS_TR 1e-15
     
-#define TRANS_COEFF_FREQ 1.0
-#define TRANS_COEFF_AMP 0.25
+#define TRANS_COEFF_FREQ_TR 1.0
+#define TRANS_COEFF_AMP_TR 0.25
     
     transientness->Resize(phases.GetSize());
     BLUtils::FillAllZero(transientness);
@@ -590,17 +593,19 @@ TransientLib4::ComputeTransientness(const WDL_TypedBuf<BL_FLOAT> &magns,
         BL_FLOAT magn = magns.Get()[i];
         
         // Ignore small magns
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_THRESHOLD);
-        if (magnDB <= DB_THRESHOLD)
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_TR,
+                                           (BL_FLOAT)DB_THRESHOLD_TR);
+        if (magnDB <= DB_THRESHOLD_TR)
             continue;
         
         BL_FLOAT freqWeight = 0.0;
         if (freqsToTrans)
         {
             //Do as Werner Van Belle
-            BL_FLOAT w = -(magnDB - DB_THRESHOLD)/DB_THRESHOLD;
+            BL_FLOAT w = -(magnDB - DB_THRESHOLD_TR)/DB_THRESHOLD_TR;
                     
-            w *= TRANS_COEFF_FREQ;
+            w *= TRANS_COEFF_FREQ_TR;
             
             freqWeight = w;
         }
@@ -628,7 +633,7 @@ TransientLib4::ComputeTransientness(const WDL_TypedBuf<BL_FLOAT> &magns,
             
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP;
+            w *= TRANS_COEFF_AMP_TR;
             
             ampWeight = w;
         }
@@ -661,12 +666,12 @@ TransientLib4::ComputeTransientness2(const WDL_TypedBuf<BL_FLOAT> &magns,
                                      BL_FLOAT smoothFactor,
                                      WDL_TypedBuf<BL_FLOAT> *transientness)
 {
-#define DB_THRESHOLD -64.0
-#define DB_EPS 1e-15
+#define DB_THRESHOLD_TR2 -64.0
+#define DB_EPS_TR2 1e-15
       
-#define TRANS_COEFF_GLOBAL 0.5
-#define TRANS_COEFF_FREQ 3.0
-#define TRANS_COEFF_AMP 1.0
+#define TRANS_COEFF_GLOBAL_TR2 0.5
+#define TRANS_COEFF_FREQ_TR2 3.0
+#define TRANS_COEFF_AMP_TR2 1.0
     
     transientness->Resize(phases.GetSize());
     BLUtils::FillAllZero(transientness);
@@ -682,16 +687,18 @@ TransientLib4::ComputeTransientness2(const WDL_TypedBuf<BL_FLOAT> &magns,
         BL_FLOAT magn = magns.Get()[i];
         
         // Ignore small magns
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_THRESHOLD);
-        if (magnDB <= DB_THRESHOLD)
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_TR2,
+                                           (BL_FLOAT)DB_THRESHOLD_TR2);
+        if (magnDB <= DB_THRESHOLD_TR2)
             continue;
         
         BL_FLOAT freqWeight = 0.0;
 
         //Do as Werner Van Belle
-        BL_FLOAT wf = -(magnDB - DB_THRESHOLD)/DB_THRESHOLD;
+        BL_FLOAT wf = -(magnDB - DB_THRESHOLD_TR2)/DB_THRESHOLD_TR2;
             
-        wf *= TRANS_COEFF_FREQ*TRANS_COEFF_GLOBAL;
+        wf *= TRANS_COEFF_FREQ_TR2*TRANS_COEFF_GLOBAL_TR2;
             
         freqWeight = wf*(1.0 - freqAmpRatio);
         
@@ -717,7 +724,7 @@ TransientLib4::ComputeTransientness2(const WDL_TypedBuf<BL_FLOAT> &magns,
             
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_AMP_TR2*TRANS_COEFF_GLOBAL_TR2;
             
             ampWeight = freqAmpRatio*w;
         }
@@ -747,12 +754,12 @@ TransientLib4::ComputeTransientness3(const WDL_TypedBuf<BL_FLOAT> &magns,
                                      BL_FLOAT smoothFactor,
                                      WDL_TypedBuf<BL_FLOAT> *transientness)
 {
-#define DB_THRESHOLD -64.0
-#define DB_EPS 1e-15
+#define DB_THRESHOLD_TR3 -64.0
+#define DB_EPS_TR3 1e-15
     
-#define TRANS_COEFF_GLOBAL 0.5
-#define TRANS_COEFF_FREQ 3.0
-#define TRANS_COEFF_AMP 1.0
+#define TRANS_COEFF_GLOBAL_TR3 0.5
+#define TRANS_COEFF_FREQ_TR3 3.0
+#define TRANS_COEFF_AMP_TR3 1.0
     
     transientness->Resize(phases.GetSize());
     BLUtils::FillAllZero(transientness);
@@ -776,16 +783,18 @@ TransientLib4::ComputeTransientness3(const WDL_TypedBuf<BL_FLOAT> &magns,
         BL_FLOAT magn = magns.Get()[i];
         
         // Ignore small magns
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_THRESHOLD);
-        if (magnDB <= DB_THRESHOLD)
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_TR3,
+                                           (BL_FLOAT)DB_THRESHOLD_TR3);
+        if (magnDB <= DB_THRESHOLD_TR3)
             continue;
         
         BL_FLOAT freqWeight = 0.0;
         
         //Do as Werner Van Belle
-        BL_FLOAT wf = -(magnDB - DB_THRESHOLD)/DB_THRESHOLD;
+        BL_FLOAT wf = -(magnDB - DB_THRESHOLD_TR3)/DB_THRESHOLD_TR3;
         
-        wf *= TRANS_COEFF_FREQ*TRANS_COEFF_GLOBAL;
+        wf *= TRANS_COEFF_FREQ_TR3*TRANS_COEFF_GLOBAL_TR3;
         
         freqWeight = wf;
         
@@ -811,7 +820,7 @@ TransientLib4::ComputeTransientness3(const WDL_TypedBuf<BL_FLOAT> &magns,
             
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_AMP_TR3*TRANS_COEFF_GLOBAL_TR3;
             
             ampWeight = w;
         }
@@ -866,13 +875,13 @@ TransientLib4::ComputeTransientness4(const WDL_TypedBuf<BL_FLOAT> &magns,
                                      WDL_TypedBuf<BL_FLOAT> *smoothWin,
                                      WDL_TypedBuf<BL_FLOAT> *transientness)
 {
-#define DB_THRESHOLD -64.0
+#define DB_THRESHOLD_TR4 -64.0
     
-#define DB_EPS 1e-15
+#define DB_EPS_TR4 1e-15
     
-#define TRANS_COEFF_GLOBAL 0.5
-#define TRANS_COEFF_FREQ 3.0
-#define TRANS_COEFF_AMP 1.0
+#define TRANS_COEFF_GLOBAL_TR4 0.5
+#define TRANS_COEFF_FREQ_TR4 3.0
+#define TRANS_COEFF_AMP_TR4 1.0
     
     transientness->Resize(phases.GetSize());
     BLUtils::FillAllZero(transientness);
@@ -896,16 +905,18 @@ TransientLib4::ComputeTransientness4(const WDL_TypedBuf<BL_FLOAT> &magns,
         BL_FLOAT magn = magns.Get()[i];
         
         // Ignore small magns
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_THRESHOLD);
-        if (magnDB <= DB_THRESHOLD)
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_TR4,
+                                           (BL_FLOAT)DB_THRESHOLD_TR4);
+        if (magnDB <= DB_THRESHOLD_TR4)
             continue;
         
         BL_FLOAT freqWeight = 0.0;
         
         //Do as Werner Van Belle
-        BL_FLOAT wf = -(magnDB - DB_THRESHOLD)/DB_THRESHOLD;
+        BL_FLOAT wf = -(magnDB - DB_THRESHOLD_TR4)/DB_THRESHOLD_TR4;
         
-        wf *= TRANS_COEFF_FREQ*TRANS_COEFF_GLOBAL;
+        wf *= TRANS_COEFF_FREQ_TR4*TRANS_COEFF_GLOBAL_TR4;
         
         freqWeight = wf;
         
@@ -931,7 +942,7 @@ TransientLib4::ComputeTransientness4(const WDL_TypedBuf<BL_FLOAT> &magns,
             
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_AMP_TR4*TRANS_COEFF_GLOBAL_TR4;
             
             ampWeight = w;
         }
@@ -998,15 +1009,15 @@ TransientLib4::ComputeTransientness5(const WDL_TypedBuf<BL_FLOAT> &magns,
                                      WDL_TypedBuf<BL_FLOAT> *smoothWin,
                                      WDL_TypedBuf<BL_FLOAT> *transientness)
 {
-#define DB_THRESHOLD -64.0
+#define DB_THRESHOLD_TR5 -64.0
     
-#define DB_EPS 1e-15
+#define DB_EPS_TR5 1e-15
     
-#define TRANS_COEFF_GLOBAL 0.5
-#define TRANS_COEFF_FREQ 3.0
-#define TRANS_COEFF_AMP 1.0
+#define TRANS_COEFF_GLOBAL_TR5 0.5
+#define TRANS_COEFF_FREQ_TR5 3.0
+#define TRANS_COEFF_AMP_TR5 1.0
     
-#define USE_SAMPLE_RATE_COEFF 0 //1
+#define USE_SAMPLE_RATE_COEFF_TR5 0 //1
     
     transientness->Resize(phases.GetSize());
     BLUtils::FillAllZero(transientness);
@@ -1035,16 +1046,18 @@ TransientLib4::ComputeTransientness5(const WDL_TypedBuf<BL_FLOAT> &magns,
         BL_FLOAT magn = magns.Get()[i];
         
         // Ignore small magns
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_THRESHOLD);
-        if (magnDB <= DB_THRESHOLD)
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_TR5,
+                                           (BL_FLOAT)DB_THRESHOLD_TR5);
+        if (magnDB <= DB_THRESHOLD_TR5)
             continue;
         
         BL_FLOAT freqWeight = 0.0;
         
         //Do as Werner Van Belle
-        BL_FLOAT wf = -(magnDB - DB_THRESHOLD)/DB_THRESHOLD;
+        BL_FLOAT wf = -(magnDB - DB_THRESHOLD_TR5)/DB_THRESHOLD_TR5;
         
-        freqWeight = wf * TRANS_COEFF_FREQ*TRANS_COEFF_GLOBAL;
+        freqWeight = wf * TRANS_COEFF_FREQ_TR5*TRANS_COEFF_GLOBAL_TR5;
         
         BL_FLOAT ampWeight = 0.0;
         if ((prevPhases != NULL) && (prevPhases->GetSize() == sampleIds.GetSize()))
@@ -1072,14 +1085,14 @@ TransientLib4::ComputeTransientness5(const WDL_TypedBuf<BL_FLOAT> &magns,
             
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_AMP_TR5*TRANS_COEFF_GLOBAL_TR5;
             
 #if 1
             // NEW: makes more coherent result for Loris voice
-#define WP_COEFF 100.0
+#define WP_COEFF_TR5 100.0
             
             // Multiply before with coeff, to avoid numerical limits
-            w *= WP_COEFF;
+            w *= WP_COEFF_TR5;
             w *= magn; //
             //w *= wf;
 #endif
@@ -1192,8 +1205,8 @@ TransientLib4::ComputeTransientness5(const WDL_TypedBuf<BL_FLOAT> &magns,
     //SmoothTransients4(transientness);
     SmoothTransients(transientness, smoothFactor);
     
-#define GLOBAL_COEFF 8.0
-    BLUtils::MultValues(transientness, (BL_FLOAT)GLOBAL_COEFF);
+#define GLOBAL_COEFF_TR5 8.0
+    BLUtils::MultValues(transientness, (BL_FLOAT)GLOBAL_COEFF_TR5);
 #endif
     
 #if 0 // TEST
@@ -1218,13 +1231,13 @@ TransientLib4::ComputeTransientness6(const WDL_TypedBuf<BL_FLOAT> &magns,
                                      BL_FLOAT sampleRate,
                                      WDL_TypedBuf<BL_FLOAT> *transientness)
 {
-#define DB_THRESHOLD -64.0
+#define DB_THRESHOLD_TR6 -64.0
     
-#define DB_EPS 1e-15
+#define DB_EPS_TR6 1e-15
     
-#define TRANS_COEFF_GLOBAL 0.5
-#define TRANS_COEFF_FREQ 3.0
-#define TRANS_COEFF_AMP 1.0
+#define TRANS_COEFF_GLOBAL_TR6 0.5
+#define TRANS_COEFF_FREQ_TR6 3.0
+#define TRANS_COEFF_AMP_TR6 1.0
     
     transientness->Resize(phases.GetSize());
     BLUtils::FillAllZero(transientness);
@@ -1248,16 +1261,18 @@ TransientLib4::ComputeTransientness6(const WDL_TypedBuf<BL_FLOAT> &magns,
         BL_FLOAT magn = magns.Get()[i];
         
         // Ignore small magns
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_THRESHOLD);
-        if (magnDB <= DB_THRESHOLD)
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_TR6,
+                                           (BL_FLOAT)DB_THRESHOLD_TR6);
+        if (magnDB <= DB_THRESHOLD_TR6)
             continue;
         
         BL_FLOAT freqWeight = 0.0;
         
         // Do as Werner Van Belle
-        BL_FLOAT wf = -(magnDB - DB_THRESHOLD)/DB_THRESHOLD;
+        BL_FLOAT wf = -(magnDB - DB_THRESHOLD_TR6)/DB_THRESHOLD_TR6;
         
-        wf *= TRANS_COEFF_FREQ*TRANS_COEFF_GLOBAL;
+        wf *= TRANS_COEFF_FREQ_TR6*TRANS_COEFF_GLOBAL_TR6;
         
         freqWeight = wf;
         
@@ -1283,7 +1298,7 @@ TransientLib4::ComputeTransientness6(const WDL_TypedBuf<BL_FLOAT> &magns,
             
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_AMP_TR6*TRANS_COEFF_GLOBAL_TR6;
             
             ampWeight = w;
         }
@@ -1301,8 +1316,8 @@ TransientLib4::ComputeTransientness6(const WDL_TypedBuf<BL_FLOAT> &magns,
     // CMA
     // Works well
     
-#define NATIVE_BUFFER_SIZE 2048
-    BL_FLOAT bufCoeff = ((BL_FLOAT)phases.GetSize())/NATIVE_BUFFER_SIZE;
+#define NATIVE_BUFFER_SIZE_TR6 2048
+    BL_FLOAT bufCoeff = ((BL_FLOAT)phases.GetSize())/NATIVE_BUFFER_SIZE_TR6;
     
     SmoothTransients(&transientnessS, smoothFactor);
     SmoothTransients(&transientnessP, smoothFactor);
@@ -1371,45 +1386,45 @@ TransientLib4::ComputeTransientnessMix(WDL_TypedBuf<BL_FLOAT> *magns,
     //
     // Main coefficient for scale !
     //
-#define TRANS_COEFF_GLOBAL 5.0
+#define TRANS_COEFF_GLOBAL_MIX 5.0
     //
     //
     
-#define TRANS_COEFF_FREQ 0.2
-#define TRANS_COEFF_AMP 0.1
+#define TRANS_COEFF_FREQ_MIX 0.2
+#define TRANS_COEFF_AMP_MIX 0.1
     
-#define DB_MIN -120.0
-#define DB_EPS 1e-15
+#define DB_MIN_MIX -120.0
+#define DB_EPS_MIX 1e-15
     
     // GOOD: keep a good y scale whatever the precision
     // Drawback: maybe less accurate since we don't use an exact version of
     // the smooth window
     //
-#define USE_ADVANCED_SMOOTHING 1
+#define USE_ADVANCED_SMOOTHING_MIX 1
     
     // BAD ! (in the curent version)
     //
     // Can only be used if transientness is in the frequency domain !
     //
     // Temporal smoothing
-#define USE_TEMPORAL_SMOOTHING 0
-#define TEMPORAL_SMOOTH_COEFF 0.8
+#define USE_TEMPORAL_SMOOTHING_MIX 0
+#define TEMPORAL_SMOOTH_COEFF_MIX 0.8
     
     
     //
     // Threshold small db (as original)
     // TODO: don't forget to check "keep track of non-transient in all cases"
-#define USE_THRESHOLD_DB 1
-#if USE_THRESHOLD_DB
+#define USE_THRESHOLD_DB_MIX 1
+#if USE_THRESHOLD_DB_MIX
     
     // -50.0: not good
     // -60.0: maybe good...
-#define THRESHOLD_DB -64.0
+#define THRESHOLD_DB_MIX -64.0
     
     // GOOD !
     // Without that, there is a remaining background noise
     // and the mix at 50% is not like bypass
-#define KEEP_TRACK_OF_THRESHOLDED 1
+#define KEEP_TRACK_OF_THRESHOLDED_MIX 1
     
 #endif
     
@@ -1443,18 +1458,20 @@ TransientLib4::ComputeTransientnessMix(WDL_TypedBuf<BL_FLOAT> *magns,
         //Do as Werner Van Belle
         BL_FLOAT magn = magns->Get()[i];
         
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_MIN);
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_MIX,
+                                           (BL_FLOAT)DB_MIN_MIX);
         
         // Threshold, to avoid negative weights values later
-        if (magnDB < DB_MIN)
-            magnDB = DB_MIN;
+        if (magnDB < DB_MIN_MIX)
+            magnDB = DB_MIN_MIX;
         
         // Works great for extracting whisper ?
-#if USE_THRESHOLD_DB
+#if USE_THRESHOLD_DB_MIX
         // Ignore small magns
-        if (magnDB <= THRESHOLD_DB)
+        if (magnDB <= THRESHOLD_DB_MIX)
         {
-#if KEEP_TRACK_OF_THRESHOLDED
+#if KEEP_TRACK_OF_THRESHOLDED_MIX
             // In all cases, keep track of the position
             // (it will be used to discard non-transient bins)
             transToMagn[(int)sampleId].push_back(i);
@@ -1466,9 +1483,9 @@ TransientLib4::ComputeTransientnessMix(WDL_TypedBuf<BL_FLOAT> *magns,
         BL_FLOAT freqWeight = 0.0;
         if (freqsToTrans)
         {
-            BL_FLOAT w = -(magnDB - DB_MIN)/DB_MIN;
+            BL_FLOAT w = -(magnDB - DB_MIN_MIX)/DB_MIN_MIX;
             
-            w *= TRANS_COEFF_FREQ*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_FREQ_MIX*TRANS_COEFF_GLOBAL_MIX;
                 
             freqWeight = w;
         }
@@ -1497,7 +1514,7 @@ TransientLib4::ComputeTransientnessMix(WDL_TypedBuf<BL_FLOAT> *magns,
                 
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_AMP_MIX*TRANS_COEFF_GLOBAL_MIX;
                 
             ampWeight = w;
         }
@@ -1528,7 +1545,7 @@ TransientLib4::ComputeTransientnessMix(WDL_TypedBuf<BL_FLOAT> *magns,
     // Do smoothing
     //
     
-#if !USE_ADVANCED_SMOOTHING
+#if !USE_ADVANCED_SMOOTHING_MIX
     // Original method
     SmoothTransients(transientness, smoothFactor);
 #else
@@ -1538,7 +1555,7 @@ TransientLib4::ComputeTransientnessMix(WDL_TypedBuf<BL_FLOAT> *magns,
     
     BLUtils::ClipMin(transientness, (BL_FLOAT)0.0);
     
-#if USE_TEMPORAL_SMOOTHING
+#if USE_TEMPORAL_SMOOTHING_MIX
     //
     // Additional pass: temporal smoothing
     //
@@ -1554,7 +1571,8 @@ TransientLib4::ComputeTransientnessMix(WDL_TypedBuf<BL_FLOAT> *magns,
             BL_FLOAT trans = transientness->Get()[i];
             BL_FLOAT prevTrans = prevTransientness.Get()[i];
             
-            trans = TEMPORAL_SMOOTH_COEFF*prevTrans + (1.0 - TEMPORAL_SMOOTH_COEFF)*trans;
+            trans = TEMPORAL_SMOOTH_COEF_MIX*prevTrans +
+            (1.0 - TEMPORAL_SMOOTH_COEFF_MIX)*trans;
             transientness->Get()[i] = trans;
         }
     }
@@ -1586,45 +1604,45 @@ TransientLib4::ComputeTransientnessMix2(WDL_TypedBuf<BL_FLOAT> *magns,
     //
     // Main coefficient for scale !
     //
-#define TRANS_COEFF_GLOBAL 5.0
+#define TRANS_COEFF_GLOBAL_MIX2 5.0
     //
     //
     
-#define TRANS_COEFF_FREQ 0.1
-#define TRANS_COEFF_AMP 0.1
+#define TRANS_COEFF_FREQ_MIX2 0.1
+#define TRANS_COEFF_AMP_MIX2 0.1
     
-#define DB_MIN -120.0
-#define DB_EPS 1e-15
+#define DB_MIN_MIX2 -120.0
+#define DB_EPS_MIX2 1e-15
     
     // GOOD: keep a good y scale whatever the precision
     // Drawback: maybe less accurate since we don't use an exact version of
     // the smooth window
     //
-#define USE_ADVANCED_SMOOTHING 1
+#define USE_ADVANCED_SMOOTHING_MIX2 1
     
     // BAD ! (in the curent version)
     //
     // Can only be used if transientness is in the frequency domain !
     //
     // Temporal smoothing
-#define USE_TEMPORAL_SMOOTHING 0
-#define TEMPORAL_SMOOTH_COEFF 0.8
+#define USE_TEMPORAL_SMOOTHING_MIX2 0
+#define TEMPORAL_SMOOTH_COEFF_MIX2 0.8
     
     
     //
     // Threshold small db (as original)
     // TODO: don't forget to check "keep track of non-transient in all cases"
-#define USE_THRESHOLD_DB 1
-#if USE_THRESHOLD_DB
+#define USE_THRESHOLD_DB_MIX2 1
+#if USE_THRESHOLD_DB_MIX2
     
     // -50.0: not good
     // -60.0: maybe good...
-#define THRESHOLD_DB -64.0
+#define THRESHOLD_DB_MIX2 -64.0
     
     // GOOD !
     // Without that, there is a remaining background noise
     // and the mix at 50% is not like bypass
-#define KEEP_TRACK_OF_THRESHOLDED 1
+#define KEEP_TRACK_OF_THRESHOLDED_MIX2 1
     
 #endif
     
@@ -1658,18 +1676,20 @@ TransientLib4::ComputeTransientnessMix2(WDL_TypedBuf<BL_FLOAT> *magns,
         //Do as Werner Van Belle
         BL_FLOAT magn = magns->Get()[i];
         
-        BL_FLOAT magnDB = BLUtils::AmpToDB(magn, (BL_FLOAT)DB_EPS, (BL_FLOAT)DB_MIN);
+        BL_FLOAT magnDB = BLUtils::AmpToDB(magn,
+                                           (BL_FLOAT)DB_EPS_MIX2,
+                                           (BL_FLOAT)DB_MIN_MIX2);
         
         // Threshold, to avoid negative weights values later
-        if (magnDB < DB_MIN)
-            magnDB = DB_MIN;
+        if (magnDB < DB_MIN_MIX2)
+            magnDB = DB_MIN_MIX2;
         
         // Works great for extracting whisper ?
-#if USE_THRESHOLD_DB
+#if USE_THRESHOLD_DB_MIX2
         // Ignore small magns
-        if (magnDB <= THRESHOLD_DB)
+        if (magnDB <= THRESHOLD_DB_MIX2)
         {
-#if KEEP_TRACK_OF_THRESHOLDED
+#if KEEP_TRACK_OF_THRESHOLDED_MIX2
             // In all cases, keep track of the position
             // (it will be used to discard non-transient bins)
             transToMagn[(int)sampleId].push_back(i);
@@ -1679,9 +1699,9 @@ TransientLib4::ComputeTransientnessMix2(WDL_TypedBuf<BL_FLOAT> *magns,
 #endif
         // Frequency weight
         BL_FLOAT freqWeight = 0.0;
-        BL_FLOAT fw = -(magnDB - DB_MIN)/DB_MIN;
+        BL_FLOAT fw = -(magnDB - DB_MIN_MIX2)/DB_MIN_MIX2;
             
-        fw *= TRANS_COEFF_FREQ*TRANS_COEFF_GLOBAL;
+        fw *= TRANS_COEFF_FREQ_MIX2*TRANS_COEFF_GLOBAL_MIX2;
             
         freqWeight = fw*(1.0 - freqAmpRatio);
         
@@ -1708,7 +1728,7 @@ TransientLib4::ComputeTransientnessMix2(WDL_TypedBuf<BL_FLOAT> *magns,
             
             BL_FLOAT w = delta/M_PI;
             
-            w *= TRANS_COEFF_AMP*TRANS_COEFF_GLOBAL;
+            w *= TRANS_COEFF_AMP_MIX2*TRANS_COEFF_GLOBAL_MIX2;
             
             ampWeight = w*freqAmpRatio;
         }
@@ -1730,12 +1750,11 @@ TransientLib4::ComputeTransientnessMix2(WDL_TypedBuf<BL_FLOAT> *magns,
     // NOTE: take care of half !
     BLUtils::ApplyWindowRescale(transientness, *window);
     
-    
     //
     // Do smoothing
     //
     
-#if !USE_ADVANCED_SMOOTHING
+#if !USE_ADVANCED_SMOOTHING_MIX2
     // Original method
     SmoothTransients(transientness, smoothFactor);
 #else
@@ -1745,7 +1764,7 @@ TransientLib4::ComputeTransientnessMix2(WDL_TypedBuf<BL_FLOAT> *magns,
     
     BLUtils::ClipMin(transientness, (BL_FLOAT)0.0);
     
-#if USE_TEMPORAL_SMOOTHING
+#if USE_TEMPORAL_SMOOTHING_MIX2
     //
     // Additional pass: temporal smoothing
     //
@@ -1761,7 +1780,8 @@ TransientLib4::ComputeTransientnessMix2(WDL_TypedBuf<BL_FLOAT> *magns,
             BL_FLOAT trans = transientness->Get()[i];
             BL_FLOAT prevTrans = prevTransientness.Get()[i];
             
-            trans = TEMPORAL_SMOOTH_COEFF*prevTrans + (1.0 - TEMPORAL_SMOOTH_COEFF)*trans;
+            trans = TEMPORAL_SMOOTH_COEFF_MIX2*prevTrans +
+            (1.0 - TEMPORAL_SMOOTH_COEFF_MIX2)*trans;
             transientness->Get()[i] = trans;
         }
     }
@@ -1868,16 +1888,16 @@ TransientLib4::GetSmoothedTransientsInterp(const WDL_TypedBuf<BL_FLOAT> &transie
                                            WDL_TypedBuf<BL_FLOAT> *smoothedTransients,
                                            BL_FLOAT precision)
 {
-#define RAW_SMOOTH_EXP  2
+#define RAW_SMOOTH_EXP_INT  2
 //#define FINE_SMOOTH_EXP 6
   
     // Increase the max precision...
-#define FINE_SMOOTH_EXP 8
+#define FINE_SMOOTH_EXP_INT 8
     // ...but decrease the progression of the precision
     // (so the visual progression of the precision will look constant)
   precision = std::pow(precision, 4.0);
     
-    int numSteps = FINE_SMOOTH_EXP - RAW_SMOOTH_EXP;
+    int numSteps = FINE_SMOOTH_EXP_INT - RAW_SMOOTH_EXP_INT;
     
     BL_FLOAT stepNum = precision*numSteps;
     int stepNumI = (int)stepNum;
@@ -1885,10 +1905,10 @@ TransientLib4::GetSmoothedTransientsInterp(const WDL_TypedBuf<BL_FLOAT> &transie
     BL_FLOAT t = stepNum - stepNumI;
     
     int exps[2];
-    exps[0] = RAW_SMOOTH_EXP + stepNumI;
-    exps[1] = RAW_SMOOTH_EXP + stepNumI + 1;
-    if (exps[1] > FINE_SMOOTH_EXP)
-        exps[1] = FINE_SMOOTH_EXP;
+    exps[0] = RAW_SMOOTH_EXP_INT + stepNumI;
+    exps[1] = RAW_SMOOTH_EXP_INT + stepNumI + 1;
+    if (exps[1] > FINE_SMOOTH_EXP_INT)
+        exps[1] = FINE_SMOOTH_EXP_INT;
     
     int rawSmoothDiv = (int)std::pow(2.0, exps[0]);
     int fineSmoothDiv = (int)std::pow(2.0, exps[1]);
@@ -1907,20 +1927,20 @@ void
 TransientLib4::NormalizeVolume(const WDL_TypedBuf<BL_FLOAT> &origin,
                                WDL_TypedBuf<BL_FLOAT> *result)
 {
-#define EPS 1e-15
+    //#define EPS 1e-15
     
     // Security
-#define NORM_MAX_COEFF 4.0
+#define NORM_MAX_COEFF_NV 4.0
     
     BL_FLOAT avgOrigin = BLUtils::ComputeAvgSquare(origin);
     BL_FLOAT avgResult = BLUtils::ComputeAvgSquare(*result);
     
-    if (avgOrigin > EPS)
+    if (avgOrigin > BL_EPS)
     {
         BL_FLOAT coeff = avgOrigin / avgResult;
         
-        if (coeff > NORM_MAX_COEFF)
-            coeff = NORM_MAX_COEFF;
+        if (coeff > NORM_MAX_COEFF_NV)
+            coeff = NORM_MAX_COEFF_NV;
         
         BLUtils::MultValues(result, coeff);
     }
@@ -1929,7 +1949,7 @@ TransientLib4::NormalizeVolume(const WDL_TypedBuf<BL_FLOAT> &origin,
 void
 TransientLib4::NormalizeCurve(WDL_TypedBuf<BL_FLOAT> *ioCurve)
 {
-#define NORM_COEFF 0.5
+#define NORM_COEFF_NC 0.5
     
     for (int i = 0; i < ioCurve->GetSize(); i++)
     {
@@ -1948,7 +1968,7 @@ TransientLib4::NormalizeCurve(WDL_TypedBuf<BL_FLOAT> *ioCurve)
         
         // We can then multiply by a coefficient, because
         // the curve never goes more than about 50% (75% at the maximum)
-        res *= NORM_COEFF;
+        res *= NORM_COEFF_NC;
         
         ioCurve->Get()[i] = res;
     }
@@ -1980,12 +2000,12 @@ TransientLib4::SmoothTransients(WDL_TypedBuf<BL_FLOAT> *transients,
     // Smooth if necessary
     if (smoothFactor > 0.0)
     {
-#define SMOOTH_FACTOR 4.0
+#define SMOOTH_FACTOR_TR 4.0
         
         WDL_TypedBuf<BL_FLOAT> smoothTransients;
         smoothTransients.Resize(transients->GetSize());
         
-        BL_FLOAT cmaCoeff = smoothFactor*transients->GetSize()/SMOOTH_FACTOR;
+        BL_FLOAT cmaCoeff = smoothFactor*transients->GetSize()/SMOOTH_FACTOR_TR;
         
         int cmaWindowSize = (int)cmaCoeff;
         
@@ -2006,14 +2026,14 @@ TransientLib4::SmoothTransients2(WDL_TypedBuf<BL_FLOAT> *transients,
                                  BL_FLOAT smoothFactor,
                                  WDL_TypedBuf<BL_FLOAT> *smoothWin)
 {
-#define MIN_WIN_SIZE 0
-#define MAX_WIN_SIZE 512
+#define MIN_WIN_SIZE_TR2 0
+#define MAX_WIN_SIZE_TR2 512
     
     // Smooth if necessary
     if (smoothFactor > 0.0)
     {
-        int maxWinSize = (MAX_WIN_SIZE < transients->GetSize()) ?
-                            MAX_WIN_SIZE : transients->GetSize();
+        int maxWinSize = (MAX_WIN_SIZE_TR2 < transients->GetSize()) ?
+                            MAX_WIN_SIZE_TR2 : transients->GetSize();
     
         int winSize = smoothFactor*maxWinSize;
     
@@ -2038,14 +2058,14 @@ void
 TransientLib4::SmoothTransients3(WDL_TypedBuf<BL_FLOAT> *transients,
                                  BL_FLOAT smoothFactor)
 {
-#define MIN_LEVEL 1
+#define MIN_LEVEL_TR3 1
 //#define MAX_LEVEL 11
-#define MAX_LEVEL 8 //9 //8
+#define MAX_LEVEL_TR3 8 //9 //8
     
     // Smooth if necessary
     if (smoothFactor > 0.0)
     {
-        int level = MIN_LEVEL + smoothFactor*(MAX_LEVEL - MIN_LEVEL);
+        int level = MIN_LEVEL_TR3 + smoothFactor*(MAX_LEVEL_TR3 - MIN_LEVEL_TR3);
         
         WDL_TypedBuf<BL_FLOAT> result;
         BLUtils::SmoothDataPyramid(&result, *transients, level);

@@ -19,11 +19,11 @@ FilterTransparentRBJ2X::FilterTransparentRBJ2X(BL_FLOAT sampleRate,
     mSampleRate = sampleRate;
     mCutoffFreq = cutoffFreq;
     
-    mFilters[0] = new FILTER_2X_CLASS(FILTER_TYPE_LOWPASS,
-                                  sampleRate, cutoffFreq);
+    mFilters[0] = new TRANSPARENT_RBJ_2X_FILTER_2X_CLASS(FILTER_TYPE_LOWPASS,
+                                                         sampleRate, cutoffFreq);
     
-    mFilters[1] = new FILTER_2X_CLASS(FILTER_TYPE_HIPASS,
-                                  sampleRate, cutoffFreq);
+    mFilters[1] = new TRANSPARENT_RBJ_2X_FILTER_2X_CLASS(FILTER_TYPE_HIPASS,
+                                                         sampleRate, cutoffFreq);
 }
 
 FilterTransparentRBJ2X::FilterTransparentRBJ2X(const FilterTransparentRBJ2X &other)
@@ -31,18 +31,18 @@ FilterTransparentRBJ2X::FilterTransparentRBJ2X(const FilterTransparentRBJ2X &oth
     mSampleRate = other.mSampleRate;
     mCutoffFreq = other.mCutoffFreq;
     
-    mFilters[0] = new FILTER_2X_CLASS(FILTER_TYPE_LOWPASS,
-                                  mSampleRate, mCutoffFreq);
+    mFilters[0] = new TRANSPARENT_RBJ_2X_FILTER_2X_CLASS(FILTER_TYPE_LOWPASS,
+                                                         mSampleRate, mCutoffFreq);
     
-    mFilters[1] = new FILTER_2X_CLASS(FILTER_TYPE_HIPASS,
-                                  mSampleRate, mCutoffFreq);
+    mFilters[1] = new TRANSPARENT_RBJ_2X_FILTER_2X_CLASS(FILTER_TYPE_HIPASS,
+                                                         mSampleRate, mCutoffFreq);
 }
 
 FilterTransparentRBJ2X::~FilterTransparentRBJ2X()
 {
     for (int i = 0; i < 2; i++)
     {
-        FILTER_2X_CLASS *filter = mFilters[i];
+        TRANSPARENT_RBJ_2X_FILTER_2X_CLASS *filter = mFilters[i];
         delete filter;
     }
 }
@@ -54,7 +54,7 @@ FilterTransparentRBJ2X::SetCutoffFreq(BL_FLOAT freq)
     
     for (int i = 0; i < 2; i++)
     {
-        FILTER_2X_CLASS *filter = mFilters[i];
+        TRANSPARENT_RBJ_2X_FILTER_2X_CLASS *filter = mFilters[i];
         filter->SetCutoffFreq(freq);
     }
 }
@@ -65,7 +65,7 @@ FilterTransparentRBJ2X::SetQFactor(BL_FLOAT q)
 {
     for (int i = 0; i < 2; i++)
     {
-        FILTER_2X_CLASS *filter = mFilters[i];
+        TRANSPARENT_RBJ_2X_FILTER_2X_CLASS *filter = mFilters[i];
         filter->SetQFactor(q);
     }
 }
@@ -77,7 +77,7 @@ FilterTransparentRBJ2X::SetSampleRate(BL_FLOAT sampleRate)
     
     for (int i = 0; i < 2; i++)
     {
-        FILTER_2X_CLASS *filter = mFilters[i];
+        TRANSPARENT_RBJ_2X_FILTER_2X_CLASS *filter = mFilters[i];
         filter->SetSampleRate(sampleRate);
     }
 }
@@ -88,7 +88,7 @@ FilterTransparentRBJ2X::Process(BL_FLOAT sample)
     BL_FLOAT sum = 0.0;
     for (int i = 0; i < 2; i++)
     {
-        FILTER_2X_CLASS *filter = mFilters[i];
+        TRANSPARENT_RBJ_2X_FILTER_2X_CLASS *filter = mFilters[i];
         BL_FLOAT result = filter->Process(sample);
         
         sum += result;
@@ -106,7 +106,7 @@ FilterTransparentRBJ2X::Process(WDL_TypedBuf<BL_FLOAT> *ioSamples)
     
     for (int i = 0; i < 2; i++)
     {
-        FILTER_2X_CLASS *filter = mFilters[i];
+        TRANSPARENT_RBJ_2X_FILTER_2X_CLASS *filter = mFilters[i];
         
         WDL_TypedBuf<BL_FLOAT> samples = *ioSamples;
         filter->Process(&samples);

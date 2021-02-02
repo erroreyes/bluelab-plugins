@@ -31,9 +31,9 @@ using namespace std;
 
 // With predictive, we have almost the same
 // results than without
-#define PREDICTIVE 1 //0 // 1 // TEST SUNDAY: activate predict
+#define PT3_PREDICTIVE 1 //0 // 1 // TEST SUNDAY: activate predict
 
-#if PREDICTIVE
+#if PT3_PREDICTIVE
 #include <SimpleKalmanFilter.h>
 
 // "How much do we expect to our measurement vary"
@@ -105,7 +105,7 @@ public:
         // All-purpose field
         BL_FLOAT mCookie;
         
-#if PREDICTIVE
+#if PT3_PREDICTIVE
         SimpleKalmanFilter mKf;
         
         BL_FLOAT mPredictedFreq;

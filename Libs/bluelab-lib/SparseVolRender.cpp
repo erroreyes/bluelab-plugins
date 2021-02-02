@@ -1163,8 +1163,8 @@ SparseVolRender::DecimateVol(deque<vector<Point> > *slices)
     //55296
     long numPointsStart = ComputeNumPoints(*slices);
     
-#define EPS 1e-8
-    if (mQuality < EPS)
+    //#define EPS 1e-8
+    if (mQuality < BL_EPS8)
         return;
     
     // NOTE: hard coded 128
@@ -1229,9 +1229,9 @@ SparseVolRender::DecimateVol(deque<vector<Point> > *slices)
         const SparseVolRender::Point &p = points[i];
         
         // Get the point normalized coordinates in the grid
-#define EPS 1e-15
+        //#define EPS 1e-15
         BL_FLOAT normX = 0.0;
-        if (bboxSizeX > EPS)
+        if (bboxSizeX > BL_EPS)
         {
             normX = (p.mX - bboxMin[0])/bboxSizeX;
             
@@ -1243,7 +1243,7 @@ SparseVolRender::DecimateVol(deque<vector<Point> > *slices)
         }
         
         BL_FLOAT normY = 0.0;
-        if (bboxSizeY > EPS)
+        if (bboxSizeY > BL_EPS)
         {
             normY = (p.mY - bboxMin[1])/bboxSizeY;
             
@@ -1254,7 +1254,7 @@ SparseVolRender::DecimateVol(deque<vector<Point> > *slices)
         }
         
         BL_FLOAT normZ = 0.0;
-        if (bboxSizeZ > EPS)
+        if (bboxSizeZ > BL_EPS)
         {
             normZ = (p.mZ - bboxMin[2])/bboxSizeZ;
             
@@ -1385,7 +1385,7 @@ SparseVolRender::VoxelToPoint(const vector<SparseVolRender::Point> &voxel,
         const SparseVolRender::Point &p0 = voxel[l];
         
         BL_FLOAT weight = 0.0;
-        if (sumWeights > EPS)
+        if (sumWeights > BL_EPS)
             weight = p0.mWeight/sumWeights;
         
         newPoint->mX += p0.mX*weight;
@@ -1510,7 +1510,7 @@ SparseVolRender::VoxelToPoint2(const vector<SparseVolRender::Point> &voxel,
         const SparseVolRender::Point &p0 = voxel[l];
         
         //BL_FLOAT weight = 0.0;
-        //if (sumWeights > EPS)
+        //if (sumWeights > BL_EPS)
         //    weight = p0.mWeight/sumWeights;
         
         newPoint->mX += p0.mX*ratio; //*weight;
@@ -1626,8 +1626,8 @@ SparseVolRender::ProjectPoints(deque<vector<Point> > *slices, int width, int hei
             BL_FLOAT z = v4.z;
             BL_FLOAT w = v4.w;
         
-#define EPS 1e-8
-            if (std::fabs(w) > EPS)
+            //#define EPS 1e-8
+            if (std::fabs(w) > BL_EPS8)
             {
                 // Optim
                 BL_FLOAT wInv = 1.0/w;
@@ -2156,9 +2156,9 @@ SparseVolRender::PointsToPixels(const vector<Point> &points,
         // 1 - Find the grid cell
         
         // Get the point normalized coordinates in the grid
-#define EPS 1e-15
+        //#define EPS 1e-15
         BL_FLOAT normX = 0.0;
-        if (bboxWidth > EPS)
+        if (bboxWidth > BL_EPS)
         {
             normX = (p.mX - bboxMin[0])/bboxWidth;
             
@@ -2170,7 +2170,7 @@ SparseVolRender::PointsToPixels(const vector<Point> &points,
         }
         
         BL_FLOAT normY = 0.0;
-        if (bboxHeight > EPS)
+        if (bboxHeight > BL_EPS)
         {
             normY = (p.mY - bboxMin[1])/bboxHeight;
             
@@ -2247,9 +2247,9 @@ SparseVolRender::PointsToPixelsSplat(const vector<Point> &points,
         // 1 - Find the grid cell
         
         // Get the point normalized coordinates in the grid
-#define EPS 1e-15
+        //#define EPS 1e-15
         BL_FLOAT normX = 0.0;
-        if (bboxWidth > EPS)
+        if (bboxWidth > BL_EPS)
         {
             normX = (p.mX - bboxMin[0])/bboxWidth;
             
@@ -2261,7 +2261,7 @@ SparseVolRender::PointsToPixelsSplat(const vector<Point> &points,
         }
         
         BL_FLOAT normY = 0.0;
-        if (bboxHeight > EPS)
+        if (bboxHeight > BL_EPS)
         {
             normY = (p.mY - bboxMin[1])/bboxHeight;
             

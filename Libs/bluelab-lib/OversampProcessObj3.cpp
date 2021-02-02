@@ -52,7 +52,7 @@ OversampProcessObj3::OversampProcessObj3(int oversampling, BL_FLOAT sampleRate,
     
     if (filterNyquist)
     {
-#if USE_RBJ_FILTER
+#if OVERSAMP_USE_RBJ_FILTER
         mFilter = new FilterRBJNX(NYQUIST_FILTER_ORDER,
                                  FILTER_TYPE_LOWPASS,
                                  sampleRate*oversampling,
@@ -108,7 +108,7 @@ OversampProcessObj3::Reset(BL_FLOAT sampleRate, int blockSize)
     
     if (mFilter != NULL)
     {
-#if USE_RBJ_FILTER
+#if OVERSAMP_USE_RBJ_FILTER
         mFilter->SetSampleRate(sampleRate*mOversampling);
         mFilter->SetCutoffFreq(sampleRate*NYQUIST_COEFF);
 #endif

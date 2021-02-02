@@ -77,12 +77,20 @@ __COLOR__[1] = ((float)__G__)/255.0; \
 __COLOR__[2] = ((float)__B__)/255.0; \
 __COLOR__[3] = ((float)__A__)/255.0;
 
-#define BUFFER_SIZE 2048
+//#define BUFFER_SIZE 2048
 
 #define UTILS_VALUE_UNDEFINED -1e16
 
 #define BL_EPS 1e-15
+#define BL_EPS3 1e-3
+#define BL_EPS6 1e-6
+#define BL_EPS8 1e-8
+#define BL_EPS10 1e-10
+
 #define BL_INF 1e15
+#define BL_INF8 1e8
+#define BL_INFI 1e9
+
 
 #define Y_LOG_SCALE_FACTOR 3.5
 

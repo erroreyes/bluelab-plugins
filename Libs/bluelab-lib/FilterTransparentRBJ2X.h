@@ -23,7 +23,7 @@ using namespace std;
 // (prefer using 1 single all pass filter, not chained)
 
 //#define FILTER_2X_CLASS FilterRBJ2X
-#define FILTER_2X_CLASS FilterRBJ2X2
+#define TRANSPARENT_RBJ_2X_FILTER_2X_CLASS FilterRBJ2X2
 
 // Low pass and high pass filters summed
 // in order to have only the delay

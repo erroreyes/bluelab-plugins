@@ -109,9 +109,9 @@ TestFilter::~TestFilter()
 void
 TestFilter::Test0()
 {
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE0 1024
     WDL_TypedBuf<BL_FLOAT> impulse;
-    impulse.Resize(BUFFER_SIZE*2);
+    impulse.Resize(BUFFER_SIZE0*2);
     
     GenImpulse(&impulse);
     
@@ -137,8 +137,9 @@ TestFilter::Test0()
 void
 TestFilter::Test1()
 {
+#define BUFFER_SIZE1 BUFFER_SIZE0
     WDL_TypedBuf<BL_FLOAT> whiteNoise;
-    whiteNoise.Resize(BUFFER_SIZE*2);
+    whiteNoise.Resize(BUFFER_SIZE1*2);
     
     BLUtils::GenNoise(&whiteNoise);
     BLUtils::MultValues(&whiteNoise, (BL_FLOAT)2.0);
@@ -171,9 +172,9 @@ TestFilter::Test1()
 void
 TestFilter::Test2()
 {
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE2 1024
     WDL_TypedBuf<BL_FLOAT> impulse;
-    impulse.Resize(BUFFER_SIZE*2);
+    impulse.Resize(BUFFER_SIZE2*2);
     
     GenImpulse(&impulse);
     
@@ -199,9 +200,9 @@ TestFilter::Test2()
 void
 TestFilter::Test3()
 {
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE3 1024
     WDL_TypedBuf<BL_FLOAT> impulse;
-    impulse.Resize(BUFFER_SIZE*2);
+    impulse.Resize(BUFFER_SIZE3*2);
     
     GenImpulse(&impulse);
     
@@ -227,9 +228,9 @@ TestFilter::Test3()
 void
 TestFilter::Test4()
 {
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE4 1024
     WDL_TypedBuf<BL_FLOAT> impulse;
-    impulse.Resize(BUFFER_SIZE*2);
+    impulse.Resize(BUFFER_SIZE4*2);
     
     GenImpulse(&impulse);
     
@@ -263,9 +264,9 @@ TestFilter::Test4()
 void
 TestFilter::Test5()
 {
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE5 1024
     WDL_TypedBuf<BL_FLOAT> impulse;
-    impulse.Resize(BUFFER_SIZE*2);
+    impulse.Resize(BUFFER_SIZE5*2);
     
     GenImpulse(&impulse);
     
@@ -287,9 +288,9 @@ TestFilter::Test5()
 void
 TestFilter::Test6()
 {
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE6 1024
     WDL_TypedBuf<BL_FLOAT> impulse;
-    impulse.Resize(BUFFER_SIZE*2);
+    impulse.Resize(BUFFER_SIZE6*2);
     
     GenImpulse(&impulse);
     

@@ -30,7 +30,7 @@
 #define TEST_DIST_DB 0
 
 #if 0
-TEST: discard points with a too low intensity => doesn't work well
+TEST: discard points with a too low intensity => doesn t work well
 #endif
 
 StereoVizVolRender::StereoVizVolRender(GraphControl11 *graphControl)

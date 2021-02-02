@@ -713,8 +713,8 @@ RayCaster2::ProjectPoints(vector<Point> *points, int width, int height)
         
         glm::vec4 v4 = modelProjMat*v;
         
-#define EPS 1e-8
-        if ((v4.w < -EPS) || (v4.w > EPS))
+        //#define EPS 1e-8
+        if ((v4.w < -BL_EPS8) || (v4.w > BL_EPS8))
         {
             // Optim
             RC_FLOAT wInv = 1.0/v4.w;
@@ -776,8 +776,8 @@ RayCaster2::ProjectPoints(const vector<Point> &points,
         
         glm::vec4 v4 = modelProjMat*v;
         
-#define EPS 1e-8
-        if ((v4.w < -EPS) || (v4.w > EPS))
+        //#define EPS 1e-8
+        if ((v4.w < -BL_EPS8) || (v4.w > BL_EPS8))
         {
             // Optim
             RC_FLOAT wInv = 1.0/v4.w;
@@ -846,8 +846,8 @@ RayCaster2::ProjectPoints(const vector<Point> &points,
         glm_vec4 v4 = glm_mat4_mul_vec4((glm_vec4 *)m0, v0);
         float *v4f = (float *)&v4;
         
-#define EPS 1e-8
-        if ((v4f[3] < -EPS) || (v4f[3] > EPS))
+        //#define EPS 1e-8
+        if ((v4f[3] < -BL_EPS8) || (v4f[3] > BL_EPS8))
         {
             // Optim
             RC_FLOAT wInv = 1.0/v4f[3];
@@ -1663,7 +1663,7 @@ RayCaster2::GetCurrentSlice()
 void
 RayCaster2::SelectionToVolume()
 {
-#define EPS 1e-15
+    //#define EPS 1e-15
     
     RC_FLOAT screenSelection[4];
     ScreenToAlignedVolume(mScreenSelection, screenSelection);
@@ -1671,7 +1671,7 @@ RayCaster2::SelectionToVolume()
     // 
     ReorderScreenSelection(screenSelection);
     
-    if ((std::fabs(mCamAngle0) < EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((std::fabs(mCamAngle0) < BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Front face
     {
         RC_FLOAT zMin = 0.5;
@@ -1694,7 +1694,7 @@ RayCaster2::SelectionToVolume()
         mVolumeSelection[7] = SelectionPoint(screenSelection[0], screenSelection[3], zMax);
     }
     
-    if ((mCamAngle0 > EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((mCamAngle0 > BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Left face
     {
         RC_FLOAT xMin = -0.5;
@@ -1717,7 +1717,7 @@ RayCaster2::SelectionToVolume()
         mVolumeSelection[7] = SelectionPoint(xMin, screenSelection[3], screenSelection[0]);
     }
     
-    if ((mCamAngle0 < -EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((mCamAngle0 < -BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Right face
     {
         RC_FLOAT xMin = -0.5;
@@ -1740,7 +1740,7 @@ RayCaster2::SelectionToVolume()
         mVolumeSelection[7] = SelectionPoint(xMin, screenSelection[3], screenSelection[0]);
     }
     
-    if ((std::fabs(mCamAngle0) < EPS) && (mCamAngle1 > EPS))
+    if ((std::fabs(mCamAngle0) < BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face front
     {
         RC_FLOAT yMin = 0.0;
@@ -1763,7 +1763,7 @@ RayCaster2::SelectionToVolume()
         mVolumeSelection[7] = SelectionPoint(screenSelection[0], yMax, screenSelection[1]);
     }
     
-    if ((mCamAngle0 > EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 > BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face left
     {
         RC_FLOAT yMin = 0.0;
@@ -1786,7 +1786,7 @@ RayCaster2::SelectionToVolume()
         mVolumeSelection[7] = SelectionPoint(1.0 - screenSelection[3], yMax, screenSelection[0]);
     }
     
-    if ((mCamAngle0 < -EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 < -BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face right
     {
         RC_FLOAT yMin = 0.0;
@@ -1813,11 +1813,11 @@ RayCaster2::SelectionToVolume()
 void
 RayCaster2::VolumeToSelection()
 {
-#define EPS 1e-15
+    //#define EPS 1e-15
     
     RC_FLOAT screenSelection[4];
     
-    if ((std::fabs(mCamAngle0) < EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((std::fabs(mCamAngle0) < BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Front face
     {
         screenSelection[0] = mVolumeSelection[0].mX;
@@ -1827,7 +1827,7 @@ RayCaster2::VolumeToSelection()
         screenSelection[3] = mVolumeSelection[2].mY;
     }
     
-    if ((mCamAngle0 > EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((mCamAngle0 > BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Left face
     {
         screenSelection[0] = mVolumeSelection[4].mZ;
@@ -1837,7 +1837,7 @@ RayCaster2::VolumeToSelection()
         screenSelection[3] = mVolumeSelection[3].mY;
     }
     
-    if ((mCamAngle0 < -EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((mCamAngle0 < -BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Right face
     {
         screenSelection[0] = mVolumeSelection[1].mZ;
@@ -1847,7 +1847,7 @@ RayCaster2::VolumeToSelection()
         screenSelection[3] = mVolumeSelection[6].mY;
     }
     
-    if ((std::fabs(mCamAngle0) < EPS) && (mCamAngle1 > EPS))
+    if ((std::fabs(mCamAngle0) < BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face front
     {
         screenSelection[0] = mVolumeSelection[3].mX;
@@ -1857,7 +1857,7 @@ RayCaster2::VolumeToSelection()
         screenSelection[3] = mVolumeSelection[6].mZ;
     }
     
-    if ((mCamAngle0 < -EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 < -BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face left
     {
         screenSelection[0] = 1.0 - mVolumeSelection[7].mZ;
@@ -1867,7 +1867,7 @@ RayCaster2::VolumeToSelection()
         screenSelection[3] = mVolumeSelection[2].mX;
     }
     
-    if ((mCamAngle0 > EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 > BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face right
     {
         screenSelection[0] = mVolumeSelection[2].mZ;
@@ -1899,7 +1899,7 @@ void
 RayCaster2::ScreenToAlignedVolume(const RC_FLOAT screenSelectionNorm[4],
                                  RC_FLOAT alignedVolumeSelection[4])
 {
-  if ((std::fabs(mCamAngle0) < EPS) && (std::fabs(mCamAngle1) < EPS))
+  if ((std::fabs(mCamAngle0) < BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Front face
     {
         RC_FLOAT corner[3] = { mVolumeSelection[0].mX, mVolumeSelection[0].mY, mVolumeSelection[0].mZ };
@@ -1925,7 +1925,7 @@ RayCaster2::ScreenToAlignedVolume(const RC_FLOAT screenSelectionNorm[4],
         alignedVolumeSelection[3] = p3_1[1];
     }
     
-  if ((mCamAngle0 > EPS) && (std::fabs(mCamAngle1) < EPS))
+  if ((mCamAngle0 > BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Left face
     {
         RC_FLOAT corner[3] = { mVolumeSelection[4].mX, mVolumeSelection[4].mY, mVolumeSelection[4].mZ };
@@ -1951,7 +1951,7 @@ RayCaster2::ScreenToAlignedVolume(const RC_FLOAT screenSelectionNorm[4],
         alignedVolumeSelection[3] = p3_1[1];
     }
     
-    if ((mCamAngle0 < -EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((mCamAngle0 < -BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Right face
     {
         RC_FLOAT corner[3] = { mVolumeSelection[1].mX, mVolumeSelection[1].mY, mVolumeSelection[1].mZ };
@@ -1977,7 +1977,7 @@ RayCaster2::ScreenToAlignedVolume(const RC_FLOAT screenSelectionNorm[4],
         alignedVolumeSelection[3] = p3_1[1];
     }
     
-    if ((std::fabs(mCamAngle0) < EPS) && (mCamAngle1 > EPS))
+    if ((std::fabs(mCamAngle0) < BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face front
     {
         RC_FLOAT corner[3] = { mVolumeSelection[3].mX, mVolumeSelection[3].mY, mVolumeSelection[3].mZ };
@@ -2003,7 +2003,7 @@ RayCaster2::ScreenToAlignedVolume(const RC_FLOAT screenSelectionNorm[4],
         alignedVolumeSelection[3] = p3_1[2];
     }
     
-    if ((mCamAngle0 < -EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 < -BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face left (right on the view)
     {
         RC_FLOAT corner[3] = { mVolumeSelection[7].mX, mVolumeSelection[7].mY, mVolumeSelection[7].mZ };
@@ -2029,7 +2029,7 @@ RayCaster2::ScreenToAlignedVolume(const RC_FLOAT screenSelectionNorm[4],
         alignedVolumeSelection[3] = p3_1[0];
     }
     
-    if ((mCamAngle0 > EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 > BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face right (left on the view)
     {
         RC_FLOAT corner[3] = { mVolumeSelection[2].mX, mVolumeSelection[2].mY, mVolumeSelection[2].mZ };
@@ -2063,7 +2063,7 @@ RayCaster2::AlignedVolumeToScreen(const RC_FLOAT alignedVolumeSelection[4],
 {
     RC_FLOAT projFace[2][3];
     
-    if ((std::fabs(mCamAngle0) < EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((std::fabs(mCamAngle0) < BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Front face
     {
         RC_FLOAT face[2][3] = { { mVolumeSelection[0].mX, mVolumeSelection[0].mY, mVolumeSelection[0].mZ },
@@ -2073,7 +2073,7 @@ RayCaster2::AlignedVolumeToScreen(const RC_FLOAT alignedVolumeSelection[4],
         ProjectPoint(projFace[1], face[1], mViewWidth, mViewHeight);
     }
     
-    if ((mCamAngle0 > EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((mCamAngle0 > BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Left face
     {
         RC_FLOAT face[2][3] = { { mVolumeSelection[4].mX, mVolumeSelection[4].mY, mVolumeSelection[4].mZ },
@@ -2084,7 +2084,7 @@ RayCaster2::AlignedVolumeToScreen(const RC_FLOAT alignedVolumeSelection[4],
         ProjectPoint(projFace[1], face[1], mViewWidth, mViewHeight);
     }
     
-    if ((mCamAngle0 < -EPS) && (std::fabs(mCamAngle1) < EPS))
+    if ((mCamAngle0 < -BL_EPS) && (std::fabs(mCamAngle1) < BL_EPS))
         // Right face
     {
         RC_FLOAT face[2][3] = { { mVolumeSelection[1].mX, mVolumeSelection[1].mY, mVolumeSelection[1].mZ },
@@ -2095,7 +2095,7 @@ RayCaster2::AlignedVolumeToScreen(const RC_FLOAT alignedVolumeSelection[4],
         ProjectPoint(projFace[1], face[1], mViewWidth, mViewHeight);
     }
     
-    if ((std::fabs(mCamAngle0) < EPS) && (mCamAngle1 > EPS))
+    if ((std::fabs(mCamAngle0) < BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face front
     {
         RC_FLOAT face[2][3] = { { mVolumeSelection[3].mX, mVolumeSelection[3].mY, mVolumeSelection[3].mZ },
@@ -2105,7 +2105,7 @@ RayCaster2::AlignedVolumeToScreen(const RC_FLOAT alignedVolumeSelection[4],
         ProjectPoint(projFace[1], face[1], mViewWidth, mViewHeight);
     }
     
-    if ((mCamAngle0 < -EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 < -BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face left
     {
         RC_FLOAT face[2][3] = { { mVolumeSelection[7].mX,
@@ -2120,7 +2120,7 @@ RayCaster2::AlignedVolumeToScreen(const RC_FLOAT alignedVolumeSelection[4],
         ProjectPoint(projFace[1], face[1], mViewWidth, mViewHeight);
     }
     
-    if ((mCamAngle0 > EPS) && (mCamAngle1 > EPS))
+    if ((mCamAngle0 > BL_EPS) && (mCamAngle1 > BL_EPS))
         // Top face right
     {
         RC_FLOAT face[2][3] = { { mVolumeSelection[2].mX,
@@ -2285,8 +2285,8 @@ RayCaster2::ProjectPoint(RC_FLOAT projP[3], const RC_FLOAT p[3], int width, int 
     RC_FLOAT z = v4.z;
     RC_FLOAT w = v4.w;
     
-#define EPS 1e-8
-    if (std::fabs(w) > EPS)
+    //#define EPS 1e-8
+    if (std::fabs(w) > BL_EPS8)
     {
         // Optim
         RC_FLOAT wInv = 1.0/w;
@@ -3646,7 +3646,7 @@ RayCaster2::BlendWBOIT(int rgba[4], vector<Point> &points0)
     rgba[3] = 0;
     
     // Find min Z
-    RC_FLOAT minZ = INF;
+    RC_FLOAT minZ = BL_INF;
     for (int k = 0; k < points0.size(); k++)
     {
         const Point &p = points0[k];
@@ -3671,7 +3671,7 @@ RayCaster2::BlendWBOIT(int rgba[4], vector<Point> &points0)
         const Point &p = points0[k];
      
         RC_FLOAT normZ = 0.0;
-        if (maxZ - minZ > EPS)
+        if (maxZ - minZ > BL_EPS) // was 1e-8
             normZ = (p.mZ - minZ)/(maxZ - minZ);
         normZ = BLUtils::LogScaleNorm2(normZ, (RC_FLOAT)128.0);
         normZ = 1.0 - normZ;
@@ -3704,7 +3704,7 @@ RayCaster2::BlendWBOIT(int rgba[4], vector<Point> &points0)
         const Point &p = points0[k];
         
         RC_FLOAT normZ = 0.0;
-        if (maxZ - minZ > EPS)
+        if (maxZ - minZ > BL_EPS)
             normZ = (p.mZ - minZ)/(maxZ - minZ);
         normZ = BLUtils::LogScaleNorm2(normZ, (RC_FLOAT)128.0);
         normZ = 1.0 - normZ;
@@ -5270,8 +5270,8 @@ RayCaster2::ComputeCameraPosition(RC_FLOAT camPos[3], bool invertModel)
         
         glm::vec4 v4 = modelMat*pos;
         
-#define EPS 1e-8
-        if ((v4.w < -EPS) || (v4.w > EPS))
+        //#define EPS 1e-8
+        if ((v4.w < -BL_EPS8) || (v4.w > BL_EPS8))
         {
             // Optim
             RC_FLOAT wInv = 1.0/v4.w;

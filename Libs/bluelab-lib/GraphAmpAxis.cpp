@@ -94,9 +94,9 @@ GraphAmpAxis::UpdateDensity20dB()
     if (mGraphAxis == NULL)
         return;
     
-#define NUM_AXIS_DATA 11
-    char *AXIS_DATA [NUM_AXIS_DATA][2];
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+#define NUM_AXIS_DATA_20DB 11
+    char *AXIS_DATA [NUM_AXIS_DATA_20DB][2];
+    for (int i = 0; i < NUM_AXIS_DATA_20DB; i++)
     {
         AXIS_DATA[i][0] = (char *)malloc(255);
         AXIS_DATA[i][1] = (char *)malloc(255);
@@ -114,22 +114,22 @@ GraphAmpAxis::UpdateDensity20dB()
     sprintf(AXIS_DATA[9][1], "20dB");
     sprintf(AXIS_DATA[10][1], "40dB"); // For EQHack
     
-    BL_FLOAT amps[NUM_AXIS_DATA] =
+    BL_FLOAT amps[NUM_AXIS_DATA_20DB] =
                     { -160.0, -140.0, -120.0, -100.0, -80.0,
                       -60.0, -40.0, -20.0, 0.0, 20.0, 40.0 };
 
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+    for (int i = 0; i < NUM_AXIS_DATA_20DB; i++)
     {
         // Do not normalize here, set the values as they are!
         if ((amps[i] < mMinDB) || (amps[i] > mMaxDB))
-            sprintf(AXIS_DATA[i][1], "");
+            sprintf(AXIS_DATA[i][1], " ");
         
         sprintf(AXIS_DATA[i][0], "%g", amps[i]);
     }
     
-    mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA);
+    mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA_20DB);
     
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+    for (int i = 0; i < NUM_AXIS_DATA_20DB; i++)
     {
         free(AXIS_DATA[i][0]);
         free(AXIS_DATA[i][1]);
@@ -143,9 +143,9 @@ GraphAmpAxis::UpdateDensity10dB()
     if (mGraphAxis == NULL)
         return;
     
-#define NUM_AXIS_DATA 21
-    char *AXIS_DATA [NUM_AXIS_DATA][2];
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+#define NUM_AXIS_DATA_10DB 21
+    char *AXIS_DATA [NUM_AXIS_DATA_10DB][2];
+    for (int i = 0; i < NUM_AXIS_DATA_10DB; i++)
     {
         AXIS_DATA[i][0] = (char *)malloc(255);
         AXIS_DATA[i][1] = (char *)malloc(255);
@@ -173,24 +173,24 @@ GraphAmpAxis::UpdateDensity10dB()
     sprintf(AXIS_DATA[19][1], "30dB");
     sprintf(AXIS_DATA[20][1], "40dB"); // For EQHack
     
-    BL_FLOAT amps[NUM_AXIS_DATA] =
+    BL_FLOAT amps[NUM_AXIS_DATA_10DB] =
                     { -160.0, -150.0, -140.0, -130.0, -120.0,
                       -110.0, -100.0, -90.0, -80.0, -70.0, -60.0,
                       -50.0, -40.0, -30.0, -20.0, -10.0,
                         0.0, 10.0, 20.0, 30.0, 40.0 };
     
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+    for (int i = 0; i < NUM_AXIS_DATA_10DB; i++)
     {
         // Do not normalize here, set the values as they are!
         if ((amps[i] < mMinDB) || (amps[i] > mMaxDB))
-            sprintf(AXIS_DATA[i][1], "");
+            sprintf(AXIS_DATA[i][1], " ");
         
         sprintf(AXIS_DATA[i][0], "%g", amps[i]);
     }
     
-    mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA);
+    mGraphAxis->SetData(AXIS_DATA, NUM_AXIS_DATA_10DB);
     
-    for (int i = 0; i < NUM_AXIS_DATA; i++)
+    for (int i = 0; i < NUM_AXIS_DATA_10DB; i++)
     {
         free(AXIS_DATA[i][0]);
         free(AXIS_DATA[i][1]);

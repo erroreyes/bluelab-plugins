@@ -22,7 +22,7 @@
 
 // Default value, will be modified in FastRTConvolver
 // depending on host buffer size
-#define BUFFER_SIZE 512
+#define PSO2_BUFFER_SIZE 512
 
 // For 44100Hz
 #define IR_SIZE 2048
@@ -56,10 +56,11 @@ PseudoStereoObj2::PseudoStereoObj2(BL_FLOAT sampleRate, BL_FLOAT width)
     WDL_TypedBuf<BL_FLOAT> ir;
     GenerateIR(&ir);
     
-    mConvolverL = new FastRTConvolver3(BUFFER_SIZE, sampleRate, ir);
-    mConvolverR = new FastRTConvolver3(BUFFER_SIZE, sampleRate, ir, FastRTConvolver3::BYPASS);
+    mConvolverL = new FastRTConvolver3(PSO2_BUFFER_SIZE, sampleRate, ir);
+    mConvolverR = new FastRTConvolver3(PSO2_BUFFER_SIZE, sampleRate, ir,
+                                       FastRTConvolver3::BYPASS);
     
-    //int blockSize = BUFFER_SIZE;
+    //int blockSize = PSO2_BUFFER_SIZE;
     //mConvolver->Reset(blockSize);
     
 #if USE_DELAY
@@ -196,7 +197,8 @@ PseudoStereoObj2::GenerateIR(WDL_TypedBuf<BL_FLOAT> *ir)
     // Use a random number class
     // So we always have the same seed, without changing the system seed
     // (so the result sound will be always the same)
-    unsigned int seedBase = 2345677898907;
+    //unsigned int seedBase = 2345677898907;
+    unsigned int seedBase = 234567789;
     RandomSequenceOfUnique rnd(seedBase, seedBase + 1);
     
     // Generate the random number vector

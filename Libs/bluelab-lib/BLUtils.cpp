@@ -7656,9 +7656,7 @@ template <typename FLOAT_TYPE>
 void
 BLUtils::UnapplyWindow(WDL_TypedBuf<FLOAT_TYPE> *values, const WDL_TypedBuf<FLOAT_TYPE> &window,
                      int boundSize)
-{
-#define EPS 1e-6
-    
+{    
     if (values->GetSize() != window.GetSize())
         return;
     
@@ -7676,7 +7674,7 @@ BLUtils::UnapplyWindow(WDL_TypedBuf<FLOAT_TYPE> *values, const WDL_TypedBuf<FLOA
         FLOAT_TYPE val = valuesData[i];
         FLOAT_TYPE w = windowData[i];
         
-        if (w > EPS)
+        if (w > BL_EPS6)
         {
             val /= w;
             valuesData[i] = val;
@@ -9420,14 +9418,12 @@ template double BLUtils::FindNearestHarmonic(double value, double refValue);
 template <typename FLOAT_TYPE>
 FLOAT_TYPE
 BLUtils::gcd(FLOAT_TYPE a, FLOAT_TYPE b)
-{
-#define EPS 0.001
-    
+{    
     if (a < b)
         return gcd(b, a);
     
     // base case
-    if (std::fabs(b) < EPS)
+    if (std::fabs(b) < BL_EPS3)
         return a;
     
     else

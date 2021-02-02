@@ -19,11 +19,6 @@
 // See: http://www.math-info.univ-paris5.fr/~aleclair/papers/gti_ipol.pdf
 // and: http://www.ipol.im/pub/art/2017/198/
 
-
-//#define M_PI 3.141592653589793
-
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
 GtiInpaint::GtiInpaint(int w, int h)
 {
     width = w;

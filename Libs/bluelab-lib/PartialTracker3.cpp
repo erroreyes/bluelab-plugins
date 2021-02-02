@@ -153,7 +153,7 @@ unsigned long PartialTracker3::Partial::mCurrentId = 0;
 
 
 PartialTracker3::Partial::Partial()
-#if PREDICTIVE
+#if PT3_PREDICTIVE
 : mKf(KF_E_MEA, KF_E_EST, KF_Q)
 #endif
 {
@@ -176,14 +176,14 @@ PartialTracker3::Partial::Partial()
     
     mCookie = 0.0;
     
-#if PREDICTIVE
+#if PT3_PREDICTIVE
     mPredictedFreq = 0.0;
 #endif
 }
 
     
 PartialTracker3::Partial::Partial(const Partial &other)
-#if PREDICTIVE
+#if PT3_PREDICTIVE
 : mKf(other.mKf)
 #endif
 {
@@ -206,7 +206,7 @@ PartialTracker3::Partial::Partial(const Partial &other)
     
     mCookie = other.mCookie;
     
-#if PREDICTIVE
+#if PT3_PREDICTIVE
     mPredictedFreq = other.mPredictedFreq;
 #endif
 }
@@ -1288,7 +1288,7 @@ PartialTracker3::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     
                     p.mFreq = peakFreq;
 
-#if PREDICTIVE
+#if PT3_PREDICTIVE
                     // TEST SUNDAY
                     // Update the estimate with the first value
                     //p.mKf.updateEstimate(p.mFreq);
@@ -1525,7 +1525,7 @@ PartialTracker3::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                     
                     p.mFreq = peakFreq;
                     
-#if PREDICTIVE
+#if PT3_PREDICTIVE
                     // TEST SUNDAY
                     // Update the estimate with the first value
                     //p.mKf.updateEstimate(p.mFreq);
@@ -1737,7 +1737,7 @@ PartialTracker3::GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns,
             res.mAmpDB = maxAmpDB;
             
             // TEST SUNDAY
-#if PREDICTIVE
+#if PT3_PREDICTIVE
             //res.mKf.updateEstimate(res.mFreq);
             res.mKf.initEstimate(res.mFreq);
             res.mPredictedFreq = res.mFreq;
@@ -1956,7 +1956,7 @@ PartialTracker3::GlueTwinPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
             res.mAmpDB = maxAmpDB;
             
             // TEST SUNDAY
-#if PREDICTIVE
+#if PT3_PREDICTIVE
             //res.mKf.updateEstimate(res.mFreq);
             res.mKf.initEstimate(res.mFreq); //
             res.mPredictedFreq = res.mFreq;
@@ -2049,7 +2049,7 @@ PartialTracker3::GlueTwinPartials(vector<Partial> *partials)
             res.mAmpDB = maxAmpDB;
             
             // TEST SUNDAY
-#if PREDICTIVE
+#if PT3_PREDICTIVE
             //res.mKf.updateEstimate(res.mFreq);
             res.mKf.initEstimate(res.mFreq);
             res.mPredictedFreq = res.mFreq;
@@ -2615,7 +2615,7 @@ PartialTracker3::FilterPartials(vector<Partial> *result)
                 
                 // TEST SUNDAY
                 // Good: extrapolate the zombies
-#if PREDICTIVE
+#if PT3_PREDICTIVE
                 newPartial.mPredictedFreq =
                     newPartial.mKf.updateEstimate(newPartial.mFreq);
 #endif
@@ -2632,7 +2632,7 @@ PartialTracker3::FilterPartials(vector<Partial> *result)
   
                 // TEST SUNDAY
                 // Good: extrapolate the zombies
-#if PREDICTIVE
+#if PT3_PREDICTIVE
                 newPartial.mPredictedFreq =
                     newPartial.mKf.updateEstimate(newPartial.mFreq);
 #endif
@@ -2909,7 +2909,7 @@ PartialTracker3::AssociatePartials(const vector<PartialTracker3::Partial> &prevP
                 // Already assigned
                 continue;
             
-#if !PREDICTIVE
+#if !PT3_PREDICTIVE
             BL_FLOAT diffFreq = std::fabs(prevPartial.mFreq - currentPartial.mFreq);
 #else
             BL_FLOAT diffFreq = std::fabs(prevPartial.mPredictedFreq - currentPartial.mFreq);
@@ -2932,7 +2932,7 @@ PartialTracker3::AssociatePartials(const vector<PartialTracker3::Partial> &prevP
                 
                 currentPartial.mAge = prevPartial.mAge + 1;
             
-#if PREDICTIVE
+#if PT3_PREDICTIVE
                 // mFirstTimePredict ?
                 currentPartial.mKf = prevPartial.mKf;
                 currentPartial.mPredictedFreq =

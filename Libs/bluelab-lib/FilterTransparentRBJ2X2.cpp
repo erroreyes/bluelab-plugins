@@ -20,8 +20,8 @@ FilterTransparentRBJ2X2::FilterTransparentRBJ2X2(BL_FLOAT sampleRate,
     mSampleRate = sampleRate;
     mCutoffFreq = cutoffFreq;
     
-    mFilter = new FILTER_2X_CLASS(FILTER_TYPE_ALLPASS,
-                                  sampleRate, cutoffFreq);
+    mFilter = new TRANSPARENT_RBJ_2X2_FILTER_2X_CLASS(FILTER_TYPE_ALLPASS,
+                                                      sampleRate, cutoffFreq);
 }
 
 FilterTransparentRBJ2X2::FilterTransparentRBJ2X2(const FilterTransparentRBJ2X2 &other)
@@ -29,8 +29,8 @@ FilterTransparentRBJ2X2::FilterTransparentRBJ2X2(const FilterTransparentRBJ2X2 &
     mSampleRate = other.mSampleRate;
     mCutoffFreq = other.mCutoffFreq;
     
-    mFilter = new FILTER_2X_CLASS(FILTER_TYPE_ALLPASS,
-                                  mSampleRate, mCutoffFreq);
+    mFilter = new TRANSPARENT_RBJ_2X2_FILTER_2X_CLASS(FILTER_TYPE_ALLPASS,
+                                                      mSampleRate, mCutoffFreq);
 }
 
 FilterTransparentRBJ2X2::~FilterTransparentRBJ2X2()

@@ -73,8 +73,8 @@ using namespace std;
 // "How much do we expect to our measurement vary"
 //
 // 200Hz (previously tested with 50Hz)
-#define KF_E_MEA 0.01 // 200.0Hz
-#define KF_E_EST KF_E_MEA
+#define PT5_KF_E_MEA 0.01 // 200.0Hz
+#define PT5_KF_E_EST PT5_KF_E_MEA
 
 // "usually a small number between 0.001 and 1"
 //
@@ -82,7 +82,7 @@ using namespace std;
 // If too high: predicted values go straight
 //
 // 0.01: "oohoo" => fails when "EEAAooaa"
-#define KF_Q 5.0 //2.0 // Was 1.0
+#define PT5_KF_Q 5.0 //2.0 // Was 1.0
 
 // Seems better without, not sure...
 #define USE_KALMAN_FOR_ASSOC 0 //1 //0
@@ -128,7 +128,7 @@ unsigned long PartialTracker5::Partial::mCurrentId = 0;
 
 
 PartialTracker5::Partial::Partial()
-: mKf(KF_E_MEA, KF_E_EST, KF_Q)
+: mKf(PT5_KF_E_MEA, PT5_KF_E_EST, PT5_KF_Q)
 {
     mPeakIndex = 0;
     mLeftIndex = 0;

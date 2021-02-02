@@ -46,13 +46,13 @@ RebalanceDumpFftObj::RebalanceDumpFftObj(int bufferSize)
     mMixCols.resize(REBALANCE_NUM_SPECTRO_COLS);
     for (int i = 0; i < mMixCols.size(); i++)
     {
-        BLUtils::ResizeFillZeros(&mMixCols[i], BUFFER_SIZE/2);
+        BLUtils::ResizeFillZeros(&mMixCols[i], REBALANCE_BUFFER_SIZE/2);
     }
     
     mSourceCols.resize(REBALANCE_NUM_SPECTRO_COLS);
     for (int i = 0; i < mSourceCols.size(); i++)
     {
-        BLUtils::ResizeFillZeros(&mSourceCols[i], BUFFER_SIZE/2);
+        BLUtils::ResizeFillZeros(&mSourceCols[i], REBALANCE_BUFFER_SIZE/2);
     }
 }
 

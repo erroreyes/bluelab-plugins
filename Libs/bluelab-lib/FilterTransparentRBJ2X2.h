@@ -23,7 +23,7 @@ using namespace std;
 
 // Seems to works well with a single all pass filter
 // (no need to chain 2 allpass filter)
-#define FILTER_2X_CLASS FilterRBJ1X
+#define TRANSPARENT_RBJ_2X2_FILTER_2X_CLASS FilterRBJ1X
 
 // FilterTransparentRBJ2X:
 // Low pass and high pass filters summed
@@ -60,7 +60,7 @@ protected:
     BL_FLOAT mSampleRate;
     BL_FLOAT mCutoffFreq;
     
-    FILTER_2X_CLASS *mFilter;
+    TRANSPARENT_RBJ_2X2_FILTER_2X_CLASS *mFilter;
 };
 
 #endif /* defined(__UST__BL_FLOATRBJFilter__) */

@@ -26,9 +26,9 @@ using namespace std;
 
 // With predictive, we have almost the same
 // results than without
-#define PREDICTIVE 0
+#define PT2_PREDICTIVE 0
 
-#if PREDICTIVE
+#if PT2_PREDICTIVE
 #include <SimpleKalmanFilter.h>
 
 // 200Hz
@@ -88,7 +88,7 @@ public:
         bool mWasAlive;
         long mZombieAge;
         
-#if PREDICTIVE
+#if PT2_PREDICTIVE
         SimpleKalmanFilter mKf;
         
         BL_FLOAT mPredictedFreq;

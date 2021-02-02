@@ -104,6 +104,8 @@ IDEA: group and smooth sources by location
 
 #define MAX_WIDTH_CHANGE_SIMPLE_ALGO 4.0
 
+#define STEREOWIDTH_BUFFER_SIZE 2048
+
 // Draw geometrical shapes, to clarify the running of the algorithm
 #if DEBUG_DRAWER_DISPLAY
 class DebugDrawer : public GraphCustomDrawer
@@ -890,14 +892,14 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
     
     // Avoid numerical imprecision when magns are very small and similar
     // (was noticed by abnormal L/R phase inversions)
-#define EPS 1e-8
+    //#define EPS 1e-8
     
     // See: https://dsp.stackexchange.com/questions/30736/how-to-calculate-an-azimuth-of-a-sound-source-in-stereo-signal
     // Thx :)
     //
         
 #if DEBUG_DRAWER_DISPLAY
-  if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < EPS)
+  if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < BL_EPS8)
     {
         mDebugDrawer->SetD(0.0);
         mDebugDrawer->SetA(0.0);
@@ -917,7 +919,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
     *sourceR = 0.0;
     *sourceTheta = 0.0;
     
-    if (freq < EPS)
+    if (freq < BL_EPS8)
         // Just in case
     {
         // Null frequency
@@ -930,7 +932,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
     const BL_FLOAT d = MICROPHONES_SEPARATION;
     
 #if DEBUG_DRAWER_DISPLAY
-    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < EPS)
+    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < BL_EPS8)
     {
         mDebugDrawer->SetD(d);
         
@@ -970,7 +972,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
 #endif
         
     // Test at least if we have sound !
-    if ((magnR < EPS) || (magnL < EPS))
+    if ((magnR < BL_EPS8) || (magnL < BL_EPS8))
         // No sound !
     {
         // Can legitimately set the result to 0
@@ -992,7 +994,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
     BL_FLOAT G = magnL/magnR;
     //BLDebug::AppendValue("G0.txt", G);
     
-    if (std::fabs(G - 1.0) < EPS)
+    if (std::fabs(G - 1.0) < BL_EPS8)
         // Similar magns: can't compute...
     {    
         // We will be in mono
@@ -1006,7 +1008,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
     
     // Distance to the right
     BL_FLOAT denomB = (1.0 - G);
-    if (std::fabs(denomB) < EPS)
+    if (std::fabs(denomB) < BL_EPS8)
         // Similar magns (previously already tested)
     {
         // We will be in mono
@@ -1021,7 +1023,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
 #endif
     
 #if DEBUG_DRAWER_DISPLAY
-    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < EPS)
+    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < BL_EPS8)
     {
         mDebugDrawer->SetB(b);
         
@@ -1040,7 +1042,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
 #endif
     
 #if DEBUG_DRAWER_DISPLAY
-    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < EPS)
+    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < BL_EPS8)
     {
         mDebugDrawer->SetA(a);
         
@@ -1064,7 +1066,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
     BL_FLOAT r = 0.5*std::sqrt(r2);
     
 #if DEBUG_DRAWER_DISPLAY
-    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < EPS)
+    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < BL_EPS8)
     {
         mDebugDrawer->SetR(r);
         mDebugDrawer->SetTheta(0.0);
@@ -1086,7 +1088,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
     // No solution: stop
     {
 #if DEBUG_DRAWER_DISPLAY
-      if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < EPS)
+      if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < BL_EPS8)
         {
             mDebugDrawer->SetFail(1);
             
@@ -1107,7 +1109,7 @@ StereoWidthProcess2::MagnPhasesToSourcePos(BL_FLOAT *sourceR, BL_FLOAT *sourceTh
 #endif
     
 #if DEBUG_DRAWER_DISPLAY
-    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < EPS)
+    if (std::fabs(freq - DEBUG_DRAWER_DISPLAY_FREQ) < BL_EPS8)
     {
         mDebugDrawer->SetTheta(theta);
         
@@ -1282,7 +1284,7 @@ StereoWidthProcess2::SourcePosToMagnPhases(BL_FLOAT sourceR, BL_FLOAT sourceThet
                                           BL_FLOAT freq,
                                           BL_FLOAT timeDelay /* unused ? */)
 {
-#define EPS 1e-15
+    //#define EPS 1e-15
     
 #if INVERT_ALGO
     bool invertFlag = (*ioMagnL > *ioMagnR);
@@ -1290,12 +1292,12 @@ StereoWidthProcess2::SourcePosToMagnPhases(BL_FLOAT sourceR, BL_FLOAT sourceThet
         sourceTheta = M_PI - sourceTheta;
 #endif
     
-    if (sourceR < EPS)
+    if (sourceR < BL_EPS)
     // The source position was not previously computed (so not usable)
     // Do not modify the signal !
         return false;
     
-    if (d < EPS)
+    if (d < BL_EPS)
         // The two mics are at the same position
         // => the signal should be mono !
     {        
@@ -1364,7 +1366,7 @@ StereoWidthProcess2::SourcePosToMagnPhases(BL_FLOAT sourceR, BL_FLOAT sourceThet
     // In all cases, take the abs of a
     a = std::fabs(a);
     
-    if (std::fabs(a + b) < EPS)
+    if (std::fabs(a + b) < BL_EPS)
     // Incorrect
         return false;
     
@@ -1372,7 +1374,7 @@ StereoWidthProcess2::SourcePosToMagnPhases(BL_FLOAT sourceR, BL_FLOAT sourceThet
     BL_FLOAT G = b/(a + b);
         
     BL_FLOAT denomT = G*c;
-    if (std::fabs(denomT) < EPS)
+    if (std::fabs(denomT) < BL_EPS)
     // One magn is very low
         return false;
     
@@ -1434,9 +1436,9 @@ StereoWidthProcess2::SourcePosToMagnPhases2(BL_FLOAT sourceR, BL_FLOAT sourceThe
     
     // Avoid numerical imprecision when magns are very small and similar
     // (was noticed by abnormal L/R phase inversions)
-#define EPS 1e-8
+    //#define EPS 1e-8
     
-    if (sourceR < EPS)
+    if (sourceR < BL_EPS8)
         // The source position was not previously computed (so not usable)
         // Do not modify the signal !
     {
@@ -1449,7 +1451,7 @@ StereoWidthProcess2::SourcePosToMagnPhases2(BL_FLOAT sourceR, BL_FLOAT sourceThe
         sourceTheta = M_PI - sourceTheta;
 #endif
     
-    if (d < EPS)
+    if (d < BL_EPS8)
         // The two mics are at the same position
         // => the signal should be mono !
     {
@@ -1526,7 +1528,7 @@ StereoWidthProcess2::SourcePosToMagnPhases2(BL_FLOAT sourceR, BL_FLOAT sourceThe
     BL_FLOAT timeDelay0 = a/c;
     
     BL_FLOAT denomG = (timeDelay0*c + b);
-    if (std::fabs(denomG) < EPS)
+    if (std::fabs(denomG) < BL_EPS8)
     {
         return false;
     }
@@ -1764,8 +1766,8 @@ StereoWidthProcess2::SecondOrderEqSolve(BL_FLOAT a, BL_FLOAT b, BL_FLOAT c, BL_F
         return 2;
     }
     
-#define EPS 1e-15
-    if (std::fabs(delta) < EPS)
+    //#define EPS 1e-15
+    if (std::fabs(delta) < BL_EPS)
     {
         res[0] = -b/(2.0*a);
         
@@ -1801,7 +1803,8 @@ StereoWidthProcess2::InitHRTF(IGraphics *pGraphics)
         for (int j = 0; j < 2; j++)
         {
 	  //mConvolvers[i][j] = new FftConvolver7(BUFFER_SIZE, true, false, false);
-	  mConvolvers[i][j] = new FftConvolver6(BUFFER_SIZE, true, false, false);
+	  mConvolvers[i][j] = new FftConvolver6(STEREOWIDTH_BUFFER_SIZE,
+                                            true, false, false);
             
             WDL_TypedBuf<BL_FLOAT> impulse;
             bool found = mHrtf->GetImpulseResponse(&impulse, elevation, azimuth, j);

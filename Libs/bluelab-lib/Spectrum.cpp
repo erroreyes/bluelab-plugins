@@ -8,7 +8,10 @@
 
 #include "Spectrum.h"
 
-#define MAX_PATH 512
+#ifndef MAX_PATH
+//#define MAX_PATH 512
+#define MAX_PATH 1024
+#endif
 
 Spectrum::Spectrum(int width)
 {

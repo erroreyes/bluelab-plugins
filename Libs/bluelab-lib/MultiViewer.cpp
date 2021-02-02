@@ -33,6 +33,7 @@
 
 #define Y_LOG_SCALE_FACTOR 3.5
 
+#define MULTI_VIEWER_BUFFER_SIZE 2048
 
 MultiViewer::MultiViewer(Plugin *plug, IGraphics *pGraphics,
                          GUIHelper11 *guiHelper,
@@ -153,7 +154,7 @@ MultiViewer::UpdateFrequencyScale()
         AXIS_DATA[i][1] = (char *)malloc(255);
     }
     
-    sprintf(AXIS_DATA[0][1], "");
+    sprintf(AXIS_DATA[0][1], " ");
     sprintf(AXIS_DATA[1][1], "100Hz");
     sprintf(AXIS_DATA[2][1], "500Hz");
     sprintf(AXIS_DATA[3][1], "1KHz");
@@ -161,7 +162,7 @@ MultiViewer::UpdateFrequencyScale()
     sprintf(AXIS_DATA[5][1], "5KHz");
     sprintf(AXIS_DATA[6][1], "10KHz");
     sprintf(AXIS_DATA[7][1], "20KHz");
-    sprintf(AXIS_DATA[8][1], "");
+    sprintf(AXIS_DATA[8][1], " ");
     
     BL_FLOAT freqs[NUM_AXIS_DATA] =
     { 50.0, 100.0, 500.0, 1000.0, 2000.0, 5000.0, 10000.0, 20000.0, 40000.0 };
@@ -169,7 +170,7 @@ MultiViewer::UpdateFrequencyScale()
     BL_FLOAT minHzValue;
     BL_FLOAT maxHzValue;
     BLUtils::GetMinMaxFreqAxisValues(&minHzValue, &maxHzValue,
-                                   BUFFER_SIZE, mSampleRate);
+                                     MULTI_VIEWER_BUFFER_SIZE, mSampleRate);
     
     
     // Avoid a shift

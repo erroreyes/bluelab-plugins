@@ -8,7 +8,8 @@
 
 //#include "FillTriangle.h"
 
-#define INF 1e15
+//#define INF 1e15
+#include <BLUtils.h>
 
 template <typename T>
 class FillTriangle
@@ -21,8 +22,8 @@ public:
         // Degerated case, all points on the same y
         if ((v1[1] == v0[1]) && (v2[1] == v0[1]))
         {
-            int minX = INF;
-            int maxX = -INF;
+            int minX = BL_INFI;
+            int maxX = -BL_INFI;
         
             if (v0[0] < minX)
                 minX = v0[0];
@@ -121,8 +122,8 @@ protected:
         int triangle[3][2] = { { v0[0], v0[1] }, { v1[0], v1[1] }, { v2[0], v2[1] } };
     
         int indices[3] = { -1, -1, -1 };
-        int minY = INF;
-        int maxY = -INF;
+        int minY = BL_INFI;
+        int maxY = -BL_INFI;
     
         // Find min and max Y and set the corresponding indices
         for (int i = 0; i < 3; i++)

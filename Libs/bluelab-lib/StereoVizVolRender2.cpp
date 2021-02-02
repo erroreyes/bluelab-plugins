@@ -62,7 +62,7 @@
 
 
 #if 0
-TEST: discard points with a too low intensity => doesn't work well
+TEST: discard points with a too low intensity => doesn t work well
 #endif
 
 StereoVizVolRender2::StereoVizVolRender2(GraphControl11 *graphControl)

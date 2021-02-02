@@ -55,7 +55,7 @@
 #define NYQUIST_FILTER 0 // 1
 
 // Better: avoid global gain decrease
-#define USE_RBJ_FILTER 1
+#define CLIPPER_USE_RBJ_FILTER 1
 
 // NEW
 // Set Nyquist filter in the parent generic class
@@ -103,7 +103,7 @@ protected:
     WDL_TypedBuf<BL_FLOAT> mCopyBuffer;
     
 #if NYQUIST_FILTER
-#if !USE_RBJ_FILTER
+#if !CLIPPER_USE_RBJ_FILTER
     FilterIIRLow12dB *mFilter;
 #else
     FilterRBJNX *mFilter;
@@ -117,7 +117,7 @@ ClipperOverObj4::ClipperOverObj4(int oversampling, BL_FLOAT sampleRate)
     mClipValue = 2.0;
     
 #if NYQUIST_FILTER
-#if !USE_RBJ_FILTER
+#if !CLIPPER_USE_RBJ_FILTER
     mFilter = new FilterIIRLow12dB();
     mFilter->Init(sampleRate*SAMPLE_RATE_COEFF, sampleRate*oversampling);
 #else
@@ -155,7 +155,7 @@ ClipperOverObj4::Reset(BL_FLOAT sampleRate)
     OVERSAMP_OBJ_CLASS::Reset(sampleRate);
     
 #if NYQUIST_FILTER
-#if !USE_RBJ_FILTER
+#if !CLIPPER_USE_RBJ_FILTER
     mFilter->Init(sampleRate*SAMPLE_RATE_COEFF, sampleRate*mOversampling);
 #else
     mFilter->SetSampleRate(sampleRate*mOversampling);
@@ -170,7 +170,7 @@ ClipperOverObj4::Reset(BL_FLOAT sampleRate, int blockSize)
     OVERSAMP_OBJ_CLASS::Reset(sampleRate, blockSize);
     
 #if NYQUIST_FILTER
-#if !USE_RBJ_FILTER
+#if !CLIPPER_USE_RBJ_FILTER
     mFilter->Init(sampleRate*SAMPLE_RATE_COEFF, sampleRate*mOversampling);
 #else
     mFilter->SetSampleRate(sampleRate*mOversampling);

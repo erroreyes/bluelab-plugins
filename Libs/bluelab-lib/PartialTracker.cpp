@@ -19,8 +19,8 @@ using namespace std;
 
 #include "PartialTracker.h"
 
-#define EPS 1e-15
-#define INF 1e15
+//#define EPS 1e-15
+//#define INF 1e15
 
 #define HISTORY_SIZE 2
 
@@ -194,8 +194,8 @@ PartialTracker::Partial::IsEqual(const Partial &p1, const Partial &p2)
     // make mistakes with dB
     //#define EPS 1e-8
     
-    if ((std::fabs(p1.mFreq - p2.mFreq) < EPS) &&
-        (std::fabs(p1.mAmp - p2.mAmp) < EPS))
+    if ((std::fabs(p1.mFreq - p2.mFreq) < BL_EPS) &&
+        (std::fabs(p1.mAmp - p2.mAmp) < BL_EPS))
         return true;
     
     return false;
@@ -767,7 +767,7 @@ PartialTracker::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                         BL_FLOAT leftVal = magns.Get()[leftIndex];
                     
                         // Stop if we reach 0 or if it goes up again
-                        if ((leftVal < EPS) || (leftVal >= prevLeftVal))
+                        if ((leftVal < BL_EPS) || (leftVal >= prevLeftVal))
                         {
                             leftIndex++;
                         
@@ -796,7 +796,7 @@ PartialTracker::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                         BL_FLOAT rightVal = magns.Get()[rightIndex];
                     
                         // Stop if we reach 0 or if it goes up again
-                        if ((rightVal < EPS) || (rightVal >= prevRightVal))
+                        if ((rightVal < BL_EPS) || (rightVal >= prevRightVal))
                         {
                             rightIndex--;
                         
@@ -1097,7 +1097,7 @@ PartialTracker::SuppressBadPartials(vector<Partial> *partials)
         
         // Zero frequency (because of very small magn) ?
         bool discard = false;
-        if (peakFreq < EPS)
+        if (peakFreq < BL_EPS)
             discard = true;
         
         if (!discard)
@@ -1315,7 +1315,7 @@ PartialTracker::TestDiscardByAmp(const Partial &p0, const Partial &p1)
     bool result = false;
     BL_FLOAT ampRatio = 1.0;
     
-    if (p0.mAmp > EPS)
+    if (p0.mAmp > BL_EPS)
         ampRatio = p1.mAmp/p0.mAmp;
     
     if ((ampRatio > MAX_AMP_DIFF_RATIO) ||
@@ -1330,7 +1330,7 @@ PartialTracker::TestDiscardByAmp(const Partial &p0, const Partial &p1)
 void
 PartialTracker::HarmonicSelect(vector<Partial> *result)
 {
-#define INF 1e8
+    //#define INF 1e8
     
     if (result->empty())
         return;
@@ -1344,7 +1344,7 @@ PartialTracker::HarmonicSelect(vector<Partial> *result)
     while((freq < mSampleRate/2.0) && !result->empty())
     {
         // Find the nearest partial
-        BL_FLOAT minDiffFreq = INF;
+        BL_FLOAT minDiffFreq = BL_INF8;
         BL_FLOAT minIdx = -1;
         for (int i = 0; i < result->size(); i++)
         {
@@ -1414,7 +1414,7 @@ PartialTracker::ComputePeakFreqAvg(const WDL_TypedBuf<BL_FLOAT> &magns,
         sumMagns += magn;
     }
     
-    if (sumMagns < EPS)
+    if (sumMagns < BL_EPS)
         return 0.0;
     
     BL_FLOAT result = sumFreqs/sumMagns;
@@ -1486,14 +1486,14 @@ PartialTracker::ComputePeakFreqAvg2(const WDL_TypedBuf<BL_FLOAT> &magns,
         sumMagns += magn;
     }
     
-    if (sumMagns < EPS)
+    if (sumMagns < BL_EPS)
         return 0.0;
     
     BL_FLOAT freq = sumFreqs/sumMagns;
     
     // Take the nearest bin
     BL_FLOAT result = 0.0;
-    BL_FLOAT minDiff = INF;
+    BL_FLOAT minDiff = BL_INF8;
     for (int i = 0; i < magns.GetSize(); i++)
     {
         BL_FLOAT freq0 = GetFrequency(i);
@@ -1634,7 +1634,7 @@ PartialTracker::AssociatePartialsMinAux1(const vector<PartialTracker::Partial> &
         const Partial &prevPartial = prevPartials[i];
         
         // Find the nearest partial (using frequency)
-        BL_FLOAT minFreqDiff = INF;
+        BL_FLOAT minFreqDiff = BL_INF8;
         int minPartialIdx = -1;
         for (int j = 0; j < currentPartials->size(); j++)
         {
@@ -1695,7 +1695,7 @@ PartialTracker::AssociatePartialsMinAux2(const vector<PartialTracker::Partial> &
             continue;
         
         // Find the nearest partial (using frequency)
-        BL_FLOAT minFreqDiff = INF;
+        BL_FLOAT minFreqDiff = BL_INF8;
         int minPartialIdx = -1;
         for (int j = 0; j < prevPartials.size(); j++)
         {
@@ -1781,7 +1781,7 @@ PartialTracker::ComputeDistances(const vector<PartialTracker::Partial> &prevPart
                                  vector<vector<BL_FLOAT> > *distances,
                                  vector<vector<int> > *ids)
 {
-#define INF 1e15
+    //#define INF 1e15
     
     int numDistances = currentPartials.size();
     if (numDistances > ASSOC_PERMUT_MAX_NEIGHBOURS)
@@ -1798,7 +1798,7 @@ PartialTracker::ComputeDistances(const vector<PartialTracker::Partial> &prevPart
         // Compute the list of distances for the current partial
         while(distances0.size() < numDistances)
         {
-            BL_FLOAT minDist2 = INF;
+            BL_FLOAT minDist2 = BL_INF;
             BL_FLOAT minId = -1;
             for (int j = 0; j < currentPartials.size(); j++)
             {

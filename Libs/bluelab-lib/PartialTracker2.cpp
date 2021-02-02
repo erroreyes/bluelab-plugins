@@ -167,7 +167,7 @@ unsigned long PartialTracker2::Partial::mCurrentId = 0;
 
 
 PartialTracker2::Partial::Partial()
-#if PREDICTIVE
+#if PT2_PREDICTIVE
 : mKf(KF_E_MEA, KF_E_EST, KF_Q)
 #endif
 {
@@ -186,14 +186,14 @@ PartialTracker2::Partial::Partial()
     mWasAlive = false;
     mZombieAge = 0;
     
-#if PREDICTIVE
+#if PT2_PREDICTIVE
     mPredictedFreq = 0.0;
 #endif
 }
 
     
 PartialTracker2::Partial::Partial(const Partial &other)
-#if PREDICTIVE
+#if PT2_PREDICTIVE
 : mKf(other.mKf)
 #endif
 {
@@ -213,7 +213,7 @@ PartialTracker2::Partial::Partial(const Partial &other)
     
     mZombieAge = other.mZombieAge;
     
-#if PREDICTIVE
+#if PT2_PREDICTIVE
     mPredictedFreq = other.mPredictedFreq;
 #endif
 }
@@ -1183,7 +1183,7 @@ PartialTracker2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                 
                     p.mFreq = peakFreq;
 
-#if PREDICTIVE
+#if PT2_PREDICTIVE
                     // Update the estimate with the first value
                     p.mKf.updateEstimate(p.mFreq);
                 
@@ -1703,7 +1703,7 @@ PartialTracker2::DetectPartialsSmooth(const WDL_TypedBuf<BL_FLOAT> &magns,
                 
                 p.mFreq = peakFreq;
                 
-#if PREDICTIVE
+#if PT2_PREDICTIVE
                 // Update the estimate with the first value
                 p.mKf.updateEstimate(p.mFreq);
                 
@@ -2671,7 +2671,7 @@ PartialTracker2::AssociatePartials(const vector<PartialTracker2::Partial> &prevP
                 // Already assigned
                 continue;
             
-#if !PREDICTIVE
+#if !PT2_PREDICTIVE
             BL_FLOAT diffFreq = std::fabs(prevPartial.mFreq - currentPartial.mFreq);
 #else
             BL_FLOAT diffFreq = std::fabs(prevPartial.mPredictedFreq - currentPartial.mFreq);
@@ -2684,7 +2684,7 @@ PartialTracker2::AssociatePartials(const vector<PartialTracker2::Partial> &prevP
                 currentPartial.mState = Partial::ALIVE;
                 currentPartial.mWasAlive = true;
             
-#if PREDICTIVE
+#if PT2_PREDICTIVE
                 // mFirstTimePredict ?
                 currentPartial.mKf = prevPartial.mKf;
                 currentPartial.mPredictedFreq =

@@ -89,8 +89,9 @@ RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize,
     
 #if USE_MASK_STACK
     for (int i = 0; i < 4; i++)
-        mMaskStacks[i] = new RebalanceMaskStack2(BUFFER_SIZE/(2*RESAMPLE_FACTOR),
-                                                 MASK_STACK_DEPTH);
+        mMaskStacks[i] =
+        new RebalanceMaskStack2(REBALANCE_BUFFER_SIZE/(2*RESAMPLE_FACTOR),
+                                MASK_STACK_DEPTH);
 #endif
     
 #ifndef WIN32
@@ -342,7 +343,7 @@ RebalanceMaskPredictorComp5::Downsample(WDL_TypedBuf<BL_FLOAT> *ioBuf,
 #endif
     
 #if USE_MEL
-    BL_FLOAT hzPerBin = sampleRate/(BUFFER_SIZE/2);
+    BL_FLOAT hzPerBin = sampleRate/(REBALANCE_BUFFER_SIZE/2);
     WDL_TypedBuf<BL_FLOAT> bufMel;
     
 #if !FIX_MEL_DOWNSAMPLING
@@ -379,7 +380,7 @@ RebalanceMaskPredictorComp5::Upsample(WDL_TypedBuf<BL_FLOAT> *ioBuf,
     }
     
 #if USE_MEL
-    BL_FLOAT hzPerBin = sampleRate/(BUFFER_SIZE/2);
+    BL_FLOAT hzPerBin = sampleRate/(REBALANCE_BUFFER_SIZE/2);
     WDL_TypedBuf<BL_FLOAT> bufMel;
     
 #if !FIX_MEL_UPSAMPLING
@@ -566,7 +567,7 @@ RebalanceMaskPredictorComp5::UpsamplePredictedMask(WDL_TypedBuf<BL_FLOAT> *ioBuf
     for (int j = 0; j < numCols; j++)
     {
         WDL_TypedBuf<BL_FLOAT> mask;
-        mask.Resize(BUFFER_SIZE/(2*RESAMPLE_FACTOR));
+        mask.Resize(REBALANCE_BUFFER_SIZE/(2*RESAMPLE_FACTOR));
         
         // Optim
         memcpy(mask.Get(),
@@ -705,9 +706,9 @@ RebalanceMaskPredictorComp5::ComputeMasks(WDL_TypedBuf<BL_FLOAT> masks[4],
     for (int i = 0; i < 4; i++)
         BLUtils::ClipMin(&masks0[i], 0.0);
     
-    ComputeLineMasks(masks, masks0, BUFFER_SIZE/2);
+    ComputeLineMasks(masks, masks0, REBALANCE_BUFFER_SIZE/2);
 #else
-    ComputeLineMasks(masks, masks0, BUFFER_SIZE/(2*RESAMPLE_FACTOR));
+    ComputeLineMasks(masks, masks0, REBALANCE_BUFFER_SIZE/(2*RESAMPLE_FACTOR));
     
     for (int i = 0; i < 4; i++)
         UpsamplePredictedMask(&masks[i], mSampleRate, 1);
@@ -807,7 +808,7 @@ RebalanceMaskPredictorComp5::UpdateCurrentMasksAdd(const vector<WDL_TypedBuf<BL_
 void
 RebalanceMaskPredictorComp5::UpdateCurrentMasksScroll()
 {
-    int numFreqs = BUFFER_SIZE/(2*RESAMPLE_FACTOR);
+    int numFreqs = REBALANCE_BUFFER_SIZE/(2*RESAMPLE_FACTOR);
     int numCols = REBALANCE_NUM_SPECTRO_COLS;
     
     for (int i = 0; i < mCurrentMasks.size(); i++)

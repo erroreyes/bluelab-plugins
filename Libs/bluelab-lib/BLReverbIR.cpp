@@ -15,7 +15,7 @@
 
 // Default value, will be modified in FastRTConvolver
 // depending on host buffer size
-#define BUFFER_SIZE 512
+#define REVERB_IR_BUFFER_SIZE 512
 
 
 BLReverbIR::BLReverbIR(BLReverb *reverb, BL_FLOAT sampleRate,
@@ -34,7 +34,8 @@ BLReverbIR::BLReverbIR(BLReverb *reverb, BL_FLOAT sampleRate,
     
     for (int i = 0; i < 2; i++)
     {
-        mConvolvers[i] = new FastRTConvolver3(BUFFER_SIZE, sampleRate, irs[i]);
+        mConvolvers[i] = new FastRTConvolver3(REVERB_IR_BUFFER_SIZE,
+                                              sampleRate, irs[i]);
     }
 }
 

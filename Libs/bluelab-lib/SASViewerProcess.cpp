@@ -1048,8 +1048,8 @@ SASViewerProcess::DisplayAmplitude()
     else
         ampDB = mScSASFrame->GetAmplitudeDB();
     
-#define Y_COEFF 20.0
-#define Y_OFFSET 0.0
+#define Y_COEFF_AMP 20.0
+#define Y_OFFSET_AMP 0.0
     
     BL_FLOAT amp = DBToAmp(ampDB);
     
@@ -1057,8 +1057,8 @@ SASViewerProcess::DisplayAmplitude()
     amps.Resize(mBufferSize/2);
     BLUtils::FillAllValue(&amps, amp);
     
-    BLUtils::MultValues(&amps, (BL_FLOAT)Y_COEFF);
-    BLUtils::AddValues(&amps, (BL_FLOAT)Y_OFFSET);
+    BLUtils::MultValues(&amps, (BL_FLOAT)Y_COEFF_AMP);
+    BLUtils::AddValues(&amps, (BL_FLOAT)Y_OFFSET_AMP);
     
     if (mSASViewerRender != NULL)
     {
@@ -1087,15 +1087,15 @@ SASViewerProcess::DisplayFrequency()
 //#define Y_COEFF 0.004
 //#define Y_OFFSET -8.0
   
-#define Y_COEFF 0.002
-#define Y_OFFSET -4.0
+#define Y_COEFF_FREQ 0.002
+#define Y_OFFSET_FREQ -4.0
 
     WDL_TypedBuf<BL_FLOAT> freqs;
     freqs.Resize(mBufferSize/2);
     BLUtils::FillAllValue(&freqs, freq);
     
-    BLUtils::MultValues(&freqs, (BL_FLOAT)Y_COEFF);
-    BLUtils::AddValues(&freqs, (BL_FLOAT)Y_OFFSET);
+    BLUtils::MultValues(&freqs, (BL_FLOAT)Y_COEFF_FREQ);
+    BLUtils::AddValues(&freqs, (BL_FLOAT)Y_OFFSET_FREQ);
     
     if (mSASViewerRender != NULL)
     {

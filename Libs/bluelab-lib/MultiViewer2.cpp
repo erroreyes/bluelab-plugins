@@ -23,6 +23,8 @@
 
 #include "MultiViewer2.h"
 
+#define MULTI_VIEWER2_BUFFER_SIZE 2048
+
 #define GRAPH_CONTROL_NUM_POINTS 1024 //512 //256
 
 #define BEVEL_CURVES 1
@@ -213,7 +215,7 @@ MultiViewer2::UpdateFrequencyScale()
     BL_FLOAT minHzValue;
     BL_FLOAT maxHzValue;
     BLUtils::GetMinMaxFreqAxisValues(&minHzValue, &maxHzValue,
-                                     BUFFER_SIZE, mSampleRate);
+                                     MULTI_VIEWER2_BUFFER_SIZE, mSampleRate);
     mFreqAxis->SetMaxFreq(maxHzValue);
 }
 
