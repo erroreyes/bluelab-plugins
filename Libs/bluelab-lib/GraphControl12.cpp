@@ -1013,7 +1013,7 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                 {
                     BL_GUI_FLOAT x0 = 0.0;
                     BL_GUI_FLOAT x1 = width;
-                
+                    
                     // If overlay, put the two lines at y-0.5 and y+0.5
                     // (so this looks more accurate in Chroma for example)
                     if (axis->mLinesOverlay)
@@ -1030,7 +1030,7 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     
                     nvgMoveTo(mVg, x0, yf);
                     nvgLineTo(mVg, x1, yf);
-                
+                    
                     nvgStroke(mVg);
                     
                     if (axis->mLinesOverlay)
@@ -1045,7 +1045,7 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                         BL_GUI_FLOAT x1 = width;
                         
                         BL_GUI_FLOAT yf = y + OVERLAY_OFFSET;
-#if 0 //GRAPH_CONTROL_FLIP_Y
+#if GRAPH_CONTROL_FLIP_Y
                         yf = height - yf;
 #endif
                         
