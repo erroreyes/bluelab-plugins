@@ -152,7 +152,8 @@ public:
 
     void CreateDemoMessage(IGraphics *graphics);
     
-    void CreateWatermarkMessage(IGraphics *graphics, const char *message);
+    void CreateWatermarkMessage(IGraphics *graphics, const char *message,
+                                IColor *color = NULL);
     
     IRadioButtonsControl *
         CreateRadioButtons(IGraphics *graphics,

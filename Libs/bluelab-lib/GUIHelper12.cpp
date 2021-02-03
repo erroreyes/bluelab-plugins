@@ -655,8 +655,13 @@ GUIHelper12::CreateDemoMessage(IGraphics *graphics)
 
 void
 GUIHelper12::CreateWatermarkMessage(IGraphics *graphics,
-                                    const char *message)
+                                    const char *message,
+                                    IColor *color)
 {
+    IColor textColor = mWatermarkTextColor;
+    if (color != NULL)
+        textColor = *color;
+    
     int x = mWatermarkTextOffsetX;
     int y = graphics->Height() - mWatermarkTextSize - mWatermarkTextOffsetY;
     
@@ -664,7 +669,7 @@ GUIHelper12::CreateWatermarkMessage(IGraphics *graphics,
                                            x, y,
                                            message, mWatermarkTextSize,
                                            mWatermarkFont,
-                                           mWatermarkTextColor, EAlign::Near);
+                                           textColor, EAlign::Near);
     
     // Avoids that the trial message masks the interaction on the help button for example
     textControl->SetInteractionDisabled(true);
