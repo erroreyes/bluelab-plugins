@@ -143,7 +143,7 @@ https://github.com/xkbcommon/libxkbcommon/blob/master/xkbcommon/xkbcommon.h
 ----------
 - TODO: add resources to CMakeList
 - TODO: for all plugs, GetScaleForScreen(2 params)
-- TODO: for many plugs, replace OnIdle() by OnGUIIdle() (for vst3 with OnIdle() disabled
+- TODO: for many plugs, replace OnIdle() by OnGUIIdle() (for vst3 with OnIdle() disabled (???)
 - TODO: for all plugs, add after attach background:
 pGraphics->AttachTextEntryControl();
 - TODO: MUTEX => MUTEX; (macro)
@@ -174,3 +174,24 @@ by 0x42F15F8D: xcbt_connect_init (xcbt.c:478)
 ln -s ../../BL-Plugins/BL-Chroma
 
 NOTE: in App mode, the first time, there is a popup to say to check soundcard settings in preferences (very good!). Check preference file (.ini ?)
+
+------
+LINUX: take care if the rendering is done at 60fps by default, even if we define another FPS (this seems to be the case...).
+- TODO: put version number and watermark in bold fond (here, it is not currently readable)
+
+emacs -nw (inside term)
+emas mode gprof: https://sourceware.org/legacy-ml/binutils/2002-08/msg00099.html
+
+gprof: use perf (perf_events) instead ?
+http://www.brendangregg.com/perf.html
+https://kifarunix.com/installing-perf-performance-analysis-tool-on-ubuntu-18-04/
+https://perf.wiki.kernel.org/index.php/Main_Page
+
+Spatializer: crash
+StereoWidth: crash
+Wav3s: view is reset when resizing gui
+SpectralDiff: display bug
+Ghost-plug: the spctrogram does not refresh after zooming
+Ghost-app: doesn't open soud files
+Ghost-app: huge gui is enabled, but i's too big!
+AutoGain: vumeter doesn't move

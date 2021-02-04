@@ -61,7 +61,7 @@ public:
 
 protected:
 	// Load from file 
-	static bool LoadMac(const char *resDir, HRTF **outHrtf);
+	static bool LoadMacLinux(const char *resDir, HRTF **outHrtf);
 	static bool ReadOneFile(WDL_TypedBuf<BL_FLOAT> *outImpulseResponses[2], const char *fileName);
 
 	// NIKO-WIN

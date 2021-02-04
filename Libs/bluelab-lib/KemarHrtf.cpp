@@ -23,14 +23,14 @@ KemarHRTF::Load(IGraphics* pGraphics,
 				const char *resourcesDir, HRTF **outHrtf)
 {
 #ifndef WIN32 // Mac
-	return LoadMac(resourcesDir, outHrtf);
+	return LoadMacLinux(resourcesDir, outHrtf);
 #else
 	return LoadWin(pGraphics, outHrtf);
 #endif
 }
 
 bool
-KemarHRTF::LoadMac(const char *resourcesDir, HRTF **outHrtf)
+KemarHRTF::LoadMacLinux(const char *resourcesDir, HRTF **outHrtf)
 {
 #if DEBUG_RESPONSES
     BL_FLOAT debugAvg[2][360];
