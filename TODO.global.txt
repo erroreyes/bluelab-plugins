@@ -187,11 +187,14 @@ http://www.brendangregg.com/perf.html
 https://kifarunix.com/installing-perf-performance-analysis-tool-on-ubuntu-18-04/
 https://perf.wiki.kernel.org/index.php/Main_Page
 
-Spatializer: crash
-StereoWidth: crash
-Wav3s: view is reset when resizing gui
-SpectralDiff: display bug
-Ghost-plug: the spctrogram does not refresh after zooming
-Ghost-app: doesn't open soud files
+---
+BUG: for all plugs: Linux: when hitting "space" in Reaper, the playback doesn't start (whereas it starts with other plugins). We need to change the focus to another window to play using "space" (already tried, looks hard to fix)
+
+
+WIP:
+
 Ghost-app: huge gui is enabled, but i's too big!
 AutoGain: vumeter doesn't move
+
+- BUG (for all plugins: insert a Gain12, insert a StereoWidth, remove the Gain12
+=> the StereoWidth freezes
