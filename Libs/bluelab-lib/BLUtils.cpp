@@ -2137,7 +2137,7 @@ void
 BLUtils::GetPlugIOBuffers(Plugin *plug,
                           sample **inputs, sample **outputs, int nFrames,
                           vector<WDL_TypedBuf<BL_FLOAT> > *inp,
-                          vector<WDL_TypedBuf<BL_FLOAT> > *scIn,
+                          vector<WDL_TypedBuf<BL_FLOAT> > *scInp,
                           vector<WDL_TypedBuf<BL_FLOAT> > *outp)
 {
 #define MAX_NUM_IN_CHANNELS 4
@@ -2168,11 +2168,40 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
         }
     }
 #endif
-    
+
+#if 0 // disabled for memory uptimization
     inp->resize(0);
     scIn->resize(0);
     outp->resize(0);
-    
+#endif
+
+    // Compute the number of inputs and outputs
+    int numIn = 0;
+    for (int i = 0; i < MAX_NUM_IN_CHANNELS; i++)
+    {
+        bool connected = plug->IsChannelConnected(ERoute::kInput, i);
+        if(connected && (inputs[i] != NULL))
+            numIn++;
+    }
+
+    int numScIn = numIn - 2;
+    if (numScIn < 0)
+        numScIn = 0;
+
+    int numOut = 0;
+    for (int i = 0; i < MAX_NUM_OUT_CHANNELS; i++)
+    {
+        bool connected = plug->IsChannelConnected(ERoute::kOutput, i);
+        if(connected && (outputs[i] != NULL))
+            numOut++;
+    }
+
+    // Resize the buffers if necessary
+    inp->resize(numIn);
+    scInp->resize(numScIn);
+    outp->resize(numOut);
+
+    // Fill the buffers
     for (int i = 0; i < MAX_NUM_IN_CHANNELS; i++)
     {
         bool connected = plug->IsChannelConnected(ERoute::kInput, i);
@@ -2181,35 +2210,37 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
             if (i < 2)
             // input
             {
-                inp->resize(inp->size() + 1);
+                //inp->resize(inp->size() + 1);
                 
-                WDL_TypedBuf<BL_FLOAT> buf;
+                WDL_TypedBuf<BL_FLOAT> &buf = (*inp)[i];
 #if !BL_TYPE_FLOAT
-                buf.Add(inputs[i], nFrames);
-                
+                //buf.Add(inputs[i], nFrames);
+                buf.Resize(nFrames);
+                memcpy(buf.Get(), inputs[i], nFrames*sizeof(BL_FLOAT));
 #else
                 buf.Resize(nFrames);
                 for (int j = 0; j < nFrames; j++)
                     buf.Get()[j] = inputs[i][j];
 #endif
                 
-                (*inp)[inp->size() - 1] = buf;
+                //(*inp)[inp->size() - 1] = buf;
             }
             else
             {
-                scIn->resize(scIn->size() + 1);
+                //scIn->resize(scIn->size() + 1);
                 
-                WDL_TypedBuf<BL_FLOAT> buf;
+                WDL_TypedBuf<BL_FLOAT> &buf = (*scInp)[i - 2];
 #if !BL_TYPE_FLOAT
-                buf.Add(inputs[i], nFrames);
-                
+                //buf.Add(inputs[i], nFrames);
+                buf.Resize(nFrames);
+                memcpy(buf.Get(), inputs[i], nFrames*sizeof(BL_FLOAT));
 #else
                 buf.Resize(nFrames);
                 for (int j = 0; j < nFrames; j++)
                     buf.Get()[j] = inputs[i][j];
 #endif
                 
-                (*scIn)[scIn->size() - 1] = buf;
+                //(*scIn)[scIn->size() - 1] = buf;
             }
         }
     }
@@ -2219,19 +2250,20 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
         bool connected = plug->IsChannelConnected(ERoute::kOutput, i);
         if(connected && (outputs[i] != NULL))
         {
-            outp->resize(outp->size() + 1);
+            //outp->resize(outp->size() + 1);
             
-            WDL_TypedBuf<BL_FLOAT> buf;
+            WDL_TypedBuf<BL_FLOAT> &buf = (*outp)[i];
 #if !BL_TYPE_FLOAT
-            buf.Add(outputs[i], nFrames);
-            
+            //buf.Add(outputs[i], nFrames);
+            buf.Resize(nFrames);
+            memcpy(buf.Get(), outputs[i], nFrames*sizeof(BL_FLOAT));
 #else
             buf.Resize(nFrames);
             for (int j = 0; j < nFrames; j++)
                 buf.Get()[j] = outputs[i][j];
 #endif
             
-            (*outp)[outp->size() - 1] = buf;
+            //(*outp)[outp->size() - 1] = buf;
         }
     }
 }
