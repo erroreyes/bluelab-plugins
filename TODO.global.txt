@@ -188,13 +188,14 @@ https://kifarunix.com/installing-perf-performance-analysis-tool-on-ubuntu-18-04/
 https://perf.wiki.kernel.org/index.php/Main_Page
 
 ---
-BUG: for all plugs: Linux: when hitting "space" in Reaper, the playback doesn't start (whereas it starts with other plugins). We need to change the focus to another window to play using "space" (already tried, looks hard to fix)
-
-
-WIP:
-
-Ghost-app: huge gui is enabled, but i's too big!
-AutoGain: vumeter doesn't move
+- BUG: for all plugs: Linux: when hitting "space" in Reaper, the playback doesn't start (whereas it starts with other plugins). We need to change the focus to another window to play using "space" (already tried, looks hard to fix)
 
 - BUG (for all plugins: insert a Gain12, insert a StereoWidth, remove the Gain12
 => the StereoWidth freezes
+
+- NOTE: for file open feature on Linux, this is a gnome program that is used
+(what about kde?)
+- NOTE: SWELL uses gdk for app menus => need to test on linux with kde!
+
+WIP:
+AutoGain: vumeter doesn't move
