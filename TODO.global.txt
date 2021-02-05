@@ -198,3 +198,4 @@ WIP:
 AutoGain: vumeter doesn't move
 
 - TODO: memory reuse for all plugs
+- TODO: improve queue (WDL fast queue ? / cyclic queue ?)
