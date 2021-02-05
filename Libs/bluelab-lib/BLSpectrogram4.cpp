@@ -57,7 +57,8 @@ BLSpectrogram4::BLSpectrogram4(BL_FLOAT sampleRate,
     mColorMapFactory = new ColorMapFactory(useGLSL, false);
     
     SetColorMap(ColorMapFactory::COLORMAP_BLUE);
-    
+
+#if 0
     if (mMaxCols > 0)
     {
         // At the beginning, fill with zero values
@@ -65,6 +66,9 @@ BLSpectrogram4::BLSpectrogram4(BL_FLOAT sampleRate,
         // when the spectrogram is not totally full
         FillWithZeros();
     }
+#endif
+
+    ResetQueues();
     
     mProgressivePhaseUnwrap = true;
     
@@ -207,9 +211,23 @@ BLSpectrogram4::Reset(BL_FLOAT sampleRate)
 {
     mSampleRate = sampleRate;
     
-    mMagns.clear();
+    /*mMagns.clear();
     mPhases.clear();
-    mUnwrappedPhases.clear();
+    mUnwrappedPhases.clear();*/
+
+    if (mMaxCols < 0)
+    {
+        mMagns.set_fixed_size(false);
+        mMagns.clear();
+
+        mPhases.set_fixed_size(false);
+        mPhases.clear();
+
+        mUnwrappedPhases.set_fixed_size(false);
+        mUnwrappedPhases.clear();
+    }
+    
+    ResetQueues();
     
     mTotalLineNum = 0;
     
@@ -226,7 +244,22 @@ BLSpectrogram4::Reset(BL_FLOAT sampleRate, int height, int maxCols)
     
     mHeight = height;
     mMaxCols = maxCols;
+
+    if (mMaxCols < 0)
+    {
+        mMagns.set_fixed_size(false);
+        mMagns.clear();
+
+        mPhases.set_fixed_size(false);
+        mPhases.clear();
+
+        mUnwrappedPhases.set_fixed_size(false);
+        mUnwrappedPhases.clear();
+    }
     
+    ResetQueues();
+    
+#if 0
     if (mMaxCols > 0)
     {
         // At the beginning, fill with zero values
@@ -234,6 +267,7 @@ BLSpectrogram4::Reset(BL_FLOAT sampleRate, int height, int maxCols)
         // when the spectrogram is not totally full
         FillWithZeros();
     }
+#endif
     
 #if OPTIM_SPECTROGRAM2
     mSpectroDataChanged = true;
@@ -257,6 +291,27 @@ int
 BLSpectrogram4::GetHeight()
 {
     return mHeight;
+}
+
+void
+BLSpectrogram4::SetFixedSize(bool flag)
+{
+    if (flag)
+    {
+        mMaxCols = mMagns.size();
+
+        mMagns.set_fixed_size(true);
+        mPhases.set_fixed_size(true);
+        mUnwrappedPhases.set_fixed_size(true);
+    }
+    else
+    {
+        mMaxCols = -1;
+
+        mMagns.set_fixed_size(false);
+        mPhases.set_fixed_size(false);
+        mUnwrappedPhases.set_fixed_size(false);
+    }
 }
 
 void
@@ -333,9 +388,19 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
             dbMagns.Get()[i] = val;
         }
     }
-    
-    mMagns.push_back(dbMagns);
-    mPhases.push_back(phases0);
+
+    if (mMaxCols < 0)
+    {
+        // Non fixed size
+        mMagns.push_back(dbMagns);
+        mPhases.push_back(phases0);
+    }
+    else
+    {
+        // Fixed size
+        mMagns.push_pop(dbMagns);
+        mPhases.push_pop(phases0);
+    }
     
     if (mProgressivePhaseUnwrap)
     {
@@ -344,10 +409,14 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         
         if (mDisplayPhasesY)
             UnwrapLineY(&phases0);
-        
-        mUnwrappedPhases.push_back(phases0);
+
+        if (mMaxCols < 0)
+            mUnwrappedPhases.push_back(phases0);
+        else
+            mUnwrappedPhases.push_pop(phases0);
     }
-    
+
+#if 0
     if (mMaxCols > 0)
     {
         if (mMagns.size() > mMaxCols)
@@ -365,6 +434,7 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
             mUnwrappedPhases.pop_front();
         }
     }
+#endif
     
     mTotalLineNum++;
     
@@ -466,7 +536,8 @@ BLSpectrogram4::GetColormapImageDataRGBA(WDL_TypedBuf<unsigned int> *colormapIma
 // compared to vectors
 //
 void
-BLSpectrogram4::UnwrapAllPhases(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+BLSpectrogram4::UnwrapAllPhases(//const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+                                const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
                                 vector<WDL_TypedBuf<BL_FLOAT> > *outPhases,
                                 bool horizontal, bool vertical)
 {
@@ -478,7 +549,7 @@ BLSpectrogram4::UnwrapAllPhases(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
     // Convert deque to vec
     for (int i = 0; i < inPhases.size(); i++)
     {
-        WDL_TypedBuf<BL_FLOAT> line = inPhases[i];
+        const WDL_TypedBuf<BL_FLOAT> &line = inPhases[i];
         outPhases->push_back(line);
     }
     
@@ -520,8 +591,9 @@ BLSpectrogram4::UnwrapAllPhases(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
 }
 
 void
-BLSpectrogram4::UnwrapAllPhases(deque<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
-                               bool horizontal, bool vertical)
+BLSpectrogram4::UnwrapAllPhases(//deque<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
+                                bl_queue<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
+                                bool horizontal, bool vertical)
 {
     vector<WDL_TypedBuf<BL_FLOAT> > phasesUnW;
     UnwrapAllPhases(*ioPhases, &phasesUnW, horizontal, vertical);
@@ -533,7 +605,8 @@ BLSpectrogram4::UnwrapAllPhases(deque<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
 // compared to vectors
 //
 void
-BLSpectrogram4::PhasesToStdVector(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+BLSpectrogram4::PhasesToStdVector(//const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+                                  const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
                                   vector<WDL_TypedBuf<BL_FLOAT> > *outPhases)
 {
     if (inPhases.empty())
@@ -564,11 +637,13 @@ BLSpectrogram4::PhasesToStdVector(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases
 
 void
 BLSpectrogram4::StdVectorToPhases(const vector<WDL_TypedBuf<BL_FLOAT> > &inPhases,
-                                  deque<WDL_TypedBuf<BL_FLOAT> > *outPhases)
+                                  //deque<WDL_TypedBuf<BL_FLOAT> > *outPhases)
+                                  bl_queue<WDL_TypedBuf<BL_FLOAT> > *outPhases)
 {
     if (inPhases.empty())
         return;
-    
+
+#if 0
     outPhases->clear();
     
     // Convert deque to vec
@@ -576,6 +651,14 @@ BLSpectrogram4::StdVectorToPhases(const vector<WDL_TypedBuf<BL_FLOAT> > &inPhase
     {
         WDL_TypedBuf<BL_FLOAT> line = inPhases[i];
         outPhases->push_back(line);
+    }
+#endif
+
+    outPhases->resize(inPhases.size());
+    for (int i = 0; i < inPhases.size(); i++)
+    {
+        const WDL_TypedBuf<BL_FLOAT> &line = inPhases[i];
+        (*outPhases)[i] = line;
     }
 }
 
@@ -1127,4 +1210,31 @@ BL_FLOAT
 BLSpectrogram4::GetSampleRate()
 {
     return mSampleRate;
+}
+
+void
+BLSpectrogram4::ResetQueues()
+{
+    if (mMaxCols > 0)
+    {
+        // Will set set_fixed_size at the same time
+        mMagns.resize(mMaxCols);
+        mPhases.resize(mMaxCols);
+        mUnwrappedPhases.resize(mMaxCols);
+
+        // Set zero value
+        WDL_TypedBuf<BL_FLOAT> zeroLine;
+        zeroLine.Resize(mHeight);
+        BLUtils::FillAllZero(&zeroLine);
+        
+        mMagns.clear(zeroLine);
+        mPhases.clear(zeroLine);
+        mUnwrappedPhases.clear(zeroLine);
+
+        //SetFixedSize(true); // no need
+    }
+    else
+    {
+        SetFixedSize(false);
+    }
 }

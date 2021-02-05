@@ -9,6 +9,8 @@
 #ifndef __BL_Chroma__ChromaFftObj__
 #define __BL_Chroma__ChromaFftObj__
 
+#include <bl_queue.h>
+
 #include <FftProcessObj16.h>
 
 // Without USE_FREQ_OBJ:
@@ -80,13 +82,17 @@ protected:
 #endif
     
     BL_FLOAT ComputeC0Freq();
-    
+
+    void ResetQueue();
+
+    //
     BLSpectrogram4 *mSpectrogram;
     SpectrogramDisplayScroll3 *mSpectroDisplay;
     
     long mLineCount;
     
-    deque<WDL_TypedBuf<BL_FLOAT> > mOverlapLines;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mOverlapLines;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mOverlapLines;
     
     WDL_TypedBuf<BL_FLOAT> mSmoothWin;
     

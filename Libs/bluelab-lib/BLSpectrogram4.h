@@ -13,6 +13,8 @@
 #include <deque>
 using namespace std;
 
+#include <bl_queue.h>
+
 #include <PPMFile.h>
 #include <ColorMapFactory.h>
 
@@ -30,7 +32,8 @@ class BLSpectrogram4
 {
 public:
     BLSpectrogram4(BL_FLOAT sampleRate,
-                   int height, int maxCols = -1, bool useGLSL = true);
+                   int height, int maxCols = -1,
+                   bool useGLSL = true);
     
     virtual ~BLSpectrogram4();
     
@@ -57,10 +60,10 @@ public:
     void SetDisplayDPhases(bool flag);
     
     int GetMaxNumCols();
-    
     int GetNumCols();
-    
     int GetHeight();
+
+    void SetFixedSize(bool flag);
     
     void SetColorMap(ColorMapFactory::ColorMap colorMapId);
     
@@ -100,19 +103,23 @@ public:
     BL_FLOAT GetSampleRate();
     
 protected:
-    void UnwrapAllPhases(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+    void UnwrapAllPhases(//const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+                         const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
                          vector<WDL_TypedBuf<BL_FLOAT> > *outPhases,
                          bool hozirontal, bool vertical);
     
     // Unwrap in place (slow)
-    void UnwrapAllPhases(deque<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
+    void UnwrapAllPhases(//deque<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
+                         bl_queue<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
                          bool horizontal, bool vertical);
     
-    void PhasesToStdVector(const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+    void PhasesToStdVector(//const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+                           const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
                            vector<WDL_TypedBuf<BL_FLOAT> > *outPhases);
 
     void StdVectorToPhases(const vector<WDL_TypedBuf<BL_FLOAT> > &inPhases,
-                           deque<WDL_TypedBuf<BL_FLOAT> > *outPhases);
+                           //deque<WDL_TypedBuf<BL_FLOAT> > *outPhases);
+                           bl_queue<WDL_TypedBuf<BL_FLOAT> > *outPhases);
     
     void UnwrapLineX(WDL_TypedBuf<BL_FLOAT> *phases);
     
@@ -140,6 +147,8 @@ protected:
     
     void ComputeDPhasesY(const vector<WDL_TypedBuf<BL_FLOAT> > &phasesUnW,
                          vector<WDL_TypedBuf<BL_FLOAT> > *dPhasesY);
+
+    void ResetQueues();
     
     //
     
@@ -167,13 +176,16 @@ protected:
     // Display derivative of phases instead of phase unwrap ?
     bool mDisplayDPhases;
     
-    deque<WDL_TypedBuf<BL_FLOAT> > mMagns;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mMagns;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mMagns;
     
     // Raw phases
-    deque<WDL_TypedBuf<BL_FLOAT> > mPhases;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mPhases;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mPhases;
     
     // Unwrapped phases
-    deque<WDL_TypedBuf<BL_FLOAT> > mUnwrappedPhases;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mUnwrappedPhases;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mUnwrappedPhases;
     
     // Count the total number of lines added
     unsigned long long mTotalLineNum;

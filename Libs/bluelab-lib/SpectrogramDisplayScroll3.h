@@ -14,6 +14,8 @@
 #include <deque>
 using namespace std;
 
+#include <bl_queue.h>
+
 #include <BLTypes.h>
 #include <GraphControl12.h>
 
@@ -84,7 +86,9 @@ protected:
     void AddSpectrogramLines(BL_FLOAT numLines);
     
     BL_FLOAT ComputeScrollOffsetPixels(int width);
-    
+
+    void ResetQueues();
+        
     // NanoVG
     NVGcontext *mVg;
     
@@ -123,6 +127,8 @@ protected:
     // Add progressively spectrogram lines
     deque<WDL_TypedBuf<BL_FLOAT> > mSpectroMagns;
     deque<WDL_TypedBuf<BL_FLOAT> > mSpectroPhases;
+    //bl_queue<WDL_TypedBuf<BL_FLOAT> > mSpectroMagns;
+    //bl_queue<WDL_TypedBuf<BL_FLOAT> > mSpectroPhases;
     
     BL_FLOAT mAddLineRemainder;
     

@@ -31,6 +31,9 @@
 
 #define USE_AVG_LINES 0 //1
 
+// Take the 4 last lines at the maximum
+// (otherwise it is too blurry)
+#define MAX_LINES 2 //4
 
 ChromaFftObj2::ChromaFftObj2(int bufferSize, int oversampling, int freqRes,
                              BL_FLOAT sampleRate)
@@ -51,6 +54,8 @@ ChromaFftObj2::ChromaFftObj2(int bufferSize, int oversampling, int freqRes,
 #if USE_FREQ_OBJ
     mFreqObj = new FreqAdjustObj3(bufferSize, oversampling, 1, sampleRate);
 #endif
+
+    ResetQueue();
 }
 
 ChromaFftObj2::~ChromaFftObj2()
@@ -118,8 +123,10 @@ ChromaFftObj2::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sam
     mSpectrogram->Reset(mSampleRate, mBufferSize/4, numCols);
     
     mLineCount = 0;
-    
-    mOverlapLines.clear();
+
+    //mOverlapLines.clear();
+
+    ResetQueue();
     
 #if USE_FREQ_OBJ
     mFreqObj->Reset(mBufferSize, mOverlapping, 1, mSampleRate);
@@ -190,7 +197,7 @@ ChromaFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 
     // Take the 4 last lines at the maximum
     // (otherwise it is too blurry)
-#define MAX_LINES 2 //4
+    //#define MAX_LINES 2 //4
     
     int maxLines = mOverlapping;
     if (maxLines > MAX_LINES)
@@ -198,9 +205,10 @@ ChromaFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         
     // Keep track of previous lines
     // For correctly display, with overlapping
-    mOverlapLines.push_back(magns);
-    if (mOverlapLines.size() > maxLines)
-        mOverlapLines.pop_front();
+    //mOverlapLines.push_back(magns);
+    //if (mOverlapLines.size() > maxLines)
+    //    mOverlapLines.pop_front();
+    mOverlapLines.push_pop(magns);
     
     // Simply make the average of the previous lines
     WDL_TypedBuf<BL_FLOAT> line;
@@ -408,6 +416,22 @@ ChromaFftObj2::ComputeC0Freq()
     BL_FLOAT C0 = BMinus1*toneMult;
     
     return C0;
+}
+
+void
+ChromaFftObj2::ResetQueue()
+{
+    // Resize
+    int maxLines = mOverlapping;
+    if (maxLines > MAX_LINES)
+        maxLines = MAX_LINES;
+    mOverlapLines.resize(maxLines);
+
+    // Set zero value
+    WDL_TypedBuf<BL_FLOAT> zeroLine;
+    zeroLine.Resize(mBufferSize/2);
+    BLUtils::FillAllZero(&zeroLine);
+    mOverlapLines.clear(zeroLine);
 }
 
 #endif // IGRAPHICS_NANOVG

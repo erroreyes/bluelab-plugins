@@ -112,6 +112,7 @@ SpectrogramDisplayScroll3::ResetScroll()
     
     mSpectroMagns.clear();
     mSpectroPhases.clear();
+    //ResetQueues();
     
     // Set to 0: no jump (but lag)
     // Set to mOverlapping: avoid very big lag
@@ -273,8 +274,8 @@ SpectrogramDisplayScroll3::PreDraw(NVGcontext *vg, int width, int height)
 
 void
 SpectrogramDisplayScroll3::SetSpectrogram(BLSpectrogram4 *spectro,
-                                         BL_FLOAT left, BL_FLOAT top,
-                                         BL_FLOAT right, BL_FLOAT bottom)
+                                          BL_FLOAT left, BL_FLOAT top,
+                                          BL_FLOAT right, BL_FLOAT bottom)
 {
     mSpectrogram = spectro;
     
@@ -332,6 +333,7 @@ void
 SpectrogramDisplayScroll3::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                                               const WDL_TypedBuf<BL_FLOAT> &phases)
 {
+#if 1
     mSpectroMagns.push_back(magns);
     mSpectroPhases.push_back(phases);
     
@@ -350,6 +352,10 @@ SpectrogramDisplayScroll3::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magn
     {
         mSpectroPhases.pop_front();
     }
+#endif
+
+    //mSpectroMagns.push_pop(magns);
+    //mSpectroPhases.push_pop(phases);
 }
 
 void
@@ -524,6 +530,27 @@ SpectrogramDisplayScroll3::ComputeScrollOffsetPixels(int width)
     mPrevPixelOffset = offsetPixels;
     
     return offsetPixels;
+}
+
+void
+SpectrogramDisplayScroll3::ResetQueues()
+{
+#if 0
+    // Resize
+    int maxCols = mSpectrogram->GetMaxNumCols();
+    int bufferLimit = maxCols*2;
+
+    mSpectroMagns.resize(bufferLimit);
+    mSpectroPhases.resize(bufferLimit);
+
+    // Set zero value
+    WDL_TypedBuf<BL_FLOAT> zeroLine;
+    zeroLine.Resize(mBufferSize/2);
+    BLUtils::FillAllZero(&zeroLine);
+    
+    mSpectroMagns.clear(zeroLine);
+    mSpectroPhases.clear(zeroLine);
+#endif
 }
 
 #endif // IGRAPHICS_NANOVG
