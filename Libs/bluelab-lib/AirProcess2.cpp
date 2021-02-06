@@ -11,7 +11,8 @@
 #include <DebugGraph.h>
 
 //#include <PartialTracker3.h>
-#include <PartialTracker4.h>
+//#include <PartialTracker4.h>
+#include <PartialTracker5.h>
 #include <SoftMaskingComp3.h>
 
 #include "AirProcess2.h"
@@ -37,7 +38,8 @@ AirProcess2::AirProcess2(int bufferSize,
     mSampleRate = sampleRate;
     
     //mPartialTracker = new PartialTracker3(bufferSize, sampleRate, overlapping);
-    mPartialTracker = new PartialTracker4(bufferSize, sampleRate, overlapping);
+    //mPartialTracker = new PartialTracker4(bufferSize, sampleRate, overlapping);
+    mPartialTracker = new PartialTracker5(bufferSize, sampleRate, overlapping);
     
     mMix = 0.5;
     mTransientSP = 0.5;
@@ -112,13 +114,14 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     BlaTimer::Start(&mTimer);
 #endif
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples = *ioBuffer;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples = mTmpBuf0;
+    fftSamples = *ioBuffer;
     
     // Take half of the complexes
     BLUtils::TakeHalf(&fftSamples);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf2;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
     
     DetectPartials(magns, phases);
@@ -129,8 +132,11 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
 #if 1 // ORIGIN
         // Noise "envelope"
-        WDL_TypedBuf<BL_FLOAT> noise;
+        WDL_TypedBuf<BL_FLOAT> &noise = mTmpBuf3;
         mPartialTracker->GetNoiseEnvelope(&noise);
+
+        // NEW
+        mPartialTracker->DenormData(&noise);
 #endif
         
         mNoise = noise;
@@ -142,11 +148,11 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
 #if 0 // Same result, with 6 ou 8 dB less
         // Noise "envelope"
-        WDL_TypedBuf<BL_FLOAT> noiseEnv;
+        WDL_TypedBuf<BL_FLOAT> &noiseEnv = mTmp4;
         mPartialTracker->GetNoiseEnvelope(&noiseEnv);
         
         // Gen noise, and mult by envelope
-        WDL_TypedBuf<BL_FLOAT> noise;
+        WDL_TypedBuf<BL_FLOAT> &noise = mTmp5;
         noise.Resize(noiseEnv.GetSize());
         BLUtils::GenNoise(&noise);
         
@@ -154,8 +160,11 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 #endif
         
         // Harmonic "envelope"
-        WDL_TypedBuf<BL_FLOAT> harmo;
+        WDL_TypedBuf<BL_FLOAT> &harmo = mTmpBuf6;
         mPartialTracker->GetHarmonicEnvelope(&harmo);
+
+        // NEW
+        mPartialTracker->DenormData(&harmo);
         
         mHarmo = harmo;
         
@@ -174,7 +183,7 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         // Origin
 #if !USE_SOFT_MASKING
         // Result
-        WDL_TypedBuf<BL_FLOAT> newMagns;
+        WDL_TypedBuf<BL_FLOAT> &newMagns = mTmpBuf7;
         newMagns.Resize(magns.GetSize());
         for (int i = 0; i < newMagns.GetSize(); i++)
         {
@@ -187,9 +196,9 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         magns = newMagns;
 #else // New: soft masking
         
-        WDL_TypedBuf<BL_FLOAT> noiseRatio;
+        WDL_TypedBuf<BL_FLOAT> &noiseRatio = mTmpBuf8;
         noiseRatio.Resize(noise.GetSize());
-        WDL_TypedBuf<BL_FLOAT> harmoRatio;
+        WDL_TypedBuf<BL_FLOAT> &harmoRatio = mTmpBuf9;
         harmoRatio.Resize(harmo.GetSize());
         for (int i = 0; i < noiseRatio.GetSize(); i++)
         {
@@ -217,18 +226,21 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         }
         
         // 0: noise, 1: harmo
-        WDL_TypedBuf<WDL_FFT_COMPLEX> result[2];
+        //WDL_TypedBuf<WDL_FFT_COMPLEX> result[2];
+        WDL_TypedBuf<WDL_FFT_COMPLEX> *result = mTmpBuf10;
         for (int i = 0; i < 2; i++)
         {
-            WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples0 = fftSamples;
-            WDL_TypedBuf<WDL_FFT_COMPLEX> inMask = fftSamples;
+            WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples0 = mTmpBuf11;
+            fftSamples0 = fftSamples;
+            WDL_TypedBuf<WDL_FFT_COMPLEX> &inMask = mTmpBuf12;
+            inMask = fftSamples;
             
             if (i == 0)
                 BLUtils::MultValues(&inMask, noiseRatio);
             else
                 BLUtils::MultValues(&inMask, harmoRatio);
             
-            WDL_TypedBuf<WDL_FFT_COMPLEX> softMask;
+            WDL_TypedBuf<WDL_FFT_COMPLEX> &softMask = mTmpBuf13;
             mSoftMaskingComps[i]->ProcessCentered(&fftSamples0,
                                                   &inMask,
                                                   &softMask);
@@ -249,7 +261,7 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         }
         
         // Combine the result
-        WDL_TypedBuf<WDL_FFT_COMPLEX> outResult;
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &outResult = mTmpBuf14;
         outResult.Resize(result[0].GetSize());
         for (int i = 0; i < outResult.GetSize(); i++)
         {
@@ -338,7 +350,7 @@ AirProcess2::GetSum(WDL_TypedBuf<BL_FLOAT> *magns)
 
 void
 AirProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                           const WDL_TypedBuf<BL_FLOAT> &phases)
+                            const WDL_TypedBuf<BL_FLOAT> &phases)
 {    
     if (!mDebugFreeze)
         mPartialTracker->SetData(magns, phases);

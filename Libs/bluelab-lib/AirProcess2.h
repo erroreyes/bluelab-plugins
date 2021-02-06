@@ -30,7 +30,8 @@ using namespace std;
 // - code clean (removed transient stuff)
 
 //class PartialTracker3;
-class PartialTracker4;
+//class PartialTracker4;
+class PartialTracker5;
 class SoftMaskingComp3;
 class AirProcess2 : public ProcessObj
 {
@@ -67,7 +68,8 @@ protected:
     BL_FLOAT mSampleRate;
     
     //PartialTracker3 *mPartialTracker;
-    PartialTracker4 *mPartialTracker;
+    //PartialTracker4 *mPartialTracker;
+    PartialTracker5 *mPartialTracker;
     
     BL_FLOAT mMix;
     BL_FLOAT mTransientSP;
@@ -85,6 +87,24 @@ protected:
     BlaTimer mTimer;
     long mCount;
 #endif
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf7;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf9;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf10[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf11;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf12;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf13;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf14;
 };
 
 #endif /* defined(__BL_Air__AirProcess2__) */
