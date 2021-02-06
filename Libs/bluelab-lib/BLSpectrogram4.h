@@ -48,7 +48,6 @@ public:
     void TouchData();
     
     void SetValueScale(Scale::Type scale);
-    //void SetYLogScale(bool flag);
     void SetYScale(Scale::Type yScale);
     
     void SetDisplayMagns(bool flag);
@@ -103,31 +102,25 @@ public:
     BL_FLOAT GetSampleRate();
     
 protected:
-    void UnwrapAllPhases(//const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
-                         const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+    void UnwrapAllPhases(const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
                          vector<WDL_TypedBuf<BL_FLOAT> > *outPhases,
                          bool hozirontal, bool vertical);
     
     // Unwrap in place (slow)
-    void UnwrapAllPhases(//deque<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
-                         bl_queue<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
+    void UnwrapAllPhases(bl_queue<WDL_TypedBuf<BL_FLOAT> > *ioPhases,
                          bool horizontal, bool vertical);
     
-    void PhasesToStdVector(//const deque<WDL_TypedBuf<BL_FLOAT> > &inPhases,
-                           const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
+    void PhasesToStdVector(const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inPhases,
                            vector<WDL_TypedBuf<BL_FLOAT> > *outPhases);
 
     void StdVectorToPhases(const vector<WDL_TypedBuf<BL_FLOAT> > &inPhases,
-                           //deque<WDL_TypedBuf<BL_FLOAT> > *outPhases);
                            bl_queue<WDL_TypedBuf<BL_FLOAT> > *outPhases);
     
     void UnwrapLineX(WDL_TypedBuf<BL_FLOAT> *phases);
     
     void UnwrapLineY(WDL_TypedBuf<BL_FLOAT> *phases);
-    
-    void FillWithZeros();
-    
-    
+
+    //
     void SavePPM(const char *filename, int maxValue);
     
     static BLSpectrogram4 *ImageToSpectrogram(BL_FLOAT sampleRate,
@@ -176,15 +169,12 @@ protected:
     // Display derivative of phases instead of phase unwrap ?
     bool mDisplayDPhases;
     
-    //deque<WDL_TypedBuf<BL_FLOAT> > mMagns;
     bl_queue<WDL_TypedBuf<BL_FLOAT> > mMagns;
     
     // Raw phases
-    //deque<WDL_TypedBuf<BL_FLOAT> > mPhases;
     bl_queue<WDL_TypedBuf<BL_FLOAT> > mPhases;
     
     // Unwrapped phases
-    //deque<WDL_TypedBuf<BL_FLOAT> > mUnwrappedPhases;
     bl_queue<WDL_TypedBuf<BL_FLOAT> > mUnwrappedPhases;
     
     // Count the total number of lines added

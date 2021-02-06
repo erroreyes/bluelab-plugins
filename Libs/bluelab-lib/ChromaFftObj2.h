@@ -91,7 +91,6 @@ protected:
     
     long mLineCount;
     
-    //deque<WDL_TypedBuf<BL_FLOAT> > mOverlapLines;
     bl_queue<WDL_TypedBuf<BL_FLOAT> > mOverlapLines;
     
     WDL_TypedBuf<BL_FLOAT> mSmoothWin;

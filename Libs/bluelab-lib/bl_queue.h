@@ -10,7 +10,7 @@ template<class T> class bl_queue
 {
 public:
     bl_queue(int size) { mFixedSize = true; mData.resize(size); mCursor = 0; }
-    bl_queue() { mFixedSize = true; mCursor = 0; }
+    bl_queue() { mFixedSize = false; mCursor = 0; }
     ~bl_queue() { mData.clear(); mNonFixedSizeData.clear(); }
 
     bool empty() const
@@ -62,35 +62,9 @@ public:
         mCursor = 0;
     }
 
-    void set_fixed_size(bool fixed)
-    {
-        if (mFixedSize && !fixed)
-        {
-            mNonFixedSizeData.clear();
-            for (int i = 0; i < mData.size(); i++)
-            {
-                mNonFixedSizeData.push_back(mData[(mCursor + i) % mData.size()]);
-            }
-            
-            mData.clear();
-            mCursor = 0;
-        }
-        else if (!mFixedSize && fixed)
-        {
-            mData.resize(mNonFixedSizeData.size());
-            mCursor = 0;
-            
-            for (int i = 0; i < mNonFixedSizeData.size(); i++)
-            {
-                mData[i] = mNonFixedSizeData[i];
-            }
-
-            mNonFixedSizeData.clear();
-        }
-
-        mFixedSize = fixed;
-    }
-
+    void freeze() { set_fixed_size(true); }
+    void unfreeze() { set_fixed_size(false); }
+    
     // For fixed size
     //
     
@@ -99,8 +73,16 @@ public:
     // no memory is allocated or deallocated
     void push_pop(T value)
     {
-        mData[mCursor] = value;
-        mCursor = (mCursor + 1) % mData.size();
+        if (mFixedSize)
+        {
+            mData[mCursor] = value;
+            mCursor = (mCursor + 1) % mData.size();
+        }
+        else
+        {
+            mNonFixedSizeData.push_back(value);
+            mNonFixedSizeData.pop_front();
+        }
     }
 
     // For non fixed size
@@ -136,6 +118,36 @@ public:
     }
     
  protected:
+    void set_fixed_size(bool fixed)
+    {
+        if (mFixedSize && !fixed)
+        {
+            mNonFixedSizeData.clear();
+            for (int i = 0; i < mData.size(); i++)
+            {
+                mNonFixedSizeData.push_back(mData[(mCursor + i) % mData.size()]);
+            }
+            
+            mData.clear();
+            mCursor = 0;
+        }
+        else if (!mFixedSize && fixed)
+        {
+            mData.resize(mNonFixedSizeData.size());
+            mCursor = 0;
+            
+            for (int i = 0; i < mNonFixedSizeData.size(); i++)
+            {
+                mData[i] = mNonFixedSizeData[i];
+            }
+
+            mNonFixedSizeData.clear();
+        }
+
+        mFixedSize = fixed;
+    }
+
+    //
     vector<T> mData;
 
     int mCursor;

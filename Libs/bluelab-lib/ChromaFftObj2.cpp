@@ -105,7 +105,8 @@ ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
 }
 
 void
-ChromaFftObj2::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate)
+ChromaFftObj2::Reset(int bufferSize, int oversampling,
+                     int freqRes, BL_FLOAT sampleRate)
 {
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
@@ -124,8 +125,7 @@ ChromaFftObj2::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sam
     
     mLineCount = 0;
 
-    //mOverlapLines.clear();
-
+    //
     ResetQueue();
     
 #if USE_FREQ_OBJ
@@ -205,9 +205,6 @@ ChromaFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         
     // Keep track of previous lines
     // For correctly display, with overlapping
-    //mOverlapLines.push_back(magns);
-    //if (mOverlapLines.size() > maxLines)
-    //    mOverlapLines.pop_front();
     mOverlapLines.push_pop(magns);
     
     // Simply make the average of the previous lines
