@@ -3229,6 +3229,32 @@ BLUtils::TakeHalf(WDL_TypedBuf<WDL_FFT_COMPLEX> *buf)
     buf->Resize(halfSize);
 }
 
+template <typename FLOAT_TYPE>
+void
+BLUtils::TakeHalf(const WDL_TypedBuf<FLOAT_TYPE> &inBuf,
+                  WDL_TypedBuf<FLOAT_TYPE> *outBuf)
+{
+    int halfSize = inBuf.GetSize() / 2;
+    outBuf->Resize(halfSize);
+
+    memcpy(outBuf->Get(), inBuf.Get(), halfSize*sizeof(FLOAT_TYPE));
+}
+template void BLUtils::TakeHalf(const WDL_TypedBuf<float> &inBuf,
+                                WDL_TypedBuf<float> *outBuf);
+template void BLUtils::TakeHalf(const WDL_TypedBuf<double> &inBuf,
+                                WDL_TypedBuf<double> *outBuf);
+
+void
+BLUtils::TakeHalf(const WDL_TypedBuf<WDL_FFT_COMPLEX> &inBuf,
+                  WDL_TypedBuf<WDL_FFT_COMPLEX> *outBuf)
+{
+    int halfSize = inBuf.GetSize() / 2;
+    outBuf->Resize(halfSize);
+
+    memcpy(outBuf->Get(), inBuf.Get(), halfSize*sizeof(WDL_FFT_COMPLEX));
+}
+
+#if 0 // not optimal
 void
 BLUtils::TakeHalf(WDL_TypedBuf<WDL_FFT_COMPLEX> *res, const WDL_TypedBuf<WDL_FFT_COMPLEX> &buf)
 {
@@ -3237,6 +3263,7 @@ BLUtils::TakeHalf(WDL_TypedBuf<WDL_FFT_COMPLEX> *res, const WDL_TypedBuf<WDL_FFT
     res->Resize(0);
     res->Add(buf.Get(), halfSize);
 }
+#endif
 
 // OPTIM PROF Infra
 #if 0 // ORIGIN
@@ -6051,6 +6078,86 @@ BLUtils::FillSecondFftHalf(WDL_TypedBuf<FLOAT_TYPE> *ioMagns)
 }
 template void BLUtils::FillSecondFftHalf(WDL_TypedBuf<float> *ioMagns);
 template void BLUtils::FillSecondFftHalf(WDL_TypedBuf<double> *ioMagns);
+
+void
+BLUtils::FillSecondFftHalf(const WDL_TypedBuf<WDL_FFT_COMPLEX> &inHalfBuf,
+                           WDL_TypedBuf<WDL_FFT_COMPLEX> *outBuf)
+{
+    if (inHalfBuf.GetSize() < 1)
+        return;
+    outBuf->Resize(inHalfBuf.GetSize()*2);
+
+    memcpy(outBuf->Get(), inHalfBuf.Get(),
+           inHalfBuf.GetSize()*sizeof(WDL_FFT_COMPLEX));
+           
+    // It is important that the "middle value" (ie index 1023) is duplicated
+    // to index 1024. So we have twice the center value
+    
+    int ioBufferSize2 = inHalfBuf.GetSize();
+    WDL_FFT_COMPLEX *ioBufferData = outBuf->Get();
+    
+    for (int i = 1; i < ioBufferSize2; i++)
+    {
+        int id0 = i + ioBufferSize2;
+        
+        // Orig, bug...
+        // doesn't fill exactly the symetry (the last value differs)
+        // but WDL generates ffts like that
+        int id1 = ioBufferSize2 - i;
+        
+        // FIX: fill the value at the middle
+        // (which was not filled, and could be undefined if not filled outside the function)
+        //
+        // NOTE: added for Rebalance, to fix a bug:
+        // - waveform values like 1e+250
+        //
+        // NOTE: quick fix, better solution could be found, by
+        // comparing with WDL fft
+        //
+        // NOTE: could fix many plugins, like for example StereoViz
+        //
+        ioBufferData[ioBufferSize2].re = 0.0;
+        ioBufferData[ioBufferSize2].im = 0.0;
+        
+        ioBufferData[id0].re = ioBufferData[id1].re;
+        
+        // Complex conjugate
+        ioBufferData[id0].im = -ioBufferData[id1].im;
+    }
+}
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::FillSecondFftHalf(const WDL_TypedBuf<FLOAT_TYPE> &inHalfMagns,
+                           WDL_TypedBuf<FLOAT_TYPE> *outMagns)
+{
+    if (inHalfMagns.GetSize() < 1)
+        return;
+    outMagns->Resize(inHalfMagns.GetSize()*2);
+    memcpy(outMagns->Get(), inHalfMagns.Get(),
+           inHalfMagns.GetSize()*sizeof(FLOAT_TYPE));
+    
+    int ioMagnsSize2 = outMagns->GetSize()/2;
+    FLOAT_TYPE *outMagnsData = outMagns->Get();
+    
+    for (int i = 1; i < ioMagnsSize2; i++)
+    {
+        int id0 = i + ioMagnsSize2;
+        
+        // WARNING: doesn't fill exactly the symetry (the last value differs)
+        // but WDL generates ffts like that
+        int id1 = ioMagnsSize2 - i;
+        
+        // FIX: fill the value at the middle
+        outMagnsData[ioMagnsSize2] = 0.0;
+        
+        outMagnsData[id0] = outMagnsData[id1];
+    }
+}
+template void BLUtils::FillSecondFftHalf(const WDL_TypedBuf<float> &inHalfMagns,
+                                         WDL_TypedBuf<float> *outMagns);
+template void BLUtils::FillSecondFftHalf(const WDL_TypedBuf<double> &inHalfMagns,
+                                         WDL_TypedBuf<double> *outMagns);
 
 template <typename FLOAT_TYPE>
 void

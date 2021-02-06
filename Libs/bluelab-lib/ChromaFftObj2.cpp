@@ -35,6 +35,9 @@
 // (otherwise it is too blurry)
 #define MAX_LINES 2 //4
 
+// No need to process output data, BL-Chroma doesn't modify the sound!
+#define OPTIM_NO_RESYNTH 1
+
 ChromaFftObj2::ChromaFftObj2(int bufferSize, int oversampling, int freqRes,
                              BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
@@ -65,25 +68,25 @@ ChromaFftObj2::~ChromaFftObj2()
 #if USE_FREQ_OBJ
     delete mFreqObj;
 #endif
-
 }
 
 void
-ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
                                 const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
-    BLUtils::TakeHalf(ioBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf0;
+    BLUtils::TakeHalf(*ioBuffer0, &ioBuffer);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf2;
+    BLUtils::ComplexToMagnPhase(&magns, &phases, ioBuffer);
 
-    WDL_TypedBuf<BL_FLOAT> chromaLine;
+    WDL_TypedBuf<BL_FLOAT> &chromaLine = mTmpBuf3;
     
 #if USE_FREQ_OBJ
     // Must update the freq obj at each step
     // (otherwise the detection will be very bad if mSpeedMod != 1)
-    WDL_TypedBuf<BL_FLOAT> realFreqs;
+    WDL_TypedBuf<BL_FLOAT> &realFreqs = mTmpBuf4;
     mFreqObj->ComputeRealFrequencies(phases, &realFreqs);
 #endif
     
@@ -99,9 +102,11 @@ ChromaFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     }   
 
     mLineCount++;
-    
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+
+#if !OPTIM_NO_RESYNTH
+    //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+    BLUtils::FillSecondFftHalf(ioBuffer, ioBuffer0);
+#endif
 }
 
 void

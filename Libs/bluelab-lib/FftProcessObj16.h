@@ -15,6 +15,7 @@ using namespace std;
 #include "IPlug_include_in_plug_hdr.h"
 
 #include "../../WDL/fft.h"
+#include "../../WDL/fastqueue.h"
 
 //#include <FifoDecimator.h>
 
@@ -269,7 +270,8 @@ public:
     ProcessObj *GetChannelProcessObject(int channelNum);
     void SetChannelProcessObject(int channelNum, ProcessObj *obj);
     
-    WDL_TypedBuf<BL_FLOAT> *GetChannelSamples(int channelNum);
+    //WDL_TypedBuf<BL_FLOAT> *GetChannelSamples(int channelNum);
+    WDL_TypedFastQueue<BL_FLOAT> *GetChannelSamples(int channelNum);
     
     WDL_TypedBuf<WDL_FFT_COMPLEX> *GetChannelFft(int channelNum);
     
@@ -321,16 +323,19 @@ public:
     
     static void ComputeInverseFft(const WDL_TypedBuf<BL_FLOAT> &fftSamplesReal,
                                   WDL_TypedBuf<BL_FLOAT> *ifftSamplesReal,
-                                  bool normalize = false);
+                                  bool normalize = false,
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *tmpBuffer = NULL);
     
 #if 1 // Moved to public for DUET and phase aliasing correction
     static void ComputeFft(const WDL_TypedBuf<BL_FLOAT> &samples,
                            WDL_TypedBuf<WDL_FFT_COMPLEX> *fftSamples,
-                           int freqRes);
+                           int freqRes,
+                           WDL_TypedBuf<WDL_FFT_COMPLEX> *tmpBuffer = NULL);
     
     static void ComputeInverseFft(const WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples,
                                   WDL_TypedBuf<BL_FLOAT> *samples,
-                                  int freqRes);
+                                  int freqRes,
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *tmpBuffer = NULL);
 #endif
     
 protected:
@@ -352,7 +357,8 @@ protected:
     void SetupSideChain();
     
     //
-    void GetAllSamples(vector<WDL_TypedBuf<BL_FLOAT> * > *samples);
+    //void GetAllSamples(vector<WDL_TypedBuf<BL_FLOAT> * > *samples);
+    void GetAllSamples(vector<WDL_TypedFastQueue<BL_FLOAT> * > *samples);
     void GetAllScSamples(vector<WDL_TypedBuf<BL_FLOAT> > *scSamples);
 
     
@@ -376,7 +382,8 @@ protected:
     
     // Raw
     static void ComputeInverseFft(const WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples,
-                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *iFftSamples);
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *iFftSamples,
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *tmpBuffer = NULL);
     
     friend class ProcessObjChannel;
     static void MakeWindows(int bufSize, int overlapping,
@@ -399,6 +406,15 @@ protected:
     
     //
     vector<MultichannelProcess *> mMcProcesses;
+
+private:
+    // Tmp buffers
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf0;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf1;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf2;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf3;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf4;
+    vector<WDL_TypedBuf<BL_FLOAT> *> mTmpBuf5;
 };
 
 #endif /* defined(__Transient__FftProcessObj16__) */

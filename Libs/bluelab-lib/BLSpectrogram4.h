@@ -193,6 +193,11 @@ protected:
 #endif
     
     Scale *mScale;
+
+private:
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
 };
 
 #endif /* defined(__Denoiser__BLSpectrogram4__) */

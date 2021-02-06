@@ -103,6 +103,14 @@ protected:
 #if USE_FREQ_OBJ
     FreqAdjustObj3 *mFreqObj;
 #endif
+    
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
 };
 
 #endif /* defined(__BL_Chroma__ChromaFftObj__) */

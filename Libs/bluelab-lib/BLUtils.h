@@ -588,8 +588,15 @@ public:
     static void TakeHalf(WDL_TypedBuf<FLOAT_TYPE> *buf);
     
     static void TakeHalf(WDL_TypedBuf<WDL_FFT_COMPLEX> *buf);
+
+    template <typename FLOAT_TYPE>
+    static void TakeHalf(const WDL_TypedBuf<FLOAT_TYPE> &inBuf,
+                         WDL_TypedBuf<FLOAT_TYPE> *outBuf);
     
-    static void TakeHalf(WDL_TypedBuf<WDL_FFT_COMPLEX> *res, const WDL_TypedBuf<WDL_FFT_COMPLEX> &buf);
+    static void TakeHalf(const WDL_TypedBuf<WDL_FFT_COMPLEX> &inBuf,
+                         WDL_TypedBuf<WDL_FFT_COMPLEX> *outBuf);
+    
+    //static void TakeHalf(WDL_TypedBuf<WDL_FFT_COMPLEX> *res, const WDL_TypedBuf<WDL_FFT_COMPLEX> &buf);
     
     template <typename FLOAT_TYPE>
     static void ResizeFillZeros(WDL_TypedBuf<FLOAT_TYPE> *buf, int newSize);
@@ -754,13 +761,23 @@ public:
     
     template <typename FLOAT_TYPE>
     static void MinMaxFftBinFreq(FLOAT_TYPE *minFreq, FLOAT_TYPE *maxFreq, int numBins, FLOAT_TYPE sampleRate);
-    
+
+    //
     static void FillSecondFftHalf(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer);
     
     // Magns only
     template <typename FLOAT_TYPE>
     static void FillSecondFftHalf(WDL_TypedBuf<FLOAT_TYPE> *ioMagns);
+
+    static void FillSecondFftHalf(const WDL_TypedBuf<WDL_FFT_COMPLEX> &inHalfBuf,
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *outBuf);
     
+    // Magns only
+    template <typename FLOAT_TYPE>
+    static void FillSecondFftHalf(const WDL_TypedBuf<FLOAT_TYPE> &inHalfMagns,
+                                  WDL_TypedBuf<FLOAT_TYPE> *outMagns);
+
+    //
     template <typename FLOAT_TYPE>
     static void FftIdsToSamplesIds(const WDL_TypedBuf<FLOAT_TYPE> &phases,
                                    WDL_TypedBuf<int> *samplesIds);

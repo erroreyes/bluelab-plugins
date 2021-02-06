@@ -305,8 +305,11 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         return;
     }
     
-    WDL_TypedBuf<BL_FLOAT> magns0 = magns;
-    WDL_TypedBuf<BL_FLOAT> phases0 = phases;
+    WDL_TypedBuf<BL_FLOAT> &magns0 = mTmpBuf0;
+    magns0 = magns;
+    
+    WDL_TypedBuf<BL_FLOAT> &phases0 = mTmpBuf1;
+    phases0 = phases;
     
     mScale->ApplyScale(mYScale, &magns0,
                        (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
@@ -327,7 +330,9 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     // (Works like a charm !)
     //WDL_TypedBuf<BL_FLOAT> dbMagns;
     //BLUtils::AmpToDBNorm(&dbMagns, magns0, (BL_FLOAT)1e-15, (BL_FLOAT)-120.0);
-    WDL_TypedBuf<BL_FLOAT> dbMagns = magns0;
+    WDL_TypedBuf<BL_FLOAT> &dbMagns = mTmpBuf2;
+    dbMagns = magns0;
+    
     if (mValueScale == Scale::DB)
     {
         for (int i = 0; i < magns0.GetSize(); i++)

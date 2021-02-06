@@ -188,7 +188,7 @@ SpectrogramDisplayScroll3::DoUpdateSpectrogram()
     if (mNeedUpdateColormapData || (mNvgColormapImage == 0))
     {
         // Colormap
-        WDL_TypedBuf<unsigned int> colorMapData;
+        WDL_TypedBuf<unsigned int> &colorMapData = mTmpBuf0;
         bool updated = mSpectrogram->GetColormapImageDataRGBA(&colorMapData);
         if (updated || (mNvgColormapImage == 0))
         {

@@ -28,6 +28,9 @@
 //
 // GraphTimeAxis6: fromGraphTimeAxis5:
 // Improved for Ghost
+
+#define MAX_NUM_LABELS 128
+
 class GUIHelper12;
 class GraphControl12;
 class GraphTimeAxis6
@@ -80,6 +83,9 @@ protected:
     bool mMustUpdate;
     
     bool mSqueezeBorderLabels;
+
+    char *mHAxisData[MAX_NUM_LABELS][2];
+    bool mAxisDataAllocated;
 };
 
 #endif

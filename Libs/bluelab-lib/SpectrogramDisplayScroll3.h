@@ -144,6 +144,9 @@ protected:
     
     // Variable speed
     int mSpeedMod;
+
+private:
+    WDL_TypedBuf<unsigned int> mTmpBuf0;
 };
 
 #endif // IGRAPHICS_NANOVG
