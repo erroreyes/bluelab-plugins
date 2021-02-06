@@ -415,6 +415,7 @@ private:
     vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf3;
     vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf4;
     vector<WDL_TypedBuf<BL_FLOAT> *> mTmpBuf5;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf6;
 };
 
 #endif /* defined(__Transient__FftProcessObj16__) */

@@ -8,6 +8,7 @@
 
 #include <Window.h>
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 #include "FftProcessObj16.h"
 
@@ -1185,7 +1186,7 @@ ProcessObjChannel::CommitResultStep()
 #else
     BLUtils::AddValues(buf.Get(), mResult.Get(), loopCount);
 #endif
-
+    
     mResultSum.SetFromBuf(0, buf.Get(), loopCount);
 }
 
@@ -1348,7 +1349,7 @@ ProcessObjChannel::NextOutBuffer()
         //       &mResultSum.Get()[mShift],
         //       (mResultSum.GetSize() - mShift)*sizeof(BL_FLOAT));
         mResultSum.GetToBuf(mShift, mTmpBuf1.Get(), mResultSum.Available() - mShift);
-                            
+        
         // Fill the end with zeros
         memset(&mTmpBuf1.Get()[mTmpBuf1.GetSize() - mShift],
                0, mShift*sizeof(BL_FLOAT));
@@ -1649,7 +1650,7 @@ FftProcessObj16::InputSamplesReady()
     GetAllSamples(&samples0);
     
     // Convert queue to vector (copy)
-    vector<WDL_TypedBuf<BL_FLOAT> > &samples1 = mTmpBuf3;
+    vector<WDL_TypedBuf<BL_FLOAT> > &samples1 = mTmpBuf6;
     samples1.resize(samples0.size());
     for (int i = 0; i < samples0.size(); i++)
     {
@@ -2336,7 +2337,7 @@ FftProcessObj16::ProcessSamples()
         }
         
         ResultSamplesReady();
-            
+
         for (int i = mChannels.size() - 1; i >= 0 ; i--)
         {
             ProcessObjChannel *chan = mChannels[i];
@@ -2344,7 +2345,7 @@ FftProcessObj16::ProcessSamples()
         }
         
         ResultSamplesWinReady();
-            
+
         for (int i = mChannels.size() - 1; i >= 0 ; i--)
         {
             ProcessObjChannel *chan = mChannels[i];
