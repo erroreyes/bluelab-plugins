@@ -21,7 +21,7 @@ public:
             return mNonFixedSizeData.size();
     }
     
-    void clear(T value)
+    void clear(const T &value)
     {
         if (mFixedSize)
         {
@@ -71,7 +71,7 @@ public:
     // Push a new value and pop at the same time
     // so the queue size stays the same, and
     // no memory is allocated or deallocated
-    void push_pop(T value)
+    void push_pop(const T &value)
     {
         if (mFixedSize)
         {
@@ -88,7 +88,7 @@ public:
     // For non fixed size
     //
     
-    void push_back(T value)
+    void push_back(const T &value)
     {
         set_fixed_size(false);
         mNonFixedSizeData.push_back(value);
