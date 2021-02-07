@@ -1019,14 +1019,21 @@ ProcessObjChannel::MakeFftStep()
     if (mFreqRes > 1)
     {
         // Non-cyclic technique, to avoid aliasing
-        BLUtils::ResizeFillZeros(&mPreparedBuffer, mPreparedBuffer.GetSize()*mFreqRes);
+        BLUtils::ResizeFillZeros(&mPreparedBuffer,
+                                 mPreparedBuffer.GetSize()*mFreqRes);
     }
     
     if (!mIsEnabled || mSkipFFT)
     {
+#if 0 // Original version, tested a lot on iPlug1
         // Be careful to not add the beginning of the buffer
         // (otherwise the windows will be applied twice sometimes).
         mResult.Add(mPreparedBuffer.Get(), mBufferSize);
+#endif
+
+#if 1 // New version, for iPlug2 and memory optimization
+        mResult = mPreparedBuffer;
+#endif
     }
     else
     {
@@ -1177,7 +1184,7 @@ ProcessObjChannel::CommitResultStep()
     WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf3;
     buf.Resize(loopCount);
     mResultSum.GetToBuf(0, buf.Get(), loopCount);
-
+    
 #if !OPTIM_SIMD
     for (int i = 0; i < loopCount; i++)
     {
