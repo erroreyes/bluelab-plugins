@@ -31,6 +31,7 @@
 
 class RebalanceMaskPredictorComp6;
 class SoftMaskingNComp;
+class Scale;
 class RebalanceProcessFftObjComp3 : public ProcessObj
 {
 public:
@@ -108,6 +109,8 @@ protected:
     
     // Mix parameters
     BL_FLOAT mMixes[NUM_STEM_SOURCES];
+
+    Scale *mScale;
 };
 
 #endif /* defined(__BL_Rebalance__RebalanceProcessFftObjComp3__) */

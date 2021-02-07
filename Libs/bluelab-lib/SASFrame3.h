@@ -211,6 +211,8 @@ protected:
     WavetableSynth *mTableSynth;
     
     BL_FLOAT mMinAmpDB;
+
+    Scale *mScale;
 };
 
 #endif /* defined(__BL_SASViewer__SASFrame3__) */

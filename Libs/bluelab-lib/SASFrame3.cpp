@@ -128,6 +128,8 @@ SASFrame3::SASFrame3(int bufferSize, BL_FLOAT sampleRate, int overlapping)
     mPrevFrequency = -1.0;
     
     mPitch = 1.0;
+
+    mScale = new Scale();
     
     //mPartialsToFreq = new PartialsToFreqCepstrum(bufferSize, sampleRate);
     mPartialsToFreq = new PartialsToFreq5(bufferSize, sampleRate);
@@ -159,6 +161,8 @@ SASFrame3::~SASFrame3()
 #if COMPUTE_SAS_SAMPLES_TABLE
     delete mTableSynth;
 #endif
+
+    delete mScale;
 }
 
 void
@@ -1352,12 +1356,12 @@ SASFrame3::GetColor(const WDL_TypedBuf<BL_FLOAT> &color,
         //col = (1.0 - t)*col0 + t*col1;
         
         // Method 2: interpolate in dB
-        col0 = Scale::ApplyScale(Scale::DB, col0, mMinAmpDB, (BL_FLOAT)0.0);
-        col1 = Scale::ApplyScale(Scale::DB, col1, mMinAmpDB, (BL_FLOAT)0.0);
+        col0 = mScale->ApplyScale(Scale::DB, col0, mMinAmpDB, (BL_FLOAT)0.0);
+        col1 = mScale->ApplyScale(Scale::DB, col1, mMinAmpDB, (BL_FLOAT)0.0);
         
         col = (1.0 - t)*col0 + t*col1;
         
-        col = Scale::ApplyScale(Scale::DB_INV, col, mMinAmpDB, (BL_FLOAT)0.0);
+        col = mScale->ApplyScale(Scale::DB_INV, col, mMinAmpDB, (BL_FLOAT)0.0);
     }
     
     return col;
@@ -2020,7 +2024,7 @@ SASFrame3::ComputeColorAux()
         BL_FLOAT amp = p.mAmp;
         
 #if COLOR_DB_INTERP
-        amp = Scale::ApplyScale(Scale::DB, amp, mMinAmpDB, (BL_FLOAT)0.0);
+        amp = mScale->ApplyScale(Scale::DB, amp, mMinAmpDB, (BL_FLOAT)0.0);
 #endif
         
         if (((int)idx >= 0) && ((int)idx < mColor.GetSize()))
@@ -2054,7 +2058,7 @@ SASFrame3::ComputeColorAux()
     {
         BL_FLOAT c = mColor.Get()[i];
         
-        c = Scale::ApplyScale(Scale::DB_INV, c, mMinAmpDB, (BL_FLOAT)0.0);
+        c = mScale->ApplyScale(Scale::DB_INV, c, mMinAmpDB, (BL_FLOAT)0.0);
      
         mColor.Get()[i] = c;
     }
@@ -2449,12 +2453,12 @@ SASFrame3::GetFreq(BL_FLOAT freq0, BL_FLOAT freq1, BL_FLOAT t)
     
     // Method 2: mel scale
     BL_FLOAT maxFreq = mSampleRate*0.5;
-    freq0 = Scale::ApplyScale(Scale::MEL, freq0/maxFreq, (BL_FLOAT)0.0, maxFreq);
-    freq1 = Scale::ApplyScale(Scale::MEL, freq1/maxFreq, (BL_FLOAT)0.0, maxFreq);
+    freq0 = mScale->ApplyScale(Scale::MEL, freq0/maxFreq, (BL_FLOAT)0.0, maxFreq);
+    freq1 = mScale->ApplyScale(Scale::MEL, freq1/maxFreq, (BL_FLOAT)0.0, maxFreq);
     
     BL_FLOAT freq = (1.0 - t)*freq0 + t*freq1;
     
-    freq = Scale::ApplyScale(Scale::MEL_INV, freq, (BL_FLOAT)0.0, maxFreq);
+    freq = mScale->ApplyScale(Scale::MEL_INV, freq, (BL_FLOAT)0.0, maxFreq);
     freq *= maxFreq;
     
     return freq;
@@ -2467,12 +2471,12 @@ SASFrame3::GetAmp(BL_FLOAT amp0, BL_FLOAT amp1, BL_FLOAT t)
     //BL_FLOAT amp = (1.0 - t)*amp0 + t*amp1;
     
     // Method 2: (if amp is not already in dB)
-    amp0 = Scale::ApplyScale(Scale::DB, amp0, mMinAmpDB, (BL_FLOAT)0.0);
-    amp1 = Scale::ApplyScale(Scale::DB, amp1, mMinAmpDB, (BL_FLOAT)0.0);
+    amp0 = mScale->ApplyScale(Scale::DB, amp0, mMinAmpDB, (BL_FLOAT)0.0);
+    amp1 = mScale->ApplyScale(Scale::DB, amp1, mMinAmpDB, (BL_FLOAT)0.0);
     
     BL_FLOAT amp = (1.0 - t)*amp0 + t*amp1;
     
-    amp = Scale::ApplyScale(Scale::DB_INV, amp, mMinAmpDB, (BL_FLOAT)0.0);
+    amp = mScale->ApplyScale(Scale::DB_INV, amp, mMinAmpDB, (BL_FLOAT)0.0);
     
     return amp;
 }
@@ -2484,12 +2488,12 @@ SASFrame3::GetCol(BL_FLOAT col0, BL_FLOAT col1, BL_FLOAT t)
     //BL_FLOAT col = (1.0 - t)*col0 + t*col1;
     
     // Method 2: (if col is not already in dB)
-    col0 = Scale::ApplyScale(Scale::DB, col0, mMinAmpDB, (BL_FLOAT)0.0);
-    col1 = Scale::ApplyScale(Scale::DB, col1, mMinAmpDB, (BL_FLOAT)0.0);
+    col0 = mScale->ApplyScale(Scale::DB, col0, mMinAmpDB, (BL_FLOAT)0.0);
+    col1 = mScale->ApplyScale(Scale::DB, col1, mMinAmpDB, (BL_FLOAT)0.0);
     
     BL_FLOAT col = (1.0 - t)*col0 + t*col1;
     
-    col = Scale::ApplyScale(Scale::DB_INV, col, mMinAmpDB, (BL_FLOAT)0.0);
+    col = mScale->ApplyScale(Scale::DB_INV, col, mMinAmpDB, (BL_FLOAT)0.0);
     
     return col;
 }

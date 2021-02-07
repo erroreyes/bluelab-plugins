@@ -201,3 +201,5 @@ AutoGain: vumeter doesn't move
 - TODO: improve queue (WDL fast queue ? / cyclic queue ?)
 
 - BUG: App, all plugins. At first launch, message "set soundcard". We se once. We relaunch. It is reset. After setting a second time this is ok.
+
+- TODO: all plugins - remove darknet marcos in bl_config.h (except in BL-Rebalance)

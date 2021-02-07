@@ -78,7 +78,7 @@ protected:
     //
     vector<GraphAxisData> mValues;
     
-    Scale::Type mScale;
+    Scale::Type mScaleType;
     BL_FLOAT mMinVal;
     BL_FLOAT mMaxVal;
     
@@ -110,6 +110,8 @@ protected:
     BL_GUI_FLOAT mBounds[2];
     
     GraphControl12 *mGraph;
+
+    Scale *mScale;
 };
 
 #endif

@@ -338,8 +338,8 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         for (int i = 0; i < magns0.GetSize(); i++)
         {
             BL_FLOAT val = magns0.Get()[i];
-            val = Scale::ApplyScale(mValueScale, val,
-                                    (BL_FLOAT)-120.0, (BL_FLOAT)0.0);
+            val = mScale->ApplyScale(mValueScale, val,
+                                     (BL_FLOAT)-120.0, (BL_FLOAT)0.0);
             dbMagns.Get()[i] = val;
         }
     }

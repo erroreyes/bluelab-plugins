@@ -53,12 +53,16 @@ DNNModelDarknetMc::DNNModelDarknetMc()
     mDbgThreshold = 0.0;
     for (int i = 0; i < NUM_STEM_SOURCES; i++)
         mMaskScales[i] = 1.0;
+
+    mScale = new Scale();
 }
 
 DNNModelDarknetMc::~DNNModelDarknetMc()
 {
     if (mNet != NULL)
         free_network(mNet);
+
+    delete mScale;
 }
 
 bool
@@ -204,8 +208,8 @@ DNNModelDarknetMc::Predict(const WDL_TypedBuf<BL_FLOAT> &input,
         
 #if PROCESS_SIGNAL_DB
         // Used when model is traind in dB
-        val = Scale::ApplyScale(Scale::DB, val,
-                                (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
+        val = mScale->ApplyScale(Scale::DB, val,
+                                 (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
 #endif
         
         X.Get()[i] = val;

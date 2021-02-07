@@ -20,6 +20,8 @@ GraphCurve5::GraphCurve5(int numValues)
     mGraph = NULL;
     
     mDescription = NULL;
+
+    mScale  = new Scale();
     
     mYScale = Scale::LINEAR;
     mMinY = 0.0;
@@ -87,6 +89,8 @@ GraphCurve5::~GraphCurve5()
 {
     if (mDescription != NULL)
         delete []mDescription;
+
+    delete mScale;
 }
 
 void
@@ -724,7 +728,7 @@ GraphCurve5::SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values)
     {
         BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(mXValues.GetSize() - 1);
         
-        BL_GUI_FLOAT x = Scale::ApplyScale(mXScale, t, mMinX, mMaxX);
+        BL_GUI_FLOAT x = mScale->ApplyScale(mXScale, t, mMinX, mMaxX);
         
         // Scale for the interface
         x = x * width;
@@ -966,7 +970,7 @@ GraphCurve5::SetValue(BL_GUI_FLOAT t, BL_GUI_FLOAT val)
     
     if (x < CURVE_VALUE_UNDEFINED) // for float
     {
-        x = Scale::ApplyScale(mXScale, x, mMinX, mMaxX);
+        x = mScale->ApplyScale(mXScale, x, mMinX, mMaxX);
             
         // X should be already normalize in input
         
@@ -1030,7 +1034,7 @@ GraphCurve5::ConvertX(BL_GUI_FLOAT val, BL_GUI_FLOAT width)
     if (x < CURVE_VALUE_UNDEFINED)
     {
         if (mXScale != Scale::LINEAR)
-            x = Scale::ApplyScale(mXScale, x, mMinX, mMaxX);
+            x = mScale->ApplyScale(mXScale, x, mMinX, mMaxX);
         else
             x = (x - mMinX)/(mMaxX - mMinX);
         
@@ -1047,7 +1051,7 @@ GraphCurve5::ConvertY(BL_GUI_FLOAT val, BL_GUI_FLOAT height)
     if (y < CURVE_VALUE_UNDEFINED)
     {
         if (mYScale != Scale::LINEAR)
-            y = Scale::ApplyScale(mYScale, y, mMinY, mMaxY);
+            y = mScale->ApplyScale(mYScale, y, mMinY, mMaxY);
         else
             y = (y - mMinY)/(mMaxY - mMinY);
         
@@ -1085,7 +1089,7 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
                      (mXScale == Scale::MEL))
             {
                 // Not optimized
-                x = Scale::ApplyScale(mXScale, x, mMinX, mMaxX);
+                x = mScale->ApplyScale(mXScale, x, mMinX, mMaxX);
                 
             }
             else
@@ -1129,7 +1133,7 @@ GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
                      (mYScale == Scale::MEL))
             {
                 // Not optimized
-                y = Scale::ApplyScale(mYScale, y, mMinY, mMaxY);
+                y = mScale->ApplyScale(mYScale, y, mMinY, mMaxY);
             }
             else
             {

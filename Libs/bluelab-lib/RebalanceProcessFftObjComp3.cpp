@@ -31,6 +31,8 @@ RebalanceProcessFftObjComp3::RebalanceProcessFftObjComp3(int bufferSize,
     mMode = RebalanceMode::SOFT;
     
     mNumInputCols = numInputCols;
+
+    mScale = new Scale();
     
     ResetSamplesHistory();
     
@@ -53,6 +55,7 @@ RebalanceProcessFftObjComp3::RebalanceProcessFftObjComp3(int bufferSize,
 RebalanceProcessFftObjComp3::~RebalanceProcessFftObjComp3()
 {
     delete mSoftMasking;
+    delete mScale;
 }
 
 void
@@ -139,8 +142,8 @@ RebalanceProcessFftObjComp3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioB
     for (int i = 0; i < magns0.GetSize(); i++)
     {
         BL_FLOAT val = magns0.Get()[i];
-        val = Scale::ApplyScale(Scale::DB, val,
-                                (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
+        val = mScale->ApplyScale(Scale::DB, val,
+                                 (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
         magns0.Get()[i] = val;
     }
 
@@ -173,8 +176,8 @@ RebalanceProcessFftObjComp3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioB
     for (int i = 0; i < magns1.GetSize(); i++)
     {
         BL_FLOAT val = magns1.Get()[i];
-        val = Scale::ApplyScaleInv(Scale::DB, val,
-                                   (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
+        val = mScale->ApplyScaleInv(Scale::DB, val,
+                                    (BL_FLOAT)PROCESS_SIGNAL_MIN_DB, (BL_FLOAT)0.0);
         
         // Noise floor
         BL_FLOAT db = BLUtils::AmpToDB(val);
@@ -393,7 +396,7 @@ RebalanceProcessFftObjComp3::ApplyMask(const WDL_TypedBuf<WDL_FFT_COMPLEX> &inDa
         BL_FLOAT magn0 = COMP_MAGN(val);
         BL_FLOAT phase0 = COMP_PHASE(val);
         
-        magn0 = Scale::ApplyScale(Scale::DB, magn0, PROCESS_SIGNAL_MIN_DB, 0.0);
+        magn0 = mScale->ApplyScale(Scale::DB, magn0, PROCESS_SIGNAL_MIN_DB, 0.0);
         
         MAGN_PHASE_COMP(magn0, phase0, val)
 #endif
@@ -405,7 +408,7 @@ RebalanceProcessFftObjComp3::ApplyMask(const WDL_TypedBuf<WDL_FFT_COMPLEX> &inDa
         BL_FLOAT magn1 = COMP_MAGN(res);
         BL_FLOAT phase1 = COMP_PHASE(res);
         
-        magn1 = Scale::ApplyScaleInv(Scale::DB, magn1, PROCESS_SIGNAL_MIN_DB, 0.0);
+        magn1 = mScale->ApplyScaleInv(Scale::DB, magn1, PROCESS_SIGNAL_MIN_DB, 0.0);
         
         // TODO: Noise floor
         

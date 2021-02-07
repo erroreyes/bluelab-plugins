@@ -289,6 +289,8 @@ protected:
     
     ParamSmoother mParamSmoother;
 
+    Scale *mScale;
+    
 private:
     // Tmp buffers
     WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf0;

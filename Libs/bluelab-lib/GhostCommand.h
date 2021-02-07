@@ -84,6 +84,8 @@ protected:
     WDL_TypedBuf<BL_FLOAT> mSavedPhasesSlice;
     
     BL_FLOAT mSampleRate;
+
+    Scale *mScale;
 };
 
 #endif

@@ -18,96 +18,106 @@ public:
     // Note: log10, or log-anything is the same since we use normalized values
     enum Type
     {
-        LINEAR,
-        DB,
-        LOG,
-        LOG_FACTOR,
-        MEL, // Quick Mel
-        MEL_FILTER, // Mel with real filters,
-        MEL_INV,
-        MEL_FILTER_INV,
-        DB_INV
+     LINEAR,
+     DB,
+     LOG,
+     LOG_FACTOR,
+     MEL, // Quick Mel
+     MEL_FILTER, // Mel with real filters,
+     MEL_INV,
+     MEL_FILTER_INV,
+     DB_INV
     };
     
     Scale();
     virtual ~Scale();
     
     // Generic
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE ApplyScale(Type scaleType,
-                                 FLOAT_TYPE x,
-                                 FLOAT_TYPE minValue = -1.0,
-                                 FLOAT_TYPE maxValue = -1.0);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT ApplyScale(Type scaleType,
+                                   BL_FLOAT x,
+                                   BL_FLOAT minValue = -1.0,
+                                   BL_FLOAT maxValue = -1.0);
     
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE ApplyScaleInv(Type scaleType,
-                                    FLOAT_TYPE x,
-                                    FLOAT_TYPE minValue = -1.0,
-                                    FLOAT_TYPE maxValue = -1.0);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT ApplyScaleInv(Type scaleType,
+                                      BL_FLOAT x,
+                                      BL_FLOAT minValue = -1.0,
+                                      BL_FLOAT maxValue = -1.0);
     
-    template <typename FLOAT_TYPE>
+    //template <typename FLOAT_TYPE>
     void ApplyScale(Type scaleType,
-                    WDL_TypedBuf<FLOAT_TYPE> *values,
-                    FLOAT_TYPE minValue = -1.0,
-                    FLOAT_TYPE maxValue = -1.0);
+                    WDL_TypedBuf<BL_FLOAT> *values,
+                    BL_FLOAT minValue = -1.0,
+                    BL_FLOAT maxValue = -1.0);
     
 protected:
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToDB(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToDB(BL_FLOAT y, BL_FLOAT mindB,
+                                       BL_FLOAT maxdB);
     
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToDBInv(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToDBInv(BL_FLOAT y, BL_FLOAT mindB,
+                                          BL_FLOAT maxdB);
     
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToLog(FLOAT_TYPE x, FLOAT_TYPE minValue,
-                                      FLOAT_TYPE maxValue);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToLog(BL_FLOAT x, BL_FLOAT minValue,
+                                        BL_FLOAT maxValue);
     
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToLogInv(FLOAT_TYPE x, FLOAT_TYPE minValue,
-                                         FLOAT_TYPE maxValue);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToLogInv(BL_FLOAT x, BL_FLOAT minValue,
+                                           BL_FLOAT maxValue);
     
 #if 0 // Legacy test
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToLogCoeff(FLOAT_TYPE x,
-                                           FLOAT_TYPE minValue, FLOAT_TYPE maxValue);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToLogCoeff(BL_FLOAT x,
+                                             BL_FLOAT minValue,
+                                             BL_FLOAT maxValue);
 #endif
     
     // Apply to axis for example
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToLogScale(FLOAT_TYPE value);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToLogScale(BL_FLOAT value);
     
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToLogScaleInv(FLOAT_TYPE value);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToLogScaleInv(BL_FLOAT value);
     
     // Apply to spectrogram for example
-    template <typename FLOAT_TYPE>
-    static void DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values);
+    //template <typename FLOAT_TYPE>
+    /*static*/ void DataToLogScale(WDL_TypedBuf<BL_FLOAT> *values);
     
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToMel(FLOAT_TYPE x,
-                                      FLOAT_TYPE minFreq,
-                                      FLOAT_TYPE maxFreq);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToMel(BL_FLOAT x,
+                                        BL_FLOAT minFreq,
+                                        BL_FLOAT maxFreq);
     
-    template <typename FLOAT_TYPE>
-    static FLOAT_TYPE NormalizedToMelInv(FLOAT_TYPE x,
-                                         FLOAT_TYPE minFreq,
-                                         FLOAT_TYPE maxFreq);
+    //template <typename FLOAT_TYPE>
+    /*static*/ BL_FLOAT NormalizedToMelInv(BL_FLOAT x,
+                                           BL_FLOAT minFreq,
+                                           BL_FLOAT maxFreq);
     
-    template <typename FLOAT_TYPE>
-    static void DataToMel(WDL_TypedBuf<FLOAT_TYPE> *values,
-                          FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
+    //template <typename FLOAT_TYPE>
+    /*static*/ void DataToMel(WDL_TypedBuf<BL_FLOAT> *values,
+                              BL_FLOAT minFreq, BL_FLOAT maxFreq);
     
-    template <typename FLOAT_TYPE>
-    void DataToMelFilter(WDL_TypedBuf<FLOAT_TYPE> *values,
-                         FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
+    //template <typename FLOAT_TYPE>
+    void DataToMelFilter(WDL_TypedBuf<BL_FLOAT> *values,
+                         BL_FLOAT minFreq, BL_FLOAT maxFreq);
     
-    template <typename FLOAT_TYPE>
-    void DataToMelFilterInv(WDL_TypedBuf<FLOAT_TYPE> *values,
-                            FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq);
+    //template <typename FLOAT_TYPE>
+    void DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
+                            BL_FLOAT minFreq, BL_FLOAT maxFreq);
     
     //
     // Must keep the object, for precomputed filter bank
     MelScale *mMelScale;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
 };
 
 #endif

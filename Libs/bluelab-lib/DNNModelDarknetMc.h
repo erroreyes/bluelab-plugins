@@ -16,6 +16,7 @@
 // DNNModelDarknetMc: from DNNModelDarknet
 // - use mlutichannel (get all masks at once)
 struct network;
+class Scale;
 class DNNModelDarknetMc : public DNNModelMc
 {
 public:
@@ -45,6 +46,8 @@ protected:
     BL_FLOAT mDbgThreshold;
     
     BL_FLOAT mMaskScales[NUM_STEM_SOURCES];
+
+    Scale *mScale;
 };
 
 #endif /* defined(__BL_Rebalance__DNNModelDarknetMc__) */

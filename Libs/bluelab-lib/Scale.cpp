@@ -27,10 +27,10 @@ Scale::~Scale()
     delete mMelScale;
 }
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
+//template <typename FLOAT_TYPE>
+BL_FLOAT
 Scale::ApplyScale(Type scaleType,
-                  FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+                  BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
     if (scaleType == DB)
     {
@@ -65,13 +65,13 @@ Scale::ApplyScale(Type scaleType,
     
     return x;
 }
-template float Scale::ApplyScale(Type scaleType, float y, float mindB, float maxdB);
-template double Scale::ApplyScale(Type scaleType, double y, double mindB, double maxdB);
+//template float Scale::ApplyScale(Type scaleType, float y, float mindB, float maxdB);
+//template double Scale::ApplyScale(Type scaleType, double y, double mindB, double maxdB);
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
+//template <typename FLOAT_TYPE>
+BL_FLOAT
 Scale::ApplyScaleInv(Type scaleType,
-                     FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+                     BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
     if (scaleType == DB)
     {
@@ -98,14 +98,14 @@ Scale::ApplyScaleInv(Type scaleType,
     
     return x;
 }
-template float Scale::ApplyScaleInv(Type scaleType, float y, float mindB, float maxdB);
-template double Scale::ApplyScaleInv(Type scaleType, double y, double mindB, double maxdB);
+//template float Scale::ApplyScaleInv(Type scaleType, float y, float mindB, float maxdB);
+//template double Scale::ApplyScaleInv(Type scaleType, double y, double mindB, double maxdB);
 
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 void
 Scale::ApplyScale(Type scaleType,
-                  WDL_TypedBuf<FLOAT_TYPE> *values,
-                  FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+                  WDL_TypedBuf<BL_FLOAT> *values,
+                  BL_FLOAT minValue, BL_FLOAT maxValue)
 {
     if (scaleType == LOG_FACTOR)
     {
@@ -124,18 +124,18 @@ Scale::ApplyScale(Type scaleType,
         DataToMelFilterInv(values, minValue, maxValue);
     }
 }
-// TMP HACK
-//template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<float> *values,
-//                                float minValue, float maxValue);
-//template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<double> *values,
-//                                double minValue, double maxValue);
-template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<BL_FLOAT> *values,
-                                BL_FLOAT minValue, BL_FLOAT maxValue);
+//// TMP HACK
+////template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<float> *values,
+////                                float minValue, float maxValue);
+////template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<double> *values,
+////                                double minValue, double maxValue);
+//template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<BL_FLOAT> *values,
+//                                BL_FLOAT minValue, BL_FLOAT maxValue);
 
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToDB(FLOAT_TYPE x, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToDB(BL_FLOAT x, BL_FLOAT mindB, BL_FLOAT maxdB)
 {
     if (std::fabs(x) < BL_EPS)
         x = mindB;
@@ -150,19 +150,19 @@ Scale::NormalizedToDB(FLOAT_TYPE x, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
     
     return x;
 }
-template float Scale::NormalizedToDB(float y, float mindB, float maxdB);
-template double Scale::NormalizedToDB(double y, double mindB, double maxdB);
+//template float Scale::NormalizedToDB(float y, float mindB, float maxdB);
+//template double Scale::NormalizedToDB(double y, double mindB, double maxdB);
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToDBInv(FLOAT_TYPE x, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToDBInv(BL_FLOAT x, BL_FLOAT mindB, BL_FLOAT maxdB)
 {
     x = mindB + x*(maxdB - mindB);
     
     x = BLUtils::DBToAmp(x);
  
-    //FLOAT_TYPE minAmp = BLUtils::DBToAmp(mindB);
-    //FLOAT_TYPE maxAmp = BLUtils::DBToAmp(maxdB);
+    //BL_FLOAT minAmp = BLUtils::DBToAmp(mindB);
+    //BL_FLOAT maxAmp = BLUtils::DBToAmp(maxdB);
     //x = (x - minAmp)/(maxAmp - minAmp);
     
     // Avoid negative values, for very low x dB
@@ -171,50 +171,50 @@ Scale::NormalizedToDBInv(FLOAT_TYPE x, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
     
     return x;
 }
-template float Scale::NormalizedToDBInv(float y, float mindB, float maxdB);
-template double Scale::NormalizedToDBInv(double y, double mindB, double maxdB);
+//template float Scale::NormalizedToDBInv(float y, float mindB, float maxdB);
+//template double Scale::NormalizedToDBInv(double y, double mindB, double maxdB);
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToLog(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToLog(BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
     x = x*(maxValue - minValue) + minValue;
     
     x = std::log10(1.0 + x);
     
-    FLOAT_TYPE lMin = std::log10(1.0 + minValue);
-    FLOAT_TYPE lMax = std::log10(1.0 + maxValue);
+    BL_FLOAT lMin = std::log10(1.0 + minValue);
+    BL_FLOAT lMax = std::log10(1.0 + maxValue);
     
     x = (x - lMin)/(lMax - lMin);
     
     return x;
 }
-template float Scale::NormalizedToLog(float x, float mindB, float maxdB);
-template double Scale::NormalizedToLog(double x, double mindB, double maxdB);
+//template float Scale::NormalizedToLog(float x, float mindB, float maxdB);
+//template double Scale::NormalizedToLog(double x, double mindB, double maxdB);
 
 // NOTE: not well checked yet
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToLogInv(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToLogInv(BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
-    FLOAT_TYPE lMin = std::log10(1.0 + minValue);
-    FLOAT_TYPE lMax = std::log10(1.0 + maxValue);
+    BL_FLOAT lMin = std::log10(1.0 + minValue);
+    BL_FLOAT lMax = std::log10(1.0 + maxValue);
     
     x = x*(lMax - lMin) + lMin;
     
-    x = std::pow((FLOAT_TYPE)10.0, x) - 1.0;
+    x = std::pow((BL_FLOAT)10.0, x) - 1.0;
     
     x = (x - minValue)/(maxValue - minValue);
     
     return x;
 }
-template float Scale::NormalizedToLogInv(float x, float mindB, float maxdB);
-template double Scale::NormalizedToLogInv(double x, double mindB, double maxdB);
+//template float Scale::NormalizedToLogInv(float x, float mindB, float maxdB);
+//template double Scale::NormalizedToLogInv(double x, double mindB, double maxdB);
 
 #if 0 // Legacy test
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToLogCoeff(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxValue)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToLogCoeff(BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
     // This trick may be improved!
     x *= LOG_SCALE_FACTOR;
@@ -225,52 +225,53 @@ Scale::NormalizedToLogCoeff(FLOAT_TYPE x, FLOAT_TYPE minValue, FLOAT_TYPE maxVal
     
     return x;
 }
-template float Scale::NormalizedToLogCoeff(float x, float minValue, float maxValue);
-template double Scale::NormalizedToLogCoeff(double x, double minValue, double maxValue);
+//template float Scale::NormalizedToLogCoeff(float x, float minValue, float maxValue);
+//template double Scale::NormalizedToLogCoeff(double x, double minValue, double maxValue);
 #endif
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToLogScale(FLOAT_TYPE value)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToLogScale(BL_FLOAT value)
 {
-    FLOAT_TYPE t0 =
-        std::log((FLOAT_TYPE)1.0 + value*(std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR;
+    BL_FLOAT t0 =
+    std::log((BL_FLOAT)1.0 + value*(std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR;
                         
     return t0;
 }
-template float Scale::NormalizedToLogScale(float value);
-template double Scale::NormalizedToLogScale(double value);
+//template float Scale::NormalizedToLogScale(float value);
+//template double Scale::NormalizedToLogScale(double value);
 
 // NOTE: Not well checked yet
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToLogScaleInv(FLOAT_TYPE value)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToLogScaleInv(BL_FLOAT value)
 {
-    FLOAT_TYPE t0 =
-        (std::exp(value) - 1.0)/(((std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
+    BL_FLOAT t0 =
+    (std::exp(value) - 1.0)/(((std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
     
     return t0;
 }
-template float Scale::NormalizedToLogScaleInv(float value);
-template double Scale::NormalizedToLogScaleInv(double value);
+//template float Scale::NormalizedToLogScaleInv(float value);
+//template double Scale::NormalizedToLogScaleInv(double value);
 
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 void
-Scale::DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values)
+Scale::DataToLogScale(WDL_TypedBuf<BL_FLOAT> *values)
 {
-    WDL_TypedBuf<FLOAT_TYPE> origValues = *values;
+    WDL_TypedBuf<BL_FLOAT> &origValues = mTmpBuf0;
+    origValues = *values;
     
     int valuesSize = values->GetSize();
-    FLOAT_TYPE *valuesData = values->Get();
-    FLOAT_TYPE *origValuesData = origValues.Get();
+    BL_FLOAT *valuesData = values->Get();
+    BL_FLOAT *origValuesData = origValues.Get();
     
     for (int i = 0; i < valuesSize; i++)
     {
-        FLOAT_TYPE t0 = ((FLOAT_TYPE)i)/valuesSize;
+        BL_FLOAT t0 = ((BL_FLOAT)i)/valuesSize;
         
         // "Inverse" process for data
         t0 *= LOG_SCALE2_FACTOR;
-        FLOAT_TYPE t = (std::exp(t0) - 1.0)/(std::exp(LOG_SCALE2_FACTOR) - 1.0);
+        BL_FLOAT t = (std::exp(t0) - 1.0)/(std::exp(LOG_SCALE2_FACTOR) - 1.0);
         
         int dstIdx = (int)(t*valuesSize);
         
@@ -282,43 +283,43 @@ Scale::DataToLogScale(WDL_TypedBuf<FLOAT_TYPE> *values)
             // We never know...
             dstIdx = valuesSize - 1;
         
-        FLOAT_TYPE dstVal = origValuesData[dstIdx];
+        BL_FLOAT dstVal = origValuesData[dstIdx];
         valuesData[i] = dstVal;
     }
 }
-template void Scale::DataToLogScale(WDL_TypedBuf<float> *values);
-template void Scale::DataToLogScale(WDL_TypedBuf<double> *values);
+//template void Scale::DataToLogScale(WDL_TypedBuf<float> *values);
+//template void Scale::DataToLogScale(WDL_TypedBuf<double> *values);
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToMel(FLOAT_TYPE x,
-                       FLOAT_TYPE minFreq,
-                       FLOAT_TYPE maxFreq)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToMel(BL_FLOAT x,
+                       BL_FLOAT minFreq,
+                       BL_FLOAT maxFreq)
 {
     x = x*(maxFreq - minFreq) + minFreq;
     
     x = MelScale::HzToMel(x);
     
-    FLOAT_TYPE lMin = MelScale::HzToMel(minFreq);
-    FLOAT_TYPE lMax = MelScale::HzToMel(maxFreq);
+    BL_FLOAT lMin = MelScale::HzToMel(minFreq);
+    BL_FLOAT lMax = MelScale::HzToMel(maxFreq);
     
     x = (x - lMin)/(lMax - lMin);
     
     return x;
 }
-template float Scale::NormalizedToMel(float value,
-                                      float minFreq, float maxFreq);
-template double Scale::NormalizedToMel(double value,
-                                       double minFreq, double maxFreq);
+//template float Scale::NormalizedToMel(float value,
+//                                      float minFreq, float maxFreq);
+//template double Scale::NormalizedToMel(double value,
+//                                       double minFreq, double maxFreq);
 
-template <typename FLOAT_TYPE>
-FLOAT_TYPE
-Scale::NormalizedToMelInv(FLOAT_TYPE x,
-                          FLOAT_TYPE minFreq,
-                          FLOAT_TYPE maxFreq)
+//template <typename FLOAT_TYPE>
+BL_FLOAT
+Scale::NormalizedToMelInv(BL_FLOAT x,
+                          BL_FLOAT minFreq,
+                          BL_FLOAT maxFreq)
 {
-    FLOAT_TYPE minMel = MelScale::HzToMel(minFreq);
-    FLOAT_TYPE maxMel = MelScale::HzToMel(maxFreq);
+    BL_FLOAT minMel = MelScale::HzToMel(minFreq);
+    BL_FLOAT maxMel = MelScale::HzToMel(maxFreq);
     
     x = x*(maxMel - minMel) + minMel;
     
@@ -328,33 +329,34 @@ Scale::NormalizedToMelInv(FLOAT_TYPE x,
     
     return x;
 }
-template float Scale::NormalizedToMelInv(float value,
-                                         float minFreq, float maxFreq);
-template double Scale::NormalizedToMelInv(double value,
-                                          double minFreq, double maxFreq);
+//template float Scale::NormalizedToMelInv(float value,
+//                                         float minFreq, float maxFreq);
+//template double Scale::NormalizedToMelInv(double value,
+//                                          double minFreq, double maxFreq);
 
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 void
-Scale::DataToMel(WDL_TypedBuf<FLOAT_TYPE> *values,
-                 FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq)
+Scale::DataToMel(WDL_TypedBuf<BL_FLOAT> *values,
+                 BL_FLOAT minFreq, BL_FLOAT maxFreq)
 {
-    WDL_TypedBuf<FLOAT_TYPE> origValues = *values;
+    WDL_TypedBuf<BL_FLOAT> &origValues = mTmpBuf1;
+    origValues = *values;
     
     int valuesSize = values->GetSize();
-    FLOAT_TYPE *valuesData = values->Get();
-    FLOAT_TYPE *origValuesData = origValues.Get();
+    BL_FLOAT *valuesData = values->Get();
+    BL_FLOAT *origValuesData = origValues.Get();
     
-    FLOAT_TYPE minMel = MelScale::HzToMel(minFreq);
-    FLOAT_TYPE maxMel = MelScale::HzToMel(maxFreq);
+    BL_FLOAT minMel = MelScale::HzToMel(minFreq);
+    BL_FLOAT maxMel = MelScale::HzToMel(maxFreq);
     
     for (int i = 0; i < valuesSize; i++)
     {
-        FLOAT_TYPE t0 = ((FLOAT_TYPE)i)/valuesSize;
+        BL_FLOAT t0 = ((BL_FLOAT)i)/valuesSize;
 
         // "Inverse" process for data
-        FLOAT_TYPE mel = minMel + t0*(maxMel - minMel);
-        FLOAT_TYPE freq = MelScale::MelToHz(mel);
-        FLOAT_TYPE t = (freq - minFreq)/(maxFreq - minFreq);
+        BL_FLOAT mel = minMel + t0*(maxMel - minMel);
+        BL_FLOAT freq = MelScale::MelToHz(mel);
+        BL_FLOAT t = (freq - minFreq)/(maxFreq - minFreq);
 
         int dstIdx = (int)(t*valuesSize);
         
@@ -366,49 +368,49 @@ Scale::DataToMel(WDL_TypedBuf<FLOAT_TYPE> *values,
             // We never know...
             dstIdx = valuesSize - 1;
         
-        FLOAT_TYPE dstVal = origValuesData[dstIdx];
+        BL_FLOAT dstVal = origValuesData[dstIdx];
         valuesData[i] = dstVal;
     }
 }
-template void Scale::DataToMel(WDL_TypedBuf<float> *values,
-                               float minFreq, float maxFreq);
-template void Scale::DataToMel(WDL_TypedBuf<double> *values,
-                               double minFreq, double maxFreq);
+//template void Scale::DataToMel(WDL_TypedBuf<float> *values,
+//                               float minFreq, float maxFreq);
+//template void Scale::DataToMel(WDL_TypedBuf<double> *values,
+//                               double minFreq, double maxFreq);
 
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 void
-Scale::DataToMelFilter(WDL_TypedBuf<FLOAT_TYPE> *values,
-                       FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq)
+Scale::DataToMelFilter(WDL_TypedBuf<BL_FLOAT> *values,
+                       BL_FLOAT minFreq, BL_FLOAT maxFreq)
 {
     int numFilters = values->GetSize();
-    WDL_TypedBuf<FLOAT_TYPE> result;
-    mMelScale->HzToMelFilter(&result, *values, (FLOAT_TYPE)(maxFreq*2.0), numFilters);
+    WDL_TypedBuf<BL_FLOAT> &result = mTmpBuf2;
+    mMelScale->HzToMelFilter(&result, *values, (BL_FLOAT)(maxFreq*2.0), numFilters);
     
     *values = result;
 }
-// TMP HACK
-//template void Scale::DataToMelFilter(WDL_TypedBuf<float> *values,
-//                                     float minFreq, float maxFreq);
-//template void Scale::DataToMelFilter(WDL_TypedBuf<double> *values,
-//                                     double minFreq, double maxFreq);
-template void Scale::DataToMelFilter(WDL_TypedBuf<BL_FLOAT> *values,
-                                     BL_FLOAT minFreq, BL_FLOAT maxFreq);
+//// TMP HACK
+////template void Scale::DataToMelFilter(WDL_TypedBuf<float> *values,
+////                                     float minFreq, float maxFreq);
+////template void Scale::DataToMelFilter(WDL_TypedBuf<double> *values,
+////                                     double minFreq, double maxFreq);
+//template void Scale::DataToMelFilter(WDL_TypedBuf<BL_FLOAT> *values,
+//                                     BL_FLOAT minFreq, BL_FLOAT maxFreq);
 
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 void
-Scale::DataToMelFilterInv(WDL_TypedBuf<FLOAT_TYPE> *values,
-                          FLOAT_TYPE minFreq, FLOAT_TYPE maxFreq)
+Scale::DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
+                          BL_FLOAT minFreq, BL_FLOAT maxFreq)
 {
     int numFilters = values->GetSize();
-    WDL_TypedBuf<FLOAT_TYPE> result;
-    mMelScale->MelToHzFilter(&result, *values, (FLOAT_TYPE)(maxFreq*2.0), numFilters);
+    WDL_TypedBuf<BL_FLOAT> &result = mTmpBuf3;
+    mMelScale->MelToHzFilter(&result, *values, (BL_FLOAT)(maxFreq*2.0), numFilters);
     
     *values = result;
 }
-// TMP HACK
-//template void Scale::DataToMelFilterInv(WDL_TypedBuf<float> *values,
-//                                        float minFreq, float maxFreq);
-//template void Scale::DataToMelFilterInv(WDL_TypedBuf<double> *values,
-//                                        double minFreq, double maxFreq);
-template void Scale::DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
-                                        BL_FLOAT minFreq, BL_FLOAT maxFreq);
+//// TMP HACK
+////template void Scale::DataToMelFilterInv(WDL_TypedBuf<float> *values,
+////                                        float minFreq, float maxFreq);
+////template void Scale::DataToMelFilterInv(WDL_TypedBuf<double> *values,
+////                                        double minFreq, double maxFreq);
+//template void Scale::DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
+//                                        BL_FLOAT minFreq, BL_FLOAT maxFreq);

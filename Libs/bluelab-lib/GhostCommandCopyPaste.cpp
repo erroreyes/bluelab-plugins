@@ -28,8 +28,8 @@ GhostCommandCopyPaste::~GhostCommandCopyPaste() {}
 
 void
 GhostCommandCopyPaste::Copy(const vector<WDL_TypedBuf<BL_FLOAT> > &magns,
-                       const vector<WDL_TypedBuf<BL_FLOAT> > &phases,
-                       int offsetXLines)
+                            const vector<WDL_TypedBuf<BL_FLOAT> > &phases,
+                            int offsetXLines)
 {
     // Save the selection when copied
     for (int i = 0; i < 4; i++)
@@ -121,10 +121,10 @@ GhostCommandCopyPaste::GetPastedSelection(BL_FLOAT pastedSelection[4],
     }
 #endif
     
-    pastedSelection[1] = Scale::ApplyScale(yScale, pastedSelection[1],
-                                           (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-    pastedSelection[3] = Scale::ApplyScale(yScale, pastedSelection[3],
-                                           (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    pastedSelection[1] = mScale->ApplyScale(yScale, pastedSelection[1],
+                                            (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    pastedSelection[3] = mScale->ApplyScale(yScale, pastedSelection[3],
+                                            (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 }
 
 int

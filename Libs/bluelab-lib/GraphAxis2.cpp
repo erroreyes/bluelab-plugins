@@ -40,7 +40,7 @@ GraphAxis2::GraphAxis2()
     
     mFontSizeCoeff = 1.0;
     
-    mScale = Scale::LINEAR;
+    mScaleType = Scale::LINEAR;
     mMinVal = 0.0;
     mMaxVal = 1.0;
     
@@ -53,9 +53,14 @@ GraphAxis2::GraphAxis2()
     // Bounds
     mBounds[0] = 0.0;
     mBounds[1] = 1.0;
+
+    mScale = new Scale();
 }
 
-GraphAxis2::~GraphAxis2() {}
+GraphAxis2::~GraphAxis2()
+{
+    delete mScale;
+}
 
 void
 GraphAxis2::InitHAxis(Scale::Type scale,
@@ -78,7 +83,7 @@ GraphAxis2::InitHAxis(Scale::Type scale,
     
     mFontSizeCoeff = fontSizeCoeff;
     
-    mScale = scale;
+    mScaleType = scale;
     mMinVal = minX;
     mMaxVal = maxX;
     
@@ -111,7 +116,7 @@ GraphAxis2::InitVAxis(Scale::Type scale,
     
     mFontSizeCoeff = fontSizeCoeff;
     
-    mScale = scale;
+    mScaleType = scale;
     mMinVal = minY;
     mMaxVal = maxY;
     
@@ -147,7 +152,7 @@ GraphAxis2::SetData(char *data[][2], int numData)
         BL_GUI_FLOAT val = atof(cData[0]);
         BL_GUI_FLOAT t = (val - mMinVal)/(mMaxVal - mMinVal);
         
-        t = Scale::ApplyScale(mScale, t, mMinVal, mMaxVal);
+        t = mScale->ApplyScale(mScaleType, t, mMinVal, mMaxVal);
         
         string text(cData[1]);
         

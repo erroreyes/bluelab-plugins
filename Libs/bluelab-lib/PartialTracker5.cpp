@@ -2325,7 +2325,7 @@ PartialTracker5::PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data)
     for (int i = 0; i < data->GetSize(); i++)
     {
         BL_FLOAT d = data->Get()[i];
-        d = Scale::ApplyScale(mYScale, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        d = mScale->ApplyScale(mYScale, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
         data->Get()[i] = d;
     }
     
@@ -2437,7 +2437,7 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
         
         // Reverse Mel
         BL_FLOAT freq = partial.mFreq;
-        freq = Scale::ApplyScale(mXScaleInv, freq, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+        freq = mScale->ApplyScale(mXScaleInv, freq, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
         partial.mFreq = freq;
         
         // Convert to real freqs
@@ -2448,8 +2448,8 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
         partial.mAmp = ProcessAWeighting(binNum, mBufferSize*0.5, partial.mAmp, false);
     
         // Y
-        partial.mAmp = Scale::ApplyScale(mYScaleInv, partial.mAmp,
-                                         (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        partial.mAmp = mScale->ApplyScale(mYScaleInv, partial.mAmp,
+                                          (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
     }
 }
 
@@ -2466,7 +2466,7 @@ PartialTracker5::DenormData(WDL_TypedBuf<BL_FLOAT> *data)
     for (int i = 0; i < data->GetSize(); i++)
     {
         BL_FLOAT d = data->Get()[i];
-        d = Scale::ApplyScale(mYScaleInv, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+        d = mScale->ApplyScale(mYScaleInv, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
         data->Get()[i] = d;
     }
 }
