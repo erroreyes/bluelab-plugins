@@ -113,10 +113,12 @@ SoftMaskingComp3::Process(const WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues,
     {
         //mMixtureHistory.push_back(mixtureValuesSub);
         //mMixtureHistory.pop_front();
+        mMixtureHistory.freeze();
         mMixtureHistory.push_pop(mixtureValuesSub);
         
         //mHistory.push_back(values);
         //mHistory.pop_front();
+        mHistory.freeze();
         mHistory.push_pop(values);
     }
 #else
@@ -221,7 +223,10 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
         //mHistory.push_back(*ioMaskedMixture);
         //mHistory.pop_front();
 
+        mMixtureHistory.freeze();
         mMixtureHistory.push_pop(mixtureSub);
+
+        mHistory.freeze();
         mHistory.push_pop(*ioMaskedMixture);
     }
 #else
