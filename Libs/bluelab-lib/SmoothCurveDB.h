@@ -39,6 +39,12 @@ protected:
     
     BL_FLOAT mMinDB;
     BL_FLOAT mMaxDB;
+
+private:
+    // Tmp Buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
 };
 
 #endif

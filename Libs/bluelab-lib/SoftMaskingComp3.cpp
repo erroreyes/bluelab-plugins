@@ -38,9 +38,12 @@ SoftMaskingComp3::~SoftMaskingComp3() {}
 
 void
 SoftMaskingComp3::Reset()
-{
-    mMixtureHistory.clear();
-    mHistory.clear();
+{    
+    //mMixtureHistory.clear();
+    //mHistory.clear();
+
+    mMixtureHistory.resize(0);
+    mHistory.resize(0);
 }
 
 void
@@ -79,7 +82,8 @@ SoftMaskingComp3::Process(const WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues,
     
     // We must compute the mixture, minus the sound corresponding to the mask
     // See: https://hal.inria.fr/inria-00544949/document
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mixtureValuesSub = mixtureValues;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValuesSub = mTmpBuf0;
+    mixtureValuesSub = mixtureValues;
     
 #if MIXTURE_SUB
     BLUtils::SubstractValues(&mixtureValuesSub, values);
@@ -91,19 +95,29 @@ SoftMaskingComp3::Process(const WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues,
     if (mMixtureHistory.empty())
     {
         // Fill the whole history with the current values
+#if 0
         for (int i = 0; i < mHistorySize; i++)
         {
             mMixtureHistory.push_back(mixtureValuesSub);
             mHistory.push_back(values);
         }
+#endif
+
+        mMixtureHistory.resize(mHistorySize);
+        mMixtureHistory.clear(mixtureValuesSub);
+
+        mHistory.resize(mHistorySize);
+        mHistory.clear(values);
     }
     else
     {
-        mMixtureHistory.push_back(mixtureValuesSub);
-        mMixtureHistory.pop_front();
+        //mMixtureHistory.push_back(mixtureValuesSub);
+        //mMixtureHistory.pop_front();
+        mMixtureHistory.push_pop(mixtureValuesSub);
         
-        mHistory.push_back(values);
-        mHistory.pop_front();
+        //mHistory.push_back(values);
+        //mHistory.pop_front();
+        mHistory.push_pop(values);
     }
 #else
     mMixtureHistory.push_back(mixtureValuesSub);
@@ -113,12 +127,15 @@ SoftMaskingComp3::Process(const WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues,
         mMixtureHistory.pop_front();
     while (mHistory.size() > mHistorySize)
         mHistory.pop_front();
+
+    mMixtureHistory.freeze();
+    mHistory.freeze();
 #endif
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> sigma2Mixture;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &sigma2Mixture = mTmpBuf1;
     ComputeSigma2(mMixtureHistory, &sigma2Mixture);
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> sigma2Values;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &sigma2Values = mTmpBuf2;
     ComputeSigma2(mHistory, &sigma2Values);
     
     // Create the mask
@@ -170,7 +187,8 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
     
     // We must compute the mixture, minus the sound corresponding to the mask
     // See: https://hal.inria.fr/inria-00544949/document
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mixtureSub = *ioMixture;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureSub = mTmpBuf3;
+    mixtureSub = *ioMixture;
     
 #if MIXTURE_SUB
     BLUtils::SubstractValues(&mixtureSub, *ioMaskedMixture);
@@ -182,19 +200,29 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
     if (mMixtureHistory.empty())
     {
         // Fill the whole history with the current values
+#if 0
         for (int i = 0; i < mHistorySize; i++)
         {
             mMixtureHistory.push_back(mixtureSub);
             mHistory.push_back(*ioMaskedMixture);
         }
+#endif
+        mMixtureHistory.resize(mHistorySize);
+        mMixtureHistory.clear(mixtureSub);
+
+        mHistory.resize(mHistorySize);
+        mHistory.clear(*ioMaskedMixture);
     }
     else
     {
-        mMixtureHistory.push_back(mixtureSub);
-        mMixtureHistory.pop_front();
+        //mMixtureHistory.push_back(mixtureSub);
+        //mMixtureHistory.pop_front();
         
-        mHistory.push_back(*ioMaskedMixture);
-        mHistory.pop_front();
+        //mHistory.push_back(*ioMaskedMixture);
+        //mHistory.pop_front();
+
+        mMixtureHistory.push_pop(mixtureSub);
+        mHistory.push_pop(*ioMaskedMixture);
     }
 #else
     mMixtureHistory.push_back(mixtureSub);
@@ -204,14 +232,17 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
         mMixtureHistory.pop_front();
     while (mHistory.size() > mHistorySize)
         mHistory.pop_front();
+
+    mMixtureHistory.freeze();
+    mHistory.freeze();
 #endif
     
     if (mProcessingEnabled)
     {
-        WDL_TypedBuf<WDL_FFT_COMPLEX> sigma2Mixture;
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &sigma2Mixture = mTmpBuf4;
         ComputeSigma2(mMixtureHistory, &sigma2Mixture);
     
-        WDL_TypedBuf<WDL_FFT_COMPLEX> sigma2MaskedMixture;
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &sigma2MaskedMixture = mTmpBuf5;
         ComputeSigma2(mHistory, &sigma2MaskedMixture);
     
         // Create the mask
@@ -261,8 +292,11 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
     // Compute the centered values
     if (!mMixtureHistory.empty())
     {
-        WDL_TypedBuf<WDL_FFT_COMPLEX> mixtureValues = mMixtureHistory[mMixtureHistory.size()/2];
-        WDL_TypedBuf<WDL_FFT_COMPLEX> masked = mHistory[mHistory.size()/2];
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &mixtureValues = mTmpBuf6;
+        mixtureValues = mMixtureHistory[mMixtureHistory.size()/2];
+        
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &masked = mTmpBuf7;
+        masked = mHistory[mHistory.size()/2];
         
         BLUtils::AddValues(&mixtureValues, masked);
         
@@ -348,7 +382,8 @@ SoftMaskingComp3::ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
 //
 // NOTE: variance is equal to sigma^2
 void
-SoftMaskingComp3::ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+SoftMaskingComp3::ComputeSigma2(//deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+                                bl_queue<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
                                 WDL_TypedBuf<WDL_FFT_COMPLEX> *outSigma2)
 {
     if (history.empty())
@@ -357,7 +392,7 @@ SoftMaskingComp3::ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
     outSigma2->Resize(history[0].GetSize());
     
     // Convert deque of vector to vector of vector
-    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > historyVec;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &historyVec = mTmpBuf8;
     historyVec.resize(history.size());
     for (int i = 0; i < historyVec.size(); i++)
         historyVec[i] = history[i];
@@ -454,7 +489,8 @@ SoftMaskingComp3::ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
 //
 // NOTE: variance is equal to sigma^2
 void
-SoftMaskingComp3::ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+SoftMaskingComp3::ComputeSigma2(//deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+                                bl_queue<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
                                 WDL_TypedBuf<WDL_FFT_COMPLEX> *outSigma2)
 {
     if (history.empty())
@@ -463,7 +499,7 @@ SoftMaskingComp3::ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
     outSigma2->Resize(history[0].GetSize());
     
     // Convert deque of vector to vector of vector
-    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > historyVec;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &historyVec = mTmpBuf9;
     historyVec.resize(history.size());
     for (int i = 0; i < historyVec.size(); i++)
         historyVec[i] = history[i];

@@ -55,19 +55,22 @@ SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset)
     // Add the values
     int histoNumValues = mHistogram->GetNumValues();
     
-    WDL_TypedBuf<BL_FLOAT> values0 = values;
+    WDL_TypedBuf<BL_FLOAT> &values0 = mTmpBuf0;
+    values0 = values;
     if (values0.GetSize() > histoNumValues)
     {
         // Decimate
         BL_FLOAT decimFactor = ((BL_FLOAT)histoNumValues)/values0.GetSize();
         
-        WDL_TypedBuf<BL_FLOAT> decimValues;
+        WDL_TypedBuf<BL_FLOAT> &decimValues = mTmpBuf1;
         BLUtils::DecimateSamples(&decimValues, values0, decimFactor);
         
         values0 = decimValues;
     }
 
-    WDL_TypedBuf<BL_FLOAT> avgValues = values0;
+    WDL_TypedBuf<BL_FLOAT> &avgValues = mTmpBuf2;
+    avgValues = values0;
+    
     if (!reset)
     {
         mHistogram->AddValues(values0);

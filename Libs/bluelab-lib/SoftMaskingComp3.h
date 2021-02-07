@@ -12,6 +12,8 @@
 #include <deque>
 using namespace std;
 
+#include <bl_queue.h>
+
 #include <BLTypes.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -66,22 +68,39 @@ public:
                          WDL_TypedBuf<WDL_FFT_COMPLEX> *softMask);
     
 protected:
-    void ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+    //void ComputeSigma2(deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+    //                   WDL_TypedBuf<WDL_FFT_COMPLEX> *outVariance);
+    void ComputeSigma2(bl_queue<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
                        WDL_TypedBuf<WDL_FFT_COMPLEX> *outVariance);
-    
-    //
+                       
+    //    
     int mHistorySize;
     
     // Mixture is the whole mixture, minus the sound corresponding to the mask
-    deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > mMixtureHistory;
+    //deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > mMixtureHistory;
+    bl_queue<WDL_TypedBuf<WDL_FFT_COMPLEX> > mMixtureHistory;
     
     // The sound corresponding to the mask
-    deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > mHistory;
+    //deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > mHistory;
+    bl_queue<WDL_TypedBuf<WDL_FFT_COMPLEX> > mHistory;
     
     //
     WDL_TypedBuf<BL_FLOAT> mWindow;
     
     bool mProcessingEnabled;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf1;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf2;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf3;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf4;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf5;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf6;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf7;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > mTmpBuf8;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > mTmpBuf9;
 };
 
 #endif /* defined(__BL_DUET__SoftMaskingComp3__) */

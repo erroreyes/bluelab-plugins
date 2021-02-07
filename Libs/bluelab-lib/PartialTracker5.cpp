@@ -315,7 +315,8 @@ PartialTracker5::GetPreProcessedMagns(WDL_TypedBuf<BL_FLOAT> *magns)
 void
 PartialTracker5::DetectPartials()
 {
-    WDL_TypedBuf<BL_FLOAT> magns0 = mCurrentMagns;
+    WDL_TypedBuf<BL_FLOAT> &magns0 = mTmpBuf0;
+    magns0 = mCurrentMagns;
     
     vector<Partial> partials;
     DetectPartials(magns0, mCurrentPhases, &partials);
@@ -382,8 +383,10 @@ PartialTracker5::ExtractNoiseEnvelopeMax()
     CutPartials(mPartials[0], &mNoiseEnvelope);
     
     // Iterate
-    WDL_TypedBuf<BL_FLOAT> dummyPhases;
-    BLUtils::ResizeFillZeros(&dummyPhases, mNoiseEnvelope.GetSize());
+    WDL_TypedBuf<BL_FLOAT> &dummyPhases = mTmpBuf1;
+    ///BLUtils::ResizeFillZeros(&dummyPhases, mNoiseEnvelope.GetSize());
+    dummyPhases.Resize(mNoiseEnvelope.GetSize());
+    BLUtils::FillAllZero(&dummyPhases);
     for (int i = 0; i < NUM_ITER_EXTRACT_NOISE - 1; i++)
     {
         vector<Partial> partials;
@@ -519,7 +522,9 @@ PartialTracker5::ProcessMusicalNoise(WDL_TypedBuf<BL_FLOAT> *noise)
         return;
     }
     
-    const WDL_TypedBuf<BL_FLOAT> noiseCopy = *noise;
+    //const WDL_TypedBuf<BL_FLOAT> noiseCopy = *noise;
+    WDL_TypedBuf<BL_FLOAT> &noiseCopy = mTmpBuf2;
+    noiseCopy = *noise;
     
     // Search for begin of first isle: values with zero borders
     //
@@ -756,7 +761,7 @@ PartialTracker5::SmoothNoiseEnvelope(WDL_TypedBuf<BL_FLOAT> *noise)
         Window::MakeGaussian2(sigma, NOISE_SMOOTH_WIN_SIZE, &mSmoothWinNoise);
     }
     
-    WDL_TypedBuf<BL_FLOAT> smoothNoise;
+    WDL_TypedBuf<BL_FLOAT> &smoothNoise = mTmpBuf3;
     BLUtils::SmoothDataWin(&smoothNoise, *noise, mSmoothWinNoise);
     
     *noise = smoothNoise;
@@ -827,8 +832,10 @@ void
 PartialTracker5::KeepOnlyPartials(const vector<Partial> &partials,
                                   WDL_TypedBuf<BL_FLOAT> *magns)
 {
-    WDL_TypedBuf<BL_FLOAT> result;
-    BLUtils::ResizeFillValue(&result, magns->GetSize(), (BL_FLOAT)0.0);
+    WDL_TypedBuf<BL_FLOAT> &result = mTmpBuf4;
+    //BLUtils::ResizeFillValue(&result, magns->GetSize(), (BL_FLOAT)0.0);
+    result.Resize(magns->GetSize());
+    BLUtils::FillAllZero(&result);
                    
     for (int i = 0; i < partials.size(); i++)
     {
@@ -872,8 +879,10 @@ PartialTracker5::CutPartialsMinEnv(WDL_TypedBuf<BL_FLOAT> *magns)
     }
 
     // Compute envelope
-    WDL_TypedBuf<BL_FLOAT> minEnv;
-    BLUtils::ResizeFillZeros(&minEnv, magns->GetSize());
+    WDL_TypedBuf<BL_FLOAT> &minEnv = mTmpBuf5;
+    //BLUtils::ResizeFillZeros(&minEnv, magns->GetSize());
+    minEnv.Resize(magns->GetSize());
+    BLUtils::FillAllZero(&minEnv);
     
     for (int i = 0; i < minIndices.size(); i++)
     {
@@ -2442,7 +2451,7 @@ PartialTracker5::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
 {
     // Input magns are in normalized dB
     
-    WDL_TypedBuf<BL_FLOAT> weights;
+    WDL_TypedBuf<BL_FLOAT> &weights = mTmpBuf6;
     int numBins = magns->GetSize();
     AWeighting::ComputeAWeights(&weights, numBins, mSampleRate);
     
