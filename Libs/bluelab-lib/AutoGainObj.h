@@ -163,6 +163,37 @@ protected:
     
     BL_FLOAT mMinGain;
     BL_FLOAT mMaxGain;
+
+private:
+    // Tmp buffers
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf0;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf1;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf2;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf6;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf7;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf9;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf10;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf11;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf12;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf13;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf14;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf15;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf16;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf17;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf18;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf19;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf20;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf21;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf22;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf23;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf24;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf25;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf26;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf27;
 };
 
 #endif /* AutoGainObj_hpp */

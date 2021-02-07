@@ -296,8 +296,12 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
 #endif
     
     // In
-    vector<WDL_TypedBuf<BL_FLOAT> > in;
-    vector<WDL_TypedBuf<BL_FLOAT> > inPhases;
+    vector<WDL_TypedBuf<BL_FLOAT> > &in = mTmpBuf0;
+    in.resize(ioFftSamples->size());
+    
+    vector<WDL_TypedBuf<BL_FLOAT> > &inPhases = mTmpBuf1;
+    inPhases.resize(ioFftSamples->size());
+    
     for (int i = 0; i < ioFftSamples->size(); i++)
     {
         BLUtils::TakeHalf((*ioFftSamples)[i]);
@@ -306,31 +310,40 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
         WDL_TypedBuf<BL_FLOAT> phases;
         BLUtils::ComplexToMagnPhase(&magns, &phases, *(*ioFftSamples)[i]);
         
-        in.push_back(magns);
-        inPhases.push_back(phases);
+        //in.push_back(magns);
+        //inPhases.push_back(phases);
+        in[i] = magns;
+        inPhases[i] = phases;
     }
     
     // ScIn
-    vector<WDL_TypedBuf<BL_FLOAT> > scIn;
+    vector<WDL_TypedBuf<BL_FLOAT> > &scIn = mTmpBuf2;
     if (scBuffer != NULL)
     {
-        vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > scBufferCopy = *scBuffer;
+        vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &scBufferCopy = mTmpBuf3;
+        scBufferCopy = *scBuffer;
+        
+        scIn.resize(scBufferCopy.size());
         
         for (int i = 0; i < scBufferCopy.size(); i++)
         {
             BLUtils::TakeHalf(&scBufferCopy[i]);
             
-            WDL_TypedBuf<BL_FLOAT> magns;
-            WDL_TypedBuf<BL_FLOAT> phases;
+            WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf4;
+            WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf5;
             BLUtils::ComplexToMagnPhase(&magns, &phases, scBufferCopy[i]);
             
-            scIn.push_back(magns);
+            //scIn.push_back(magns);
+            scIn[i] = magns;
         }
     }
     
     // Out
-    vector<WDL_TypedBuf<BL_FLOAT> > out = in;
-    vector<WDL_TypedBuf<BL_FLOAT> > outPhases = inPhases;
+    vector<WDL_TypedBuf<BL_FLOAT> > &out = mTmpBuf6;
+    out = in;
+    
+    vector<WDL_TypedBuf<BL_FLOAT> > &outPhases = mTmpBuf7;
+    outPhases = inPhases;
     
     if (mMode == BYPASS_WRITE)
     {
@@ -465,15 +478,17 @@ AutoGainObj::ComputeOutGainSpect(const vector<WDL_TypedBuf<BL_FLOAT> > &inSample
     // We have at least one sidechain channel
     
     // Stereo to mono
-    WDL_TypedBuf<BL_FLOAT> sideChain;
+    WDL_TypedBuf<BL_FLOAT> &sideChain = mTmpBuf8;
     if (scIn.size() > 0)
     {
         sideChain = scIn[0];
         if (scIn.size() > 1)
             BLUtils::StereoToMono(&sideChain, scIn[0], scIn[1]);
     }
+    else
+        sideChain.Resize(0);
     
-    WDL_TypedBuf<BL_FLOAT> monoIn;
+    WDL_TypedBuf<BL_FLOAT> &monoIn = mTmpBuf9;
     if (inSamples.size() > 0)
     {
         monoIn = inSamples[0];
@@ -481,12 +496,14 @@ AutoGainObj::ComputeOutGainSpect(const vector<WDL_TypedBuf<BL_FLOAT> > &inSample
         if (inSamples.size() > 1)
             BLUtils::StereoToMono(&monoIn, inSamples[0], inSamples[1]);
     }
+    else
+        monoIn.Resize(0);
     
     //Convert to dB
-    WDL_TypedBuf<BL_FLOAT> dbSc;
+    WDL_TypedBuf<BL_FLOAT> &dbSc = mTmpBuf10;
     BLUtils::AmpToDB(&dbSc, sideChain, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
     
-    WDL_TypedBuf<BL_FLOAT> dbIn;
+    WDL_TypedBuf<BL_FLOAT> &dbIn = mTmpBuf11;
     BLUtils::AmpToDB(&dbIn, monoIn, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
     
     BL_FLOAT inGain = ComputeInGain(monoIn);
@@ -501,7 +518,7 @@ AutoGainObj::ComputeOutGainSpectConstantSc(const vector<WDL_TypedBuf<BL_FLOAT> >
                                            BL_FLOAT constantScValue)
 {
     
-    WDL_TypedBuf<BL_FLOAT> monoIn;
+    WDL_TypedBuf<BL_FLOAT> &monoIn = mTmpBuf12;
     if (inSamples.size() > 0)
     {
         monoIn = inSamples[0];
@@ -509,17 +526,19 @@ AutoGainObj::ComputeOutGainSpectConstantSc(const vector<WDL_TypedBuf<BL_FLOAT> >
         if (inSamples.size() > 1)
             BLUtils::StereoToMono(&monoIn, inSamples[0], inSamples[1]);
     }
+    else
+        monoIn.Resize(0);
     
     // Dummy Sc magn array
-    WDL_TypedBuf<BL_FLOAT> scMagns;
+    WDL_TypedBuf<BL_FLOAT> &scMagns = mTmpBuf13;
     BLUtils::ResizeFillValue(&scMagns, monoIn.GetSize(), constantScValue);
     
     //Convert to dB
-    WDL_TypedBuf<BL_FLOAT> dbSc;
+    WDL_TypedBuf<BL_FLOAT> &dbSc = mTmpBuf14;
     BLUtils::AmpToDB(&dbSc, scMagns, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
     
     // FIX: fix flat end of result curve, when using sample rate > 44100
-    WDL_TypedBuf<BL_FLOAT> dbIn;
+    WDL_TypedBuf<BL_FLOAT> &dbIn = mTmpBuf15;
     BLUtils::AmpToDB(&dbIn, monoIn, (BL_FLOAT)BL_EPS, /*DB_INF*/(BL_FLOAT)DB_INF2);
     
     BL_FLOAT inGain = ComputeInGain(monoIn);
@@ -555,7 +574,7 @@ AutoGainObj::ComputeOutGainSpectAux(const WDL_TypedBuf<BL_FLOAT> &dbIn,
 #endif
     
     mAvgHistoScIn->AddValues(dbSc);
-    WDL_TypedBuf<BL_FLOAT> avgSc;
+    WDL_TypedBuf<BL_FLOAT> &avgSc = mTmpBuf16;
     mAvgHistoScIn->GetValues(&avgSc);
     
 #if FIX_START_JUMP
@@ -566,7 +585,7 @@ AutoGainObj::ComputeOutGainSpectAux(const WDL_TypedBuf<BL_FLOAT> &dbIn,
 #endif
     
     mAvgHistoIn->AddValues(dbIn);
-    WDL_TypedBuf<BL_FLOAT> avgIn;
+    WDL_TypedBuf<BL_FLOAT> &avgIn = mTmpBuf17;
     mAvgHistoIn->GetValues(&avgIn);
     
 #if !SILENCE_THRS_ALGO2
@@ -595,7 +614,8 @@ AutoGainObj::ComputeOutGainSpectAux(const WDL_TypedBuf<BL_FLOAT> &dbIn,
     mGainSmoother->Update();
     outGain = mGainSmoother->GetCurrentValue();
     
-    WDL_TypedBuf<BL_FLOAT> newAvgIn = avgIn;
+    WDL_TypedBuf<BL_FLOAT> &newAvgIn = mTmpBuf18;
+    newAvgIn = avgIn;
     BLUtils::AddValues(&newAvgIn, outGain);
     
     // Bound the side chain curve
@@ -635,7 +655,7 @@ AutoGainObj::ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
     // Compute the sidechain gain
     
     // We have at least one sidechain channel
-    WDL_TypedBuf<BL_FLOAT> sideChain;
+    WDL_TypedBuf<BL_FLOAT> &sideChain = mTmpBuf19;
     if (scIn.size() > 0)
     {
         sideChain = scIn[0];
@@ -645,6 +665,8 @@ AutoGainObj::ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
             BLUtils::StereoToMono(&sideChain, scIn[0], scIn[1]);
         }
     }
+    else
+        sideChain.Resize(0);
     
     BL_FLOAT sideChainAvg = BLUtils::ComputeRMSAvg2(sideChain.Get(), sideChain.GetSize());
     BL_FLOAT scGain = BLUtils::AmpToDB(sideChainAvg, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
@@ -653,7 +675,7 @@ AutoGainObj::ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
     mScSamplesSmoother->Update();
     scGain = mScSamplesSmoother->GetCurrentValue();
     
-    WDL_TypedBuf<BL_FLOAT> monoIn;
+    WDL_TypedBuf<BL_FLOAT> &monoIn = mTmpBuf20;
     if (inSamples.size() > 0)
     {
         monoIn = inSamples[0];
@@ -661,6 +683,8 @@ AutoGainObj::ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
         if (inSamples.size() > 1)
             BLUtils::StereoToMono(&monoIn, inSamples[0], inSamples[1]);
     }
+    else
+        monoIn.Resize(0);
     
     BL_FLOAT inAvg = BLUtils::ComputeRMSAvg2(monoIn.Get(), monoIn.GetSize());
     BL_FLOAT inGain = BLUtils::AmpToDB(inAvg, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
@@ -707,7 +731,7 @@ BL_FLOAT
 AutoGainObj::ComputeFftGain(const WDL_TypedBuf<BL_FLOAT> &avgIn,
                             const WDL_TypedBuf<BL_FLOAT> &avgSc)
 {
-    WDL_TypedBuf<BL_FLOAT> diff;
+    WDL_TypedBuf<BL_FLOAT> &diff = mTmpBuf21;
     diff.Resize(avgIn.GetSize());
     
     BLUtils::ComputeDiff(&diff, avgIn, avgSc);
@@ -810,7 +834,7 @@ AutoGainObj::UpdateGraphReadMode(const vector<WDL_TypedBuf<BL_FLOAT> > &in,
                                  const vector<WDL_TypedBuf<BL_FLOAT> > &out)
 {
     // In
-    WDL_TypedBuf<BL_FLOAT> monoIn;
+    WDL_TypedBuf<BL_FLOAT> &monoIn = mTmpBuf22;
     if (in.size() > 0)
     {
         monoIn = in[0];
@@ -818,8 +842,10 @@ AutoGainObj::UpdateGraphReadMode(const vector<WDL_TypedBuf<BL_FLOAT> > &in,
         if (in.size() > 1)
             BLUtils::StereoToMono(&monoIn, in[0], in[1]);
     }
+    else
+        monoIn.Resize(0);
     
-    WDL_TypedBuf<BL_FLOAT> dbIn;
+    WDL_TypedBuf<BL_FLOAT> &dbIn = mTmpBuf23;
     BLUtils::AmpToDB(&dbIn, monoIn, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
     
 #if FIX_START_JUMP
@@ -828,11 +854,11 @@ AutoGainObj::UpdateGraphReadMode(const vector<WDL_TypedBuf<BL_FLOAT> > &in,
 #endif
     
     mAvgHistoIn->AddValues(dbIn);
-    WDL_TypedBuf<BL_FLOAT> avgIn;
+    WDL_TypedBuf<BL_FLOAT> &avgIn = mTmpBuf24;
     mAvgHistoIn->GetValues(&avgIn);
     
     // Out
-    WDL_TypedBuf<BL_FLOAT> monoOut;
+    WDL_TypedBuf<BL_FLOAT> &monoOut = mTmpBuf25;
     if (out.size() > 0)
     {
         monoOut = out[0];
@@ -840,8 +866,10 @@ AutoGainObj::UpdateGraphReadMode(const vector<WDL_TypedBuf<BL_FLOAT> > &in,
         if (out.size() > 1)
             BLUtils::StereoToMono(&monoOut, out[0], out[1]);
     }
+    else
+        monoOut.Resize(0);
     
-    WDL_TypedBuf<BL_FLOAT> dbOut;
+    WDL_TypedBuf<BL_FLOAT> &dbOut = mTmpBuf26;
     BLUtils::AmpToDB(&dbOut, monoOut, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
     
 #if FIX_START_JUMP
@@ -852,7 +880,7 @@ AutoGainObj::UpdateGraphReadMode(const vector<WDL_TypedBuf<BL_FLOAT> > &in,
 #endif
     
     mAvgHistoOut->AddValues(dbOut);
-    WDL_TypedBuf<BL_FLOAT> avgOut;
+    WDL_TypedBuf<BL_FLOAT> &avgOut = mTmpBuf27;
     mAvgHistoOut->GetValues(&avgOut);
     
     // Curves data

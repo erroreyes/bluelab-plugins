@@ -257,15 +257,22 @@ GraphCurve5::PushValue(BL_GUI_FLOAT x, BL_GUI_FLOAT y)
     
     if (mYValues.GetSize() > mNumValues)
     {
-        WDL_TypedBuf<BL_GUI_FLOAT> newXValues;
-        WDL_TypedBuf<BL_GUI_FLOAT> newYValues;
+        WDL_TypedBuf<BL_GUI_FLOAT> &newXValues = mTmpBuf0;
+        newXValues.Resize(mNumValues + 1);
+        
+        WDL_TypedBuf<BL_GUI_FLOAT> &newYValues = mTmpBuf1;
+        newYValues.Resize(mNumValues + 1);
+        
         for (int i = 1; i < mNumValues + 1; i++)
         {
             BL_GUI_FLOAT x = mXValues.Get()[i];
             BL_GUI_FLOAT y = mYValues.Get()[i];
             
-            newXValues.Add(x);
-            newYValues.Add(y);
+            //newXValues.Add(x);
+            //newYValues.Add(y);
+
+            newXValues.Get()[i] = x;
+            newYValues.Get()[i] = y;
         }
         
         mXValues = newXValues;
@@ -841,7 +848,7 @@ GraphCurve5::SetValuesDecimate2(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
         return;
     
     // Decimate
-    WDL_TypedBuf<BL_GUI_FLOAT> decimValues;
+    WDL_TypedBuf<BL_GUI_FLOAT> &decimValues = mTmpBuf3;
     if (isWaveSignal)
         BLUtils::DecimateSamples(&decimValues, *values, decFactor);
     else
@@ -870,7 +877,7 @@ GraphCurve5::SetValuesDecimate3(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
         return;
     
     // Decimate
-    WDL_TypedBuf<BL_GUI_FLOAT> decimValues;
+    WDL_TypedBuf<BL_GUI_FLOAT> &decimValues = mTmpBuf4;
     if (isWaveSignal)
         BLUtils::DecimateSamples2(&decimValues, *values, decFactor);
     else
@@ -901,11 +908,11 @@ GraphCurve5::SetValuesXDbDecimate(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
     BLUtils::GetMinMaxFreqAxisValues(&minHzValue, &maxHzValue,
                                      bufferSize, sampleRate);
     
-    WDL_TypedBuf<BL_GUI_FLOAT> logSignal;
+    WDL_TypedBuf<BL_GUI_FLOAT> &logSignal = mTmpBuf5;
     BLUtils::FreqsToDbNorm(&logSignal, *values, hzPerBin,
                            minHzValue, maxHzValue);
     
-    WDL_TypedBuf<BL_GUI_FLOAT> decimSignal;
+    WDL_TypedBuf<BL_GUI_FLOAT> &decimSignal = mTmpBuf6;
     BLUtils::DecimateValues(&decimSignal, logSignal, decimFactor);
     
     for (int i = 0; i < decimSignal.GetSize(); i++)
@@ -931,11 +938,11 @@ GraphCurve5::SetValuesXDbDecimateDb(const WDL_TypedBuf<BL_GUI_FLOAT> *values,
     BLUtils::GetMinMaxFreqAxisValues(&minHzValue, &maxHzValue,
                                      bufferSize, sampleRate);
     
-    WDL_TypedBuf<BL_GUI_FLOAT> logSignal;
+    WDL_TypedBuf<BL_GUI_FLOAT> &logSignal = mTmpBuf7;
     BLUtils::FreqsToDbNorm(&logSignal, *values, hzPerBin,
                            minHzValue, maxHzValue);
     
-    WDL_TypedBuf<BL_GUI_FLOAT> decimSignal;
+    WDL_TypedBuf<BL_GUI_FLOAT> &decimSignal = mTmpBuf8;
     BLUtils::DecimateValuesDb(&decimSignal, logSignal, decimFactor, minValueDb);
     
     for (int i = 0; i < decimSignal.GetSize(); i++)
@@ -1095,7 +1102,7 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
 
 void
 GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
-                         BL_GUI_FLOAT height)
+                      BL_GUI_FLOAT height)
 {
     BL_GUI_FLOAT yCoeff =
         mAutoAdjustFactor * mYScaleFactor*height/(mMaxY - mMinY);

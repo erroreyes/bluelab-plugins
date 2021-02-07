@@ -288,6 +288,17 @@ protected:
     GraphControl12 *mGraph;
     
     ParamSmoother mParamSmoother;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf6;
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf7;
+    WDL_TypedBuf<BL_GUI_FLOAT> mTmpBuf8;
 };
 
 #endif
