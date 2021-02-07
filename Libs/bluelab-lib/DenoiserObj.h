@@ -12,6 +12,8 @@
 #include <deque>
 using namespace std;
 
+#include <bl_queue.h>
+
 #include "IPlug_include_in_plug_hdr.h"
 
 #include <FftProcessObj16.h>
@@ -98,7 +100,8 @@ protected:
                      BL_FLOAT threshold);
     
     // Take an fft buffer history and transform it to an image
-    void SamplesHistoryToImage(const deque<WDL_TypedBuf<BL_FLOAT> > *hist,
+    void SamplesHistoryToImage(//const deque<WDL_TypedBuf<BL_FLOAT> > *hist,
+                               const bl_queue<WDL_TypedBuf<BL_FLOAT> > *hist,
                                WDL_TypedBuf<BL_FLOAT> *imageChunk);
     
     // Take an image and extract one line
@@ -106,8 +109,10 @@ protected:
     // Take the phases from the history
     void ImageLineToSamples(const WDL_TypedBuf<BL_FLOAT> *image,
                             int width, int height, int lineNum,
-                            const deque<WDL_TypedBuf<BL_FLOAT> > *hist,
-                            const deque<WDL_TypedBuf<BL_FLOAT> > *phaseHist,
+                            //const deque<WDL_TypedBuf<BL_FLOAT> > *hist,
+                            //const deque<WDL_TypedBuf<BL_FLOAT> > *phaseHist,
+                            const bl_queue<WDL_TypedBuf<BL_FLOAT> > *hist,
+                            const bl_queue<WDL_TypedBuf<BL_FLOAT> > *phaseHist,
                             WDL_TypedBuf<BL_FLOAT> *resultBuf,
                             WDL_TypedBuf<BL_FLOAT> *resultPhases);
     
@@ -154,9 +159,14 @@ protected:
     //
     // Residual denoise
     //
-    deque<WDL_TypedBuf<BL_FLOAT> > mHistoryFftBufs;
-    deque<WDL_TypedBuf<BL_FLOAT> > mHistoryFftNoiseBufs;
-    deque<WDL_TypedBuf<BL_FLOAT> > mHistoryPhases;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mHistoryFftBufs;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mHistoryFftNoiseBufs;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mHistoryPhases;
+    
+    // NOTE: since using bl_queue, we push_back instead() of push_front()
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mHistoryFftBufs;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mHistoryFftNoiseBufs;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mHistoryPhases;
     
     WDL_TypedBuf<BL_FLOAT> mInputImageFilterChunk;
     WDL_TypedBuf<BL_FLOAT> mOutputImageFilterChunk;
