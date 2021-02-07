@@ -13,6 +13,8 @@
 #include <deque>
 using namespace std;
 
+#include <bl_queue.h>
+
 #include <SimpleKalmanFilter.h>
 #include <Scale.h>
 
@@ -375,7 +377,7 @@ protected:
     WDL_TypedBuf<BL_FLOAT> mPrevNoiseEnvelope;
     
     // For ComputeMusicalNoise()
-    deque<WDL_TypedBuf<BL_FLOAT> > mPrevNoiseMasks;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mPrevNoiseMasks;
     
     //
     BL_FLOAT mMaxDetectFreq;
@@ -409,6 +411,28 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+
+    void ReserveTmpBufs();
+    
+    vector<Partial> mTmpPartials0;
+    vector<Partial> mTmpPartials1;
+    vector<Partial> mTmpPartials2;
+    vector<Partial> mTmpPartials3;
+    vector<Partial> mTmpPartials4;
+    vector<Partial> mTmpPartials5;
+    vector<Partial> mTmpPartials6;
+    vector<Partial> mTmpPartials7;
+    vector<Partial> mTmpPartials8;
+    vector<Partial> mTmpPartials9;
+    vector<Partial> mTmpPartials10;
+    vector<Partial> mTmpPartials11;
+    vector<Partial> mTmpPartials12;
+    vector<Partial> mTmpPartials13;
+    vector<Partial> mTmpPartials14;
+    vector<Partial> mTmpPartials15;
+    vector<Partial> mTmpPartials16;
+    vector<Partial> mTmpPartials17;
+    vector<Partial> mTmpPartials18;
 };
 
 #endif /* defined(__BL_SASViewer__PartialTracker5__) */

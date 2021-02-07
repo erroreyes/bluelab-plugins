@@ -245,6 +245,8 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     mTimeSmoothNoiseCoeff = 0.5;
     
     mDbgParam = 1.0;
+
+    ReserveTmpBufs();
 }
 
 PartialTracker5::~PartialTracker5()
@@ -265,10 +267,10 @@ PartialTracker5::Reset()
     mCurrentPhases.Resize(0);
     
     mSmoothWinNoise.Resize(0);
-    
 
     mPrevNoiseEnvelope.Resize(0);
     // For ComputeMusicalNoise()
+    mPrevNoiseMasks.unfreeze();
     mPrevNoiseMasks.clear();
     
     mTimeSmoothPrevMagns.Resize(0);
@@ -282,6 +284,8 @@ PartialTracker5::Reset(int bufferSize, BL_FLOAT sampleRate)
     mSampleRate = sampleRate;
     
     Reset();
+
+    ReserveTmpBufs();
 }
 
 BL_FLOAT
@@ -318,14 +322,16 @@ PartialTracker5::DetectPartials()
     WDL_TypedBuf<BL_FLOAT> &magns0 = mTmpBuf0;
     magns0 = mCurrentMagns;
     
-    vector<Partial> partials;
+    vector<Partial> &partials = mTmpPartials0;
+    partials.resize(0);
     DetectPartials(magns0, mCurrentPhases, &partials);
     
     SuppressZeroFreqPartials(&partials);
     
     // Some operations
 #if GLUE_BARBS
-    vector<Partial> prev = partials;
+    vector<Partial> &prev = mTmpPartials1;
+    prev = partials;
     
     GluePartialBarbs(magns0, &partials);
 #endif
@@ -389,7 +395,8 @@ PartialTracker5::ExtractNoiseEnvelopeMax()
     BLUtils::FillAllZero(&dummyPhases);
     for (int i = 0; i < NUM_ITER_EXTRACT_NOISE - 1; i++)
     {
-        vector<Partial> partials;
+        vector<Partial> &partials = mTmpPartials2;
+        partials.resize(0);
         DetectPartials(mNoiseEnvelope, dummyPhases, &partials);
         
         CutPartials(partials, &mNoiseEnvelope);
@@ -402,7 +409,8 @@ PartialTracker5::ExtractNoiseEnvelopeTrack()
     // If not partial detected, noise envelope is simply the input magns
     mNoiseEnvelope = mCurrentMagns;
     
-    vector<Partial> partials;
+    vector<Partial> &partials = mTmpPartials3;
+    partials.resize(0);
     
     // Get all partials, or only alive ?
     //partials = mResult; // Not so good, makes noise peaks
@@ -434,7 +442,8 @@ PartialTracker5::ExtractNoiseEnvelopeTrack()
 void
 PartialTracker5::ExtractNoiseEnvelopeSimple()
 {
-    vector<Partial> partials;
+    vector<Partial> &partials = mTmpPartials4;
+    partials.resize(0);
     
     // Get all partials, or only alive ?
     //partials = mResult; // Not so good, makes noise peaks
@@ -516,8 +525,12 @@ PartialTracker5::ProcessMusicalNoise(WDL_TypedBuf<BL_FLOAT> *noise)
     if (mPrevNoiseMasks.size() < HISTORY_SIZE_MUS_NOISE)
     {
         mPrevNoiseMasks.push_back(*noise);
-        if (mPrevNoiseMasks.size() > HISTORY_SIZE_MUS_NOISE)
-            mPrevNoiseMasks.pop_front();
+
+        if (mPrevNoiseMasks.size() == HISTORY_SIZE_MUS_NOISE)
+            mPrevNoiseMasks.freeze();
+
+        //if (mPrevNoiseMasks.size() > HISTORY_SIZE_MUS_NOISE)
+        //    mPrevNoiseMasks.pop_front();
         
         return;
     }
@@ -619,9 +632,10 @@ PartialTracker5::ProcessMusicalNoise(WDL_TypedBuf<BL_FLOAT> *noise)
     
     // Fill the history at the end
     // (to avoid having processing the current noise as history
-    mPrevNoiseMasks.push_back(noiseCopy);
-    if (mPrevNoiseMasks.size() > HISTORY_SIZE_MUS_NOISE)
-        mPrevNoiseMasks.pop_front();
+    //mPrevNoiseMasks.push_back(noiseCopy);
+    //if (mPrevNoiseMasks.size() > HISTORY_SIZE_MUS_NOISE)
+    //    mPrevNoiseMasks.pop_front();
+    mPrevNoiseMasks.push_pop(noiseCopy);
 }
 
 void
@@ -932,7 +946,9 @@ PartialTracker5::GetAlivePartials(vector<Partial> *partials)
 void
 PartialTracker5::RemoveRealDeadPartials(vector<Partial> *partials)
 {
-    vector<Partial> result;
+    vector<Partial> &result = mTmpPartials5;
+    result.resize(0);
+    
     for (int i = 0; i < partials->size(); i++)
     {
         const Partial &p = (*partials)[i];
@@ -1198,7 +1214,8 @@ bool
 PartialTracker5::GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns,
                                   vector<Partial> *partials)
 {
-    vector<Partial> result;
+    vector<Partial> &result = mTmpPartials6;
+    result.resize(0);
     bool glued = false;
     
     sort(partials->begin(), partials->end(), Partial::FreqLess);
@@ -1208,7 +1225,9 @@ PartialTracker5::GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns,
     {
         Partial currentPartial = (*partials)[idx];
         
-        vector<Partial> twinPartials;
+        vector<Partial> &twinPartials = mTmpPartials7;
+        twinPartials.resize(0);
+        
         twinPartials.push_back(currentPartial);
         
         for (int j = idx + 1; j < partials->size(); j++)
@@ -1416,7 +1435,9 @@ void
 PartialTracker5::DiscardFlatPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                                      vector<Partial> *partials)
 {
-    vector<Partial> result;
+    vector<Partial> &result = mTmpPartials8;
+    result.resize(0);
+    
     for (int i = 0; i < partials->size(); i++)
     {
         const Partial &partial = (*partials)[i];
@@ -1451,7 +1472,9 @@ PartialTracker5::DiscardInvalidPeaks(const WDL_TypedBuf<BL_FLOAT> &magns,
 void
 PartialTracker5::SuppressZeroFreqPartials(vector<Partial> *partials)
 {
-    vector<Partial> result;
+    vector<Partial> &result = mTmpPartials9;
+    result.resize(0);
+    
     for (int i = 0; i < partials->size(); i++)
     {
         const Partial &partial = (*partials)[i];
@@ -1473,7 +1496,9 @@ PartialTracker5::SuppressZeroFreqPartials(vector<Partial> *partials)
 void
 PartialTracker5::ThresholdPartialsPeakHeight(vector<Partial> *partials)
 {
-    vector<Partial> result;
+    vector<Partial> &result = mTmpPartials10;
+    result.resize(0);
+    
     for (int i = 0; i < partials->size(); i++)
     {
         const Partial &partial = (*partials)[i];
@@ -1704,7 +1729,9 @@ PartialTracker5::SuppressBarbs(vector<Partial> *partials)
 #define HEIGHT_COEFF 2.0
 #define WIDTH_COEFF 1.0
     
-    vector<Partial> result;
+    vector<Partial> &result = mTmpPartials11;
+    result.resize(0);
+    
     for (int i = 0; i < partials->size(); i++)
     {
         const Partial &partial = (*partials)[i];
@@ -1771,10 +1798,12 @@ PartialTracker5::FilterPartials(vector<Partial> *result)
         return;
     
     const vector<Partial> &prevPartials = mPartials[1];
-    vector<Partial> currentPartials = mPartials[0];
+    vector<Partial> &currentPartials = mTmpPartials12;
+    currentPartials = mPartials[0];
     
     // Partials that was not associated at the end
-    vector<Partial> remainingPartials;
+    vector<Partial> &remainingPartials = mTmpPartials13;
+    remainingPartials.resize(0);
     
     AssociatePartialsPARSHL(prevPartials, &currentPartials, &remainingPartials);
     
@@ -2032,18 +2061,23 @@ PartialTracker5::AssociatePartials(const vector<PartialTracker5::Partial> &prevP
                                    vector<PartialTracker5::Partial> *remainingPartials)
 {
     // Sort current partials and prev partials by decreasing amplitude
-    vector<Partial> currentPartialsSort = *currentPartials;
+    vector<Partial> &currentPartialsSort = mTmpPartials14;
+    currentPartialsSort = *currentPartials;
     sort(currentPartialsSort.begin(), currentPartialsSort.end(), Partial::AmpLess);
     reverse(currentPartialsSort.begin(), currentPartialsSort.end());
     
-    vector<Partial> prevPartialsSort = prevPartials;
+    vector<Partial> &prevPartialsSort = mTmpPartials15;
+    prevPartialsSort = prevPartials;
+    
     sort(prevPartialsSort.begin(), prevPartialsSort.end(), Partial::AmpLess);
     reverse(prevPartialsSort.begin(), prevPartialsSort.end());
  
     // Associate
     
     // Associated partials
-    vector<Partial> currentPartialsAssoc;
+    vector<Partial> &currentPartialsAssoc = mTmpPartials16;
+    currentPartialsAssoc.resize(0);
+    
     for (int i = 0; i < prevPartialsSort.size(); i++)
     {
         const Partial &prevPartial = prevPartialsSort[i];
@@ -2110,7 +2144,8 @@ PartialTracker5::AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> 
     // Sort current partials and prev partials by increasing frequency
     sort(currentPartials->begin(), currentPartials->end(), Partial::FreqLess);
     
-    vector<PartialTracker5::Partial> prevPartials0 = prevPartials;
+    vector<PartialTracker5::Partial> &prevPartials0 = mTmpPartials17;
+    prevPartials0 = prevPartials;
     sort(prevPartials0.begin(), prevPartials0.end(), Partial::FreqLess);
     
     // Associated partials
@@ -2191,7 +2226,9 @@ PartialTracker5::AssociatePartialsPARSHL(const vector<PartialTracker5::Partial> 
     
     
     // Update partials
-    vector<PartialTracker5::Partial> newPartials;
+    vector<PartialTracker5::Partial> &newPartials = mTmpPartials18;
+    newPartials.resize(0);
+    
     for (int j = 0; j < currentPartials->size(); j++)
     {
         Partial &currentPartial = (*currentPartials)[j];
@@ -2518,4 +2555,37 @@ PartialTracker5::ProcessAWeighting(int binNum, int numBins,
         normDbMagn = 1.0;
         
     return normDbMagn;
+}
+
+void
+PartialTracker5::ReserveTmpBufs()
+{
+    // Doesn't seem to improve.
+    // Maybe the defaut behavior of std::vector() is sufficient
+    // to manage well our case.
+    //
+    // So disable
+    return;
+    
+    int reserveSize = mBufferSize/2;
+    
+    mTmpPartials0.reserve(reserveSize);
+    mTmpPartials1.reserve(reserveSize);
+    mTmpPartials2.reserve(reserveSize);
+    mTmpPartials3.reserve(reserveSize);
+    mTmpPartials4.reserve(reserveSize);
+    mTmpPartials5.reserve(reserveSize);
+    mTmpPartials6.reserve(reserveSize);
+    mTmpPartials7.reserve(reserveSize);
+    mTmpPartials8.reserve(reserveSize);
+    mTmpPartials9.reserve(reserveSize);
+    mTmpPartials10.reserve(reserveSize);
+    mTmpPartials11.reserve(reserveSize);
+    mTmpPartials12.reserve(reserveSize);
+    mTmpPartials13.reserve(reserveSize);
+    mTmpPartials14.reserve(reserveSize);
+    mTmpPartials15.reserve(reserveSize);
+    mTmpPartials16.reserve(reserveSize);
+    mTmpPartials17.reserve(reserveSize);
+    mTmpPartials18.reserve(reserveSize);
 }
