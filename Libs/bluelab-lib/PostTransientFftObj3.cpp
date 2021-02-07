@@ -242,7 +242,7 @@ PostTransientFftObj3::ResultSamplesWinReady()
         if (transObj == NULL)
             continue;
         
-        WDL_TypedBuf<BL_FLOAT> transientness;
+        WDL_TypedBuf<BL_FLOAT> &transientness = mTmpBuf0;;
         transObj->GetCurrentTransientness(&transientness);
     
         // Transient boost

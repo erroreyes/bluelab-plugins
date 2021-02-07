@@ -178,6 +178,31 @@ protected:
     DenoiserObj *mTwinNoiseObj;
     
     WDL_TypedBuf<BL_FLOAT> mNoiseBufPhases;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf7;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf8;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf9;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf10;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf11;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf12;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf13;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf14;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf15;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf16;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf17;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf18;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf19;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf20;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf21;
 };
 
 #endif /* defined(__BL_Denoiser__DenoiserObj__) */

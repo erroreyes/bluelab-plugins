@@ -11,6 +11,8 @@
 
 #include <BLTypes.h>
 
+#include "../../WDL/fastqueue.h"
+
 #include "IPlug_include_in_plug_hdr.h"
 
 // Keep many values, and decimate when GetValues()
@@ -39,7 +41,13 @@ protected:
     BL_FLOAT mDecimFactor;
     bool mIsSamples;
     
-    WDL_TypedBuf<BL_FLOAT> mValues;
+    //WDL_TypedBuf<BL_FLOAT> mValues;
+    WDL_TypedFastQueue<BL_FLOAT> mValues;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
 };
 
 #endif /* defined(__BL_TransientShaper__FifoDecimator2__) */

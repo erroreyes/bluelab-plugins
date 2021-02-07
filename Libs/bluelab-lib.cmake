@@ -748,6 +748,8 @@ set(_bluelab-lib_src
   TimeAxis3D.h
   TransientLib4.cpp
   TransientLib4.h
+  TransientLib5.cpp
+  TransientLib5.h
   TransientShaperFftObj3.cpp
   TransientShaperFftObj3.h
   UnstableRemoveIf.h

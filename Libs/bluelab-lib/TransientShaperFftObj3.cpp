@@ -9,8 +9,10 @@
 #include <BLUtils.h>
 #include <BLDebug.h>
 
-#include "TransientLib4.h"
-#include "FifoDecimator.h"
+//#include "TransientLib4.h"
+#include <TransientLib5.h>
+
+#include <FifoDecimator2.h>
 
 #include "TransientShaperFftObj3.h"
 
@@ -66,6 +68,8 @@ TransientShaperFftObj3::TransientShaperFftObj3(int bufferSize, int oversampling,
 mInput(true),
 mOutput(true)
 {
+    mTransLib = new TransientLib5();
+    
     mPrecision = 0.0;
     mSoftHard = 0.0;
     
@@ -92,6 +96,8 @@ TransientShaperFftObj3::~TransientShaperFftObj3()
 {
     if (mTransientness != NULL)
         delete mTransientness;
+
+    delete mTransLib;
 }
 
 void
@@ -163,7 +169,7 @@ TransientShaperFftObj3::ProcessInputSamplesPre(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
         resampledAudio[j] = ioBuffer->Get()[j];
     }
         
-    WDL_TypedBuf<BL_FLOAT> outSamples;
+    WDL_TypedBuf<BL_FLOAT> &outSamples = mTmpBuf0;
     outSamples.Resize(desiredSamples);
     int numResampled = mResamplerIn.ResampleOut(outSamples.Get(),
                                                ioBuffer->GetSize(),
@@ -196,7 +202,6 @@ TransientShaperFftObj3::SetFreqAmpRatio(BL_FLOAT ratio)
     mFreqAmpRatio = ratio;
 }
 
-
 void
 TransientShaperFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                                          const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
@@ -205,7 +210,7 @@ TransientShaperFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer
 
 #if BYPASS_IF_NOCHANGE
 #define EPS 1e-15
-  if (std::fabs(mSoftHard) < EPS)
+    if (std::fabs(mSoftHard) < EPS)
     {
         // TODO: check this
         //mPrevPhases = phases;
@@ -219,10 +224,11 @@ TransientShaperFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer
     
     // Seems hard to take half, since we work in sample space too...
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftBuffer = *ioBuffer;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftBuffer = mTmpBuf1;
+    fftBuffer = *ioBuffer;
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf3;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftBuffer);
 
 #if !DENOISER_OPTIM5
@@ -243,70 +249,75 @@ TransientShaperFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer
     //FftProcessObj12::UnapplyAnalysisWindowFft(&magns, phases);
     
     // Compute the transientness
-    WDL_TypedBuf<BL_FLOAT> transientness;
+    WDL_TypedBuf<BL_FLOAT> &transientness = mTmpBuf4;
 #if USE_TRANSIENT_DETECT_2
     // Old version: can not extract "s" only
-    TransientLib4::ComputeTransientness2(magns, phases,
-                                        &mPrevPhases,
-                                        //mFreqsToTrans,
-                                        //mAmpsToTrans,
-                                        mFreqAmpRatio,
-                                        1.0 - mPrecision,
-                                        &transientness);
+    //TransientLib4::ComputeTransientness2(magns, phases,
+    mTransLib->ComputeTransientness2(magns, phases,
+                                    &mPrevPhases,
+                                    //mFreqsToTrans,
+                                    //mAmpsToTrans,
+                                    mFreqAmpRatio,
+                                    1.0 - mPrecision,
+                                    &transientness);
 #endif
 
 #if USE_TRANSIENT_DETECT_3
     // New version(fixed): can extract "s" only
-      // And the volume is not increased compared to bypass
+    // And the volume is not increased compared to bypass
     
     // This version works great with 44100Hz,
     // but not so good with 88200Hz
     // This is certainly due to transient smoothing
     // that shifts the maximum out of the correct value
-    TransientLib4::ComputeTransientness3(magns, phases,
-                                         &mPrevPhases,
-                                         //mFreqsToTrans,
-                                         //mAmpsToTrans,
-                                         mFreqAmpRatio,
-                                         1.0 - mPrecision,
-                                         &transientness);
+    //TransientLib4::ComputeTransientness3(magns, phases,
+    mTransLib->ComputeTransientness3(magns, phases,
+                                    &mPrevPhases,
+                                    //mFreqsToTrans,
+                                    //mAmpsToTrans,
+                                    mFreqAmpRatio,
+                                    1.0 - mPrecision,
+                                    &transientness);
 #endif
 
 #if USE_TRANSIENT_DETECT_4
     // Same as above, but with smoothing fixed and accurate
     // (smooth using LOD pyramid)
-    TransientLib4::ComputeTransientness4(magns, phases,
-                                         &mPrevPhases,
-                                         //mFreqsToTrans,
-                                         //mAmpsToTrans,
-                                         mFreqAmpRatio,
-                                         1.0 - mPrecision,
-                                         mSampleRate,
-                                         &mTransSmoothWin,
-                                         &transientness);
+    //TransientLib4::ComputeTransientness4(magns, phases,
+    mTransLib->ComputeTransientness4(magns, phases,
+                                    &mPrevPhases,
+                                    //mFreqsToTrans,
+                                    //mAmpsToTrans,
+                                    mFreqAmpRatio,
+                                    1.0 - mPrecision,
+                                    mSampleRate,
+                                    &mTransSmoothWin,
+                                    &transientness);
     
 #endif
 
 #if USE_TRANSIENT_DETECT_5
     // TEST
-    TransientLib4::ComputeTransientness5(magns, phases,
-                                         &mPrevPhases,
-                                         mFreqAmpRatio,
-                                         1.0 - mPrecision,
-                                         mSampleRate,
-                                         &mTransSmoothWin,
-                                         &transientness);
+    //TransientLib4::ComputeTransientness5(magns, phases,
+    mTransLib->ComputeTransientness5(magns, phases,
+                                    &mPrevPhases,
+                                    mFreqAmpRatio,
+                                    1.0 - mPrecision,
+                                    mSampleRate,
+                                    &mTransSmoothWin,
+                                    &transientness);
     
 #endif
 
 #if USE_TRANSIENT_DETECT_6
     // Final: good for 88200Hz + buffer size 4096
-    TransientLib4::ComputeTransientness6(magns, phases,
-                                         &mPrevPhases,
-                                         mFreqAmpRatio,
-                                         1.0 - mPrecision,
-                                         mSampleRate,
-                                         &transientness);
+    //TransientLib4::ComputeTransientness6(magns, phases,
+    mTransLib->ComputeTransientness6(magns, phases,
+                                    &mPrevPhases,
+                                    mFreqAmpRatio,
+                                    1.0 - mPrecision,
+                                    mSampleRate,
+                                    &transientness);
     
 #endif
     
@@ -324,7 +335,8 @@ TransientShaperFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer
 #if FORCE_SAMPLE_RATE_KEEP_QUALITY
     if (mSampleRate != SAMPLE_RATE)
     {
-        WDL_TypedBuf<BL_FLOAT> currentTransientness = mCurrentTransientness;
+        WDL_TypedBuf<BL_FLOAT> &currentTransientness = mTmpBuf5;
+        currentTransientness = mCurrentTransientness;
         
         BL_FLOAT coeff = mSampleRate/SAMPLE_RATE;
         int newSize = currentTransientness.GetSize()*coeff;
@@ -348,7 +360,7 @@ TransientShaperFftObj3::ProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     {
 #if BYPASS_IF_NOCHANGE
 #define EPS 1e-15
-      if (std::fabs(mSoftHard) < EPS)
+        if (std::fabs(mSoftHard) < EPS)
         {
             return;
         }
@@ -405,7 +417,7 @@ TransientShaperFftObj3::ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
         resampledAudio[i] = ioBuffer->Get()[i];
     }
     
-    WDL_TypedBuf<BL_FLOAT> outSamples;
+    WDL_TypedBuf<BL_FLOAT> &outSamples = mTmpBuf6;
     outSamples.Resize(numOutSamples); // Input driven
     
     int numResampled = mResamplerOut.ResampleOut(outSamples.Get(),
@@ -442,8 +454,11 @@ TransientShaperFftObj3::ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
     if (mSamplesIn.GetSize() < newSize)
         return;
     
-    WDL_TypedBuf<BL_FLOAT> result;
-    result.Add(mSamplesIn.Get(), newSize);
+    WDL_TypedBuf<BL_FLOAT> &result = mTmpBuf7;
+    //result.Add(mSamplesIn.Get(), newSize);
+    result.Resize(newSize);
+    memcpy(result.Get(), mSamplesIn.Get(), newSize*sizeof(BL_FLOAT));
+    
     BLUtils::ConsumeLeft(&mSamplesIn, newSize);
     
     // Extract a buffer of transientness
@@ -453,8 +468,10 @@ TransientShaperFftObj3::ProcessSamplesPost(WDL_TypedBuf<BL_FLOAT> *ioBuffer)
     if (mTransientnessBuf.GetSize() < newSize)
         return;
     
-    WDL_TypedBuf<BL_FLOAT> trans;
-    trans.Add(mTransientnessBuf.Get(), newSize);
+    WDL_TypedBuf<BL_FLOAT> &trans = mTmpBuf8;
+    //trans.Add(mTransientnessBuf.Get(), newSize);
+    trans.Resize(newSize);
+    memcpy(trans.Get(), mTransientnessBuf.Get(), newSize*sizeof(BL_FLOAT));
     BLUtils::ConsumeLeft(&mTransientnessBuf, newSize);
     
     // Apply transientness
@@ -486,7 +503,8 @@ TransientShaperFftObj3::SetTrackIO(int maxNumPoints, BL_FLOAT decimFactor,
     
     if (trackTransientness)
     {
-        mTransientness = new FifoDecimator(maxNumPoints, decimFactor, false);
+        //mTransientness = new FifoDecimator(maxNumPoints, decimFactor, false);
+        mTransientness = new FifoDecimator2(maxNumPoints, decimFactor, false);
     }
 
     // ??
@@ -556,7 +574,8 @@ TransientShaperFftObj3::ApplyTransientness(WDL_TypedBuf<BL_FLOAT> *ioSamples,
     if (currentTransientness.GetSize() != ioSamples->GetSize())
         return;
     
-    WDL_TypedBuf<BL_FLOAT> trans = currentTransientness;
+    WDL_TypedBuf<BL_FLOAT> &trans = mTmpBuf9;
+    trans = currentTransientness;
     
     //BLUtils::MultValues(&trans, TRANSIENTNESS_COEFF);
     
@@ -566,10 +585,12 @@ TransientShaperFftObj3::ApplyTransientness(WDL_TypedBuf<BL_FLOAT> *ioSamples,
     
     BL_FLOAT gainDB = MAX_GAIN*mSoftHard;
     
-    WDL_TypedBuf<BL_FLOAT> gainsDB = trans;
+    WDL_TypedBuf<BL_FLOAT> &gainsDB = mTmpBuf10;
+    gainsDB = trans;
     BLUtils::MultValues(&gainsDB, gainDB);
     
-    WDL_TypedBuf<BL_FLOAT> gains = gainsDB;
+    WDL_TypedBuf<BL_FLOAT> &gains = mTmpBuf11;
+    gains = gainsDB;
     BLUtils::DBToAmp(&gains);
     
     BLUtils::MultValues(ioSamples, gains);
@@ -608,7 +629,8 @@ TransientShaperFftObj3::ApplyTransientness(WDL_TypedBuf<BL_FLOAT> *ioSamples,
 #define EXP 0.75
 #define FACTOR 0.5
     
-    WDL_TypedBuf<BL_FLOAT> trans = currentTransientness;
+    WDL_TypedBuf<BL_FLOAT> &trans = mTmpBuf12;
+    trans = currentTransientness;
     
     // Flatten the peaks
     // The factor is used to keep almost the same scale
@@ -618,7 +640,8 @@ TransientShaperFftObj3::ApplyTransientness(WDL_TypedBuf<BL_FLOAT> *ioSamples,
     
     BL_FLOAT gainDB = TRANS_GAIN_FACTOR*mSoftHard;
     
-    WDL_TypedBuf<BL_FLOAT> gainsDB = trans;
+    WDL_TypedBuf<BL_FLOAT> &gainsDB = mTmpBuf13;
+    gainsDB = trans;
     BLUtils::MultValues(&gainsDB, gainDB);
     
     // Clip the gain at 6dB
@@ -629,7 +652,8 @@ TransientShaperFftObj3::ApplyTransientness(WDL_TypedBuf<BL_FLOAT> *ioSamples,
     // => this way, we shouldn't have signal distortion !
     BLUtils::AntiClipping(&gainsDB, TRANS_GAIN_CLIP);
     
-    WDL_TypedBuf<BL_FLOAT> gains = gainsDB;
+    WDL_TypedBuf<BL_FLOAT> &gains = mTmpBuf14;
+    gains = gainsDB;
     BLUtils::DBToAmp(&gains);
     
     // Apply the gain to the signal

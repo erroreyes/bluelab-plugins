@@ -301,9 +301,10 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     
     vector<WDL_TypedBuf<BL_FLOAT> > &inPhases = mTmpBuf1;
     inPhases.resize(ioFftSamples->size());
-    
+
     for (int i = 0; i < ioFftSamples->size(); i++)
     {
+        // NOTE: not optimal for memory
         BLUtils::TakeHalf((*ioFftSamples)[i]);
         
         WDL_TypedBuf<BL_FLOAT> magns;
@@ -388,7 +389,8 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     for (int i = 0; i < ioFftSamples->size(); i++)
     {
         BLUtils::MagnPhaseToComplex((*ioFftSamples)[i], out[i], outPhases[i]);
-        
+
+        // NOTE: not optimal for memory
         BLUtils::ResizeFillZeros((*ioFftSamples)[i], (*ioFftSamples)[i]->GetSize()*2);
         BLUtils::FillSecondFftHalf((*ioFftSamples)[i]);
     }

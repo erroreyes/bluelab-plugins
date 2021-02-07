@@ -106,7 +106,7 @@ AirProcess2::Reset(int bufferSize, int overlapping, int oversampling,
 }
 
 void
-AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
                               const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 
 {
@@ -114,12 +114,14 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     BlaTimer::Start(&mTimer);
 #endif
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples = mTmpBuf0;
-    fftSamples = *ioBuffer;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples0 = mTmpBuf0;
+    fftSamples0 = *ioBuffer0;
     
     // Take half of the complexes
-    BLUtils::TakeHalf(&fftSamples);
-    
+    //BLUtils::TakeHalf(&fftSamples);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples = mTmpBuf15;
+    BLUtils::TakeHalf(fftSamples0, &fftSamples);
+        
     WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
     WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf2;
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
@@ -283,9 +285,10 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
         // Optim: avoid reconverting to magns
         // and return early
-        *ioBuffer = outResult;
-        ioBuffer->Resize(ioBuffer->GetSize()*2);
-        BLUtils::FillSecondFftHalf(ioBuffer);
+        //ioBuffer = outResult;
+        //ioBuffer->Resize(ioBuffer->GetSize()*2);
+        memcpy(ioBuffer0->Get(), outResult.Get(), outResult.GetSize());
+        BLUtils::FillSecondFftHalf(ioBuffer0);
         
         return;
 #endif
@@ -294,9 +297,13 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     mSum = magns;
     
     // For noise envelope
-    BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
-    ioBuffer->Resize(ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+    //BLUtils::MagnPhaseToComplex(&ioBuffer, magns, phases);
+    //ioBuffer->Resize(ioBuffer->GetSize()*2);
+
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &result = mTmpBuf16;
+    BLUtils::MagnPhaseToComplex(&result, magns, phases);
+    memcpy(ioBuffer0->Get(), result.Get(), result.GetSize());
+    BLUtils::FillSecondFftHalf(ioBuffer0);
     
 #if AIR_PROCESS_PROFILE
     BlaTimer::StopAndDump(&mTimer, &mCount, "AirProcess-profile.txt", "%ld");

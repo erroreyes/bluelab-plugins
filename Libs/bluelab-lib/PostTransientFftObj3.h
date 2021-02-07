@@ -66,7 +66,8 @@ protected:
     
     void AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &inputs,
                     const vector<WDL_TypedBuf<BL_FLOAT> > &scInputs);
-    
+
+    //
     BL_FLOAT mTransBoost;
     
     //DENOISER_OPTIM10
@@ -74,6 +75,10 @@ protected:
     
     //DENOISER_OPTIM11
     BL_FLOAT mTransientBoostFactor;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
 };
 
 #endif /* defined(__BL_PitchShift__PostTransientFftObj3__) */

@@ -17,7 +17,8 @@ FifoDecimator2::FifoDecimator2(long maxSize,
     mDecimFactor = decimFactor;
     mIsSamples = isSamples;
     
-    mValues.Resize(mMaxSize);
+    //mValues.Resize(mMaxSize);
+    mValues.Add(0, mMaxSize);
     
     Reset();
 }
@@ -35,7 +36,13 @@ FifoDecimator2::~FifoDecimator2() {}
 void
 FifoDecimator2::Reset()
 {
-    BLUtils::FillAllZero(&mValues);
+    //BLUtils::FillAllZero(&mValues);
+
+    WDL_TypedBuf<BL_FLOAT> &zeros = mTmpBuf0;
+    zeros.Resize(mValues.Available());
+    BLUtils::FillAllZero(&zeros);
+
+    mValues.SetFromBuf(0, zeros.Get(), zeros.GetSize());
 }
 
 void
@@ -56,22 +63,29 @@ FifoDecimator2::SetParams(long maxSize, BL_FLOAT decimFactor, bool isSamples)
 
 void
 FifoDecimator2::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
-{
-    BLUtils::AppendValues(&mValues, values);
+{    
+    //BLUtils::AppendValues(&mValues, values);
+    mValues.Add(values.Get(), values.GetSize());
     
-    int numValuesConsume = mValues.GetSize() - mMaxSize;
+    //int numValuesConsume = mValues.GetSize() - mMaxSize;
+    int numValuesConsume = mValues.Available() - mMaxSize;
     if (numValuesConsume > 0)
     {
-        BLUtils::ConsumeLeft(&mValues, numValuesConsume);
+        //BLUtils::ConsumeLeft(&mValues, numValuesConsume);
+        mValues.Advance(numValuesConsume);
     }
 }
 
 void
 FifoDecimator2::GetValues(WDL_TypedBuf<BL_FLOAT> *values)
 {
+    WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf1;
+    buf.Resize(mValues.Available());
+    mValues.GetToBuf(0, buf.Get(), buf.GetSize());
+                     
     if (mIsSamples)
-        BLUtils::DecimateSamples(values, mValues, mDecimFactor);
+        BLUtils::DecimateSamples(values, buf/*mValues*/, mDecimFactor);
         //BLUtils::DecimateSamplesFast(values, mValues, mDecimFactor);
     else
-        BLUtils::DecimateValues(values, mValues, mDecimFactor);
+        BLUtils::DecimateValues(values, buf/*mValues*/, mDecimFactor);
 }

@@ -9,7 +9,8 @@
 #ifndef __BL_Shaper__TransientShaperFftObj3__
 #define __BL_Shaper__TransientShaperFftObj3__
 
-#include <FifoDecimator.h>
+//#include <FifoDecimator.h>
+#include <FifoDecimator2.h> // NEW iPlug2
 #include <FftProcessObj16.h>
 
 // Detection of "s" and "p" is good at 44100Hz
@@ -55,7 +56,8 @@
 
 
 // TransientShaper
-class FifoDecimator;
+//class FifoDecimator;
+class TransientLib5;
 class TransientShaperFftObj3 : public ProcessObj
 {
 public:
@@ -136,7 +138,8 @@ protected:
     WDL_TypedBuf<BL_FLOAT> mCurrentTransientness;
     
     // For GUI
-    FifoDecimator *mTransientness;
+    //FifoDecimator *mTransientness;
+    FifoDecimator2 *mTransientness;
     
     // For computing derivative (for amp to trans)
     WDL_TypedBuf<BL_FLOAT> mPrevPhases;
@@ -161,8 +164,30 @@ protected:
     //WDL_TypedBuf<BL_FLOAT> mTransSmoothWin;
 
     // For tracking
-    FifoDecimator mInput;
-    FifoDecimator mOutput;
+    //FifoDecimator mInput;
+    //FifoDecimator mOutput;
+    FifoDecimator2 mInput;
+    FifoDecimator2 mOutput;
+    
+    TransientLib5 *mTransLib;
+    
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf7;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf9;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf10;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf11;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf12;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf13;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf14;
 };
 
 #endif /* defined(__BL_Shaper__TransientShaperFftObj3__) */
