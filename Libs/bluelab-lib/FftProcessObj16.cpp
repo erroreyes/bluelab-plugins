@@ -474,7 +474,8 @@ ProcessObjChannel::ComputeLatency(int blockSize)
 
 
 void
-ProcessObjChannel::Reset(int bufferSize, int overlapping, int freqRes, BL_FLOAT sampleRate)
+ProcessObjChannel::Reset(int bufferSize, int overlapping,
+                         int freqRes, BL_FLOAT sampleRate)
 {
     mBufferSize = bufferSize;
     mOverlapping = overlapping;
@@ -2454,9 +2455,10 @@ FftProcessObj16::Process(const vector<WDL_TypedBuf<BL_FLOAT> > &inputs,
 {
     //vector<WDL_TypedBuf<BL_FLOAT> > inputs0 = inputs;
     vector<WDL_TypedBuf<BL_FLOAT> > &inputs0 = mTmpBuf0;
-    inputs0 = inputs;
-    
-    if (inputs0.size() == 0)
+    if (inputs.size() > 0)
+        inputs0 = inputs;
+    else
+        //if (inputs0.size() == 0)
     {
         // Create dummy input samples
         inputs0 = *outputs;

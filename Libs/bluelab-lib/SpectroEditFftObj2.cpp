@@ -132,8 +132,11 @@ SpectroEditFftObj2::PreProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
             }
             else // We are in bounds
             {
-                ioBuffer->Resize(0);
-                ioBuffer->Add(&mSamples->Get()[sampleId], mBufferSize);
+                //ioBuffer->Resize(0);
+                //ioBuffer->Add(&mSamples->Get()[sampleId], mBufferSize);
+                ioBuffer->Resize(mBufferSize);
+                memcpy(ioBuffer->Get(), &mSamples->Get()[sampleId],
+                       mBufferSize*sizeof(BL_FLOAT));
             }
         }
     }
@@ -141,14 +144,16 @@ SpectroEditFftObj2::PreProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
 #endif
 
 void
-SpectroEditFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+SpectroEditFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
                                      const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
-    BLUtils::TakeHalf(ioBuffer);
+    //BLUtils::TakeHalf(ioBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf0;
+    BLUtils::TakeHalf(*ioBuffer0, &ioBuffer);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf2;
+    BLUtils::ComplexToMagnPhase(&magns, &phases, ioBuffer);
  
     if (mMode == BYPASS)
     {
@@ -173,11 +178,11 @@ SpectroEditFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         
             if (!mSelectionPlayFinished)
             {
-                WDL_TypedBuf<BL_FLOAT> newMagns;
+                WDL_TypedBuf<BL_FLOAT> &newMagns = mTmpBuf3;
                 GetData(magns, &newMagns);
                 magns = newMagns;
             
-                WDL_TypedBuf<BL_FLOAT> newPhases;
+                WDL_TypedBuf<BL_FLOAT> &newPhases = mTmpBuf4;
                 GetData(phases, &newPhases);
                 phases = newPhases;
             }
@@ -239,7 +244,8 @@ SpectroEditFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             {
                 magns = mCurrentReplaceMagns[0];
                 phases = mCurrentReplacePhases[0];
-            
+
+                // NOTE: this is not optimal for memory
                 BLUtils::ConsumeLeft(&mCurrentReplaceMagns);
                 BLUtils::ConsumeLeft(&mCurrentReplacePhases);
             }
@@ -258,11 +264,13 @@ SpectroEditFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     {
         mLineCount++;
     }
-    
-    BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
-    
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &result = mTmpBuf5;
+    BLUtils::MagnPhaseToComplex(&result, magns, phases);
+    memcpy(ioBuffer0->Get(), result.Get(),
+           result.GetSize()*sizeof(WDL_FFT_COMPLEX));
+    //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+    BLUtils::FillSecondFftHalf(ioBuffer0);
 }
 
 void
@@ -289,7 +297,8 @@ SpectroEditFftObj2::GetMode()
 }
 
 void
-SpectroEditFftObj2::SetDataSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
+SpectroEditFftObj2::SetDataSelection(BL_FLOAT x0, BL_FLOAT y0,
+                                     BL_FLOAT x1, BL_FLOAT y1)
 {
     mDataSelection[0] = x0*mOverlapping;
     mDataSelection[1] = y0;

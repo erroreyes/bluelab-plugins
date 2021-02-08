@@ -206,3 +206,5 @@ AutoGain: vumeter doesn't move
 
 - SITE: bundle: check the checkbox "is bundle", and add all the plugins
 => so in user account, there also will be all plugins separately
+
+- TODO: check memory of all plugins, but when manipulating all knobs/options
