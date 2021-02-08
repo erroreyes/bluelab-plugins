@@ -302,7 +302,8 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
 
     WDL_TypedBuf<WDL_FFT_COMPLEX> &result = mTmpBuf16;
     BLUtils::MagnPhaseToComplex(&result, magns, phases);
-    memcpy(ioBuffer0->Get(), result.Get(), result.GetSize());
+    memcpy(ioBuffer0->Get(), result.Get(),
+           result.GetSize()*sizeof(WDL_FFT_COMPLEX));
     BLUtils::FillSecondFftHalf(ioBuffer0);
     
 #if AIR_PROCESS_PROFILE

@@ -416,6 +416,19 @@ private:
     vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf4;
     vector<WDL_TypedBuf<BL_FLOAT> *> mTmpBuf5;
     vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf6;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > mTmpBuf7;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > mTmpBuf8;
+    vector<WDL_TypedFastQueue<BL_FLOAT> * > mTmpBuf9;
+    vector<WDL_TypedBuf<BL_FLOAT> * > mTmpBuf10;
+    vector<WDL_TypedFastQueue<BL_FLOAT> * > mTmpBuf11;
+    vector<WDL_TypedBuf<BL_FLOAT> * > mTmpBuf12;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf13;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > mTmpBuf14;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > mTmpBuf15;
+    vector<WDL_TypedBuf<BL_FLOAT> * > mTmpBuf16;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf17;
+    vector<WDL_TypedBuf<BL_FLOAT> * > mTmpBuf18;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf19;
 };
 
 #endif /* defined(__Transient__FftProcessObj16__) */

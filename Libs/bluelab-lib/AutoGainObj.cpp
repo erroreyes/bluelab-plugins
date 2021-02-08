@@ -280,7 +280,7 @@ AutoGainObj::ProcessInputSamplesWin(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples
 }
 
 void
-AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples,
+AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamples0,
                              const vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scBuffer)
 {
 #if SKIP_FIRST_FRAME
@@ -297,19 +297,23 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     
     // In
     vector<WDL_TypedBuf<BL_FLOAT> > &in = mTmpBuf0;
-    in.resize(ioFftSamples->size());
+    in.resize(ioFftSamples0->size());
     
     vector<WDL_TypedBuf<BL_FLOAT> > &inPhases = mTmpBuf1;
-    inPhases.resize(ioFftSamples->size());
+    inPhases.resize(ioFftSamples0->size());
 
-    for (int i = 0; i < ioFftSamples->size(); i++)
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &ioFftSamples = mTmpBuf28;
+    ioFftSamples.resize(ioFftSamples0->size());
+    
+    for (int i = 0; i < ioFftSamples0->size(); i++)
     {
         // NOTE: not optimal for memory
-        BLUtils::TakeHalf((*ioFftSamples)[i]);
+        //BLUtils::TakeHalf((*ioFftSamples)[i]);
+        BLUtils::TakeHalf(*(*ioFftSamples0)[i], &ioFftSamples[i]);
         
-        WDL_TypedBuf<BL_FLOAT> magns;
-        WDL_TypedBuf<BL_FLOAT> phases;
-        BLUtils::ComplexToMagnPhase(&magns, &phases, *(*ioFftSamples)[i]);
+        WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf29;
+        WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf30;
+        BLUtils::ComplexToMagnPhase(&magns, &phases, ioFftSamples[i]);
         
         //in.push_back(magns);
         //inPhases.push_back(phases);
@@ -322,13 +326,14 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     if (scBuffer != NULL)
     {
         vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &scBufferCopy = mTmpBuf3;
-        scBufferCopy = *scBuffer;
+        //scBufferCopy = *scBuffer;
         
         scIn.resize(scBufferCopy.size());
         
         for (int i = 0; i < scBufferCopy.size(); i++)
         {
-            BLUtils::TakeHalf(&scBufferCopy[i]);
+            //BLUtils::TakeHalf(&scBufferCopy[i]);
+            BLUtils::TakeHalf((*scBuffer)[i], &scBufferCopy[i]);
             
             WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf4;
             WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf5;
@@ -386,13 +391,17 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     }
     
     // Result
-    for (int i = 0; i < ioFftSamples->size(); i++)
+    for (int i = 0; i < ioFftSamples0->size(); i++)
     {
-        BLUtils::MagnPhaseToComplex((*ioFftSamples)[i], out[i], outPhases[i]);
+        BLUtils::MagnPhaseToComplex(&ioFftSamples[i], out[i], outPhases[i]);
 
         // NOTE: not optimal for memory
-        BLUtils::ResizeFillZeros((*ioFftSamples)[i], (*ioFftSamples)[i]->GetSize()*2);
-        BLUtils::FillSecondFftHalf((*ioFftSamples)[i]);
+        //BLUtils::ResizeFillZeros((*ioFftSamples)[i], (*ioFftSamples)[i]->GetSize()*2);
+        //BLUtils::FillSecondFftHalf((*ioFftSamples)[i]);
+
+        memcpy((*ioFftSamples0)[i]->Get(), ioFftSamples[i].Get(),
+               ioFftSamples[i].GetSize()*sizeof(WDL_FFT_COMPLEX));
+        BLUtils::FillSecondFftHalf((*ioFftSamples0)[i]);
     }
 }
 

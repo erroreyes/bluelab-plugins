@@ -356,6 +356,10 @@ private:
 
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf5;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf6;
+
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf7;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf9;
 };
 
 ProcessObjChannel::ProcessObjChannel(ProcessObj *processObj, int bufferSize)
@@ -728,7 +732,7 @@ ProcessObjChannel::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
         int numZeros = numRequested - remaining;
      
         // get only the necessary samples
-        WDL_TypedBuf<BL_FLOAT> buf;
+        WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf7;
         GetResultOutBuffer(&buf, remaining);
             
         if (output != NULL)
@@ -834,7 +838,7 @@ ProcessObjChannel::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
         if (numRequestedLat <= numOutSamples) // Just in case
         {
             // get only the necessary samples
-            WDL_TypedBuf<BL_FLOAT> buf;
+            WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf8;
             GetResultOutBuffer(&buf, numRequestedLat);
         
             if (output != NULL)
@@ -865,7 +869,7 @@ ProcessObjChannel::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
     if (numRequestedLat <= numOutSamples) // Just in case
     {
         // get only the necessary samples
-        WDL_TypedBuf<BL_FLOAT> buf;
+        WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf9;
         GetResultOutBuffer(&buf, numRequestedLat);
             
         if (output != NULL)
@@ -1653,7 +1657,7 @@ FftProcessObj16::InputSamplesReady()
         return;
     
     //vector<WDL_TypedBuf<BL_FLOAT> * > samples;
-    vector<WDL_TypedFastQueue<BL_FLOAT> * > samples0;
+    vector<WDL_TypedFastQueue<BL_FLOAT> * > &samples0 = mTmpBuf9;
     GetAllSamples(&samples0);
     
     // Convert queue to vector (copy)
@@ -1665,7 +1669,7 @@ FftProcessObj16::InputSamplesReady()
         samples0[i]->GetToBuf(0, samples1[i].Get(), samples0[i]->Available());
     }
     
-    vector<WDL_TypedBuf<BL_FLOAT> * > samples;
+    vector<WDL_TypedBuf<BL_FLOAT> * > &samples = mTmpBuf10;
     samples.resize(samples1.size());
     for (int i = 0; i < samples.size(); i++)
     {
@@ -1701,7 +1705,7 @@ FftProcessObj16::InputSamplesWinReady()
         return;
     
     //vector<WDL_TypedBuf<BL_FLOAT> * > samples;
-    vector<WDL_TypedFastQueue<BL_FLOAT> * > samples0;
+    vector<WDL_TypedFastQueue<BL_FLOAT> * > &samples0 = mTmpBuf11;
     GetAllSamples(&samples0);
 
     // Convert queue to vector (copy)
@@ -1713,14 +1717,14 @@ FftProcessObj16::InputSamplesWinReady()
         samples0[i]->GetToBuf(0, samples1[i].Get(), samples0[i]->Available());
     }
     
-    vector<WDL_TypedBuf<BL_FLOAT> * > samples;
+    vector<WDL_TypedBuf<BL_FLOAT> * > &samples = mTmpBuf12;
     samples.resize(samples1.size());
     for (int i = 0; i < samples.size(); i++)
     {
         samples[i] = &(samples1[i]);
     }
  
-    vector<WDL_TypedBuf<BL_FLOAT> > scSamples;
+    vector<WDL_TypedBuf<BL_FLOAT> > &scSamples = mTmpBuf13;
     GetAllScSamples(&scSamples);
     
     for (int i = 0; i < mMcProcesses.size(); i++)
@@ -1747,10 +1751,10 @@ FftProcessObj16::InputFftReady()
     if (mMcProcesses.empty())
         return;
     
-    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > samples;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > &samples = mTmpBuf14;
     GetAllFftSamples(&samples);
     
-    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > scSamples;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &scSamples = mTmpBuf7;
     GetAllFftScSamples(&scSamples);
     
     for (int i = 0; i < mMcProcesses.size(); i++)
@@ -1771,10 +1775,10 @@ FftProcessObj16::ResultFftReady()
     if (mMcProcesses.empty())
         return;
     
-    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > samples;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > &samples = mTmpBuf15;
     GetAllFftSamples(&samples);
     
-    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > scSamples;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &scSamples = mTmpBuf8;
     GetAllFftScSamples(&scSamples);
     
     for (int i = 0; i < mMcProcesses.size(); i++)
@@ -1795,10 +1799,10 @@ FftProcessObj16::ResultSamplesWinReady()
     if (mMcProcesses.empty())
         return;
     
-    vector<WDL_TypedBuf<BL_FLOAT> * > samples;
+    vector<WDL_TypedBuf<BL_FLOAT> * > &samples = mTmpBuf16;
     GetAllResultSamples(&samples);
     
-    vector<WDL_TypedBuf<BL_FLOAT> > scSamples;
+    vector<WDL_TypedBuf<BL_FLOAT> > &scSamples = mTmpBuf17;
     GetAllResultScSamples(&scSamples);
     
     for (int i = 0; i < mMcProcesses.size(); i++)
@@ -1819,10 +1823,10 @@ FftProcessObj16::ResultSamplesReady()
     if (mMcProcesses.empty())
         return;
     
-    vector<WDL_TypedBuf<BL_FLOAT> * > samples;
+    vector<WDL_TypedBuf<BL_FLOAT> * > &samples = mTmpBuf18;
     GetAllResultSamples(&samples);
     
-    vector<WDL_TypedBuf<BL_FLOAT> > scSamples;
+    vector<WDL_TypedBuf<BL_FLOAT> > &scSamples= mTmpBuf19;
     GetAllResultScSamples(&scSamples);
     
     for (int i = 0; i < mMcProcesses.size(); i++)
@@ -2645,6 +2649,8 @@ void
 //FftProcessObj16::GetAllSamples(vector<WDL_TypedBuf<BL_FLOAT> * > *samples)
 FftProcessObj16::GetAllSamples(vector<WDL_TypedFastQueue<BL_FLOAT> * > *samples)
 {
+    samples->resize(mChannels.size() - mNumScInputs);
+    
     for (int i = 0; i < mChannels.size() - mNumScInputs; i++) // NEW
     {
         ProcessObjChannel *chan = mChannels[i];
@@ -2652,7 +2658,8 @@ FftProcessObj16::GetAllSamples(vector<WDL_TypedFastQueue<BL_FLOAT> * > *samples)
         //WDL_TypedBuf<BL_FLOAT> *s = chan->GetSamples();
         WDL_TypedFastQueue<BL_FLOAT> *s = chan->GetSamples();
     
-        samples->push_back(s);
+        //samples->push_back(s);
+        (*samples)[i] = s;
     }
 }
 
@@ -2690,19 +2697,34 @@ FftProcessObj16::GetAllScSamples(vector<WDL_TypedBuf<BL_FLOAT> > *scSamples)
 void
 FftProcessObj16::GetAllFftSamples(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *samples)
 {
+    samples->resize(mChannels.size() - mNumScInputs);
+    
     for (int i = 0; i < mChannels.size() - mNumScInputs; i++) // NEW
     {
         ProcessObjChannel *chan = mChannels[i];
         
         WDL_TypedBuf<WDL_FFT_COMPLEX> *s = chan->GetFft();
         
-        samples->push_back(s);
+        //samples->push_back(s);
+        (*samples)[i] = s;
     }
 }
 
 void
 FftProcessObj16::GetAllFftScSamples(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scSamples)
 {
+    int numScChan = 0;
+    for (int i = 0; i < mChannels.size(); i++)
+    {
+        ProcessObjChannel *chan = mChannels[i];
+        ProcessObjChannel *scChan = chan->GetSideChainChannel();
+        if (scChan != NULL)
+            numScChan++;
+    }
+
+    scSamples->resize(numScChan);
+
+    int scIdx = 0;
     for (int i = 0; i < mChannels.size(); i++)
     {
         ProcessObjChannel *chan = mChannels[i];
@@ -2711,7 +2733,8 @@ FftProcessObj16::GetAllFftScSamples(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scSa
         {
             WDL_TypedBuf<WDL_FFT_COMPLEX> *s = scChan->GetFft();
         
-            scSamples->push_back(*s);
+            //scSamples->push_back(*s);
+            (*scSamples)[scIdx++] = *s;
         }
     }
 }
@@ -2719,19 +2742,35 @@ FftProcessObj16::GetAllFftScSamples(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > *scSa
 void
 FftProcessObj16::GetAllResultSamples(vector<WDL_TypedBuf<BL_FLOAT> * > *samples)
 {
+    samples->resize(mChannels.size() - mNumScInputs);
+    
     for (int i = 0; i < mChannels.size() - mNumScInputs; i++) // NEW
     {
         ProcessObjChannel *chan = mChannels[i];
         
         WDL_TypedBuf<BL_FLOAT> *s = chan->GetResultSamples();
         
-        samples->push_back(s);
+        //samples->push_back(s);
+        (*samples)[i] = s;
     }
 }
 
 void
 FftProcessObj16::GetAllResultScSamples(vector<WDL_TypedBuf<BL_FLOAT> > *scSamples)
 {
+    int numScChan = 0;
+    for (int i = 0; i < mChannels.size(); i++)
+    {
+        ProcessObjChannel *chan = mChannels[i];
+        
+        ProcessObjChannel *scChan = chan->GetSideChainChannel();
+        if (scChan != NULL)
+            numScChan++;
+    }
+
+    scSamples->resize(numScChan);
+
+    int scIdx = 0;
     for (int i = 0; i < mChannels.size(); i++)
     {
         ProcessObjChannel *chan = mChannels[i];
@@ -2741,7 +2780,8 @@ FftProcessObj16::GetAllResultScSamples(vector<WDL_TypedBuf<BL_FLOAT> > *scSample
         {
             WDL_TypedBuf<BL_FLOAT> *s = scChan->GetResultSamples();
             
-            scSamples->push_back(*s);
+            //scSamples->push_back(*s);
+            (*scSamples)[scIdx++] = *s;
         }
     }
 }

@@ -194,6 +194,9 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf25;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf26;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf27;
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > mTmpBuf28;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf29;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf30;
 };
 
 #endif /* AutoGainObj_hpp */

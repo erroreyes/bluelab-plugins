@@ -203,3 +203,6 @@ AutoGain: vumeter doesn't move
 - BUG: App, all plugins. At first launch, message "set soundcard". We se once. We relaunch. It is reset. After setting a second time this is ok.
 
 - TODO: all plugins - remove darknet marcos in bl_config.h (except in BL-Rebalance)
+
+- SITE: bundle: check the checkbox "is bundle", and add all the plugins
+=> so in user account, there also will be all plugins separately
