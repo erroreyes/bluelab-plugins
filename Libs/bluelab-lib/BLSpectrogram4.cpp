@@ -319,11 +319,15 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     if ((magns0.GetSize() > mHeight) ||
         (phases0.GetSize() > mHeight))
     {
-        BLUtils::DecimateSamples(&magns0,
-                               ((BL_FLOAT)mHeight)/magns0.GetSize());
-        
-        BLUtils::DecimateSamples(&phases0,
-                               ((BL_FLOAT)mHeight)/phases0.GetSize());
+        WDL_TypedBuf<BL_FLOAT> &origMagns = mTmpBuf3;
+        origMagns = magns0;
+        BLUtils::DecimateSamples(&magns0, origMagns,
+                                 ((BL_FLOAT)mHeight)/magns0.GetSize());
+
+        WDL_TypedBuf<BL_FLOAT> &origPhases = mTmpBuf4;
+        origPhases = phases0;
+        BLUtils::DecimateSamples(&phases0, origPhases,
+                                 ((BL_FLOAT)mHeight)/phases0.GetSize());
     }
     
     // Convert amp to dB

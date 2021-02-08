@@ -111,6 +111,12 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf7;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf9;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf10;
 };
 
 #endif /* defined(__BL_Chroma__ChromaFftObj__) */

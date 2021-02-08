@@ -11,6 +11,7 @@
 #include <BLSpectrogram4.h>
 #include <UpTime.h>
 #include <BLDebug.h>
+#include <BLUtils.h>
 
 #include "SpectrogramDisplayScroll3.h"
 
@@ -112,7 +113,8 @@ SpectrogramDisplayScroll3::ResetScroll()
     
     mSpectroMagns.clear();
     mSpectroPhases.clear();
-    //ResetQueues();
+
+    ResetQueues(); //
     
     // Set to 0: no jump (but lag)
     // Set to mOverlapping: avoid very big lag
@@ -333,26 +335,35 @@ void
 SpectrogramDisplayScroll3::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                                               const WDL_TypedBuf<BL_FLOAT> &phases)
 {
-#if 1
-    mSpectroMagns.push_back(magns);
-    mSpectroPhases.push_back(phases);
-    
     // FIX: If the plugin was hidden, and the host playing,
     // mSpectroMagns and mSpectroPhases continued to grow, without being ever flushed
     // (big memory leak)
     int maxCols = mSpectrogram->GetMaxNumCols();
     int bufferLimit = maxCols*2;
-    
-    while (mSpectroMagns.size() > bufferLimit)
+
+    if (mSpectroMagns.size() != bufferLimit)
     {
-        mSpectroMagns.pop_front();
-    }
+        mSpectroMagns.push_back(magns);
+        mSpectroPhases.push_back(phases);
     
-    while (mSpectroPhases.size() > bufferLimit)
-    {
-        mSpectroPhases.pop_front();
+        while (mSpectroMagns.size() > bufferLimit)
+        {
+            mSpectroMagns.pop_front();
+        }
+        
+        while (mSpectroPhases.size() > bufferLimit)
+        {
+            mSpectroPhases.pop_front();
+        }
     }
-#endif
+    else
+    {
+        mSpectroMagns.freeze();
+        mSpectroMagns.push_pop(magns);
+
+        mSpectroMagns.freeze();
+        mSpectroPhases.push_pop(phases);
+    }
 
     //mSpectroMagns.push_pop(magns);
     //mSpectroPhases.push_pop(phases);
@@ -468,7 +479,10 @@ SpectrogramDisplayScroll3::ComputeScrollOffsetPixels(int width)
         // GOOD !
         // Flush the previous data if we stopped the playback and just restarted it
         // Avoids a big jump when restarting
+        mSpectroMagns.unfreeze();
         mSpectroMagns.clear();
+
+        mSpectroPhases.unfreeze();
         mSpectroPhases.clear();
         
         // Set to 0: no jump (but lag)
@@ -535,7 +549,7 @@ SpectrogramDisplayScroll3::ComputeScrollOffsetPixels(int width)
 void
 SpectrogramDisplayScroll3::ResetQueues()
 {
-#if 0
+#if 1
     // Resize
     int maxCols = mSpectrogram->GetMaxNumCols();
     int bufferLimit = maxCols*2;
@@ -547,8 +561,11 @@ SpectrogramDisplayScroll3::ResetQueues()
     WDL_TypedBuf<BL_FLOAT> zeroLine;
     zeroLine.Resize(mBufferSize/2);
     BLUtils::FillAllZero(&zeroLine);
-    
+
+    mSpectroMagns.freeze();
     mSpectroMagns.clear(zeroLine);
+
+    mSpectroPhases.freeze();
     mSpectroPhases.clear(zeroLine);
 #endif
 }

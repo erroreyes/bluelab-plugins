@@ -198,6 +198,8 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
 };
 
 #endif /* defined(__Denoiser__BLSpectrogram4__) */

@@ -125,10 +125,14 @@ protected:
     BL_FLOAT mLinesOffset;
     
     // Add progressively spectrogram lines
-    deque<WDL_TypedBuf<BL_FLOAT> > mSpectroMagns;
-    deque<WDL_TypedBuf<BL_FLOAT> > mSpectroPhases;
-    //bl_queue<WDL_TypedBuf<BL_FLOAT> > mSpectroMagns;
-    //bl_queue<WDL_TypedBuf<BL_FLOAT> > mSpectroPhases;
+    //
+    // NOTE: can't really benefit from bl_queue
+    // (we really need to pop, to decrease the list) sometimes
+    //
+    //deque<WDL_TypedBuf<BL_FLOAT> > mSpectroMagns;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mSpectroPhases;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mSpectroMagns;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mSpectroPhases;
     
     BL_FLOAT mAddLineRemainder;
     

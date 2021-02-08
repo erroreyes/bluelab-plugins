@@ -174,7 +174,7 @@ ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 #if USE_FREQ_OBJ
   // Must update the freq obj at each step
   // (otherwise the detection will be very bad if mSpeedMod != 1)
-  WDL_TypedBuf<BL_FLOAT> realFreqs;
+  WDL_TypedBuf<BL_FLOAT> &realFreqs = mTmpBuf7;
   mFreqObj->ComputeRealFrequencies(phases, &realFreqs);
 #endif
  
@@ -213,12 +213,13 @@ ChromaFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     mOverlapLines.push_pop(magns);
     
     // Simply make the average of the previous lines
-    WDL_TypedBuf<BL_FLOAT> line;
+    WDL_TypedBuf<BL_FLOAT> &line = mTmpBuf8;
     BLUtils::ResizeFillZeros(&line, magns.GetSize());
     
     for (int i = 0; i < mOverlapLines.size(); i++)
     {
-        WDL_TypedBuf<BL_FLOAT> currentLine = mOverlapLines[i];
+        WDL_TypedBuf<BL_FLOAT> &currentLine = mTmpBuf9;
+        currentLine = mOverlapLines[i];
         
 #if !USE_SIMPLE_AVG
         // Multiply by a coeff to smooth
@@ -327,7 +328,7 @@ ChromaFftObj2::MagnsToChromaLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     }
 #endif
     
-    WDL_TypedBuf<BL_FLOAT> smoothLine;
+    WDL_TypedBuf<BL_FLOAT> &smoothLine = mTmpBuf5;
     BLUtils::SmoothDataWin(&smoothLine, *chromaLine, mSmoothWin);
     
     *chromaLine = smoothLine;
@@ -399,7 +400,7 @@ ChromaFftObj2::MagnsToChromaLineFreqs(const WDL_TypedBuf<BL_FLOAT> &magns,
     }
     
     // Smooth
-    WDL_TypedBuf<BL_FLOAT> smoothLine;
+    WDL_TypedBuf<BL_FLOAT> &smoothLine = mTmpBuf6;
     BLUtils::SmoothDataWin(&smoothLine, *chromaLine, mSmoothWin);
     *chromaLine = smoothLine;
 }
@@ -430,7 +431,7 @@ ChromaFftObj2::ResetQueue()
     mOverlapLines.resize(maxLines);
 
     // Set zero value
-    WDL_TypedBuf<BL_FLOAT> zeroLine;
+    WDL_TypedBuf<BL_FLOAT> &zeroLine = mTmpBuf10;
     zeroLine.Resize(mBufferSize/2);
     BLUtils::FillAllZero(&zeroLine);
     mOverlapLines.clear(zeroLine);

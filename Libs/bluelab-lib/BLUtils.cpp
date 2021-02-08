@@ -5888,7 +5888,7 @@ template void BLUtils::DecimateSamples2(WDL_TypedBuf<double> *result,
 template <typename FLOAT_TYPE>
 void
 BLUtils::DecimateSamples(WDL_TypedBuf<FLOAT_TYPE> *ioSamples,
-                       FLOAT_TYPE decFactor)
+                         FLOAT_TYPE decFactor)
 {
     WDL_TypedBuf<FLOAT_TYPE> origSamples = *ioSamples;
     DecimateSamples(ioSamples, origSamples, decFactor);
