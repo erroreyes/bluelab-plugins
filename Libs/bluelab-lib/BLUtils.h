@@ -24,6 +24,7 @@ using namespace std;
 #include "IPlug_include_in_plug_hdr.h"
 
 #include "../../WDL/fft.h"
+#include "../../WDL/fastqueue.h"
 
 #include <BLTypes.h>
 
@@ -1071,6 +1072,11 @@ public:
     // Very basic
     template <typename FLOAT_TYPE>
     static void DecimateStep(WDL_TypedBuf<FLOAT_TYPE> *ioSamples, int step);
+
+    template <typename FLOAT_TYPE>
+    static void DecimateStep(const WDL_TypedBuf<FLOAT_TYPE> &inSamples,
+                             WDL_TypedBuf<FLOAT_TYPE> *outSamples,
+                             int step);
     
     // Math
     template <typename FLOAT_TYPE>
@@ -1510,8 +1516,45 @@ public:
     
     static long int GetTimeMillis();
     
-    static bool GetFullPlugResourcesPath(const IPluginBase &plug, WDL_String *resPath);
-    
+    static bool GetFullPlugResourcesPath(const IPluginBase &plug,
+                                         WDL_String *resPath);
+
+    //
+    template <typename FLOAT_TYPE>
+    static void FastQueueToBuf(const WDL_TypedFastQueue<FLOAT_TYPE> &q,
+                               WDL_TypedBuf<FLOAT_TYPE> *buf,
+                               int numToCopy = -1);
+
+    template <typename FLOAT_TYPE>
+    static void BufToFastQueue(const WDL_TypedBuf<FLOAT_TYPE> &buf,
+                               WDL_TypedFastQueue<FLOAT_TYPE> *q);
+
+    template <typename FLOAT_TYPE>
+    static void Replace(WDL_TypedFastQueue<FLOAT_TYPE> *dst,
+                        int startIdx,
+                        const WDL_TypedBuf<FLOAT_TYPE> &src);
+
+    template <typename FLOAT_TYPE>
+    static void ConsumeLeft(WDL_TypedFastQueue<FLOAT_TYPE> *ioBuffer,
+                            int numToConsume);
+
+    template <typename FLOAT_TYPE>
+    static void ResizeFillZeros(WDL_TypedFastQueue<FLOAT_TYPE> *q, int newSize);
+
+    template <typename FLOAT_TYPE>
+    static void ConsumeLeft(const WDL_TypedBuf<FLOAT_TYPE> &inBuffer,
+                            WDL_TypedBuf<FLOAT_TYPE> *outBuffer,
+                            int numToConsume);
+
+    template <typename FLOAT_TYPE>
+    static void SetBufResize(WDL_TypedBuf<FLOAT_TYPE> *dstBuffer,
+                             const WDL_TypedBuf<FLOAT_TYPE> &srcBuffer,
+                             int srcOffset = 0, int numToCopy = -1);
+
+    template <typename FLOAT_TYPE>
+    static void SetBuf(WDL_TypedBuf<FLOAT_TYPE> *dstBuffer,
+                       const WDL_TypedBuf<FLOAT_TYPE> &srcBuffer);
+        
 protected:
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE BinaryImageMatchAux(const vector<WDL_TypedBuf<FLOAT_TYPE> > &image0,

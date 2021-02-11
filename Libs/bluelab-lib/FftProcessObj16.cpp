@@ -852,7 +852,8 @@ ProcessObjChannel::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
                     output->Get()[mCurrentLatency + i] = buf.Get()[i];
                 }
 #else
-                memcpy(&output->Get()[mCurrentLatency], buf.Get(), numRequestedLat*sizeof(BL_FLOAT));
+                memcpy(&output->Get()[mCurrentLatency], buf.Get(),
+                       numRequestedLat*sizeof(BL_FLOAT));
 #endif
             }
             

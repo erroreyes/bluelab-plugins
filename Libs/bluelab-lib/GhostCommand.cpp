@@ -120,7 +120,7 @@ GhostCommand::Undo(vector<WDL_TypedBuf<BL_FLOAT> > *magns,
 
 void
 GhostCommand::GetSelectedData(const vector<WDL_TypedBuf<BL_FLOAT> > &data,
-                         WDL_TypedBuf<BL_FLOAT> *selectedData)
+                              WDL_TypedBuf<BL_FLOAT> *selectedData)
 {
     int x0;
     int x1;
@@ -156,7 +156,7 @@ GhostCommand::GetSelectedData(const vector<WDL_TypedBuf<BL_FLOAT> > &data,
 // A slice have already been extracted
 void
 GhostCommand::GetSelectedDataY(const vector<WDL_TypedBuf<BL_FLOAT> > &data,
-                          WDL_TypedBuf<BL_FLOAT> *selectedData)
+                               WDL_TypedBuf<BL_FLOAT> *selectedData)
 {
     int y0;
     int y1;

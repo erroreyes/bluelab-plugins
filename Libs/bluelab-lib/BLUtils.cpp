@@ -5937,27 +5937,63 @@ template <typename FLOAT_TYPE>
 void
 BLUtils::DecimateStep(WDL_TypedBuf<FLOAT_TYPE> *ioSamples, int step)
 {
-    int numSamples = ioSamples->GetSize();
+    const WDL_TypedBuf<FLOAT_TYPE> &copyInBuf = *ioSamples;
     
-    WDL_TypedBuf<FLOAT_TYPE> samplesCopy = *ioSamples;
-    const FLOAT_TYPE *copyBuf = samplesCopy.Get();
+    DecimateStep(copyInBuf, ioSamples, step);
     
-    ioSamples->Resize(ioSamples->GetSize()/step);
-    int numResultSamples = ioSamples->GetSize();
-    FLOAT_TYPE *resultBuf = ioSamples->Get();
+    /*int numSamples = ioSamples->GetSize();
+    
+      WDL_TypedBuf<FLOAT_TYPE> samplesCopy = *ioSamples;
+      const FLOAT_TYPE *copyBuf = samplesCopy.Get();
+      
+      ioSamples->Resize(ioSamples->GetSize()/step);
+      int numResultSamples = ioSamples->GetSize();
+      FLOAT_TYPE *resultBuf = ioSamples->Get();
+      
+      int resPos = 0;
+      for (int i = 0; i < numSamples; i += step)
+      {
+      if (resPos < numResultSamples)
+      {
+      FLOAT_TYPE val = copyBuf[i];
+      resultBuf[resPos++] = val;
+      }
+      }*/
+}
+template void BLUtils::DecimateStep(WDL_TypedBuf<float> *ioSamples, int step);
+template void BLUtils::DecimateStep(WDL_TypedBuf<double> *ioSamples, int step);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::DecimateStep(const WDL_TypedBuf<FLOAT_TYPE> &inSamples,
+                      WDL_TypedBuf<FLOAT_TYPE> *outSamples,
+                      int step)
+{
+    int numSamples = inSamples.GetSize();
+    
+    //WDL_TypedBuf<FLOAT_TYPE> samplesCopy = *ioSamples;
+    const FLOAT_TYPE *inBuf = inSamples.Get();
+    
+    outSamples->Resize(inSamples.GetSize()/step);
+    int numResultSamples = outSamples->GetSize();
+    FLOAT_TYPE *outBuf = outSamples->Get();
     
     int resPos = 0;
     for (int i = 0; i < numSamples; i += step)
     {
         if (resPos < numResultSamples)
         {
-            FLOAT_TYPE val = copyBuf[i];
-            resultBuf[resPos++] = val;
+            FLOAT_TYPE val = inBuf[i];
+            outBuf[resPos++] = val;
         }
     }
 }
-template void BLUtils::DecimateStep(WDL_TypedBuf<float> *ioSamples, int step);
-template void BLUtils::DecimateStep(WDL_TypedBuf<double> *ioSamples, int step);
+template void BLUtils::DecimateStep(const WDL_TypedBuf<float> &inSamples,
+                                    WDL_TypedBuf<float> *outSamples,
+                                    int step);
+template void BLUtils::DecimateStep(const WDL_TypedBuf<double> &inSamples,
+                                    WDL_TypedBuf<double> *outSamples,
+                                    int step);
 
 template <typename FLOAT_TYPE>
 void
@@ -11607,11 +11643,11 @@ BLUtils::LagrangeInterp4(FLOAT_TYPE x,
     return y;
 }
 template float BLUtils::LagrangeInterp4(float x,
-                             float p0[2], float p1[2],
-                             float p2[2], float p3[2]);
+                                        float p0[2], float p1[2],
+                                        float p2[2], float p3[2]);
 template double BLUtils::LagrangeInterp4(double x,
-                              double p0[2], double p1[2],
-                              double p2[2], double p3[2]);
+                                         double p0[2], double p1[2],
+                                         double p2[2], double p3[2]);
 
 void
 BLUtils::ConvertToGUIFloatType(WDL_TypedBuf<BL_GUI_FLOAT> *dst,
@@ -11890,3 +11926,162 @@ BLUtils::GetFullPlugResourcesPath(const IPluginBase &plug, WDL_String *resPath)
     
     return true;
 }
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<FLOAT_TYPE> &q,
+                        WDL_TypedBuf<FLOAT_TYPE> *buf,
+                        int numToCopy)
+{
+    if (numToCopy == -1)
+        numToCopy = q.Available();
+
+    if (numToCopy > q.Available())
+        numToCopy = q.Available();
+    
+    buf->Resize(numToCopy);
+    
+    q.GetToBuf(0, buf->Get(), numToCopy);
+}
+template void BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<float> &q,
+                                      WDL_TypedBuf<float> *buf,
+                                      int numToCopy);
+template void BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<double> &q,
+                                      WDL_TypedBuf<double> *buf,
+                                      int numToCopy);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::BufToFastQueue(const WDL_TypedBuf<FLOAT_TYPE> &buf,
+                        WDL_TypedFastQueue<FLOAT_TYPE> *q)
+{
+    int numToAdd = buf.GetSize() - q->Available();
+    if (numToAdd > 0)
+        q->Add(0, numToAdd);
+    else if (numToAdd < 0)
+    {
+        q->Clear();
+        q->Add(0, buf.GetSize());
+    }
+
+    q->SetFromBuf(0, buf.Get(), buf.GetSize());
+}
+template void BLUtils::BufToFastQueue(const WDL_TypedBuf<float> &buf,
+                                      WDL_TypedFastQueue<float> *q);
+template void BLUtils::BufToFastQueue(const WDL_TypedBuf<double> &buf,
+                                      WDL_TypedFastQueue<double> *q);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::Replace(WDL_TypedFastQueue<FLOAT_TYPE> *dst,
+                 int startIdx,
+                 const WDL_TypedBuf<FLOAT_TYPE> &src)
+{
+    int numToReplace = src.GetSize();
+    if (startIdx + numToReplace > dst->Available())
+        numToReplace = dst->Available() - startIdx;
+
+    dst->SetFromBuf(startIdx, src.Get(), numToReplace);
+}
+template void BLUtils::Replace(WDL_TypedFastQueue<float> *dst, int startIdx,
+                               const WDL_TypedBuf<float> &src);
+template void BLUtils::Replace(WDL_TypedFastQueue<double> *dst, int startIdx,
+                               const WDL_TypedBuf<double> &src);
+
+template <typename FLOAT_TYPE>
+void BLUtils::ConsumeLeft(WDL_TypedFastQueue<FLOAT_TYPE> *ioBuffer,
+                          int numToConsume)
+{
+    if (numToConsume > ioBuffer->Available())
+        numToConsume = ioBuffer->Available();
+
+    ioBuffer->Advance(numToConsume);
+}
+template void BLUtils::ConsumeLeft(WDL_TypedFastQueue<float> *ioBuffer,
+                                   int numToConsume);
+template void BLUtils::ConsumeLeft(WDL_TypedFastQueue<double> *ioBuffer,
+                                   int numToConsume);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::ResizeFillZeros(WDL_TypedFastQueue<FLOAT_TYPE> *q, int newSize)
+{
+    int numToAdd = newSize - q->Available();
+    if (numToAdd > 0)
+        q->Add(0, numToAdd);
+    else if (numToAdd < 0)
+    {
+        q->Clear();
+        q->Add(0, newSize);
+    }
+}
+template void BLUtils::ResizeFillZeros(WDL_TypedFastQueue<float> *q, int newSize);
+template void BLUtils::ResizeFillZeros(WDL_TypedFastQueue<double> *q, int newSize);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::ConsumeLeft(const WDL_TypedBuf<FLOAT_TYPE> &inBuffer,
+                     WDL_TypedBuf<FLOAT_TYPE> *outBuffer,
+                     int numToConsume)
+{
+    int newSize = inBuffer.GetSize() - numToConsume;
+    if (newSize <= 0)
+    {
+        outBuffer->Resize(0);
+        
+        return;
+    }
+
+    outBuffer->Resize(newSize);
+    memcpy(outBuffer->Get(),
+           &inBuffer.Get()[numToConsume],
+           newSize*sizeof(FLOAT_TYPE));
+}
+template void BLUtils::ConsumeLeft(const WDL_TypedBuf<float> &inBuffer,
+                                   WDL_TypedBuf<float> *outBuffer,
+                                   int numToConsume);
+template void BLUtils::ConsumeLeft(const WDL_TypedBuf<double> &inBuffer,
+                                   WDL_TypedBuf<double> *outBuffer,
+                                   int numToConsume);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::SetBufResize(WDL_TypedBuf<FLOAT_TYPE> *dstBuffer,
+                      const WDL_TypedBuf<FLOAT_TYPE> &srcBuffer,
+                      int srcOffset, int numToCopy)
+{
+    if (numToCopy == -1)
+        numToCopy = srcBuffer.GetSize();
+    // FIX: fixed here
+    if (numToCopy + srcOffset > srcBuffer.GetSize())
+        numToCopy = srcBuffer.GetSize() - srcOffset;
+        
+    dstBuffer->Resize(numToCopy);
+    memcpy(dstBuffer->Get(),
+           &srcBuffer.Get()[srcOffset],
+           numToCopy*sizeof(FLOAT_TYPE));
+}
+template void BLUtils::SetBufResize(WDL_TypedBuf<float> *dstBuffer,
+                                    const WDL_TypedBuf<float> &srcBuffer,
+                                    int srcOffset, int numToCopy);
+template void BLUtils::SetBufResize(WDL_TypedBuf<double> *dstBuffer,
+                                    const WDL_TypedBuf<double> &srcBuffer,
+                                    int srcOffset, int numToCopy);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::SetBuf(WDL_TypedBuf<FLOAT_TYPE> *dstBuffer,
+                const WDL_TypedBuf<FLOAT_TYPE> &srcBuffer)
+{
+    int numToCopy = srcBuffer.GetSize();
+    if (dstBuffer->GetSize() < numToCopy)
+        numToCopy = dstBuffer->GetSize();
+    
+    memcpy(dstBuffer->Get(), srcBuffer.Get(), numToCopy*sizeof(FLOAT_TYPE));
+}
+template void BLUtils::SetBuf(WDL_TypedBuf<float> *dstBuffer,
+                              const WDL_TypedBuf<float> &srcBuffer);
+template void BLUtils::SetBuf(WDL_TypedBuf<double> *dstBuffer,
+                              const WDL_TypedBuf<double> &srcBuffer);
+template void BLUtils::SetBuf(WDL_TypedBuf<WDL_FFT_COMPLEX> *dstBuffer,
+                              const WDL_TypedBuf<WDL_FFT_COMPLEX> &srcBuffer);

@@ -208,3 +208,21 @@ AutoGain: vumeter doesn't move
 => so in user account, there also will be all plugins separately
 
 - TODO: check memory of all plugins, but when manipulating all knobs/options
+
+The plugin for finding sound in a point cloud is: XLN Audio XO
+
+emacs multi-occur-in-matching-buffers "then type '.' for all buffers"
+
+
+- TODO (all plugs before Ghost): BLUtils::SetBuf() and BLUtils::SetBufResize() instad of memcpy
+- TODO: all plugs (except Rebalance): remove darknlet macros in bl_config
+
+#### valgrind with gdb:
+valgrind --tool=memcheck --vgdb=yes --vgdb-error=0 reaper
+gdb reaper
+(gdb) target remote | /usr/bin/vgdb --pid=389515
+(gdb) continue
+
+
+Re-enable tmp buffers
+

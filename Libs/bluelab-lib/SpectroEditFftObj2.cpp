@@ -134,9 +134,12 @@ SpectroEditFftObj2::PreProcessSamplesBuffer(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
             {
                 //ioBuffer->Resize(0);
                 //ioBuffer->Add(&mSamples->Get()[sampleId], mBufferSize);
-                ioBuffer->Resize(mBufferSize);
-                memcpy(ioBuffer->Get(), &mSamples->Get()[sampleId],
-                       mBufferSize*sizeof(BL_FLOAT));
+
+                /*ioBuffer->Resize(mBufferSize);
+                  memcpy(ioBuffer->Get(), &mSamples->Get()[sampleId],
+                  mBufferSize*sizeof(BL_FLOAT));*/
+
+                BLUtils::SetBufResize(ioBuffer, *mSamples, sampleId, mBufferSize);
             }
         }
     }
@@ -267,14 +270,19 @@ SpectroEditFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
 
     WDL_TypedBuf<WDL_FFT_COMPLEX> &result = mTmpBuf5;
     BLUtils::MagnPhaseToComplex(&result, magns, phases);
-    memcpy(ioBuffer0->Get(), result.Get(),
-           result.GetSize()*sizeof(WDL_FFT_COMPLEX));
+
+    //memcpy(ioBuffer0->Get(), result.Get(),
+    //       result.GetSize()*sizeof(WDL_FFT_COMPLEX));
+    BLUtils::SetBuf(ioBuffer0, result);
+    
     //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+
     BLUtils::FillSecondFftHalf(ioBuffer0);
 }
 
 void
-SpectroEditFftObj2::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate)
+SpectroEditFftObj2::Reset(int bufferSize, int oversampling,
+                          int freqRes, BL_FLOAT sampleRate)
 {
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     

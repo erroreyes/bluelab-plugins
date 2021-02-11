@@ -38,7 +38,7 @@ SpectrogramFftObj::~SpectrogramFftObj()
 }
 
 void
-SpectrogramFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+SpectrogramFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
                                     const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
 #if CONSTANT_SPEED_FEATURE
@@ -55,23 +55,31 @@ SpectrogramFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         }
     }
 #endif
+
+    //BLUtils::TakeHalf(ioBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf0; 
+    BLUtils::TakeHalf(*ioBuffer0, &ioBuffer);
     
-    BLUtils::TakeHalf(ioBuffer);
-    
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf2;
+    BLUtils::ComplexToMagnPhase(&magns, &phases, ioBuffer);
     
     AddSpectrogramLine(magns, phases);
     
     mLineCount++;
     
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+    //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+    //BLUtils::FillSecondFftHalf(ioBuffer);
+
+    //memcpy(ioBuffer0->Get(), ioBuffer.Get(), ioBuffer.GetSize()*sizeof(BL_FLOAT));
+    BLUtils::SetBuf(ioBuffer0, ioBuffer);
+                    
+    BLUtils::FillSecondFftHalf(ioBuffer0);
 }
 
 void
-SpectrogramFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate)
+SpectrogramFftObj::Reset(int bufferSize, int oversampling,
+                         int freqRes, BL_FLOAT sampleRate)
 {
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     

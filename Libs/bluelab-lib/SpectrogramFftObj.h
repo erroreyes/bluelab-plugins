@@ -74,6 +74,12 @@ protected:
     int mAddStep;
     
     Mode mMode;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
 };
 
 #endif

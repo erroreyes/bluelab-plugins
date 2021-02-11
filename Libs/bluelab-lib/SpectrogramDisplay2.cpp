@@ -122,7 +122,11 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
     //int w = mSpectrogram->GetMaxNumCols();
     int w = mSpectrogram->GetNumCols(); // ??
     int h = mSpectrogram->GetHeight();
-    
+
+    // FIX; commented this, otherwise sometimes the texture was
+    // not created, and we called directly texture update
+    // (which made a valgrind error in GL)
+#if 0
     // Avoid white image when there is no data
     if (mSpectroImageData.GetSize() == 0)
     {
@@ -132,6 +136,7 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
         mNeedUpdateSpectrogramData = true;
         mNeedUpdateBGSpectrogramData = true;
     }
+#endif
     
     // The following lines avoid that: at startup when there is no data loaded,
     // all the background was white.
@@ -145,7 +150,8 @@ SpectrogramDisplay2::DoUpdateSpectrogram()
     
     if ((mNeedUpdateSpectrogramData ||
         (mNvgSpectroImage == 0) ||
-        (mNvgBGSpectroImage == 0)))
+        (mNvgBGSpectroImage == 0)) ||
+        (mSpectroImageData.GetSize() != imageSize)) // NEW
     {
         bool imageCreated = false;
         if ((mSpectroImageData.GetSize() != imageSize) ||

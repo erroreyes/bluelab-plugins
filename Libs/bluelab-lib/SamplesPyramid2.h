@@ -14,6 +14,7 @@ using namespace std;
 
 #include <BLTypes.h>
 
+#include "../../WDL/fastqueue.h"
 #include "IPlug_include_in_plug_hdr.h"
 
 // SamplesPyramid2: for UST
@@ -51,14 +52,30 @@ public:
 #endif
     
 protected:
-    vector<WDL_TypedBuf<BL_FLOAT> > mSamplesPyramid;
+    void ResetTmpBuffers();
+    
+    //vector<WDL_TypedBuf<BL_FLOAT> > mSamplesPyramid;
+    vector<WDL_TypedFastQueue<BL_FLOAT> > mSamplesPyramid;
     
     // Keep a push buffer, to be able to push
-    // by blocks of power of two (otherwise,
+    // by bloocks of power of two (otherwise,
     // there are artefacts on the second half).
-    WDL_TypedBuf<BL_FLOAT> mPushBuf;
+    //WDL_TypedBuf<BL_FLOAT> mPushBuf;
+    WDL_TypedFastQueue<BL_FLOAT> mPushBuf;
     
     long mRemainToPop;
+
+private:
+    // Tmp buffers
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf0;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf1;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf2;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf3;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf4;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf7;
+    vector<WDL_TypedBuf<BL_FLOAT> > mTmpBuf8;
 };
 
 #endif /* defined(__BL_Ghost__SamplesPyramid2__) */
