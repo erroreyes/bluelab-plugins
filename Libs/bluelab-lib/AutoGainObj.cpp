@@ -399,8 +399,10 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
         //BLUtils::ResizeFillZeros((*ioFftSamples)[i], (*ioFftSamples)[i]->GetSize()*2);
         //BLUtils::FillSecondFftHalf((*ioFftSamples)[i]);
 
-        memcpy((*ioFftSamples0)[i]->Get(), ioFftSamples[i].Get(),
-               ioFftSamples[i].GetSize()*sizeof(WDL_FFT_COMPLEX));
+        //memcpy((*ioFftSamples0)[i]->Get(), ioFftSamples[i].Get(),
+        //       ioFftSamples[i].GetSize()*sizeof(WDL_FFT_COMPLEX));
+        BLUtils::SetBuf((*ioFftSamples0)[i], ioFftSamples[i]);
+        
         BLUtils::FillSecondFftHalf((*ioFftSamples0)[i]);
     }
 }
