@@ -222,7 +222,10 @@ valgrind --tool=memcheck --vgdb=yes --vgdb-error=0 reaper
 gdb reaper
 (gdb) target remote | /usr/bin/vgdb --pid=389515
 (gdb) continue
+#####################
+
+TODO: in InfrasonicViewer, the last line is very bright
+=> check if we have the same "problem" with other spectrogram plugins
 
 
-Re-enable tmp buffers
 
