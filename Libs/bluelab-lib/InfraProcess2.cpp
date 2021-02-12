@@ -214,20 +214,21 @@ InfraProcess2::Reset(int bufferSize, int overlapping, int oversampling,
 
 void
 InfraProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                              const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
+                                const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 
 {
 #if INFRA_PROCESS_PROFILE
     BlaTimer::Start(&mTimer);
 #endif
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples = *ioBuffer;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples = mTmpBuf0;
     
     // Take half of the complexes
-    BLUtils::TakeHalf(&fftSamples);
+    //BLUtils::TakeHalf(&fftSamples);
+    BLUtils::TakeHalf(*ioBuffer, &fftSamples);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf2;
 #if !SKIP_FFT_PHASES
     BLUtils::ComplexToMagnPhase(&magns, &phases, fftSamples);
 #else
@@ -249,7 +250,7 @@ InfraProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     sort(partials.begin(), partials.end(), PartialTracker5::Partial::FreqLess);
 
     // Increase initial freq
-    WDL_TypedBuf<BL_FLOAT> increasedInitial;
+    WDL_TypedBuf<BL_FLOAT> &increasedInitial = mTmpBuf3;
     IncreaseInitialFreq(&increasedInitial, magns, partials);
     
     // Mix
@@ -265,8 +266,10 @@ InfraProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
 #if (INCREASE_INITIAL_FREQ || INCREASE_ALL_FREQS)
     // Re-synth
-    BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
-    ioBuffer->Resize(ioBuffer->GetSize()*2);
+    //BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
+    //ioBuffer->Resize(ioBuffer->GetSize()*2);
+    BLUtils::MagnPhaseToComplex(&fftSamples, magns, phases);
+    BLUtils::SetBuf(ioBuffer, fftSamples);
     BLUtils::FillSecondFftHalf(ioBuffer);
 #endif
     
@@ -291,7 +294,7 @@ InfraProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
 #endif
     
     // Phantom
-    WDL_TypedBuf<BL_FLOAT> phantomSynthBuffer;
+    WDL_TypedBuf<BL_FLOAT> &phantomSynthBuffer = mTmpBuf4;
     BLUtils::ResizeFillZeros(&phantomSynthBuffer, ioBuffer->GetSize());
     
     vector<PartialTracker5::Partial> phantomPartials;
@@ -312,21 +315,28 @@ InfraProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     // GOOD
     // Not more crackles at all!
 #if FIX_PHANT_MIX_CRACKLE
+    WDL_TypedBuf<BL_FLOAT> &phantomSynthBuffer0 = mTmpBuf8;
+    phantomSynthBuffer0.Resize(phantomSynthBuffer.GetSize()/mOverlapping);
+    BLUtils::SetBuf(&phantomSynthBuffer0, phantomSynthBuffer);
+    
     // Only the first 1/4 of the buffer is filled
     // So reduce the buffer, to apply ramp only on the filed part
-    phantomSynthBuffer.Resize(phantomSynthBuffer.GetSize()/mOverlapping);
+    //phantomSynthBuffer.Resize(phantomSynthBuffer.GetSize()/mOverlapping);
     
     // Apply shape to have a good progression in dB
     BL_FLOAT phantomMix = BLUtils::ApplyParamShape(mPhantomMix, (BL_FLOAT)0.5);
     BL_FLOAT prevPhantomMix = BLUtils::ApplyParamShape(mPrevPhantomMix, (BL_FLOAT)0.5);
-    BLUtils::MultValuesRamp(&phantomSynthBuffer, prevPhantomMix, phantomMix);
+    BLUtils::MultValuesRamp(&phantomSynthBuffer0, prevPhantomMix, phantomMix);
     
     // Resize back
-    BLUtils::ResizeFillZeros(&phantomSynthBuffer, phantomSynthBuffer.GetSize()*mOverlapping);
+    //BLUtils::ResizeFillZeros(&phantomSynthBuffer,
+    //                         phantomSynthBuffer.GetSize()*mOverlapping);
+    BLUtils::FillAllZero(&phantomSynthBuffer);
+    BLUtils::SetBuf(&phantomSynthBuffer, phantomSynthBuffer0);
 #endif
     
     // Sub
-    WDL_TypedBuf<BL_FLOAT> subSynthBuffer;
+    WDL_TypedBuf<BL_FLOAT> &subSynthBuffer = mTmpBuf5;
     BLUtils::ResizeFillZeros(&subSynthBuffer, ioBuffer->GetSize());
     
     vector<PartialTracker5::Partial> subPartials;
@@ -342,11 +352,14 @@ InfraProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     // Only the first 1/4 of the buffer is filled
     // So reduce the buffer, to avoid passing the low pass filter
     // on the zeros too (would have made artifacts)
-    subSynthBuffer.Resize(subSynthBuffer.GetSize()/mOverlapping);
+    //subSynthBuffer.Resize(subSynthBuffer.GetSize()/mOverlapping);
+
+    WDL_TypedBuf<BL_FLOAT> &subSynthBuffer0 = mTmpBuf8;
+    subSynthBuffer0.Resize(subSynthBuffer.GetSize()/mOverlapping);
     
-    WDL_TypedBuf<BL_FLOAT> subLowBuffer;
-    mSubLowFilter->Process(&subLowBuffer, subSynthBuffer);
-    subSynthBuffer = subLowBuffer;
+    WDL_TypedBuf<BL_FLOAT> &subLowBuffer = mTmpBuf6;
+    mSubLowFilter->Process(&subLowBuffer, subSynthBuffer0);
+    subSynthBuffer0 = subLowBuffer;
     
     // GOOD !
     // Must apply submix ramp on the reduced buffer!
@@ -354,18 +367,20 @@ InfraProcess2::ProcessSamplesBufferWin(WDL_TypedBuf<BL_FLOAT> *ioBuffer,
     // Apply shape to have a good progression in dB
     BL_FLOAT subMix = BLUtils::ApplyParamShape(mSubMix, (BL_FLOAT)0.5);
     BL_FLOAT prevSubMix = BLUtils::ApplyParamShape(mPrevSubMix, (BL_FLOAT)0.5);
-    BLUtils::MultValuesRamp(&subSynthBuffer, prevSubMix, subMix);
+    BLUtils::MultValuesRamp(&subSynthBuffer0, prevSubMix, subMix);
 #endif
     
     // Resize back
-    BLUtils::ResizeFillZeros(&subSynthBuffer, subSynthBuffer.GetSize()*mOverlapping);
+    //BLUtils::ResizeFillZeros(&subSynthBuffer, subSynthBuffer.GetSize()*mOverlapping);
+    BLUtils::FillAllZero(&subSynthBuffer);
+    BLUtils::SetBuf(&subSynthBuffer, subSynthBuffer0);
 #endif
     
     //BLUtils::MultValues(&subSynthBuffer, subMix);
         
     // Phantom initial freqs
 #if INCREASE_LOW_FREQS
-    WDL_TypedBuf<BL_FLOAT> lowBuffer;
+    WDL_TypedBuf<BL_FLOAT> &lowBuffer = mTmpBuf7;
     mLowFilter->Process(&lowBuffer, *ioBuffer);
     
     BL_FLOAT dbCoeff = mPhantomMix*BLUtils::DBToAmp(INITIAL_INCREASE_DB);
@@ -430,7 +445,7 @@ InfraProcess2::SetDebug(bool flag)
 
 void
 InfraProcess2::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
-                             const WDL_TypedBuf<BL_FLOAT> &phases)
+                              const WDL_TypedBuf<BL_FLOAT> &phases)
 {    
     mPartialTracker->SetData(magns, phases);
     
