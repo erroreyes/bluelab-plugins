@@ -39,22 +39,24 @@ GhostViewerFftObj::~GhostViewerFftObj()
 }
 
 void
-GhostViewerFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+GhostViewerFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
                                     const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
-    BLUtils::TakeHalf(ioBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf0;
+    BLUtils::TakeHalf(*ioBuffer0, &ioBuffer);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf2;
+    BLUtils::ComplexToMagnPhase(&magns, &phases, ioBuffer);
     
     if (mLineCount % mSpeedMod == 0)
         AddSpectrogramLine(magns, phases);
     
     mLineCount++;
     
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+    //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+    BLUtils::SetBuf(ioBuffer0, ioBuffer);
+    BLUtils::FillSecondFftHalf(ioBuffer0);
 }
 
 void
@@ -126,12 +128,13 @@ GhostViewerFftObj::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         mOverlapLines.pop_front();
     
     // Simply make the average of the previous lines
-    WDL_TypedBuf<BL_FLOAT> line;
+    WDL_TypedBuf<BL_FLOAT> &line = mTmpBuf3;
     BLUtils::ResizeFillZeros(&line, magns.GetSize());
     
     for (int i = 0; i < mOverlapLines.size(); i++)
     {
-        WDL_TypedBuf<BL_FLOAT> currentLine = mOverlapLines[i];
+        WDL_TypedBuf<BL_FLOAT> &currentLine = mTmpBuf4;
+        currentLine = mOverlapLines[i];
         
 #if !USE_SIMPLE_AVG
         // Multiply by a coeff to smooth
