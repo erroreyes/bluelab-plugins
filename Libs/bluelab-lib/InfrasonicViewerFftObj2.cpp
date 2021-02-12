@@ -56,23 +56,29 @@ InfrasonicViewerFftObj2::~InfrasonicViewerFftObj2()
 }
 
 void
-InfrasonicViewerFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
-                                    const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
+InfrasonicViewerFftObj2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
+                                          const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
-    BLUtils::TakeHalf(ioBuffer);
+    //BLUtils::TakeHalf(ioBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf0;
+    BLUtils::TakeHalf(*ioBuffer0, &ioBuffer);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
+    WDL_TypedBuf<BL_FLOAT> &magns0 = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &phases0 = mTmpBuf2;
+    BLUtils::ComplexToMagnPhase(&magns0, &phases0, ioBuffer);
+
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf6;
     
-    SelectSubSonic(&magns, &phases);
+    SelectSubSonic(magns0, phases0, &magns, &phases);
     
     AddSpectrogramLine(magns, phases);
     
     mLineCount++;
     
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+    //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+    BLUtils::SetBuf(ioBuffer0, ioBuffer);
+    BLUtils::FillSecondFftHalf(ioBuffer0);
 }
 
 #if 0 // ORIGIN
@@ -232,12 +238,13 @@ InfrasonicViewerFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
         mOverlapLines.pop_front();
     
     // Simply make the average of the previous lines
-    WDL_TypedBuf<BL_FLOAT> line;
+    WDL_TypedBuf<BL_FLOAT> &line = mTmpBuf3;
     BLUtils::ResizeFillZeros(&line, magns.GetSize());
     
     for (int i = 0; i < mOverlapLines.size(); i++)
     {
-        WDL_TypedBuf<BL_FLOAT> currentLine = mOverlapLines[i];
+        WDL_TypedBuf<BL_FLOAT> &currentLine = mTmpBuf4;
+        currentLine = mOverlapLines[i];
         
 #if !USE_SIMPLE_AVG
         // Multiply by a coeff to smooth
@@ -273,16 +280,21 @@ InfrasonicViewerFftObj2::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
 }
 
 void
-InfrasonicViewerFftObj2::SelectSubSonic(WDL_TypedBuf<BL_FLOAT> *magns,
-                                          WDL_TypedBuf<BL_FLOAT> *phases)
+InfrasonicViewerFftObj2::SelectSubSonic(const WDL_TypedBuf<BL_FLOAT> &inMagns,
+                                        const WDL_TypedBuf<BL_FLOAT> &inPhases,
+                                        WDL_TypedBuf<BL_FLOAT> *outMagns,
+                                        WDL_TypedBuf<BL_FLOAT> *outPhases)
 {
     // 100 Hz max
     int lastBin = ComputeLastBin(mMaxFreq);
     
     //fprintf(stderr, "last bin: %d\n", lastBin);
     
-    magns->Resize(lastBin);
-    phases->Resize(lastBin);
+    outMagns->Resize(lastBin);
+    outPhases->Resize(lastBin);
+
+    BLUtils::SetBuf(outMagns, inMagns);
+    BLUtils::SetBuf(outPhases, inPhases);
 }
 
 int

@@ -319,14 +319,20 @@ BLSpectrogram4::AddLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     if ((magns0.GetSize() > mHeight) ||
         (phases0.GetSize() > mHeight))
     {
-        WDL_TypedBuf<BL_FLOAT> &origMagns = mTmpBuf3;
-        origMagns = magns0;
-        BLUtils::DecimateSamples(&magns0, origMagns,
+        // NOTE: must use pointers here, otherwise we will have
+        // references or references, referring both to initial object
+        // (so the initial object would be resized each time)
+        
+        //WDL_TypedBuf<BL_FLOAT> &origMagns = mTmpBuf3;
+        WDL_TypedBuf<BL_FLOAT> *origMagns = &mTmpBuf3;
+        *origMagns = magns0;
+        BLUtils::DecimateSamples(&magns0, *origMagns,
                                  ((BL_FLOAT)mHeight)/magns0.GetSize());
 
-        WDL_TypedBuf<BL_FLOAT> &origPhases = mTmpBuf4;
-        origPhases = phases0;
-        BLUtils::DecimateSamples(&phases0, origPhases,
+        //WDL_TypedBuf<BL_FLOAT> &origPhases = mTmpBuf4;
+        WDL_TypedBuf<BL_FLOAT> *origPhases = &mTmpBuf4;
+        *origPhases = phases0;
+        BLUtils::DecimateSamples(&phases0, *origPhases,
                                  ((BL_FLOAT)mHeight)/phases0.GetSize());
     }
     

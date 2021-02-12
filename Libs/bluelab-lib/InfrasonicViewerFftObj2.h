@@ -52,8 +52,10 @@ protected:
     void AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
                             const WDL_TypedBuf<BL_FLOAT> &phases);
     
-    void SelectSubSonic(WDL_TypedBuf<BL_FLOAT> *magns,
-                        WDL_TypedBuf<BL_FLOAT> *phases);
+    void SelectSubSonic(const WDL_TypedBuf<BL_FLOAT> &inMagns,
+                        const WDL_TypedBuf<BL_FLOAT> &inPhases,
+                        WDL_TypedBuf<BL_FLOAT> *outMagns,
+                        WDL_TypedBuf<BL_FLOAT> *outPhases);
 
     int ComputeLastBin(BL_FLOAT freq);
     
@@ -73,6 +75,16 @@ protected:
     BL_FLOAT mMaxFreq;
     
     BL_FLOAT mTimeWindowSec;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
 };
 
 #endif /* defined(__BL_GhostViewer__InfrasonicViewerFftObj2__) */
