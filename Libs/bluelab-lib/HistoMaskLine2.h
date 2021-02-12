@@ -23,9 +23,12 @@ class HistoMaskLine2
 {
 public:
     HistoMaskLine2(int bufferSize);
+    HistoMaskLine2();
     
     virtual ~HistoMaskLine2();
 
+    void Reset(int bufferSize);
+    
     void AddValue(int index, int value);
     
     void Apply(WDL_TypedBuf<BL_FLOAT> *values,

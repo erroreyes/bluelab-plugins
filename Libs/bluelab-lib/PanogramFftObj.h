@@ -9,7 +9,8 @@
 #ifndef __BL_Pano__PanogramFftObj__
 #define __BL_Pano__PanogramFftObj__
 
-#include "FftProcessObj16.h"
+#include <FftProcessObj16.h>
+#include <HistoMaskLine2.h>
 
 // From ChromaFftObj
 //
@@ -81,6 +82,17 @@ protected:
     int mAddLineCount;
     
     bool mIsEnabled;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    
+    HistoMaskLine2 mMaskLine;
 };
 
 #endif /* defined(__BL_BL_Pano__BL_PanogramFftObj__) */

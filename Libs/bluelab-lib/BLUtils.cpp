@@ -1667,7 +1667,7 @@ template void BLUtils::AddZeros(WDL_TypedBuf<double> *ioBuf, int size);
 template <typename FLOAT_TYPE>
 void
 BLUtils::StereoToMono(WDL_TypedBuf<FLOAT_TYPE> *monoResult,
-                    const FLOAT_TYPE *in0, const FLOAT_TYPE *in1, int nFrames)
+                      const FLOAT_TYPE *in0, const FLOAT_TYPE *in1, int nFrames)
 {
     if ((in0 == NULL) && (in1 == NULL))
         return;
@@ -1705,16 +1705,17 @@ BLUtils::StereoToMono(WDL_TypedBuf<FLOAT_TYPE> *monoResult,
     }
 }
 template void BLUtils::StereoToMono(WDL_TypedBuf<float> *monoResult,
-                                  const float *in0, const float *in1, int nFrames);
+                                    const float *in0, const float *in1, int nFrames);
 template void BLUtils::StereoToMono(WDL_TypedBuf<double> *monoResult,
-                                  const double *in0, const double *in1, int nFrames);
+                                    const double *in0, const double *in1,
+                                    int nFrames);
 
 
 template <typename FLOAT_TYPE>
 void
 BLUtils::StereoToMono(WDL_TypedBuf<FLOAT_TYPE> *monoResult,
-                    const WDL_TypedBuf<FLOAT_TYPE> &in0,
-                    const WDL_TypedBuf<FLOAT_TYPE> &in1)
+                      const WDL_TypedBuf<FLOAT_TYPE> &in0,
+                      const WDL_TypedBuf<FLOAT_TYPE> &in1)
 {
     if ((in0.GetSize() == 0) && (in1.GetSize() == 0))
         return;
@@ -1765,7 +1766,7 @@ template void BLUtils::StereoToMono(WDL_TypedBuf<double> *monoResult,
 template <typename FLOAT_TYPE>
 void
 BLUtils::StereoToMono(WDL_TypedBuf<FLOAT_TYPE> *monoResult,
-                    const vector< WDL_TypedBuf<FLOAT_TYPE> > &in0)
+                      const vector< WDL_TypedBuf<FLOAT_TYPE> > &in0)
 {
     if (in0.empty())
         return;
@@ -1779,9 +1780,9 @@ BLUtils::StereoToMono(WDL_TypedBuf<FLOAT_TYPE> *monoResult,
     }
 }
 template void BLUtils::StereoToMono(WDL_TypedBuf<float> *monoResult,
-                                  const vector< WDL_TypedBuf<float> > &in0);
+                                    const vector< WDL_TypedBuf<float> > &in0);
 template void BLUtils::StereoToMono(WDL_TypedBuf<double> *monoResult,
-                                  const vector< WDL_TypedBuf<double> > &in0);
+                                    const vector< WDL_TypedBuf<double> > &in0);
 
 
 template <typename FLOAT_TYPE>
@@ -1797,11 +1798,21 @@ BLUtils::StereoToMono(vector<WDL_TypedBuf<FLOAT_TYPE> > *samplesVec)
     else if (samplesVec->size() == 2)
     {
         // Set to mono
-        WDL_TypedBuf<FLOAT_TYPE> mono;
-        BLUtils::StereoToMono(&mono, (*samplesVec)[0], (*samplesVec)[1]);
+        //WDL_TypedBuf<FLOAT_TYPE> mono;
+        //BLUtils::StereoToMono(&mono, (*samplesVec)[0], (*samplesVec)[1]);
+        //(*samplesVec)[0] = mono;
+        //(*samplesVec)[1] = mono;
         
-        (*samplesVec)[0] = mono;
-        (*samplesVec)[1] = mono;
+        for (int i = 0; i < (*samplesVec)[0].GetSize(); i++)
+        {
+            FLOAT_TYPE l = (*samplesVec)[0].Get()[i];
+            FLOAT_TYPE r = (*samplesVec)[1].Get()[i];
+
+            FLOAT_TYPE m = (l + r)*0.5;
+
+            (*samplesVec)[0].Get()[i] = m;
+            (*samplesVec)[1].Get()[i] = m;
+        }
     }
 }
 template void BLUtils::StereoToMono(vector<WDL_TypedBuf<float> > *samplesVec);
@@ -9647,15 +9658,15 @@ BLUtils::SmoothDataWin(WDL_TypedBuf<FLOAT_TYPE> *ioData,
     SmoothDataWin(ioData, data, win);
 }
 template void BLUtils::SmoothDataWin(WDL_TypedBuf<float> *ioData,
-                          const WDL_TypedBuf<float> &win);
+                                     const WDL_TypedBuf<float> &win);
 template void BLUtils::SmoothDataWin(WDL_TypedBuf<double> *ioData,
-                          const WDL_TypedBuf<double> &win);
+                                     const WDL_TypedBuf<double> &win);
 
 template <typename FLOAT_TYPE>
 void
 BLUtils::SmoothDataWin(WDL_TypedBuf<FLOAT_TYPE> *result,
-                     const WDL_TypedBuf<FLOAT_TYPE> &data,
-                     const WDL_TypedBuf<FLOAT_TYPE> &win)
+                       const WDL_TypedBuf<FLOAT_TYPE> &data,
+                       const WDL_TypedBuf<FLOAT_TYPE> &win)
 {
     result->Resize(data.GetSize());
     

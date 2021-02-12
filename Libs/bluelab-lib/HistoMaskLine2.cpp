@@ -13,6 +13,16 @@
 
 HistoMaskLine2::HistoMaskLine2(int bufferSize)
 {
+    Reset(bufferSize);
+}
+
+HistoMaskLine2::HistoMaskLine2() {}
+
+HistoMaskLine2::~HistoMaskLine2() {}
+
+void
+HistoMaskLine2::Reset(int bufferSize)
+{
     mBuffer.resize(bufferSize/2);
     
 #if 1 // Correct init => so if a value is not set, we won't take it in apply
@@ -20,8 +30,6 @@ HistoMaskLine2::HistoMaskLine2(int bufferSize)
         mBuffer[i] = -1;
 #endif
 }
-
-HistoMaskLine2::~HistoMaskLine2() {}
 
 void
 HistoMaskLine2::AddValue(int index, int value)

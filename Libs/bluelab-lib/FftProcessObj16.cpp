@@ -2961,7 +2961,11 @@ FftProcessObj16::ComputeInverseFft(const WDL_TypedBuf<BL_FLOAT> &fftSamplesReal,
                                    bool normalize,
                                    WDL_TypedBuf<WDL_FFT_COMPLEX> *tmpBuffer)
 {
-    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples = *tmpBuffer;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> tmpBuf0;
+    
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples =
+    (tmpBuffer != NULL) ? *tmpBuffer : tmpBuf0;
+    
     fftSamples.Resize(fftSamplesReal.GetSize());
     for (int i = 0; i < fftSamplesReal.GetSize(); i++)
     {

@@ -9,6 +9,8 @@
 #ifndef __UST__FastRTConvolver3__
 #define __UST__FastRTConvolver3__
 
+#include "../../WDL/fastqueue.h"
+
 #include <BLTypes.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -79,14 +81,23 @@ protected:
 #endif
     
     // For bufferizing
-    WDL_TypedBuf<BL_FLOAT> mInSamples;
-    WDL_TypedBuf<BL_FLOAT> mOutSamples;
+    //WDL_TypedBuf<BL_FLOAT> mInSamples;
+    //WDL_TypedBuf<BL_FLOAT> mOutSamples;
+    WDL_TypedFastQueue<BL_FLOAT> mInSamples;
+    WDL_TypedFastQueue<BL_FLOAT> mOutSamples;
     
     int mBlockSize;
     
     long mSampleNum;
     
     Mode mMode;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
 };
 
 #endif /* defined(__UST__FastRTConvolver3__) */

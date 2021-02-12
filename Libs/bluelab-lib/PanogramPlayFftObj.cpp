@@ -79,10 +79,10 @@ PanogramPlayFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             mSelectionPlayFinished = true;
         }
         
-        WDL_TypedBuf<BL_FLOAT> magns;
+        WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf0;
         magns.Resize(ioBuffer->GetSize()/2);
         
-        WDL_TypedBuf<BL_FLOAT> phases;
+        WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf1;
         phases.Resize(ioBuffer->GetSize()/2);
         
         if (!mSelectionPlayFinished)
@@ -138,30 +138,48 @@ PanogramPlayFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
     if (mMode == RECORD)
     {
-        WDL_TypedBuf<WDL_FFT_COMPLEX> ioBuffer0 = *ioBuffer;
+        //WDL_TypedBuf<WDL_FFT_COMPLEX> ioBuffer0 = *ioBuffer;
+        //BLUtils::TakeHalf(&ioBuffer0);
+
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer0 = mTmpBuf2;
+        BLUtils::TakeHalf(*ioBuffer, &ioBuffer0);
         
-        BLUtils::TakeHalf(&ioBuffer0);
-        
-        WDL_TypedBuf<BL_FLOAT> magns;
-        WDL_TypedBuf<BL_FLOAT> phases;
+        WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf3;
+        WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf4;
         BLUtils::ComplexToMagnPhase(&magns, &phases, ioBuffer0);
-        
-        mCurrentMagns.push_back(magns);
-        if (mCurrentMagns.size() > mNumCols)
-            mCurrentMagns.pop_front();
-        
-        mCurrentPhases.push_back(phases);
-        if (mCurrentPhases.size() > mNumCols)
-            mCurrentPhases.pop_front();
+
+        if (mCurrentMagns.size() != mNumCols)
+        {
+            mCurrentMagns.push_back(magns);
+            if (mCurrentMagns.size() > mNumCols)
+                mCurrentMagns.pop_front();
+        }
+        else
+        {
+            mCurrentMagns.freeze();
+            mCurrentMagns.push_pop(magns);
+        }
+
+        if (mCurrentPhases.size() != mNumCols)
+        {
+            mCurrentPhases.push_back(phases);
+            if (mCurrentPhases.size() > mNumCols)
+                mCurrentPhases.pop_front();
+        }
+        else
+        {
+            mCurrentPhases.freeze();
+            mCurrentPhases.push_pop(phases);
+        }
         
         // Play only inside selection
         //
         if (mHostIsPlaying && mSelectionEnabled)
         {
-            WDL_TypedBuf<BL_FLOAT> magns;
+            WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf5;
             magns.Resize(ioBuffer->GetSize()/2);
             
-            WDL_TypedBuf<BL_FLOAT> phases;
+            WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf6;
             phases.Resize(ioBuffer->GetSize()/2);
             
             //
@@ -173,17 +191,21 @@ PanogramPlayFftObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
             
             GetDataLineMask(mCurrentMagns, &magns, lineCount);
             GetDataLineMask(mCurrentPhases, &phases, lineCount);
-            
-            BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
-            
-            BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+
+            //BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases); 
+            //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+            //BLUtils::FillSecondFftHalf(ioBuffer);
+
+            BLUtils::MagnPhaseToComplex(&ioBuffer0, magns, phases);
+            BLUtils::SetBuf(ioBuffer, ioBuffer0);
             BLUtils::FillSecondFftHalf(ioBuffer);
         }
     }
 }
 
 void
-PanogramPlayFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate)
+PanogramPlayFftObj::Reset(int bufferSize, int oversampling,
+                          int freqRes, BL_FLOAT sampleRate)
 {
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
@@ -200,7 +222,8 @@ PanogramPlayFftObj::SetMode(Mode mode)
 }
 
 void
-PanogramPlayFftObj::SetNormSelection(BL_FLOAT x0, BL_FLOAT y0, BL_FLOAT x1, BL_FLOAT y1)
+PanogramPlayFftObj::SetNormSelection(BL_FLOAT x0, BL_FLOAT y0,
+                                     BL_FLOAT x1, BL_FLOAT y1)
 {
     // Swap
     BL_FLOAT newY0 = 1.0 - y1;
@@ -298,9 +321,12 @@ PanogramPlayFftObj::SetNumCols(int numCols)
         mNumCols = numCols;
     
         mCurrentMagns.resize(mNumCols);
+        mCurrentMagns.freeze();
+        
         mCurrentPhases.resize(mNumCols);
-    
-        WDL_TypedBuf<BL_FLOAT> zeros;
+        mCurrentPhases.freeze();
+        
+        WDL_TypedBuf<BL_FLOAT> &zeros = mTmpBuf7;
         zeros.Resize(mBufferSize/2);
         BLUtils::FillAllZero(&zeros);
     
@@ -311,13 +337,17 @@ PanogramPlayFftObj::SetNumCols(int numCols)
         }
         
 #if FIX_NO_SOUND_FIRST_DE_FREEZE
-        mMaskLines.clear();
+        /*mMaskLines.clear();
         
+          HistoMaskLine2 maskLine(mBufferSize);
+          for (int i = 0; i < mNumCols; i++)
+          {
+          mMaskLines.push_back(maskLine);
+          }*/
+
         HistoMaskLine2 maskLine(mBufferSize);
-        for (int i = 0; i < mNumCols; i++)
-        {
-            mMaskLines.push_back(maskLine);
-        }
+        mMaskLines.resize(mNumCols);
+        mMaskLines.clear(maskLine);
 #endif
     }
 }
@@ -346,7 +376,7 @@ PanogramPlayFftObj::AddMaskLine(const HistoMaskLine2 &maskLine)
 }
 
 void
-PanogramPlayFftObj::GetDataLine(const deque<WDL_TypedBuf<BL_FLOAT> > &inData,
+PanogramPlayFftObj::GetDataLine(const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inData,
                                 WDL_TypedBuf<BL_FLOAT> *data,
                                 int lineCount)
 {
@@ -400,7 +430,7 @@ PanogramPlayFftObj::GetDataLine(const deque<WDL_TypedBuf<BL_FLOAT> > &inData,
 }
 
 void
-PanogramPlayFftObj::GetDataLineMask(const deque<WDL_TypedBuf<BL_FLOAT> > &inData,
+PanogramPlayFftObj::GetDataLineMask(const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inData,
                                     WDL_TypedBuf<BL_FLOAT> *data,
                                     int lineCount)
 {

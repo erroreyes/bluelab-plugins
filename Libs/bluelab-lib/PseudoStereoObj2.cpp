@@ -53,7 +53,7 @@ PseudoStereoObj2::PseudoStereoObj2(BL_FLOAT sampleRate, BL_FLOAT width)
     
     SetIRSize(sampleRate);
     
-    WDL_TypedBuf<BL_FLOAT> ir;
+    WDL_TypedBuf<BL_FLOAT> &ir = mTmpBuf0;
     GenerateIR(&ir);
     
     mConvolverL = new FastRTConvolver3(PSO2_BUFFER_SIZE, sampleRate, ir);
@@ -89,7 +89,7 @@ PseudoStereoObj2::Reset(BL_FLOAT sampleRate, int blockSize)
     
     SetIRSize(sampleRate);
     
-    WDL_TypedBuf<BL_FLOAT> ir;
+    WDL_TypedBuf<BL_FLOAT> &ir = mTmpBuf1;
     GenerateIR(&ir);
     mConvolverL->SetIR(ir);
  
@@ -123,7 +123,7 @@ PseudoStereoObj2::ProcessSamples(const WDL_TypedBuf<BL_FLOAT> &sampsIn,
     mConvolverL->Process(sampsIn, sampsOutL);
     
 #if FIX_LATENCY_RIGHT_CHANNEL
-    WDL_TypedBuf<BL_FLOAT> delayedSamples;
+    WDL_TypedBuf<BL_FLOAT> &delayedSamples = mTmpBuf2;
     delayedSamples.Resize(sampsIn.GetSize());
     mConvolverR->Process(sampsIn, &delayedSamples);
 #endif
@@ -173,7 +173,8 @@ PseudoStereoObj2::ProcessSamples(vector<WDL_TypedBuf<BL_FLOAT> > *samplesVec)
     
     BLUtils::StereoToMono(samplesVec);
     
-    WDL_TypedBuf<BL_FLOAT> mono = (*samplesVec)[0];
+    WDL_TypedBuf<BL_FLOAT> &mono = mTmpBuf3;
+    mono = (*samplesVec)[0];
     ProcessSamples(mono, &(*samplesVec)[0], &(*samplesVec)[1]);
     
     // No need, if we want to adjut the default width,
@@ -202,7 +203,7 @@ PseudoStereoObj2::GenerateIR(WDL_TypedBuf<BL_FLOAT> *ir)
     RandomSequenceOfUnique rnd(seedBase, seedBase + 1);
     
     // Generate the random number vector
-    WDL_TypedBuf<BL_FLOAT> R;
+    WDL_TypedBuf<BL_FLOAT> &R = mTmpBuf4;
     R.Resize(ir->GetSize());
     for (int i = 0; i < R.GetSize(); i++)
     {
@@ -216,7 +217,7 @@ PseudoStereoObj2::GenerateIR(WDL_TypedBuf<BL_FLOAT> *ir)
     }
     
     // Compute Hl
-    WDL_TypedBuf<BL_FLOAT> Hl;
+    WDL_TypedBuf<BL_FLOAT> &Hl = mTmpBuf5;
     Hl.Resize(ir->GetSize());
     for (int i = 0; i < Hl.GetSize(); i++)
     {
@@ -229,8 +230,9 @@ PseudoStereoObj2::GenerateIR(WDL_TypedBuf<BL_FLOAT> *ir)
     }
     
     // Compute Fft-1(Hl)
-    WDL_TypedBuf<BL_FLOAT> hl;
-    FftProcessObj16::ComputeInverseFft(Hl, &hl, true);
+    WDL_TypedBuf<BL_FLOAT> &hl = mTmpBuf6;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &tmpBuf = mTmpBuf7;
+    FftProcessObj16::ComputeInverseFft(Hl, &hl, true, &tmpBuf);
     
     *ir = hl;
     

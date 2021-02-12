@@ -12,6 +12,8 @@
 #include <deque>
 using namespace std;
 
+#include <bl_queue.h>
+
 #include "FftProcessObj16.h"
 
 #include <HistoMaskLine2.h>
@@ -70,10 +72,10 @@ public:
     void AddMaskLine(const HistoMaskLine2 &maskLine);
     
 protected:
-    void GetDataLine(const deque<WDL_TypedBuf<BL_FLOAT> > &inData,
+    void GetDataLine(const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inData,
                      WDL_TypedBuf<BL_FLOAT> *data, int lineCount);
 
-    void GetDataLineMask(const deque<WDL_TypedBuf<BL_FLOAT> > &inData,
+    void GetDataLineMask(const bl_queue<WDL_TypedBuf<BL_FLOAT> > &inData,
                          WDL_TypedBuf<BL_FLOAT> *data, int lineCount);
     
     // Shift a little, to have the sound played eactly when the bar passes
@@ -93,10 +95,13 @@ protected:
     
     // There are 4 magns and phases for one call to Process() if oversampling is 4
     
-    deque<WDL_TypedBuf<BL_FLOAT> > mCurrentMagns;
-    deque<WDL_TypedBuf<BL_FLOAT> > mCurrentPhases;
-    
-    deque<HistoMaskLine2> mMaskLines;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mCurrentMagns;
+    //deque<WDL_TypedBuf<BL_FLOAT> > mCurrentPhases;
+    //deque<HistoMaskLine2> mMaskLines;
+
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mCurrentMagns;
+    bl_queue<WDL_TypedBuf<BL_FLOAT> > mCurrentPhases;
+    bl_queue<HistoMaskLine2> mMaskLines;
     
     int mNumCols;
     
@@ -105,6 +110,17 @@ protected:
     
     // Host play
     bool mHostIsPlaying;
+
+private:
+    // Tmp buffer
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf7;
 };
 
 #endif /* defined(__BL_Ghost__PanogramPlayFftObj__) */

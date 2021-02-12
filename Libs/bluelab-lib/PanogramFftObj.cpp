@@ -11,7 +11,6 @@
 #include <BLSpectrogram4.h>
 #include <Window.h>
 #include <SpectrogramDisplayScroll3.h>
-#include <HistoMaskLine2.h>
 #include <PanogramPlayFftObj.h>
 #include <BLUtils.h>
 
@@ -32,7 +31,8 @@
 
 PanogramFftObj::PanogramFftObj(int bufferSize, int oversampling, int freqRes,
                                BL_FLOAT sampleRate)
-: MultichannelProcess()
+: MultichannelProcess(),
+  mMaskLine(bufferSize)
 {
     mSpectrogram = new BLSpectrogram4(sampleRate, bufferSize/4, -1);
     mSpectroDisplay = NULL;
@@ -73,28 +73,35 @@ PanogramFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftS
     if (!mIsEnabled)
         return;
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> *fftSamples = mTmpBuf0;
     fftSamples[0] = *(*ioFftSamples)[0];
     fftSamples[1] = *(*ioFftSamples)[1];
     
-    WDL_TypedBuf<BL_FLOAT> magns[2];
-    WDL_TypedBuf<BL_FLOAT> phases[2];
+    WDL_TypedBuf<BL_FLOAT> *magns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> *phases = mTmpBuf2;
     
     for (int i = 0; i < 2; i++)
     {
-        BLUtils::TakeHalf(&fftSamples[i]);
-        //BLUtils::ComplexToMagnPhase(&magns[i], &phases[i], *(*ioFftSamples)[i]);
-        BLUtils::ComplexToMagnPhase(&magns[i], &phases[i], fftSamples[i]);
+        //BLUtils::TakeHalf(&fftSamples[i]);
+        
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &half = mTmpBuf3;
+        BLUtils::TakeHalf(fftSamples[i], &half);
+
+        ////BLUtils::ComplexToMagnPhase(&magns[i], &phases[i], *(*ioFftSamples)[i]);
+        //BLUtils::ComplexToMagnPhase(&magns[i], &phases[i], fftSamples[i]);
+        BLUtils::ComplexToMagnPhase(&magns[i], &phases[i], half);
     }
     
-    WDL_TypedBuf<BL_FLOAT> panoLine;
-    HistoMaskLine2 maskLine(mBufferSize);
-    MagnsToPanoLine(magns, &panoLine, &maskLine);
+    //HistoMaskLine2 maskLine(mBufferSize);
+    mMaskLine.Reset(mBufferSize);
+
+    WDL_TypedBuf<BL_FLOAT> &panoLine = mTmpBuf4;
+    MagnsToPanoLine(magns, &panoLine, &mMaskLine);
     
     for (int i = 0; i < 2; i++)
     {
         if (mPlayFftObjs[i] != NULL)
-            mPlayFftObjs[i]->AddMaskLine(maskLine);
+            mPlayFftObjs[i]->AddMaskLine(mMaskLine);
     }
   
     mLineCount++;
@@ -117,7 +124,8 @@ PanogramFftObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftS
 }
 
 void
-PanogramFftObj::Reset(int bufferSize, int oversampling, int freqRes, BL_FLOAT sampleRate)
+PanogramFftObj::Reset(int bufferSize, int oversampling,
+                      int freqRes, BL_FLOAT sampleRate)
 {
     MultichannelProcess::Reset(bufferSize, oversampling, freqRes, sampleRate);
     
@@ -213,7 +221,7 @@ PanogramFftObj::SetEnabled(bool flag)
 
 void
 PanogramFftObj::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
-                               const WDL_TypedBuf<BL_FLOAT> &phases)
+                                   const WDL_TypedBuf<BL_FLOAT> &phases)
 {
     // Simple add
     if (mSpectroDisplay != NULL)
@@ -288,7 +296,7 @@ PanogramFftObj::MagnsToPanoLine(const WDL_TypedBuf<BL_FLOAT> magns[2],
         Window::MakeHanning(panoLine->GetSize()/divisor, &mSmoothWin);
     }
     
-    WDL_TypedBuf<BL_FLOAT> smoothLine;
+    WDL_TypedBuf<BL_FLOAT> &smoothLine = mTmpBuf5;
     BLUtils::SmoothDataWin(&smoothLine, *panoLine, mSmoothWin);
 #endif
     

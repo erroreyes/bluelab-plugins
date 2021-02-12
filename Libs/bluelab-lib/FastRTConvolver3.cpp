@@ -119,8 +119,10 @@ FastRTConvolver3::~FastRTConvolver3()
 void
 FastRTConvolver3::Reset(BL_FLOAT sampleRate, int blockSize)
 {
-    mInSamples.Resize(0);
-    mOutSamples.Resize(0);
+    //mInSamples.Resize(0);
+    //mOutSamples.Resize(0);
+    mInSamples.Clear();
+    mOutSamples.Clear();
     
     mBlockSize = blockSize;
     ComputeBufferSize(blockSize);
@@ -220,20 +222,27 @@ FastRTConvolver3::Process(const WDL_TypedBuf<BL_FLOAT> &samples,
     {
         int numZeros = mBlockSize - samples.GetSize();
         if (numZeros > 0)
-            BLUtils::PadZerosRight(&mInSamples, numZeros);
+            //BLUtils::PadZerosRight(&mInSamples, numZeros);
+            mInSamples.Add(0, numZeros);
     }
 #endif
     
     // Process as many samples as possible
-    while(mInSamples.GetSize() >= mBufferSize)
+    //while(mInSamples.GetSize() >= mBufferSize)
+    while(mInSamples.Available() >= mBufferSize)
     {
         // Prepare the buffer to process
-        WDL_TypedBuf<BL_FLOAT> inBuf;
-        inBuf.Add(mInSamples.Get(), mBufferSize);
+        //WDL_TypedBuf<BL_FLOAT> inBuf;
+        //inBuf.Add(mInSamples.Get(), mBufferSize);
+
+        WDL_TypedBuf<BL_FLOAT> &inBuf = mTmpBuf0;
+        inBuf.Resize(mBufferSize);
+        //BLUtils::SetBuf(&inBuf, mInSamples);
+        BLUtils::FastQueueToBuf(mInSamples, &inBuf, mBufferSize);
         
         BLUtils::ConsumeLeft(&mInSamples, mBufferSize);
         
-        WDL_TypedBuf<BL_FLOAT> outBuf;
+        WDL_TypedBuf<BL_FLOAT> &outBuf = mTmpBuf1;
         if (mMode == NORMAL)
         {
             outBuf.Resize(mBufferSize);
@@ -260,7 +269,8 @@ FastRTConvolver3::Process(const WDL_TypedBuf<BL_FLOAT> &samples,
                 memset(outBuf.Get(), 0, outBuf.GetSize() - nAvail);
             
             if ((nAvail > 0) && (outBuf.GetSize() > 0))
-                memcpy(&outBuf.Get()[outBuf.GetSize() - nAvail - 1], convo, nAvail*sizeof(BL_FLOAT));
+                memcpy(&outBuf.Get()[outBuf.GetSize() - nAvail - 1],
+                       convo, nAvail*sizeof(BL_FLOAT));
             
             mConvEngine->Advance(nAvail);
 #endif
@@ -283,23 +293,35 @@ FastRTConvolver3::Process(const WDL_TypedBuf<BL_FLOAT> &samples,
     //
     if (numZeros > samples.GetSize())
         numZeros = samples.GetSize();
-    
-    WDL_TypedBuf<BL_FLOAT> outRes;
-    if (numZeros > 0)
-        BLUtils::ResizeFillZeros(&outRes, numZeros);
-    
+
     int numOutValues = samples.GetSize() - numZeros;
+    
+    WDL_TypedBuf<BL_FLOAT> &outRes = mTmpBuf2;
+    //if (numZeros > 0)
+    //    BLUtils::ResizeFillZeros(&outRes, numZeros);
+    outRes.Resize(numZeros + numOutValues);
+    if (numZeros > 0)
+        memset(outRes.Get(), 0, numZeros*sizeof(BL_FLOAT));
     
     //
     if (numOutValues < 0)
         numOutValues = 0;
     
 #if FIX_VARIABLE_BUFFER_SIZE3
-    if (mOutSamples.GetSize() < numOutValues)
-        numOutValues = mOutSamples.GetSize();
+    //if (mOutSamples.GetSize() < numOutValues)
+    //    numOutValues = mOutSamples.GetSize();
+    if (mOutSamples.Available() < numOutValues)
+        numOutValues = mOutSamples.Available();
 #endif
-    
-    outRes.Add(mOutSamples.Get(), numOutValues);
+
+    //outRes.Add(mOutSamples.Get(), numOutValues);
+    WDL_TypedBuf<BL_FLOAT> &tmpBuf = mTmpBuf3;
+    tmpBuf.Resize(numOutValues);
+    mOutSamples.GetToBuf(0, tmpBuf.Get(), numOutValues);
+    memcpy(&outRes.Get()[numZeros],
+           tmpBuf.Get(),
+           numOutValues*sizeof(BL_FLOAT));
+           
     BLUtils::ConsumeLeft(&mOutSamples, numOutValues);
     
     // result
