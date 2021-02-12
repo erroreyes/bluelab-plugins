@@ -359,6 +359,9 @@ StereoWidthProcess2::StereoWidthProcess2(IGraphics *pGraphics,
 #if USE_HRTF
     InitHRTF(pGraphics);
 #endif
+
+    int dummyWinSize = 5;
+    mSmoother = new CMA2Smoother(bufferSize, dummyWinSize);
 }
 
 StereoWidthProcess2::~StereoWidthProcess2()
@@ -377,6 +380,8 @@ StereoWidthProcess2::~StereoWidthProcess2()
     if (mHrtf != NULL)
         delete mHrtf;
 #endif
+
+    delete mSmoother;
 }
 
 void
@@ -1673,11 +1678,11 @@ StereoWidthProcess2::SpatialSmoothing(WDL_TypedBuf<BL_FLOAT> *sourceRs,
     int windowSize = sourceRs->GetSize()/SPATIAL_SMOOTHING_WINDOW_SIZE;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceRs;
-    CMA2Smoother::ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
+    mSmoother->ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
     *sourceRs = smoothSourceRs;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceThetas;
-    CMA2Smoother::ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
+    mSmoother->ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
     *sourceThetas = smoothSourceThetas;
 }
 

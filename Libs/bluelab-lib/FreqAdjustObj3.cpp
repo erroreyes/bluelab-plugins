@@ -87,7 +87,8 @@ FreqAdjustObj3::SetPhases(const WDL_TypedBuf<BL_FLOAT> &phases,
 #if 1 // reversed (works with identity !!)
     mSumPhases = phases;
     
-    WDL_TypedBuf<BL_FLOAT> diff = phases;
+    WDL_TypedBuf<BL_FLOAT> &diff = mTmpBuf0;
+    diff = phases;
     BLUtils::SubstractValues(&diff, prevPhases);
     
     BLUtils::SubstractValues(&mLastPhases, diff);

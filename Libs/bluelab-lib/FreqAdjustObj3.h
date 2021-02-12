@@ -64,6 +64,10 @@ protected:
     WDL_TypedBuf<BL_FLOAT> mSumPhases;
     
     bool mMustSetLastPhases;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
 };
 
 #endif /* defined(__PitchShift__FreqAdjustObj__) */

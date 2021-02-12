@@ -12,7 +12,8 @@
 
 #include <PartialTracker3.h>
 //#include <TransientShaperFftObj3.h>
-#include <TransientLib4.h>
+//#include <TransientLib4.h>
+#include <TransientLib5.h>
 
 #include "AirProcess.h"
 
@@ -34,7 +35,8 @@ AirProcess::AirProcess(int bufferSize,
     
     mMix = 0.5;
     mTransientSP = 0.5;
-    
+
+    mTransLib = new TransientLib5();
     //
     //int freqRes = 1;
     //mSTransientObj = new TransientShaperFftObj3(bufferSize, overlapping, freqRes,
@@ -56,9 +58,11 @@ AirProcess::AirProcess(int bufferSize,
 AirProcess::~AirProcess()
 {
     delete mPartialTracker;
-    
+
     //delete mSTransientObj;
     //delete mPTransientObj;
+
+    delete mTransLib;
 }
 
 void
@@ -201,17 +205,17 @@ AirProcess::ComputeTransientness(const WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer)
     
     WDL_TypedBuf<BL_FLOAT> transS;
     BL_FLOAT freqAmpRatioS = 0.0;
-    TransientLib4::ComputeTransientness2(magns, phases,
-                                         &mPrevPhases,
-                                         freqAmpRatioS,
-                                         1.0, &transS);
+    mTransLib->ComputeTransientness2(magns, phases,
+                                     &mPrevPhases,
+                                     freqAmpRatioS,
+                                     1.0, &transS);
     
     WDL_TypedBuf<BL_FLOAT> transP;
     BL_FLOAT freqAmpRatioP = 1.0;
-    TransientLib4::ComputeTransientness2(magns, phases,
-                                         &mPrevPhases,
-                                         freqAmpRatioP,
-                                         1.0, &transP);
+    mTransLib->ComputeTransientness2(magns, phases,
+                                     &mPrevPhases,
+                                     freqAmpRatioP,
+                                     1.0, &transP);
     
     mSPRatio.Resize(magns.GetSize());
     for (int i = 0; i < mSPRatio.GetSize(); i++)

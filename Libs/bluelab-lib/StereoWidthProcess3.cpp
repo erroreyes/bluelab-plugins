@@ -121,6 +121,9 @@ StereoWidthProcess3::StereoWidthProcess3(int bufferSize,
     
     mProcessNum = 0;
     mDisplayRefreshRate = GetDisplayRefreshRate();
+
+    int dummyWinSize = 5;
+    mSmoother = new CMA2Smoother(bufferSize, dummyWinSize);
 }
 
 StereoWidthProcess3::~StereoWidthProcess3()
@@ -128,6 +131,8 @@ StereoWidthProcess3::~StereoWidthProcess3()
     // Smoothing
     delete mSourceRsHisto;
     delete mSourceThetasHisto;
+
+    delete mSmoother;
 }
 
 void
@@ -591,11 +596,11 @@ StereoWidthProcess3::SpatialSmoothing(WDL_TypedBuf<BL_FLOAT> *sourceRs,
     int windowSize = sourceRs->GetSize()/SPATIAL_SMOOTHING_WINDOW_SIZE;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceRs;
-    CMA2Smoother::ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
+    mSmoother->ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
     *sourceRs = smoothSourceRs;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceThetas;
-    CMA2Smoother::ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
+    mSmoother->ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
     *sourceThetas = smoothSourceThetas;
 }
 

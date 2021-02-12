@@ -14,6 +14,7 @@ using namespace std;
 
 #include "FftProcessObj16.h"
 
+class TransientLib5;
 class SpectroEditFftObj2EXPE : public ProcessObj
 {
 public:
@@ -101,7 +102,7 @@ protected:
     
     long LineCountToSampleId(long lineCount);
     
-    
+    //
     long mLineCount;
     
     WDL_TypedBuf<BL_FLOAT> *mSamples;
@@ -130,6 +131,8 @@ protected:
     BL_FLOAT mFreqAmpRatio;
     
     BL_FLOAT mTransThreshold;
+
+    TransientLib5 *mTransLib;
 };
 
 #endif /* defined(__BL_Ghost__SpectroEditFftObj2EXPE__) */

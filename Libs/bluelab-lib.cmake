@@ -746,8 +746,6 @@ set(_bluelab-lib_src
   TestSimd.h
   TimeAxis3D.cpp
   TimeAxis3D.h
-  TransientLib4.cpp
-  TransientLib4.h
   TransientLib5.cpp
   TransientLib5.h
   TransientShaperFftObj3.cpp

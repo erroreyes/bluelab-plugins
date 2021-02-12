@@ -7,12 +7,14 @@
 //
 
 #include <BLUtils.h>
-#include <TransientLib4.h>
+//#include <TransientLib4.h>
+#include <TransientLib5.h>
 
 #include "SpectroEditFftObj2EXPE.h"
 
-SpectroEditFftObj2EXPE::SpectroEditFftObj2EXPE(int bufferSize, int oversampling, int freqRes,
-                                     BL_FLOAT sampleRate)
+SpectroEditFftObj2EXPE::SpectroEditFftObj2EXPE(int bufferSize, int oversampling,
+                                               int freqRes,
+                                               BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
     ProcessObj::Reset(bufferSize, oversampling, freqRes, sampleRate);
@@ -35,9 +37,14 @@ SpectroEditFftObj2EXPE::SpectroEditFftObj2EXPE(int bufferSize, int oversampling,
     mFreqAmpRatio = 0.5;
     
     mTransThreshold = 0.0;
+
+    mTransLib = new TransientLib5();
 }
 
-SpectroEditFftObj2EXPE::~SpectroEditFftObj2EXPE() {}
+SpectroEditFftObj2EXPE::~SpectroEditFftObj2EXPE()
+{
+    delete mTransLib;
+}
 
 void
 SpectroEditFftObj2EXPE::SetSamples(WDL_TypedBuf<BL_FLOAT> *samples)
@@ -123,12 +130,12 @@ SpectroEditFftObj2EXPE::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer
             // NOTE: interesting if we remove the db threshold
             // in TransientLib4::ComputeTransientness2
             WDL_TypedBuf<BL_FLOAT> transientness;
-            TransientLib4::ComputeTransientness2(magns,
-                                                 phases,
-                                                 prevPhases,
-                                                 mFreqAmpRatio,
-                                                 mSmoothFactor,
-                                                 &transientness);
+            mTransLib->ComputeTransientness2(magns,
+                                             phases,
+                                             prevPhases,
+                                             mFreqAmpRatio,
+                                             mSmoothFactor,
+                                             &transientness);
             
             mPrevPhases = phases;
             

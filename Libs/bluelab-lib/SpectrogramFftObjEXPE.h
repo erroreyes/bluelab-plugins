@@ -14,6 +14,7 @@
 #include "FftProcessObj16.h"
 
 class BLSpectrogram4;
+class TransientLib5;
 class SpectrogramFftObjEXPE : public ProcessObj
 {
 public:
@@ -67,6 +68,8 @@ protected:
     BL_FLOAT mSmoothFactor;
     BL_FLOAT mFreqAmpRatio;
     BL_FLOAT mTransThreshold;
+
+    TransientLib5 *mTransLib;
 };
 
 #endif

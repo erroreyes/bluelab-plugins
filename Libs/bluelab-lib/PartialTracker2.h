@@ -40,6 +40,7 @@ using namespace std;
 #endif
 
 class FreqAdjustObj3;
+class CMASmoother;
 class PartialTracker2
 {
 public:
@@ -313,7 +314,7 @@ protected:
     void SmoothPartials(const vector<PartialTracker2::Partial> &prevPartials,
                         vector<PartialTracker2::Partial> *currentPartials);
 
-    
+    //
     int mBufferSize;
     BL_FLOAT mSampleRate;
     int mOverlapping;
@@ -343,6 +344,8 @@ protected:
     WDL_TypedBuf<BL_FLOAT> mSmoothWinThreshold;
     
     WDL_TypedBuf<BL_FLOAT> mSmoothWinNoise;
+
+    CMASmoother *mSmoother;
 };
 
 #endif /* defined(__BL_SASViewer__PartialTracker2__) */

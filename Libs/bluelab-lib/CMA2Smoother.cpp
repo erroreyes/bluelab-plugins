@@ -10,7 +10,8 @@
 
 CMA2Smoother::CMA2Smoother(int bufferSize, int windowSize)
 : mSmoother0(bufferSize, windowSize),
-mSmoother1(bufferSize, windowSize) {}
+  mSmoother1(bufferSize, windowSize),
+  mSmootherP1(bufferSize, windowSize) {}
 
 CMA2Smoother::~CMA2Smoother() {}
 
@@ -38,30 +39,34 @@ CMA2Smoother::Process(const BL_FLOAT *data, BL_FLOAT *smoothedData, int nFrames)
     return processed;
 }
 
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
+//bool CMA2Smoother::ProcessOne(const FLOAT_TYPE *data, FLOAT_TYPE *smoothedData, int nFrames, int windowSize)
 bool
-CMA2Smoother::ProcessOne(const FLOAT_TYPE *data, FLOAT_TYPE *smoothedData, int nFrames, int windowSize)
+CMA2Smoother::ProcessOne(const BL_FLOAT *data, BL_FLOAT *smoothedData,
+                         int nFrames, int windowSize)
 {
     // Addition for TransientShaper
     if (windowSize <= 1)
         return false;
     
-    WDL_TypedBuf<FLOAT_TYPE> tmpData;
+    WDL_TypedBuf<BL_FLOAT> &tmpData = mTmpBuf0;
     tmpData.Resize(nFrames);
     
-    bool processed = CMASmoother::ProcessOne(data, tmpData.Get(), nFrames, windowSize);
+    bool processed = mSmootherP1.ProcessOne(data, tmpData.Get(),
+                                            nFrames, windowSize);
     if (processed)
-        processed = CMASmoother::ProcessOne(tmpData.Get(), smoothedData, nFrames, windowSize);
+        processed = mSmootherP1.ProcessOne(tmpData.Get(), smoothedData,
+                                           nFrames, windowSize);
     
     return processed;
 }
-template bool CMA2Smoother::ProcessOne(const float *data, float *smoothedData, int nFrames, int windowSize);
-template bool CMA2Smoother::ProcessOne(const double *data, double *smoothedData, int nFrames, int windowSize);
+//template bool CMA2Smoother::ProcessOne(const float *data, float *smoothedData, int nFrames, int windowSize);
+//template bool CMA2Smoother::ProcessOne(const double *data, double *smoothedData, int nFrames, int windowSize);
 
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 bool
-CMA2Smoother::ProcessOne(const WDL_TypedBuf<FLOAT_TYPE> &inData,
-                         WDL_TypedBuf<FLOAT_TYPE> *outSmoothedData,
+CMA2Smoother::ProcessOne(const WDL_TypedBuf<BL_FLOAT> &inData,
+                         WDL_TypedBuf<BL_FLOAT> *outSmoothedData,
                          int windowSize)
 {
     outSmoothedData->Resize(inData.GetSize());
@@ -71,12 +76,12 @@ CMA2Smoother::ProcessOne(const WDL_TypedBuf<FLOAT_TYPE> &inData,
     
     return res;
 }
-template bool CMA2Smoother::ProcessOne(const WDL_TypedBuf<float> &inData,
-                                       WDL_TypedBuf<float> *outSmoothedData,
-                                       int windowSize);
-template bool CMA2Smoother::ProcessOne(const WDL_TypedBuf<double> &inData,
-                                       WDL_TypedBuf<double> *outSmoothedData,
-                                       int windowSize);
+//template bool CMA2Smoother::ProcessOne(const WDL_TypedBuf<float> &inData,
+//                                       WDL_TypedBuf<float> *outSmoothedData,
+//                                       int windowSize);
+//template bool CMA2Smoother::ProcessOne(const WDL_TypedBuf<double> &inData,
+//                                       WDL_TypedBuf<double> *outSmoothedData,
+//                                       int windowSize);
 
 
 void

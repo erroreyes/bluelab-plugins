@@ -21,6 +21,7 @@
 // StereoWidthProcessDisp: from StereoWidthProcess3
 // Removed processing, kept only display
 
+class CMA2Smoother;
 class StereoWidthProcessDisp : public MultichannelProcess
 {
 public:
@@ -92,6 +93,8 @@ protected:
     
     // Choosing this value as the same as overlapping is good
     int mDisplayRefreshRate;
+
+    CMA2Smoother *mSmoother;
 };
 
 #endif /* defined(__BL_PitchShift__StereoPhasesProcess__) */

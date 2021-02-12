@@ -31,6 +31,8 @@ class HRTF;
 //class FftConvolver7;
 class FftConvolver6;
 
+class CMA2Smoother;
+
 // From StereoWidthProcess
 // Uses HRTF
 class StereoWidthProcess2 : public MultichannelProcess
@@ -202,6 +204,8 @@ protected:
     HRTF *mHrtf;
     //FftConvolver7 *mConvolvers[NUM_HRTF_SLICES][2];
     FftConvolver6 *mConvolvers[NUM_HRTF_SLICES][2];
+
+    CMA2Smoother *mSmoother;
 };
 
 #endif /* defined(__BL_PitchShift__StereoPhasesProcess__) */

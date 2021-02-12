@@ -21,6 +21,7 @@ using namespace std;
 #include <SMVProcessYComputer.h>
 #include <SMVProcessColComputer.h>
 
+
 // From StereoWidthProcess3
 // From StereoVizProcess3
 
@@ -31,6 +32,7 @@ class SMVVolRender3;
 class PhasesUnwrapper;
 class TimeAxis3D;
 class Axis3DFactory2;
+class CMA2Smoother;
 class SMVProcess4 : public MultichannelProcess
 {
 public:
@@ -258,6 +260,9 @@ protected:
     
     //
     Axis3DFactory2 *mAxisFactory;
+
+    //
+    CMA2Smoother *mSmoother;
 };
 
 #endif /* defined(__BL_PitchShift__StereoPhasesProcess__) */

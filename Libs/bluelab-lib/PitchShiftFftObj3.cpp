@@ -47,10 +47,13 @@ PitchShiftFftObj3::PitchShiftFftObj3(int bufferSize, int oversampling, int freqR
 PitchShiftFftObj3::~PitchShiftFftObj3() {}
 
 void
-PitchShiftFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+PitchShiftFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
                                    const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
-    BLUtils::TakeHalf(ioBuffer);
+    //BLUtils::TakeHalf(ioBuffer);
+    
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf6;
+    BLUtils::TakeHalf(*ioBuffer0, &ioBuffer);
     
     BL_FLOAT factor;
     
@@ -78,9 +81,9 @@ PitchShiftFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     }
 #endif
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
-    BLUtils::ComplexToMagnPhase(&magns, &phases, *ioBuffer);
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf1;
+    BLUtils::ComplexToMagnPhase(&magns, &phases, ioBuffer);
     
 #if KEEP_BOUND_VALUES
     // Problem with first magn and first phase
@@ -114,10 +117,12 @@ PitchShiftFftObj3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
     
     //NormalizeFftValues(&magns);
     
-    BLUtils::MagnPhaseToComplex(ioBuffer, magns, phases);
+    BLUtils::MagnPhaseToComplex(&ioBuffer, magns, phases);
     
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+    //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+    BLUtils::SetBuf(ioBuffer0, ioBuffer);
+    
+    BLUtils::FillSecondFftHalf(ioBuffer0);
 }
 
 void
@@ -169,11 +174,13 @@ PitchShiftFftObj3::Convert(WDL_TypedBuf<BL_FLOAT> *ioMagns,
         // Error
         return;
     
-    const WDL_TypedBuf<BL_FLOAT> originMagns = *ioMagns;
-    const WDL_TypedBuf<BL_FLOAT> originPhases = *ioPhases;
+    /*const*/ WDL_TypedBuf<BL_FLOAT> &originMagns = mTmpBuf2;
+    originMagns = *ioMagns;
+    /*const*/ WDL_TypedBuf<BL_FLOAT> &originPhases = mTmpBuf3;
+    originPhases = *ioPhases;
     
     // See: http://blogs.zynaptiq.com/bernsee/pitch-shifting-using-the-ft/
-    WDL_TypedBuf<BL_FLOAT> realFreqs;
+    WDL_TypedBuf<BL_FLOAT> &realFreqs = mTmpBuf4;
     mFreqObj.ComputeRealFrequencies(*ioPhases, &realFreqs);
     
     // Reset all the values
@@ -188,7 +195,7 @@ PitchShiftFftObj3::Convert(WDL_TypedBuf<BL_FLOAT> *ioMagns,
     
     // Do not reset the phases, we will focus on the magnitudes to detected unset values
     
-    WDL_TypedBuf<BL_FLOAT> freqs;
+    WDL_TypedBuf<BL_FLOAT> &freqs = mTmpBuf5;
     freqs.Resize(originMagns.GetSize());
     
     // -1.0 means undefined when filling holes after

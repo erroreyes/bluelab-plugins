@@ -25,6 +25,31 @@ CMASmoother::CMASmoother(int bufferSize, int windowSize)
 
 CMASmoother::~CMASmoother() {}
 
+void
+CMASmoother::Reset()
+{
+    mInData.Resize(0);
+    mOutData.Resize(0);
+    
+    mFirstTime = true;
+    
+    mPrevVal = 0.0;
+}
+
+void
+CMASmoother::Reset(int bufferSize, int windowSize)
+{
+    mBufferSize = bufferSize;
+    mWindowSize = windowSize;
+    
+    mInData.Resize(0);
+    mOutData.Resize(0);
+    
+    mFirstTime = true;
+    
+    mPrevVal = 0.0;
+}
+
 bool
 CMASmoother::Process(const BL_FLOAT *data, BL_FLOAT *smoothedData, int nFrames)
 {
@@ -91,17 +116,6 @@ CMASmoother::ProcessInternal(const BL_FLOAT *data, BL_FLOAT *smoothedData, int n
     return false;
 }
 
-void
-CMASmoother::Reset()
-{
-    mInData.Resize(0);
-    mOutData.Resize(0);
-    
-    mFirstTime = true;
-    
-    mPrevVal = 0.0;
-}
-
 #if !DENOISER_OPTIM0
 bool
 CMASmoother::ProcessOne(const BL_FLOAT *data, BL_FLOAT *smoothedData, int nFrames, int windowSize)
@@ -165,14 +179,15 @@ CMASmoother::ProcessOne(const BL_FLOAT *data, BL_FLOAT *smoothedData, int nFrame
 
 // NOTE: does not optimize if we keep allocated previous buffers
 // inData and outData
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 bool
-CMASmoother::ProcessOne(const FLOAT_TYPE *data, FLOAT_TYPE *smoothedData, int nFrames, int windowSize)
+CMASmoother::ProcessOne(const BL_FLOAT *data, BL_FLOAT *smoothedData,
+                        int nFrames, int windowSize)
 {
     if (nFrames < windowSize)
         return false;
     
-    WDL_TypedBuf<FLOAT_TYPE> inData;
+    WDL_TypedBuf<BL_FLOAT> &inData = mTmpBuf0;
     
     // First, fill with zeros
     int inDataFullSize = 3*windowSize + nFrames;
@@ -190,7 +205,7 @@ CMASmoother::ProcessOne(const FLOAT_TYPE *data, FLOAT_TYPE *smoothedData, int nF
     for (int i = 0; i < windowSize; i++)
     {
         // Try a fix (12/09/2017) => Worked well for EqHack
-        FLOAT_TYPE val = data[windowSize - i];
+        BL_FLOAT val = data[windowSize - i];
         
         inData.Get()[prevSize0 + i] = val;
     }
@@ -201,30 +216,30 @@ CMASmoother::ProcessOne(const FLOAT_TYPE *data, FLOAT_TYPE *smoothedData, int nF
     
     int prevSize2 = 2*windowSize + nFrames;
     
-    FLOAT_TYPE *inDataBuf = inData.Get();
+    BL_FLOAT *inDataBuf = inData.Get();
     for (int i = 0; i < windowSize; i++)
     {
-        FLOAT_TYPE val = data[nFrames - i - 1];
+        BL_FLOAT val = data[nFrames - i - 1];
         
         inDataBuf[prevSize2 + i] = val;
     }
     
-    WDL_TypedBuf<FLOAT_TYPE> outData;
+    WDL_TypedBuf<BL_FLOAT> &outData = mTmpBuf1;
     int outDataSize = inDataFullSize - 2*(windowSize/2); // FIX for odd window size
     if (outData.GetSize() != outDataSize)
         outData.Resize(outDataSize);
     
     int halfWindowSize = windowSize/2;
-    FLOAT_TYPE windowSizeInv = 1.0/windowSize;
+    BL_FLOAT windowSizeInv = 1.0/windowSize;
     
     int outStep = 0;
     
     // Centered moving average
-    FLOAT_TYPE prevVal = 0.0;
-    FLOAT_TYPE *outDataBuf = outData.Get();
+    BL_FLOAT prevVal = 0.0;
+    BL_FLOAT *outDataBuf = outData.Get();
     for (int i = halfWindowSize; i < inData.GetSize() - halfWindowSize; i++)
     {
-        FLOAT_TYPE xn = prevVal + (inDataBuf[i + halfWindowSize] -
+        BL_FLOAT xn = prevVal + (inDataBuf[i + halfWindowSize] -
                                inDataBuf[i - halfWindowSize])*windowSizeInv;/*/windowSize;*/
         
         outDataBuf[outStep++] = xn;
@@ -239,12 +254,12 @@ CMASmoother::ProcessOne(const FLOAT_TYPE *data, FLOAT_TYPE *smoothedData, int nF
     // Because we add extra data at the beginning
     memcpy(smoothedData,
            &outData.Get()[windowSize + halfWindowSize],
-           nFrames*sizeof(FLOAT_TYPE));
+           nFrames*sizeof(BL_FLOAT));
     
     return true;
 }
-template bool CMASmoother::ProcessOne(const float *data, float *smoothedData, int nFrames, int windowSize);
-template bool CMASmoother::ProcessOne(const double *data, double *smoothedData, int nFrames, int windowSize);
+//template bool CMASmoother::ProcessOne(const float *data, float *smoothedData, int nFrames, int windowSize);
+//template bool CMASmoother::ProcessOne(const double *data, double *smoothedData, int nFrames, int windowSize);
 #endif
 
 bool

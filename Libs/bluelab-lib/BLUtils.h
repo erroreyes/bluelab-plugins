@@ -104,6 +104,7 @@ bl_round(float x)
 { return roundf(x); }
 
 // TODO: reorder the cpp too
+class CMA2Smoother;
 class BLUtils
 {
 public:
@@ -1088,16 +1089,18 @@ public:
                                 WDL_TypedBuf<FLOAT_TYPE> *envelope,
                                 bool extendBoundsValues);
     
-    template <typename FLOAT_TYPE>
-    static void ComputeEnvelopeSmooth(const WDL_TypedBuf<FLOAT_TYPE> &samples,
-                                      WDL_TypedBuf<FLOAT_TYPE> *envelope,
-                                      FLOAT_TYPE smoothCoeff,
+    //template <typename FLOAT_TYPE>
+    static void ComputeEnvelopeSmooth(CMA2Smoother *smoother,
+                                      const WDL_TypedBuf<BL_FLOAT> &samples,
+                                      WDL_TypedBuf<BL_FLOAT> *envelope,
+                                      BL_FLOAT smoothCoeff,
                                       bool extendBoundsValues);
     
-    template <typename FLOAT_TYPE>
-    static void ComputeEnvelopeSmooth2(const WDL_TypedBuf<FLOAT_TYPE> &samples,
-                                       WDL_TypedBuf<FLOAT_TYPE> *envelope,
-                                       FLOAT_TYPE smoothCoeff);
+    //template <typename FLOAT_TYPE>
+    static void ComputeEnvelopeSmooth2(CMA2Smoother *smoother,
+                                       const WDL_TypedBuf<BL_FLOAT> &samples,
+                                       WDL_TypedBuf<BL_FLOAT> *envelope,
+                                       BL_FLOAT smoothCoeff);
     
     template <typename FLOAT_TYPE>
     static void ZeroBoundEnvelope(WDL_TypedBuf<FLOAT_TYPE> *envelope);

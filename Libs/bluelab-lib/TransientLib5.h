@@ -20,6 +20,7 @@
 // TransientLib4
 //
 // TransientLib5: use object, no static anymore
+class CMA2Smoother;
 class TransientLib5
 {
 public:
@@ -211,6 +212,10 @@ protected:
     void SmoothTransientsAdvanced(WDL_TypedBuf<BL_FLOAT> *transients,
                                   BL_FLOAT smoothFactor);
 
+    //
+    CMA2Smoother *mSmoother0;
+    CMA2Smoother *mSmoother1;
+    
 private:
     // Tmp buffers
     WDL_TypedBuf<BL_FLOAT> mTmpBuf0;

@@ -59,6 +59,7 @@
 
 #include <RayCaster2.h>
 
+#include <CMA2Smoother.h>
 
 #include "SMVProcess4.h"
 
@@ -231,6 +232,9 @@ SMVProcess4::SMVProcess4(int bufferSize,
     mHostIsPlaying = false;
     
     mTimeAxis = NULL;
+
+    int dummyWindowSize = 5;
+    mSmoother = new CMA2Smoother(bufferSize, dummyWindowSize);
 }
 
 SMVProcess4::~SMVProcess4()
@@ -259,6 +263,8 @@ SMVProcess4::~SMVProcess4()
         delete mTimeAxis;
     
     delete mAxisFactory;
+
+    delete mSmoother;
 }
 
 void
@@ -693,11 +699,11 @@ SMVProcess4::SpatialSmoothing(WDL_TypedBuf<BL_FLOAT> *sourceRs,
     int windowSize = sourceRs->GetSize()/SPATIAL_SMOOTHING_WINDOW_SIZE;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceRs;
-    CMA2Smoother::ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
+    mSmoother->ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
     *sourceRs = smoothSourceRs;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceThetas;
-    CMA2Smoother::ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
+    mSmoother->ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
     *sourceThetas = smoothSourceThetas;
 }
 

@@ -14,7 +14,8 @@
 #include "SpectrogramFftObjEXPE.h"
 
 // EXPE
-#include "TransientLib4.h"
+//#include "TransientLib4.h"
+#include "TransientLib5.h"
 
 #define USE_AVG_LINES 0 //1
 
@@ -31,11 +32,15 @@ SpectrogramFftObjEXPE::SpectrogramFftObjEXPE(int bufferSize, int oversampling,
     mSmoothFactor = 0.5;
     mFreqAmpRatio = 0.5;
     mTransThreshold = 0.0;
+
+    mTransLib = new TransientLib5();
 }
 
 SpectrogramFftObjEXPE::~SpectrogramFftObjEXPE()
 {
     delete mSpectrogram;
+
+    delete mTransLib;
 }
 
 void
@@ -197,12 +202,12 @@ SpectrogramFftObjEXPE::AddSpectrogramLine(const WDL_TypedBuf<BL_FLOAT> &magns,
     //    BLUtils::MultValues(&magnsNorm, 1.0/avg);
     
     WDL_TypedBuf<BL_FLOAT> transientness;
-    TransientLib4::ComputeTransientness2(magns,
-                                         phases,
-                                         prevPhases,
-                                         mFreqAmpRatio,
-                                         mSmoothFactor,
-                                         &transientness);
+    mTransLib->ComputeTransientness2(magns,
+                                     phases,
+                                     prevPhases,
+                                     mFreqAmpRatio,
+                                     mSmoothFactor,
+                                     &transientness);
     
     mPrevPhases = phases;
     

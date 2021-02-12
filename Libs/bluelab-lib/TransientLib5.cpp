@@ -12,7 +12,6 @@
 
 //#include "../../WDL/IPlug/Containers.h"
 
-#include <CMA2Smoother.h>
 #include <BLUtils.h>
 #include <CMA2Smoother.h>
 #include <Window.h>
@@ -24,9 +23,20 @@
 #include <DebugGraph.h>
 #endif
 
-TransientLib5::TransientLib5() {}
+TransientLib5::TransientLib5()
+{
+    int dummyBufferSize = 2048;
+    int dummyWinSize = 5;
+    
+    mSmoother0 = new CMA2Smoother(dummyBufferSize, dummyWinSize);
+    mSmoother1 = new CMA2Smoother(dummyBufferSize, dummyWinSize);
+}
 
-TransientLib5::~TransientLib5() {}
+TransientLib5::~TransientLib5()
+{
+    delete mSmoother0;
+    delete mSmoother1;
+}
 
 // NOTE: This first method works well, even if there something a bit unlogical
 void
@@ -1876,18 +1886,18 @@ TransientLib5::GetSmoothedTransients(const WDL_TypedBuf<BL_FLOAT> &transients,
 {
     // Smoother curve, to extract the non-transient part easily
     smoothedTransientsRaw->Resize(transients.GetSize());
-    CMA2Smoother::ProcessOne(transients.Get(),
-                             smoothedTransientsRaw->Get(),
-                             transients.GetSize(),
-                             transients.GetSize()/rawSmooth);
+    mSmoother0->ProcessOne(transients.Get(),
+                           smoothedTransientsRaw->Get(),
+                           transients.GetSize(),
+                           transients.GetSize()/rawSmooth);
     
     // Sharper curve, to extract only transients accurately
     smoothedTransientsFine->Resize(transients.GetSize());
     
-    CMA2Smoother::ProcessOne(transients.Get(),
-                             smoothedTransientsFine->Get(),
-                             transients.GetSize(),
-                             transients.GetSize()/fineSmooth);
+    mSmoother0->ProcessOne(transients.Get(),
+                           smoothedTransientsFine->Get(),
+                           transients.GetSize(),
+                           transients.GetSize()/fineSmooth);
 }
 
 // Compute the nearest two curves, then interpolate between the two curves
@@ -2018,10 +2028,10 @@ TransientLib5::SmoothTransients(WDL_TypedBuf<BL_FLOAT> *transients,
         
         int cmaWindowSize = (int)cmaCoeff;
         
-        CMA2Smoother::ProcessOne(transients->Get(),
-                                 smoothTransients.Get(),
-                                 transients->GetSize(),
-                                 cmaWindowSize);
+        mSmoother1->ProcessOne(transients->Get(),
+                               smoothTransients.Get(),
+                               transients->GetSize(),
+                               cmaWindowSize);
         
         *transients = smoothTransients;
     }

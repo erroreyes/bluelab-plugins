@@ -24,7 +24,7 @@ using namespace std;
 
 class PartialTracker3;
 //class TransientShaperFftObj3;
-
+class TransientLib5;
 class AirProcess : public ProcessObj
 {
 public:
@@ -70,6 +70,8 @@ protected:
     WDL_TypedBuf<BL_FLOAT> mPrevPhases;
     
     bool mDebugFreeze;
+
+    TransientLib5 *mTransLib;
 };
 
 #endif /* defined(__BL_Air__AirProcess__) */

@@ -38,7 +38,8 @@
 #define FIX_MONO 1
 
 StereoWidthProcessDisp::StereoWidthProcessDisp(int bufferSize,
-                                               BL_FLOAT overlapping, BL_FLOAT oversampling,
+                                               BL_FLOAT overlapping,
+                                               BL_FLOAT oversampling,
                                                BL_FLOAT sampleRate)
 {
     mBufferSize = bufferSize;
@@ -57,6 +58,9 @@ StereoWidthProcessDisp::StereoWidthProcessDisp(int bufferSize,
     // NEW
     //mDisplayMode = SOURCE;
     mDisplayMode = SCANNER;
+
+    int dummyWinSize = 5;
+    mSmoother = new CMA2Smoother(bufferSize, dummyWinSize);
 }
 
 StereoWidthProcessDisp::~StereoWidthProcessDisp()
@@ -64,6 +68,8 @@ StereoWidthProcessDisp::~StereoWidthProcessDisp()
     // Smoothing
     delete mSourceRsHisto;
     delete mSourceThetasHisto;
+
+    delete mSmoother;
 }
 
 void
@@ -319,11 +325,11 @@ StereoWidthProcessDisp::SpatialSmoothing(WDL_TypedBuf<BL_FLOAT> *sourceRs,
     int windowSize = sourceRs->GetSize()/SPATIAL_SMOOTHING_WINDOW_SIZE;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceRs;
-    CMA2Smoother::ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
+    mSmoother->ProcessOne(*sourceRs, &smoothSourceRs, windowSize);
     *sourceRs = smoothSourceRs;
     
     WDL_TypedBuf<BL_FLOAT> smoothSourceThetas;
-    CMA2Smoother::ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
+    mSmoother->ProcessOne(*sourceThetas, &smoothSourceThetas, windowSize);
     *sourceThetas = smoothSourceThetas;
 }
 

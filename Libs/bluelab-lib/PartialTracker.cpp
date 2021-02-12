@@ -232,12 +232,17 @@ PartialTracker::PartialTracker(int bufferSize, BL_FLOAT sampleRate,
 #endif
     
      mSharpnessExtractNoise = DEFAULT_SHARPNESS_EXTRACT_NOISE;
+
+     int dummyWinSize = 5;
+     mSmoother = new CMASmoother(bufferSize, dummyWinSize);
 }
 
 PartialTracker::~PartialTracker()
 {
     if (mFreqObj != NULL)
         delete mFreqObj;
+
+    delete mSmoother;
 }
 
 void
@@ -542,8 +547,8 @@ PartialTracker::ExtractNoiseEnvelopeSmooth()
     
     WDL_TypedBuf<BL_FLOAT> smoothEnv;
     smoothEnv.Resize(mNoiseEnvelope.GetSize());
-    CMASmoother::ProcessOne(mNoiseEnvelope.Get(), smoothEnv.Get(),
-                            mNoiseEnvelope.GetSize(), CMA_WINDOW_SIZE);
+    mSmoother->ProcessOne(mNoiseEnvelope.Get(), smoothEnv.Get(),
+                          mNoiseEnvelope.GetSize(), CMA_WINDOW_SIZE);
     
     mNoiseEnvelope = smoothEnv;
 }

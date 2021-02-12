@@ -5534,6 +5534,7 @@ BLUtils::MakeSymmetry(WDL_TypedBuf<FLOAT_TYPE> *symBuf, const WDL_TypedBuf<FLOAT
 template void BLUtils::MakeSymmetry(WDL_TypedBuf<float> *symBuf, const WDL_TypedBuf<float> &buf);
 template void BLUtils::MakeSymmetry(WDL_TypedBuf<double> *symBuf, const WDL_TypedBuf<double> &buf);
 
+#if 0 // old version...
 void
 BLUtils::Reverse(WDL_TypedBuf<int> *values)
 {
@@ -5552,7 +5553,27 @@ BLUtils::Reverse(WDL_TypedBuf<int> *values)
         valuesData[idx] = val;
     }
 }
+#endif
 
+// NOTE: not really tested for the moment...
+//
+// New version, don't use temporary buffer
+void
+BLUtils::Reverse(WDL_TypedBuf<int> *values)
+{    
+    int valuesHalfSize = values->GetSize()/2;
+    for (int i = 0; i < valuesHalfSize; i++)
+    {
+        int val0 = values->Get()[i];
+        int idx = values->GetSize() - i - 1;
+        int val1 = values->Get()[idx];
+
+        values->Get()[i] = val1;
+        values->Get()[idx] = val0;
+    }
+}
+
+#if 0 // old version
 template <typename FLOAT_TYPE>
 void
 BLUtils::Reverse(WDL_TypedBuf<FLOAT_TYPE> *values)
@@ -5570,6 +5591,23 @@ BLUtils::Reverse(WDL_TypedBuf<FLOAT_TYPE> *values)
         int idx = valuesSize - i - 1;
         
         valuesData[idx] = val;
+    }
+}
+#endif
+// New version (no tmeporary buffer)
+template <typename FLOAT_TYPE>
+void
+BLUtils::Reverse(WDL_TypedBuf<FLOAT_TYPE> *values)
+{
+    int valuesHalfSize = values->GetSize()/2;
+    for (int i = 0; i < valuesHalfSize; i++)
+    {
+        FLOAT_TYPE val0 = values->Get()[i];
+        int idx = values->GetSize() - i - 1;
+        FLOAT_TYPE val1 = values->Get()[idx];
+
+        values->Get()[i] = val1;
+        values->Get()[idx] = val0;
     }
 }
 template void BLUtils::Reverse(WDL_TypedBuf<float> *values);
@@ -7198,34 +7236,35 @@ template void BLUtils::FillMissingValues3(WDL_TypedBuf<double> *values,
                                bool extendBounds, double undefinedValue);
 
 // Smooth, then compute envelope
-template <typename FLOAT_TYPE>
+///template <typename FLOAT_TYPE>
 void
-BLUtils::ComputeEnvelopeSmooth(const WDL_TypedBuf<FLOAT_TYPE> &samples,
-                             WDL_TypedBuf<FLOAT_TYPE> *envelope,
-                             FLOAT_TYPE smoothCoeff,
-                             bool extendBoundsValues)
+BLUtils::ComputeEnvelopeSmooth(CMA2Smoother *smoother,
+                               const WDL_TypedBuf<BL_FLOAT> &samples,
+                               WDL_TypedBuf<BL_FLOAT> *envelope,
+                               BL_FLOAT smoothCoeff,
+                               bool extendBoundsValues)
 {
-    WDL_TypedBuf<FLOAT_TYPE> smoothedSamples;
+    WDL_TypedBuf<BL_FLOAT> smoothedSamples;
     smoothedSamples.Resize(samples.GetSize());
                            
-    FLOAT_TYPE cmaCoeff = smoothCoeff*samples.GetSize();
+    BL_FLOAT cmaCoeff = smoothCoeff*samples.GetSize();
     
-    WDL_TypedBuf<FLOAT_TYPE> samplesAbs = samples;
+    WDL_TypedBuf<BL_FLOAT> samplesAbs = samples;
     BLUtils::ComputeAbs(&samplesAbs);
     
-    CMA2Smoother::ProcessOne(samplesAbs.Get(), smoothedSamples.Get(),
-                             samplesAbs.GetSize(), cmaCoeff);
+    smoother->ProcessOne(samplesAbs.Get(), smoothedSamples.Get(),
+                         samplesAbs.GetSize(), cmaCoeff);
     
     
     // Restore the sign, for envelope computation
     
     int samplesSize = samples.GetSize();
-    FLOAT_TYPE *samplesData = samples.Get();
-    FLOAT_TYPE *smoothedSamplesData = smoothedSamples.Get();
+    BL_FLOAT *samplesData = samples.Get();
+    BL_FLOAT *smoothedSamplesData = smoothedSamples.Get();
     
     for (int i = 0; i < samplesSize; i++)
     {
-        FLOAT_TYPE sample = samplesData[i];
+        BL_FLOAT sample = samplesData[i];
         
         if (sample < 0.0)
             smoothedSamplesData[i] *= -1.0;
@@ -7233,50 +7272,53 @@ BLUtils::ComputeEnvelopeSmooth(const WDL_TypedBuf<FLOAT_TYPE> &samples,
     
     ComputeEnvelope(smoothedSamples, envelope, extendBoundsValues);
 }
-template void BLUtils::ComputeEnvelopeSmooth(const WDL_TypedBuf<float> &samples,
+/*template void BLUtils::ComputeEnvelopeSmooth(const WDL_TypedBuf<float> &samples,
                                   WDL_TypedBuf<float> *envelope,
                                   float smoothCoeff,
                                   bool extendBoundsValues);
-template void BLUtils::ComputeEnvelopeSmooth(const WDL_TypedBuf<double> &samples,
+                                  template void BLUtils::ComputeEnvelopeSmooth(const WDL_TypedBuf<double> &samples,
                                   WDL_TypedBuf<double> *envelope,
                                   double smoothCoeff,
                                   bool extendBoundsValues);
+*/
 
 // Compute an envelope by only smoothing
-template <typename FLOAT_TYPE>
+//template <typename FLOAT_TYPE>
 void
-BLUtils::ComputeEnvelopeSmooth2(const WDL_TypedBuf<FLOAT_TYPE> &samples,
-                              WDL_TypedBuf<FLOAT_TYPE> *envelope,
-                              FLOAT_TYPE smoothCoeff)
+BLUtils::ComputeEnvelopeSmooth2(CMA2Smoother *smoother,
+                                const WDL_TypedBuf<BL_FLOAT> &samples,
+                                WDL_TypedBuf<BL_FLOAT> *envelope,
+                                BL_FLOAT smoothCoeff)
 {
     envelope->Resize(samples.GetSize());
     
-    FLOAT_TYPE cmaCoeff = smoothCoeff*samples.GetSize();
+    BL_FLOAT cmaCoeff = smoothCoeff*samples.GetSize();
     
-    WDL_TypedBuf<FLOAT_TYPE> samplesAbs = samples;
+    WDL_TypedBuf<BL_FLOAT> samplesAbs = samples;
     BLUtils::ComputeAbs(&samplesAbs);
     
-    CMA2Smoother::ProcessOne(samplesAbs.Get(), envelope->Get(),
-                             samplesAbs.GetSize(), cmaCoeff);
+    smoother->ProcessOne(samplesAbs.Get(), envelope->Get(),
+                         samplesAbs.GetSize(), cmaCoeff);
     
     // Normalize
     // Because CMA2Smoother reduce the values
     
-    FLOAT_TYPE maxSamples = BLUtils::ComputeMax(samples.Get(), samples.GetSize());
-    FLOAT_TYPE maxEnvelope = BLUtils::ComputeMax(envelope->Get(), envelope->GetSize());
+    BL_FLOAT maxSamples = BLUtils::ComputeMax(samples.Get(), samples.GetSize());
+    BL_FLOAT maxEnvelope = BLUtils::ComputeMax(envelope->Get(), envelope->GetSize());
     
     if (maxEnvelope > BL_EPS)
     {
-        FLOAT_TYPE coeff = maxSamples/maxEnvelope;
+        BL_FLOAT coeff = maxSamples/maxEnvelope;
         BLUtils::MultValues(envelope, coeff);
     }
 }
-template void BLUtils::ComputeEnvelopeSmooth2(const WDL_TypedBuf<float> &samples,
-                                   WDL_TypedBuf<float> *envelope,
-                                   float smoothCoeff);
-template void BLUtils::ComputeEnvelopeSmooth2(const WDL_TypedBuf<double> &samples,
-                                   WDL_TypedBuf<double> *envelope,
-                                   double smoothCoeff);
+/*template void BLUtils::ComputeEnvelopeSmooth2(const WDL_TypedBuf<float> &samples,
+  WDL_TypedBuf<float> *envelope,
+  float smoothCoeff);
+  template void BLUtils::ComputeEnvelopeSmooth2(const WDL_TypedBuf<double> &samples,
+  WDL_TypedBuf<double> *envelope,
+  double smoothCoeff);
+*/
 
 template <typename FLOAT_TYPE>
 void

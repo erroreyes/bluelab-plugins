@@ -16,6 +16,7 @@
 using namespace std;
 
 class FreqAdjustObj3;
+class CMASmoother;
 class PartialTracker
 {
 public:
@@ -232,6 +233,8 @@ protected:
     //WDL_TypedBuf<BL_FLOAT> mPrevPhases;
     
     BL_FLOAT mSharpnessExtractNoise;
+
+    CMASmoother *mSmoother;
 };
 
 #endif /* defined(__BL_SASViewer__PartialTracker__) */
