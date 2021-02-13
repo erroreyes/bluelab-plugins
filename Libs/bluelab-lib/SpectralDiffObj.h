@@ -27,6 +27,16 @@ class SpectralDiffObj : public ProcessObj
     WDL_TypedBuf<BL_FLOAT> mOutSignal0;
     WDL_TypedBuf<BL_FLOAT> mOutSignal1;
     WDL_TypedBuf<BL_FLOAT> mOutDiff;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
 };
 
 #endif

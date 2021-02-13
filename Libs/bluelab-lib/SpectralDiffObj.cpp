@@ -81,23 +81,27 @@ void
 SpectralDiffObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                                   const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 {
-    WDL_TypedBuf<WDL_FFT_COMPLEX> halfBuffer = *ioBuffer;
-    BLUtils::TakeHalf(&halfBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &halfBuffer = mTmpBuf0;
+    
+    //BLUtils::TakeHalf(&halfBuffer);
+    BLUtils::TakeHalf(*ioBuffer, &halfBuffer);
     
     // Signal
-    WDL_TypedBuf<BL_FLOAT> signalMagns;
-    WDL_TypedBuf<BL_FLOAT> signalPhases;
+    WDL_TypedBuf<BL_FLOAT> &signalMagns = mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> &signalPhases = mTmpBuf2;
     BLUtils::ComplexToMagnPhase(&signalMagns, &signalPhases, halfBuffer);
     
     // Side chain in input
     mOutSignal0 = signalMagns;
     
     // Sc signal
-    WDL_TypedBuf<WDL_FFT_COMPLEX> halfScBuffer = *scBuffer;
-    BLUtils::TakeHalf(&halfScBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &halfScBuffer = mTmpBuf3;
     
-    WDL_TypedBuf<BL_FLOAT> scMagns;
-    WDL_TypedBuf<BL_FLOAT> scPhases;
+    //BLUtils::TakeHalf(&halfScBuffer);
+    BLUtils::TakeHalf(*scBuffer, &halfScBuffer);
+    
+    WDL_TypedBuf<BL_FLOAT> &scMagns = mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> &scPhases = mTmpBuf5;
     if (scBuffer != NULL)
     {
         // We have sidechain
@@ -106,7 +110,7 @@ SpectralDiffObj::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         mOutSignal1 = scMagns;
     }
     
-    WDL_TypedBuf<BL_FLOAT> resultMagns;
+    WDL_TypedBuf<BL_FLOAT> &resultMagns = mTmpBuf6;
     resultMagns.Resize(signalMagns.GetSize());
 
     for (int i = 0; i < resultMagns.GetSize(); i++)
