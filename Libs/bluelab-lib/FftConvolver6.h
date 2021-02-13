@@ -12,6 +12,7 @@
 #include "IPlug_include_in_plug_hdr.h"
 
 #include "../../WDL/fft.h"
+#include "../../WDL/fastqueue.h"
 
 //#include "../../WDL/IPlug/Containers.h"
 
@@ -105,16 +106,21 @@ protected:
                            const WDL_TypedBuf<WDL_FFT_COMPLEX> &response);
 
 #if !FIX_LATENCY
-    void ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &sampleBuf,
-                          const WDL_TypedBuf<BL_FLOAT> *ioResultBuf,
+    //void ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &sampleBuf,
+    //                      const WDL_TypedBuf<BL_FLOAT> *ioResultBuf,
+    //                      int offsetSamples, int offsetResult);
+    void ProcessOneBuffer(const WDL_TypedFastQueue<BL_FLOAT> &sampleBuf,
+                          const WDL_TypedFastQueue<BL_FLOAT> *ioResultBuf,
                           int offsetSamples, int offsetResult);
 #endif
     
 #if FIX_LATENCY
     // New version, without offsets (more clear)
-    void ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &sampleBuf,
-                           WDL_TypedBuf<BL_FLOAT> *ioResultBuf);
-
+    //void ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &sampleBuf,
+    //                       WDL_TypedBuf<BL_FLOAT> *ioResultBuf);
+    void ProcessOneBuffer(const WDL_TypedFastQueue<BL_FLOAT> &sampleBuf,
+                          WDL_TypedFastQueue<BL_FLOAT> *ioResultBuf);
+    
     // Get partial result if necessary
     bool GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested);
     
@@ -139,8 +145,11 @@ protected:
     
     //bool mInit;
     
-    WDL_TypedBuf<BL_FLOAT> mSamplesBuf;
-    WDL_TypedBuf<BL_FLOAT> mResultBuf;
+    //WDL_TypedBuf<BL_FLOAT> mSamplesBuf;
+    WDL_TypedFastQueue<BL_FLOAT> mSamplesBuf;
+    
+    //WDL_TypedBuf<BL_FLOAT> mResultBuf;
+    WDL_TypedFastQueue<BL_FLOAT> mResultBuf;
     
 #if !FIX_LATENCY
     // NOTE: these variables made the code unclear
@@ -187,9 +196,34 @@ protected:
     int mLatency;
     int mCurrentLatency;
     
-    WDL_TypedBuf<BL_FLOAT> mResultOut;
+    //WDL_TypedBuf<BL_FLOAT> mResultOut;
+    WDL_TypedFastQueue<BL_FLOAT> mResultOut;
 #endif
 
+private:
+    // Tmp buffer
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf5;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf7;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf9;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf10;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf11;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf12;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf15;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf16;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf17;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf18;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf19;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf20;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf21;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf22;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf23;
 };
 
 #endif /* defined(__Spatializer__FftConvolver6__) */

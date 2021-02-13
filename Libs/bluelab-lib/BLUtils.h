@@ -1529,6 +1529,12 @@ public:
                                int numToCopy = -1);
 
     template <typename FLOAT_TYPE>
+    static void FastQueueToBuf(const WDL_TypedFastQueue<FLOAT_TYPE> &q,
+                               int queueOffset,
+                               WDL_TypedBuf<FLOAT_TYPE> *buf,
+                               int numToCopy = -1);
+    
+    template <typename FLOAT_TYPE>
     static void BufToFastQueue(const WDL_TypedBuf<FLOAT_TYPE> &buf,
                                WDL_TypedFastQueue<FLOAT_TYPE> *q);
 

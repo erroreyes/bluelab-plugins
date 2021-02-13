@@ -4833,7 +4833,8 @@ BLUtils::NextPowerOfTwo(int value)
 
 template <typename FLOAT_TYPE>
 void
-BLUtils::AddValues(WDL_TypedBuf<FLOAT_TYPE> *ioBuf, const WDL_TypedBuf<FLOAT_TYPE> &addBuf)
+BLUtils::AddValues(WDL_TypedBuf<FLOAT_TYPE> *ioBuf,
+                   const WDL_TypedBuf<FLOAT_TYPE> &addBuf)
 {
     int ioBufSize = ioBuf->GetSize();
     FLOAT_TYPE *ioBufData = ioBuf->Get();
@@ -12000,6 +12001,32 @@ template void BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<float> &q,
                                       WDL_TypedBuf<float> *buf,
                                       int numToCopy);
 template void BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<double> &q,
+                                      WDL_TypedBuf<double> *buf,
+                                      int numToCopy);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<FLOAT_TYPE> &q,
+                        int queueOffset,
+                        WDL_TypedBuf<FLOAT_TYPE> *buf,
+                        int numToCopy)
+{
+    if (numToCopy == -1)
+        numToCopy = (q.Available() - queueOffset);
+
+    if (numToCopy + queueOffset > q.Available())
+        numToCopy = q.Available() - queueOffset;
+    
+    buf->Resize(numToCopy);
+    
+    q.GetToBuf(queueOffset, buf->Get(), numToCopy);
+}
+template void BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<float> &q,
+                                      int queueOffset,
+                                      WDL_TypedBuf<float> *buf,
+                                      int numToCopy);
+template void BLUtils::FastQueueToBuf(const WDL_TypedFastQueue<double> &q,
+                                      int queueOffset,
                                       WDL_TypedBuf<double> *buf,
                                       int numToCopy);
 

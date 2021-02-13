@@ -33,12 +33,14 @@ FixedBufferObj::Reset()
 {
     for (int i = 0; i < mInputs.size(); i++)
     {
-        mInputs[i].Resize(0);
+        //mInputs[i].Resize(0);
+        mInputs[i].Clear();
     }
     
     for (int i = 0; i < mOutputs.size(); i++)
     {
-        mOutputs[i].Resize(0);
+        //mOutputs[i].Resize(0);
+        mOutputs[i].Clear();
     }
     
     mCurrentLatency = mBufferSize;
@@ -54,37 +56,41 @@ FixedBufferObj::Reset(int bufferSize)
 }
 
 void
-FixedBufferObj::SetInputs(const vector<WDL_TypedBuf<double> > &buffers)
+FixedBufferObj::SetInputs(const vector<WDL_TypedBuf<BL_FLOAT> > &buffers)
 {
     if (buffers.empty())
         return;
     
     for (int i = 0; i < buffers.size(); i++)
     {
-        const WDL_TypedBuf<double> &buf = buffers[i];
+        const WDL_TypedBuf<BL_FLOAT> &buf = buffers[i];
         mInputs[i].Add(buf.Get(), buf.GetSize());
     }
     
     if (buffers.size() == 1)
     // Mono
     {
-        BLUtils::AddZeros(&mInputs[1], buffers[0].GetSize());
+        //BLUtils::AddZeros(&mInputs[1], buffers[0].GetSize());
+        mInputs[1].Add(0, buffers[0].GetSize());
     }
 }
 
 bool
-FixedBufferObj::GetInputs(vector<WDL_TypedBuf<double> > *buffers)
+FixedBufferObj::GetInputs(vector<WDL_TypedBuf<BL_FLOAT> > *buffers)
 {
-    if (mInputs[0].GetSize() < mBufferSize)
+    //if (mInputs[0].GetSize() < mBufferSize)
+    if (mInputs[0].Available() < mBufferSize)
         return false;
     
-    if (mInputs[1].GetSize() < mBufferSize)
+    //if (mInputs[1].GetSize() < mBufferSize)
+    if (mInputs[1].Available() < mBufferSize)
         return false;
     
     for (int i = 0; i < buffers->size(); i++)
     {
         (*buffers)[i].Resize(mBufferSize);
-        memcpy((*buffers)[i].Get(), mInputs[i].Get(), mBufferSize*sizeof(double));
+        //memcpy((*buffers)[i].Get(), mInputs[i].Get(), mBufferSize*sizeof(BL_FLOAT));
+        mInputs[i].GetToBuf(0, (*buffers)[i].Get(), mBufferSize);
     }
     
     BLUtils::ConsumeLeft(&mInputs[0], mBufferSize);
@@ -94,11 +100,11 @@ FixedBufferObj::GetInputs(vector<WDL_TypedBuf<double> > *buffers)
 }
 
 void
-FixedBufferObj::ResizeOutputs(vector<WDL_TypedBuf<double> > *buffers)
+FixedBufferObj::ResizeOutputs(vector<WDL_TypedBuf<BL_FLOAT> > *buffers)
 {
     for (int i = 0; i < buffers->size(); i++)
     {
-        WDL_TypedBuf<double> &buf = (*buffers)[i];
+        WDL_TypedBuf<BL_FLOAT> &buf = (*buffers)[i];
         buf.Resize(mBufferSize);
         
 #if FIX_CLICK_REASON
@@ -110,29 +116,32 @@ FixedBufferObj::ResizeOutputs(vector<WDL_TypedBuf<double> > *buffers)
 }
 
 void
-FixedBufferObj::SetOutputs(const vector<WDL_TypedBuf<double> > &buffers)
+FixedBufferObj::SetOutputs(const vector<WDL_TypedBuf<BL_FLOAT> > &buffers)
 {
     if (buffers.empty())
         return;
     
     for (int i = 0; i < buffers.size(); i++)
     {
-        const WDL_TypedBuf<double> &buf = buffers[i];
+        const WDL_TypedBuf<BL_FLOAT> &buf = buffers[i];
         mOutputs[i].Add(buf.Get(), buf.GetSize());
     }
     
     if (buffers.size() == 1)
         // Mono
     {
-        BLUtils::AddZeros(&mOutputs[1], buffers[0].GetSize());
+        //BLUtils::AddZeros(&mOutputs[1], buffers[0].GetSize());
+        mOutputs[1].Add(0, buffers[0].GetSize());
     }
 }
 
 bool
-FixedBufferObj::GetOutputs(vector<WDL_TypedBuf<double> > *buffers, int nFrames)
+FixedBufferObj::GetOutputs(vector<WDL_TypedBuf<BL_FLOAT> > *buffers, int nFrames)
 {
-    if ((mOutputs[0].GetSize() < nFrames) ||
-        (mOutputs[1].GetSize() < nFrames) ||
+    //if ((mOutputs[0].GetSize() < nFrames) ||
+    //    (mOutputs[1].GetSize() < nFrames) ||
+    if ((mOutputs[0].Available() < nFrames) ||
+        (mOutputs[1].Available() < nFrames) ||
         (mCurrentLatency > nFrames))
     {
         for (int i = 0; i < buffers->size(); i++)
@@ -156,8 +165,9 @@ FixedBufferObj::GetOutputs(vector<WDL_TypedBuf<double> > *buffers, int nFrames)
         
         BLUtils::FillAllZero(&(*buffers)[i]);
         
-        //memcpy((*buffers)[i].Get(), mOutputs[i].Get(), nFrames*sizeof(double));
-        memcpy(&(*buffers)[i].Get()[mCurrentLatency], mOutputs[i].Get(), nFramesLat*sizeof(double));
+        //memcpy((*buffers)[i].Get(), mOutputs[i].Get(), nFrames*sizeof(BL_FLOAT));
+        //memcpy(&(*buffers)[i].Get()[mCurrentLatency], mOutputs[i].Get(), nFramesLat*sizeof(BL_FLOAT));
+        mOutputs[i].GetToBuf(0, &(*buffers)[i].Get()[mCurrentLatency], nFramesLat);
     }
     
     //BLUtils::ConsumeLeft(&mOutputs[0], nFrames);

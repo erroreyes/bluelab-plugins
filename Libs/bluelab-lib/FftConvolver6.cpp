@@ -97,8 +97,10 @@ FftConvolver6::SetLatency(int latency)
 void
 FftConvolver6::Reset()
 {
-    mSamplesBuf.Resize(0);
-    mResultBuf.Resize(0);
+    //mSamplesBuf.Resize(0);
+    mSamplesBuf.Clear();
+    //mResultBuf.Resize(0);
+    mResultBuf.Clear();
     
     //
     mPadFftResponse.Resize(0);
@@ -123,7 +125,8 @@ FftConvolver6::Reset()
     // For latency fix 2
     mCurrentLatency = mLatency;
     
-    mResultOut.Resize(0);
+    //mResultOut.Resize(0);
+    mResultOut.Clear();
 #endif
 }
 
@@ -138,8 +141,10 @@ FftConvolver6::Reset(int bufferSize)
 void
 FftConvolver6::Flush()
 {
-    mSamplesBuf.Resize(0);
-    mResultBuf.Resize(0);
+    //mSamplesBuf.Resize(0);
+    mSamplesBuf.Clear();
+    //mResultBuf.Resize(0);
+    mResultBuf.Clear();
     
     //BLUtils::FillAllZero(&mSamplesBuf);
     //BLUtils::FillAllZero(&mResultBuf);
@@ -148,7 +153,8 @@ FftConvolver6::Flush()
     // For latency fix 2
     mCurrentLatency = mLatency;
     
-    mResultOut.Resize(0);
+    //mResultOut.Resize(0);
+    mResultOut.Clear();
 #endif
 
 #if !FIX_LATENCY
@@ -165,7 +171,8 @@ FftConvolver6::SetResponse(const WDL_TypedBuf<BL_FLOAT> *response)
     if (response->GetSize() == 0)
         return;
     
-    WDL_TypedBuf<BL_FLOAT> copyResp = *response;
+    WDL_TypedBuf<BL_FLOAT> &copyResp = mTmpBuf2;
+    copyResp = *response;
     
     ResizeImpulse(&copyResp);
     
@@ -178,7 +185,8 @@ FftConvolver6::SetResponse(const WDL_TypedBuf<BL_FLOAT> *response)
         // Pad the response
         BLUtils::ResizeFillZeros(&mPadSampleResponse, mPadSampleResponse.GetSize()*PAD_FACTOR);
     
-    WDL_TypedBuf<BL_FLOAT> respForFft = mPadSampleResponse;
+    WDL_TypedBuf<BL_FLOAT> &respForFft = mTmpBuf3;
+    respForFft = mPadSampleResponse;
     
 #if USE_WINDOWING
     if (mWindow.GetSize() != respForFft.GetSize())
@@ -207,7 +215,11 @@ FftConvolver6::SetResponse(const WDL_TypedBuf<BL_FLOAT> *response)
     // Without that, the volume increases again after 5s with resp = 10s
 #if 1
     // Reset the result buffer
-    BLUtils::FillAllZero(&mResultBuf);
+    //BLUtils::FillAllZero(&mResultBuf);
+    WDL_TypedBuf<BL_FLOAT> &zero = mTmpBuf0;
+    mTmpBuf0.Resize(mResultBuf.Available());
+    BLUtils::FillAllZero(&mTmpBuf0);
+    mResultBuf.SetFromBuf(0, mTmpBuf0.Get(), mTmpBuf0.GetSize());
 #endif
 }
 
@@ -224,19 +236,23 @@ if (mUsePadFactor)
 #if !FIX_LATENCY 
 // Original method
 void
-FftConvolver6::ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &samplesBuf,
-                                const WDL_TypedBuf<BL_FLOAT> *ioResultBuf,
+FftConvolver6::ProcessOneBuffer(//const WDL_TypedBuf<BL_FLOAT> &samplesBuf,
+                                //const WDL_TypedBuf<BL_FLOAT> *ioResultBuf,
+                                const WDL_TypedFastQueue<BL_FLOAT> &samplesBuf,
+                                const WDL_TypedFastQueue<BL_FLOAT> *ioResultBuf,
                                 int offsetSamples, int offsetResult)
 {
-    WDL_TypedBuf<BL_FLOAT> padBuf;
-    padBuf.Resize(mBufferSize);
+    /*padBuf.Resize(mBufferSize);
     for (int i = 0; i < mBufferSize; i++)
     {
-        if (i + offsetSamples >= samplesBuf.GetSize())
-            break;
-        
-        padBuf.Get()[i] = samplesBuf.Get()[i + offsetSamples];
-    }
+    if (i + offsetSamples >= samplesBuf.GetSize())
+    break;
+    
+    padBuf.Get()[i] = samplesBuf.Get()[i + offsetSamples];
+    }*/
+    
+    WDL_TypedBuf<BL_FLOAT> &padBuf0 = mTmpBuf4;
+    BLUtils::FastQueueToBuf(samplesBuf, &padBuf0, mBufferSize);
     
     // Take the size of the response if greater than buffer size
     int newSize;
@@ -244,8 +260,13 @@ FftConvolver6::ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &samplesBuf,
         newSize = MAX(mBufferSize*PAD_FACTOR, mPadFftResponse.GetSize());
     else
         newSize = MAX(mBufferSize, mPadFftResponse.GetSize());
+
+    //BLUtils::ResizeFillZeros(&padBuf, newSize);
     
-    BLUtils::ResizeFillZeros(&padBuf, newSize);
+    WDL_TypedBuf<BL_FLOAT> *padBuf = &mTmpBuf19;
+    padBuf->Resize(newSize);
+    BLUtils::FillAllZero(padBuf);
+    BLUtils::CopyBuf(padBuf, padBuf0);
     
 #define DEBUG_BUFS 0
 #if DEBUG_BUFS
@@ -257,11 +278,11 @@ FftConvolver6::ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &samplesBuf,
 #endif
     
 #if USE_WINDOWING
-    Window::Apply(mWindow, &padBuf);
+    Window::Apply(mWindow, padBuf);
 #endif
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftBuf;
-    ComputeFft(&padBuf, &fftBuf, mNormalize);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftBuf = mTmpBuf5;
+    ComputeFft(padBuf, &fftBuf, mNormalize);
     
 #if DEBUG_BUFS
     if (count == 1)
@@ -271,38 +292,49 @@ FftConvolver6::ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &samplesBuf,
     // Apply modifications of the buffer
     ProcessFftBuffer(&fftBuf, mPadFftResponse);
     
-    ComputeInverseFft(&fftBuf, &padBuf);
+    ComputeInverseFft(&fftBuf, padBuf);
     
 #if DEBUG_BUFS
     if (count == 1)
         BLDebug::DumpData("buf1.txt", padBuf);
 #endif
+
+    WDL_TypedBuf<BL_FLOAT> &resultBuf = mTmpBuf20;
+
+    BLUtils::FastQueueToBuf(*ioResultBuf, offsetResult,
+                            resultBuf, padBuf->GetSize());
     
-    for (int i = 0; i < padBuf.GetSize(); i++)        
-    {
-        if (i + offsetResult >= ioResultBuf->GetSize())
-            break;
-        
-        ioResultBuf->Get()[i + offsetResult] += padBuf.Get()[i];
-    }
+    BLUtils::AddValues(&resultBuf, *padBuf);
+
+    ioResultBuf->SetFromBuf(offsetResult, resultBuf.Get(), resultBuf.GetSize());
+    
+    /*for (int i = 0; i < padBuf.GetSize(); i++)        
+      {
+      if (i + offsetResult >= ioResultBuf->GetSize())
+      break;
+      
+      ioResultBuf->Get()[i + offsetResult] += padBuf.Get()[i];
+      }*/
 }
 #endif
 
 #if FIX_LATENCY
 // Method with latency correctly fixed
 void
-FftConvolver6::ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &samplesBuf,
-                                WDL_TypedBuf<BL_FLOAT> *ioResultBuf)
+FftConvolver6::ProcessOneBuffer(const WDL_TypedFastQueue<BL_FLOAT> &samplesBuf,
+                                WDL_TypedFastQueue<BL_FLOAT> *ioResultBuf)
 {
-    WDL_TypedBuf<BL_FLOAT> padBuf;
-    padBuf.Resize(mBufferSize);
-    for (int i = 0; i < mBufferSize; i++)
-    {
-        if (i >= samplesBuf.GetSize())
-            break;
-        
-        padBuf.Get()[i] = samplesBuf.Get()[i];
-    }
+    WDL_TypedBuf<BL_FLOAT> &padBuf0 = mTmpBuf6;
+    
+    /*for (int i = 0; i < mBufferSize; i++)
+      {
+      if (i >= samplesBuf.GetSize())
+      break;
+      
+      padBuf.Get()[i] = samplesBuf.Get()[i];
+      }*/
+
+    BLUtils::FastQueueToBuf(samplesBuf, &padBuf0, mBufferSize);
     
     // Take the size of the response if greater than buffer size
     int newSize;
@@ -311,27 +343,37 @@ FftConvolver6::ProcessOneBuffer(const WDL_TypedBuf<BL_FLOAT> &samplesBuf,
     else
         newSize = MAX(mBufferSize, mPadFftResponse.GetSize());
     
-    BLUtils::ResizeFillZeros(&padBuf, newSize);
+    //BLUtils::ResizeFillZeros(&padBuf, newSize);
+    WDL_TypedBuf<BL_FLOAT> *padBuf = &mTmpBuf21;
+    padBuf->Resize(newSize);
+    BLUtils::FillAllZero(padBuf);
+    BLUtils::CopyBuf(padBuf, padBuf0);
     
 #if USE_WINDOWING
-    Window::Apply(mWindow, &padBuf);
+    Window::Apply(mWindow, padBuf);
 #endif
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftBuf;
-    ComputeFft(&padBuf, &fftBuf, mNormalize);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftBuf = mTmpBuf7;
+    ComputeFft(padBuf, &fftBuf, mNormalize);
     
     // Apply modifications of the buffer
     ProcessFftBuffer(&fftBuf, mPadFftResponse);
     
-    ComputeInverseFft(&fftBuf, &padBuf);
+    ComputeInverseFft(&fftBuf, padBuf);
     
-    for (int i = 0; i < padBuf.GetSize(); i++)
-    {
-        if (i >= ioResultBuf->GetSize())
-            break;
-        
-        ioResultBuf->Get()[i] += padBuf.Get()[i];
-    }
+    /*for (int i = 0; i < padBuf.GetSize(); i++)
+      {
+      if (i >= ioResultBuf->GetSize())
+      break;
+      
+      ioResultBuf->Get()[i] += padBuf.Get()[i];
+      }*/
+    WDL_TypedBuf<BL_FLOAT> &resultBuf = mTmpBuf22;
+    BLUtils::FastQueueToBuf(*ioResultBuf, &resultBuf, padBuf->GetSize());
+
+    BLUtils::AddValues(&resultBuf, *padBuf);
+    
+    ioResultBuf->SetFromBuf(0, resultBuf.Get(), resultBuf.GetSize());
 }
 #endif
 
@@ -350,8 +392,12 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
         if (output != NULL)
         // Copy the result
         {
-            if (mResultBuf.GetSize() >= nFrames)
-                memcpy(output, mResultBuf.Get(), nFrames*sizeof(BL_FLOAT));
+            //if (mResultBuf.GetSize() >= nFrames)
+            //    memcpy(output, mResultBuf.Get(), nFrames*sizeof(BL_FLOAT));
+            if (mResultBuf.Available() >= nFrames)
+            {
+                mResultBuf.GetToBuf(0, output, nFrames);
+            }
             // else there is an error somewhere !
         }
             
@@ -364,7 +410,8 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
 
     // Here, we have not yet enough result samples
     
-    if (mSamplesBuf.GetSize() < mBufferSize)
+    //if (mSamplesBuf.GetSize() < mBufferSize)
+    if (mSamplesBuf.Available() < mBufferSize)
     {
         // And here, we have not yet enough samples to compute a result
         
@@ -376,7 +423,8 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     }
     
     // Fill with zero the future working area
-    BLUtils::AddZeros(&mResultBuf, mBufferSize);
+    //BLUtils::AddZeros(&mResultBuf, mBufferSize);
+    mResultBuf.Add(0, mBufferSize);
 
     int size = (mBufferSize > nFrames) ? mBufferSize : nFrames;
     
@@ -387,18 +435,23 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     // We need more room !
     if (mUsePadFactor)
     {
-        if (mResultBuf.GetSize() < newSize*PAD_FACTOR)
-            BLUtils::AddZeros(&mResultBuf, newSize*PAD_FACTOR);
+        //if (mResultBuf.GetSize() < newSize*PAD_FACTOR)
+        //    BLUtils::AddZeros(&mResultBuf, newSize*PAD_FACTOR);
+        if (mResultBuf.Available() < newSize*PAD_FACTOR)
+            mResultBuf.Add(0, newSize*PAD_FACTOR);
     }
     else
     {
-        if (mResultBuf.GetSize() < newSize)
-            BLUtils::AddZeros(&mResultBuf, newSize);
+        //if (mResultBuf.GetSize() < newSize)
+        //    BLUtils::AddZeros(&mResultBuf, newSize);
+        if (mResultBuf.Available() < newSize)
+            mResultBuf.Add(0, newSize);
     }
     
     int offsetSamples = 0;
     int numProcessed = 0;
-    while (offsetSamples + mBufferSize <= mSamplesBuf.GetSize())
+    //while (offsetSamples + mBufferSize <= mSamplesBuf.GetSize())
+    while (offsetSamples + mBufferSize <= mSamplesBuf.Available())
     {
         ProcessOneBuffer(mSamplesBuf, &mResultBuf, offsetSamples, mOffsetResult);
         
@@ -430,8 +483,10 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     // Copy the result
     if (output != NULL)
     {
-        if (mResultBuf.GetSize() >= nFrames)
-            memcpy(output, mResultBuf.Get(), nFrames*sizeof(BL_FLOAT));
+        //if (mResultBuf.GetSize() >= nFrames)
+        //    memcpy(output, mResultBuf.Get(), nFrames*sizeof(BL_FLOAT));
+        if (mResultBuf.Available() >= nFrames)
+            mResultBuf.GetToBuf(0, output, nFrames);
         // else there is an error somewhere
     }
     
@@ -441,7 +496,8 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     mNumResultReady -= nFrames;
     
     // Offset is in the interval [0, mBufferSize]
-    mOffsetResult = mResultBuf.GetSize() % mBufferSize;
+    //mOffsetResult = mResultBuf.GetSize() % mBufferSize;
+    mOffsetResult = mResultBuf.Available() % mBufferSize;
     
     return true;
 }
@@ -471,18 +527,23 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     // We need more room !
     if (mUsePadFactor)
     {
-        if (mResultBuf.GetSize() < newSize*PAD_FACTOR)
-            BLUtils::AddZeros(&mResultBuf, newSize*PAD_FACTOR);
+        //if (mResultBuf.GetSize() < newSize*PAD_FACTOR)
+        //    BLUtils::AddZeros(&mResultBuf, newSize*PAD_FACTOR);
+        if (mResultBuf.Available() < newSize*PAD_FACTOR)
+            mResultBuf.Add(0, newSize*PAD_FACTOR);
     }
     else
     {
-        if (mResultBuf.GetSize() < newSize)
-            BLUtils::AddZeros(&mResultBuf, newSize);
+        //if (mResultBuf.GetSize() < newSize)
+        //    BLUtils::AddZeros(&mResultBuf, newSize);
+        if (mResultBuf.Available() < newSize)
+            mResultBuf.Add(0, newSize);
     }
     
     int offsetSamples = 0;
     int numProcessed = 0;
-    while (offsetSamples + mBufferSize <= mSamplesBuf.GetSize())
+    //while (offsetSamples + mBufferSize <= mSamplesBuf.GetSize())
+    while (offsetSamples + mBufferSize <= mSamplesBuf.Available())
     {
         ProcessOneBuffer(mSamplesBuf, &mResultBuf, offsetSamples, mOffsetResult);
         
@@ -508,8 +569,10 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     if (output != NULL)
     // Copy the result
     {
-        if (mResultBuf.GetSize() >= nFrames)
-            memcpy(output, mResultBuf.Get(), nFrames*sizeof(BL_FLOAT));
+        //if (mResultBuf.GetSize() >= nFrames)
+        //    memcpy(output, mResultBuf.Get(), nFrames*sizeof(BL_FLOAT));
+        if (mResultBuf.Available() >= nFrames)
+            mResultBuf.GetToBuf(0, output, nFrames);
         // else there is an error somewhere !
     }
         
@@ -518,7 +581,8 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     mNumResultReady -= nFrames;
     
     // Offset is in the interval [0, mBufferSize]
-    mOffsetResult = mResultBuf.GetSize() % mBufferSize;
+    //mOffsetResult = mResultBuf.GetSize() % mBufferSize;
+    mOffsetResult = mResultBuf.Available() % mBufferSize;
     
     return true;
 }
@@ -566,13 +630,17 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     // We need more room !
     if (mUsePadFactor)
     {
-        if (mResultBuf.GetSize() < newSize*PAD_FACTOR)
-            BLUtils::AddZeros(&mResultBuf, newSize*PAD_FACTOR);
+        //if (mResultBuf.GetSize() < newSize*PAD_FACTOR)
+        //    BLUtils::AddZeros(&mResultBuf, newSize*PAD_FACTOR);
+        if (mResultBuf.Available() < newSize*PAD_FACTOR)
+            mResultBuf.Add(0, newSize*PAD_FACTOR);
     }
     else
     {
-        if (mResultBuf.GetSize() < newSize)
-            BLUtils::AddZeros(&mResultBuf, newSize);
+        //if (mResultBuf.GetSize() < newSize)
+        //    BLUtils::AddZeros(&mResultBuf, newSize);
+        if (mResultBuf.Available() < newSize)
+            mResultBuf.Add(0, newSize);
     }
     
     // BUG:
@@ -581,12 +649,18 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
     
     // FIX:
     // No crackles
-    while (mSamplesBuf.GetSize() > mBufferSize)
+    //while (mSamplesBuf.GetSize() > mBufferSize)
+    while (mSamplesBuf.Available() > mBufferSize)
     {
         // Version for FIX_LATENCY
         ProcessOneBuffer(mSamplesBuf, &mResultBuf);
+
+        WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf1;
+        buf.Resize(mBufferSize);
+        mResultBuf.GetToBuf(0, buf.Get(), mBufferSize);
         
-        mResultOut.Add(mResultBuf.Get(), mBufferSize);
+        //mResultOut.Add(mResultBuf.Get(), mBufferSize);
+        mResultOut.Add(buf.Get(), buf.GetSize());
         
         // Consume the processed samples
         BLUtils::ConsumeLeft(&mSamplesBuf, mBufferSize);
@@ -596,7 +670,7 @@ FftConvolver6::Process(BL_FLOAT *input, BL_FLOAT *output, int nFrames)
         // Stop if it remains too few samples to process
     }
     
-    WDL_TypedBuf<BL_FLOAT> resultBuf;
+    WDL_TypedBuf<BL_FLOAT> &resultBuf = mTmpBuf8;
     bool res = GetResult(&resultBuf, nFrames);
     
     if (res)
@@ -626,7 +700,7 @@ FftConvolver6::Process(const WDL_TypedBuf<BL_FLOAT> &inMagns,
                        WDL_TypedBuf<BL_FLOAT> *resultMagns,
                        WDL_TypedBuf<BL_FLOAT> *resultPhases)
 {
-    WDL_TypedBuf<WDL_FFT_COMPLEX> ioBuffer;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf9;
     BLUtils::MagnPhaseToComplex(&ioBuffer, inMagns, inPhases);
     
     ProcessFftBuffer2(&ioBuffer, mPadFftResponse);
@@ -645,7 +719,8 @@ bool
 FftConvolver6::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
 {
     // Get the computed result
-    int numOutSamples = mResultOut.GetSize();
+    //int numOutSamples = mResultOut.GetSize();
+    int numOutSamples = mResultOut.Available();
     
     // Latency fix
     //
@@ -702,7 +777,7 @@ FftConvolver6::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
         int numZeros = numRequested - remaining;
         
         // get only the necessary samples
-        WDL_TypedBuf<BL_FLOAT> buf;
+        WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf10;
         GetResultOutBuffer(&buf, remaining);
         
         if (output != NULL)
@@ -754,7 +829,8 @@ bool
 FftConvolver6::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
 {
     // Get the computed result
-    int numOutSamples = mResultOut.GetSize();
+    //int numOutSamples = mResultOut.GetSize();
+    int numOutSamples = mResultOut.Available();
     
     // We have big latency, output only zeros
     if (mCurrentLatency >= numRequested)
@@ -778,7 +854,7 @@ FftConvolver6::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
     {
         if (numRequested <= numOutSamples) // just in case
         {
-            WDL_TypedBuf<BL_FLOAT> buf;
+            WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf11;
             GetResultOutBuffer(&buf, numRequested);
             
             if (output != NULL)
@@ -806,7 +882,7 @@ FftConvolver6::GetResult(WDL_TypedBuf<BL_FLOAT> *output, int numRequested)
         if (numRequestedLat <= numOutSamples) // Just in case
         {
             // get only the necessary samples
-            WDL_TypedBuf<BL_FLOAT> buf;
+            WDL_TypedBuf<BL_FLOAT> &buf = mTmpBuf12;
             GetResultOutBuffer(&buf, numRequestedLat);
             
             if (output != NULL)
@@ -835,7 +911,8 @@ void
 FftConvolver6::GetResultOutBuffer(WDL_TypedBuf<BL_FLOAT> *output,
                                   int numRequested)
 {
-    int size = mResultOut.GetSize();
+    //int size = mResultOut.GetSize();
+    int size = mResultOut.Available();
     
     // Should not happen
     if (size < numRequested)
@@ -845,7 +922,8 @@ FftConvolver6::GetResultOutBuffer(WDL_TypedBuf<BL_FLOAT> *output,
     output->Resize(numRequested);
     
     // Copy the result
-    memcpy(output->Get(), mResultOut.Get(), numRequested*sizeof(BL_FLOAT));
+    //memcpy(output->Get(), mResultOut.Get(), numRequested*sizeof(BL_FLOAT));
+    mResultOut.GetToBuf(0, output->Get(), numRequested);
     
     // Resize down, skipping left
     BLUtils::ConsumeLeft(&mResultOut, numRequested);
@@ -866,7 +944,7 @@ FftConvolver6::ResampleImpulse(WDL_TypedBuf<BL_FLOAT> *impulseResponse,
         if (impulseResponse->GetSize() > 0)
         {
             Resampler2 resampler(sampleRate, respSampleRate);
-            
+
             WDL_TypedBuf<BL_FLOAT> newImpulse;
             resampler.Resample(impulseResponse, &newImpulse);
             
@@ -926,16 +1004,18 @@ FftConvolver6::ResizeImpulse(WDL_TypedBuf<BL_FLOAT> *impulseResponse)
 }
 
 void
-FftConvolver6::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
+FftConvolver6::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
                                 const WDL_TypedBuf<WDL_FFT_COMPLEX> &response)
 {
-    BLUtils::TakeHalf(ioBuffer);
- 
-    for (int i = 0; i < ioBuffer->GetSize(); i++)
+    //BLUtils::TakeHalf(ioBuffer);
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &ioBuffer = mTmpBuf23;
+    BLUtils::TakeHalf(*ioBuffer0, &ioBuffer);
+    
+    for (int i = 0; i < ioBuffer.GetSize(); i++)
     {
-        if (i >= ioBuffer->GetSize())
+        if (i >= ioBuffer.GetSize())
             break;
-        WDL_FFT_COMPLEX sigComp = ioBuffer->Get()[i];
+        WDL_FFT_COMPLEX sigComp = ioBuffer.Get()[i];
         
         if (i >= response.GetSize())
             break;
@@ -946,11 +1026,13 @@ FftConvolver6::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
         res.re = sigComp.re*respComp.re - sigComp.im*respComp.im;
         res.im = sigComp.im*respComp.re + sigComp.re*respComp.im;
         
-        ioBuffer->Get()[i] = res;
+        ioBuffer.Get()[i] = res;
     }
     
-    BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
-    BLUtils::FillSecondFftHalf(ioBuffer);
+    //BLUtils::ResizeFillZeros(ioBuffer, ioBuffer->GetSize()*2);
+    BLUtils::SetBuf(ioBuffer0, ioBuffer);
+    
+    BLUtils::FillSecondFftHalf(ioBuffer0);
 }
 
 // For using with already frequential signal
@@ -1011,7 +1093,9 @@ FftConvolver6::ComputeFft(const WDL_TypedBuf<BL_FLOAT> *samples,
     WDL_fft(fftSamples->Get(), fftSamples->GetSize(), false);
     
     // Sort the fft buffer
-    WDL_TypedBuf<WDL_FFT_COMPLEX> tmpFftBuf = *fftSamples;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &tmpFftBuf = mTmpBuf15;
+    tmpFftBuf = *fftSamples;
+    
     for (int i = 0; i < fftSamples->GetSize(); i++)
     {
         int k = WDL_fft_permute(fftSamples->GetSize(), i);
@@ -1029,7 +1113,9 @@ void
 FftConvolver6::ComputeInverseFft(const WDL_TypedBuf<WDL_FFT_COMPLEX> *fftSamples,
                                  WDL_TypedBuf<BL_FLOAT> *samples)
 {
-    WDL_TypedBuf<WDL_FFT_COMPLEX> tmpFftBuf = *fftSamples;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &tmpFftBuf = mTmpBuf16;
+    tmpFftBuf = *fftSamples;
+    
     for (int i = 0; i < fftSamples->GetSize(); i++)
     {
         int k = WDL_fft_permute(fftSamples->GetSize(), i);
@@ -1069,8 +1155,8 @@ FftConvolver6::NormalizeResponseFft(WDL_TypedBuf<WDL_FFT_COMPLEX> *fftSamples)
     // We can normalize the response as samples or as fft, this is the same
     // as fft is conservative for multiplication by a factor
     
-    WDL_TypedBuf<BL_FLOAT> magns;
-    WDL_TypedBuf<BL_FLOAT> phases;
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf17;
+    WDL_TypedBuf<BL_FLOAT> &phases = mTmpBuf18;
     BLUtils::ComplexToMagnPhase(&magns, &phases, *fftSamples);
     
     // Take sum(samples) and not sum(abs(samples)) !

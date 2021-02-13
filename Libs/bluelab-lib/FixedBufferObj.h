@@ -12,6 +12,8 @@
 #include <vector>
 using namespace std;
 
+#include "../../WDL/fastqueue.h"
+
 #include "IPlug_include_in_plug_hdr.h"
 
 
@@ -28,20 +30,22 @@ public:
     // NEW
     void Reset(int bufferSize);
     
-    void SetInputs(const vector<WDL_TypedBuf<double> > &buffers);
-    bool GetInputs(vector<WDL_TypedBuf<double> > *buffers);
+    void SetInputs(const vector<WDL_TypedBuf<BL_FLOAT> > &buffers);
+    bool GetInputs(vector<WDL_TypedBuf<BL_FLOAT> > *buffers);
     
-    void ResizeOutputs(vector<WDL_TypedBuf<double> > *buffers);
+    void ResizeOutputs(vector<WDL_TypedBuf<BL_FLOAT> > *buffers);
                     
-    void SetOutputs(const vector<WDL_TypedBuf<double> > &buffers);
-    bool GetOutputs(vector<WDL_TypedBuf<double> > *buffers, int nFrames);
+    void SetOutputs(const vector<WDL_TypedBuf<BL_FLOAT> > &buffers);
+    bool GetOutputs(vector<WDL_TypedBuf<BL_FLOAT> > *buffers, int nFrames);
     
 protected:
     int mBufferSize;
     int mCurrentLatency;
     
-    vector<WDL_TypedBuf<double> > mInputs;
-    vector<WDL_TypedBuf<double> > mOutputs;
+    //vector<WDL_TypedBuf<BL_FLOAT> > mInputs;
+    //vector<WDL_TypedBuf<BL_FLOAT> > mOutputs;
+    vector<WDL_TypedFastQueue<BL_FLOAT> > mInputs;
+    vector<WDL_TypedFastQueue<BL_FLOAT> > mOutputs;
 };
 
 #endif /* defined(__BL_Spatializer__FixedBuffedObj__) */
