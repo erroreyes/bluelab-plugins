@@ -228,4 +228,28 @@ TODO: in InfrasonicViewer, the last line is very bright
 => check if we have the same "problem" with other spectrogram plugins
 
 
+Design:
+"new needa / needle" font (see video)
+"eye flow" / "what is the order of what the eye see"
+"elements attractive for eye"
+contrast: everything must be easily readable
+spacing: consistent spacing
+rectangles: more or less round corners
+---
+- visual hieracrchy
+- white space
+- color & contrast
+- alignment
+- typography
+- scale
+search "ui design gallery" for seeing examples
+(https://screenlane.com/)
+---
+- maybe use dark grey instead of black for background! (grey "6 6 6" or "9 9 9")
+(izotope uses a dark grey, but with more blue ("4/5 6 7")
+captain blood uses real black
+- use a band at the bottom on the whole width (include logo, plug name, version, logo)
+
+Website: for categories "menu", add a submenu to "PLUGINS" on the bar, and add the most used category pages as submenu entries (should be feasible as it is!)
+
 
