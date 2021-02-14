@@ -64,6 +64,15 @@ protected:
     bool mUsePhaseAliasingCorrection;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mPACOversampledFft[2];
 #endif
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf1[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf4[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf5[2];
 };
 
 #endif /* defined(__BL_BL_DUET__BL_StereoDeReverbProcess__) */

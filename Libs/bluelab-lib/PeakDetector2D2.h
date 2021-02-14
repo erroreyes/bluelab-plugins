@@ -122,6 +122,12 @@ protected:
     
     // Number of points of the circle
     int mNumPoints;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<int> mTmpBuf0;
+    WDL_TypedBuf<int> mTmpBuf1;
+    WDL_TypedBuf<int> mTmpBuf2;
 };
 
 #endif /* defined(__BL_DUET__PeakDetector2D2__) */

@@ -26,6 +26,10 @@ protected:
     int mKernelSize;
     
     WDL_TypedBuf<BL_FLOAT> mHanningKernel;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
 };
 
 #endif /* defined(__BL_DUET__ImageSmootherKernel__) */

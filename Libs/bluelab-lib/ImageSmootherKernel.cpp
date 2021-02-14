@@ -39,7 +39,7 @@ void
 ImageSmootherKernel::SmoothImage(int imgWidth, int imgHeight,
                                  WDL_TypedBuf<BL_FLOAT> *imageData)
 {
-    WDL_TypedBuf<BL_FLOAT> result;
+    WDL_TypedBuf<BL_FLOAT> &result = mTmpBuf0;
     result.Resize(imageData->GetSize());
     BLUtils::FillAllZero(&result);
     

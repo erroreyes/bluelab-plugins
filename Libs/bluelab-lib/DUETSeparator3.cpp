@@ -168,7 +168,7 @@ DUETSeparator3::SetHistogramSize(int histoSize)
 
 void
 DUETSeparator3::SetInputData(const WDL_TypedBuf<BL_FLOAT> magns[2],
-                            const WDL_TypedBuf<BL_FLOAT> phases[2])
+                             const WDL_TypedBuf<BL_FLOAT> phases[2])
 {
     mInputMagns[0] = magns[0];
     mInputMagns[1] = magns[1];
@@ -229,7 +229,8 @@ DUETSeparator3::Process()
         FillHistogramPAC(&oobSamples);
     }
 #endif
-    
+
+#if 0
     // Debug
     WDL_TypedBuf<int> dbgOobSamples;
     //dbgEobSamples.Resize(eobSamples.size());
@@ -242,6 +243,7 @@ DUETSeparator3::Process()
         int idx = oobSamples[i];
         dbgOobSamples.Get()[idx] = 1e-5;
     }
+#endif
     
     // The magns corresponding to out of bound samples will be set to zero.
     //
@@ -261,7 +263,9 @@ DUETSeparator3::Process()
         mSmootherKernel->SmoothImage(width, height, &mCurrentHistogramData);
     }
     
-    WDL_TypedBuf<BL_FLOAT> thresholdedHistogram = mCurrentHistogramData;
+    WDL_TypedBuf<BL_FLOAT> &thresholdedHistogram = mTmpBuf0;
+    thresholdedHistogram = mCurrentHistogramData;
+    
     ThresholdHistogram(width, height, &thresholdedHistogram,
                        mThresholdFloor);
     
@@ -269,7 +273,7 @@ DUETSeparator3::Process()
     if (mThresholdFloor > 0.0)
         useOnlyThreshold = true;
     
-    WDL_TypedBuf<BL_FLOAT> floatMask;
+    WDL_TypedBuf<BL_FLOAT> &floatMask = mTmpBuf1;
     if (useOnlyThreshold)
     {
         // Create float mask directly, do not compute peaks
@@ -301,26 +305,28 @@ DUETSeparator3::Process()
         //
         
         // Detect peaks
-        WDL_TypedBuf<BL_FLOAT> maximaHistogram = mCurrentHistogramData;
+        WDL_TypedBuf<BL_FLOAT> &maximaHistogram = mTmpBuf2;
+        maximaHistogram = mCurrentHistogramData;
         DetectPeaks(width, height, &maximaHistogram);
     
-        WDL_TypedBuf<BL_FLOAT> maximaHistogramThrs = maximaHistogram;
+        WDL_TypedBuf<BL_FLOAT> &maximaHistogramThrs = mTmpBuf3;
+        maximaHistogramThrs = maximaHistogram;
         ThresholdHistogram(width, height, &maximaHistogramThrs,
                            mThresholdPeaks);
     
         vector<PeakDetector2D2::Peak> peaks;
         ExtractPeaks(width, height, maximaHistogramThrs, &peaks);
     
-        WDL_TypedBuf<int> mask;
+        WDL_TypedBuf<int> &mask = mTmpBuf4;
         //CreateMaskDist(width, height, thresholdedHistogram, peaks, &mask);
         CreateMaskPeakDetector(width, height, thresholdedHistogram, peaks, &mask);
     
         ComputePeaksAreas(mask, &peaks);
-    
+
         // Display
-        WDL_TypedBuf<BL_FLOAT> dbgMaskImage;
+        WDL_TypedBuf<BL_FLOAT> &dbgMaskImage = mTmpBuf5;
         DBG_MaskToImage(mask, &dbgMaskImage);
-    
+        
         //WDL_TypedBuf<BL_FLOAT> floatMask;
         MaskToFloatMask(mask, &floatMask);
     
@@ -371,7 +377,7 @@ DUETSeparator3::Process()
     
     if (mUseSoftMasks && !mUseSoftMasksComp)
     {
-        WDL_TypedBuf<BL_FLOAT> softMasks[2];
+        WDL_TypedBuf<BL_FLOAT> *softMasks = mTmpBuf6;
         CreateSoftMasks(mCurrentMagns, floatMask, softMasks, &oobSamples);
         
         for (int i = 0; i < 2; i++)
@@ -386,7 +392,7 @@ DUETSeparator3::Process()
     }
     else if (mUseSoftMasksComp)
     {
-        WDL_TypedBuf<WDL_FFT_COMPLEX> softMasksComp[2];
+        WDL_TypedBuf<WDL_FFT_COMPLEX> *softMasksComp = mTmpBuf7;
         CreateSoftMasksComp(mCurrentFftData, floatMask, softMasksComp, &oobSamples);
         
 #if PROCESS_MASK_CENTERED
@@ -1134,8 +1140,9 @@ DUETSeparator3::ComputePACDelta(const WDL_TypedBuf<WDL_FFT_COMPLEX> oversampledF
 }
 
 void
-DUETSeparator3::ThresholdHistogram(int width, int height, WDL_TypedBuf<BL_FLOAT> *data,
-                                  BL_FLOAT threshold)
+DUETSeparator3::ThresholdHistogram(int width, int height,
+                                   WDL_TypedBuf<BL_FLOAT> *data,
+                                   BL_FLOAT threshold)
 {
     for (int i = 0; i < data->GetSize(); i++)
     {
@@ -1267,7 +1274,9 @@ void
 DUETSeparator3::DetectPeaks(int width, int height,
                            WDL_TypedBuf<BL_FLOAT> *data)
 {
-    BLUtils::FindMaxima2D(width, height, data, true);
+    WDL_TypedBuf<BL_FLOAT> &result = mTmpBuf10;
+    BLUtils::FindMaxima2D(width, height, *data, &result, true);
+    *data = result;
 }
 
 void
@@ -1546,7 +1555,7 @@ DUETSeparator3::CreateSoftMasks(const WDL_TypedBuf<BL_FLOAT> magns[2],
     // Create masks
     //
     
-    WDL_TypedBuf<BL_FLOAT> thrsMagns[2];
+    WDL_TypedBuf<BL_FLOAT> *thrsMagns = mTmpBuf8;
     
     // By default, fill all
     thrsMagns[0] = magns[0];
@@ -1603,7 +1612,7 @@ DUETSeparator3::CreateSoftMasksComp(/*const*/ WDL_TypedBuf<WDL_FFT_COMPLEX> fftD
     // Create masks
     //
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> thrsFftData[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> *thrsFftData = mTmpBuf9;
     
     // By default, fill all
     thrsFftData[0] = fftData[0];

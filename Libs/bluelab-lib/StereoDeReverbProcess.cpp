@@ -96,15 +96,20 @@ StereoDeReverbProcess::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > 
         return;
     
     //
-    WDL_TypedBuf<WDL_FFT_COMPLEX> ioBuffers[2];
-    ioBuffers[0] = *(*ioFftSamples)[0];
-    ioBuffers[1] = *(*ioFftSamples)[1];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffers0 = mTmpBuf0;
+    ioBuffers0[0] = *(*ioFftSamples)[0];
+    ioBuffers0[1] = *(*ioFftSamples)[1];
+
+    WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffers = mTmpBuf1;
     
-    BLUtils::TakeHalf(&ioBuffers[0]);
-    BLUtils::TakeHalf(&ioBuffers[1]);
+    //BLUtils::TakeHalf(&ioBuffers[0]);
+    //BLUtils::TakeHalf(&ioBuffers[1]);
+    BLUtils::TakeHalf(ioBuffers0[0], &ioBuffers[0]);
+    BLUtils::TakeHalf(ioBuffers0[1], &ioBuffers[1]);
     
-    WDL_TypedBuf<BL_FLOAT> magns[2];
-    WDL_TypedBuf<BL_FLOAT> phases[2];
+    
+    WDL_TypedBuf<BL_FLOAT> *magns = mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> *phases = mTmpBuf3;
     BLUtils::ComplexToMagnPhase(&magns[0], &phases[0], ioBuffers[0]);
     BLUtils::ComplexToMagnPhase(&magns[1], &phases[1], ioBuffers[1]);
     
@@ -119,14 +124,18 @@ StereoDeReverbProcess::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > 
     
     
     // Complex soft masks!
-    WDL_TypedBuf<WDL_FFT_COMPLEX> deReverb[2];
+    WDL_TypedBuf<WDL_FFT_COMPLEX> *deReverb = mTmpBuf4;
     mSeparator->GetOutputDataComp(deReverb);
     
 #if PROCESS_MASK_CENTERED
     mSeparator->GetDelayedInputDataComp(ioBuffers);
 #endif
     
-    WDL_TypedBuf<WDL_FFT_COMPLEX> reverb[2] = { ioBuffers[0], ioBuffers[1] };
+    //WDL_TypedBuf<WDL_FFT_COMPLEX> reverb[2] = { ioBuffers[0], ioBuffers[1] };
+    WDL_TypedBuf<WDL_FFT_COMPLEX> *reverb = mTmpBuf5;
+    reverb[0] = ioBuffers[0];
+    reverb[1] = ioBuffers[1];
+    
     for (int i = 0; i < 2; i++)
     {
         BLUtils::SubstractValues(&reverb[i], deReverb[i]);
@@ -171,14 +180,17 @@ StereoDeReverbProcess::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > 
     }
         
     //
-    BLUtils::ResizeFillZeros(&ioBuffers[0], ioBuffers[0].GetSize()*2);
-    BLUtils::ResizeFillZeros(&ioBuffers[1], ioBuffers[1].GetSize()*2);
+    //BLUtils::ResizeFillZeros(&ioBuffers[0], ioBuffers[0].GetSize()*2);
+    //BLUtils::ResizeFillZeros(&ioBuffers[1], ioBuffers[1].GetSize()*2);
+
+    BLUtils::SetBuf(&ioBuffers0[0], ioBuffers[0]);
+    BLUtils::SetBuf(&ioBuffers0[1], ioBuffers[1]);
     
-    BLUtils::FillSecondFftHalf(&ioBuffers[0]);
-    BLUtils::FillSecondFftHalf(&ioBuffers[1]);
+    BLUtils::FillSecondFftHalf(&ioBuffers0[0]);
+    BLUtils::FillSecondFftHalf(&ioBuffers0[1]);
     
-    *(*ioFftSamples)[0] = ioBuffers[0];
-    *(*ioFftSamples)[1] = ioBuffers[1];
+    *(*ioFftSamples)[0] = ioBuffers0[0];
+    *(*ioFftSamples)[1] = ioBuffers0[1];
 }
 
 #if 0

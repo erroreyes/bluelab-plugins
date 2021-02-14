@@ -209,7 +209,23 @@ AutoGain: vumeter doesn't move
 
 - TODO: check memory of all plugins, but when manipulating all knobs/options
 
+BL-SampleFinder:
 The plugin for finding sound in a point cloud is: XLN Audio XO
+Another (better): Atlas -> https://www.algonaut.tech/
+Explanation: https://www.youtube.com/watch?v=9x-_My5yjQY
+https://experiments.withgoogle.com/drum-machine
+Code: https://github.com/googlecreativelab/aiexperiments-drum-machine
+https://github.com/kylemcdonald/AudioNotebooks (t-SNE) (tsne is only in bin form here)
+t-SNE: https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding
+Another paper: "Nonlinear Dimensionality Reduction Approaches applied to Music and Textural Sounds" - Stephane Dupont
+Sound fingerprint: https://emysound.com/blog/open-source/2020/06/12/how-audio-fingerprinting-works.html
+IDEA: hdf5 -> does hdf5 of 2 close data are also close?
+-> try to find hash function that keeps the "closeness"
+Try to classify the sounds with some fiew criteria
+(maybe see: "Traite des objets musicaux" for criteria)
+
+- TODO: zoom on cloud with mouse wheel or zoom gesture
+- TODO: drag'n drop from the app, to anywhere in the filesystem, (to copy), or to a DAW track, to import. (transform the drag in file drag for each system).
 
 emacs multi-occur-in-matching-buffers "then type '.' for all buffers"
 
@@ -251,5 +267,3 @@ captain blood uses real black
 - use a band at the bottom on the whole width (include logo, plug name, version, logo)
 
 Website: for categories "menu", add a submenu to "PLUGINS" on the bar, and add the most used category pages as submenu entries (should be feasible as it is!)
-
-

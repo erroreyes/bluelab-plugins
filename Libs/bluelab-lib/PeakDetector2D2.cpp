@@ -99,12 +99,12 @@ PeakDetector2D2::DetectPeaksNoOverlap(int width, int height,
     //
     
     // This mask is a mask with all the previous contours filled
-    WDL_TypedBuf<int> overlapPrevMask;
+    WDL_TypedBuf<int> &overlapPrevMask = mTmpBuf0;
     overlapPrevMask.Resize(mask->GetSize());
    
     // This mask is a mask with the new contours filling progressively
     // contour by contour
-    WDL_TypedBuf<int> overlapNewMask;
+    WDL_TypedBuf<int> &overlapNewMask = mTmpBuf1;
     overlapNewMask.Resize(mask->GetSize());
     
     // Iterate
@@ -170,8 +170,10 @@ PeakDetector2D2::DetectPeaksNoOverlap(int width, int height,
 // Version with overlap of contours
 // (old version)
 void
-PeakDetector2D2::DetectPeak(int width, int height, const WDL_TypedBuf<BL_FLOAT> &image,
-                            const Peak &peak, BL_FLOAT threshold, BL_FLOAT thresholdWidth,
+PeakDetector2D2::DetectPeak(int width, int height,
+                            const WDL_TypedBuf<BL_FLOAT> &image,
+                            const Peak &peak, BL_FLOAT threshold,
+                            BL_FLOAT thresholdWidth,
                             WDL_TypedBuf<int> *mask)
 {    
     if (mNumPoints < 3)
@@ -207,7 +209,8 @@ PeakDetector2D2::DetectPeak(int width, int height, const WDL_TypedBuf<BL_FLOAT> 
 }
 
 void
-PeakDetector2D2::InitPoints(int width, int height, const WDL_TypedBuf<BL_FLOAT> &image,
+PeakDetector2D2::InitPoints(int width, int height,
+                            const WDL_TypedBuf<BL_FLOAT> &image,
                             const Peak &peak, vector<Point> *points)
 {
     // Just in case.
@@ -452,7 +455,9 @@ PeakDetector2D2::FillMaskHoles(int width, int height,
 {
 #define NUM_NEIGHBORS 3 //2
     
-    WDL_TypedBuf<int> maskCopy = *mask;
+    WDL_TypedBuf<int> &maskCopy = mTmpBuf2;
+    maskCopy = *mask;
+    
     for (int i = bbox[0][0]; i <= bbox[1][0]; i++)
     {
         for (int j = bbox[0][1]; j <= bbox[1][1]; j++)
