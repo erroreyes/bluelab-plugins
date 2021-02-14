@@ -14,6 +14,8 @@
 #include <vector>
 using namespace std;
 
+#include "../../WDL/fastqueue.h"
+
 #include <GraphControl12.h>
 
 #include "IPlug_include_in_plug_hdr.h"
@@ -91,7 +93,7 @@ public:
                    GraphControl12 *graph3,
                    GraphControl12 *graph4);
 
-    void AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples);
+    void AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples);
 
     //
     BLUpmixGraphDrawer *GetUpmixGraphDrawer();
@@ -130,7 +132,20 @@ protected:
     BLFireworks *mFireworks;
     SourceComputer *mSourceComputer;
     
-    WDL_TypedBuf<BL_FLOAT> mSamples[2];
+    //WDL_TypedBuf<BL_FLOAT> mSamples[2];
+    WDL_TypedFastQueue<BL_FLOAT> mSamples[2];
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf6[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf7[2];
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8[2];
 };
 
 #endif // IGRAPHICS_NANOVG

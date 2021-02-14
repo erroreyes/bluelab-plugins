@@ -422,7 +422,7 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
 }
 
 void
-BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
+BLVectorscope::AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples)
 {
     if (samples.size() != 2)
         return;
@@ -431,7 +431,8 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
     {
         mSamples[i].Add(samples[i].Get(), samples[i].GetSize());
         
-        int numToConsume = mSamples[i].GetSize() - NUM_POINTS;
+        //int numToConsume = mSamples[i].GetSize() - NUM_POINTS;
+        int numToConsume = mSamples[i].Available() - NUM_POINTS;
         if (numToConsume > 0)
         {
             BLUtils::ConsumeLeft(&mSamples[i], numToConsume);
@@ -442,8 +443,14 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
     {
         if (mGraphs[POLAR_SAMPLE_MODE_ID] != NULL)
         {
-            WDL_TypedBuf<BL_FLOAT> polarSamples[2];
-            BLVectorscopeProcess::ComputePolarSamples(mSamples, polarSamples);
+            WDL_TypedBuf<BL_FLOAT> *polarSamples = mTmpBuf0;
+            
+            WDL_TypedBuf<BL_FLOAT> *samplesIn = mTmpBuf1;
+            BLUtils::FastQueueToBuf(mSamples[0], &samplesIn[0]);
+            BLUtils::FastQueueToBuf(mSamples[1], &samplesIn[1]);
+            
+            BLVectorscopeProcess::ComputePolarSamples(samplesIn/*mSamples*/,
+                                                      polarSamples);
             
             // Adjust to the circle graph drawer
             BLUtils::MultValues(&polarSamples[1], (BL_FLOAT)SCALE_POLAR_Y);
@@ -456,8 +463,14 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
     {
         if (mGraphs[LISSAJOUS_MODE_ID] != NULL)
         {
-            WDL_TypedBuf<BL_FLOAT> lissajousSamples[2];
-            BLVectorscopeProcess::ComputeLissajous(mSamples, lissajousSamples, true);
+            WDL_TypedBuf<BL_FLOAT> *lissajousSamples = mTmpBuf2;
+
+            WDL_TypedBuf<BL_FLOAT> *samples = mTmpBuf3;
+            BLUtils::FastQueueToBuf(mSamples[0], &samples[0]);
+            BLUtils::FastQueueToBuf(mSamples[1], &samples[1]);
+            
+            BLVectorscopeProcess::ComputeLissajous(samples/*mSamples*/,
+                                                   lissajousSamples, true);
             
             // Scale so that we stay in the square (even in diagonal)
             BLUtils::MultValues(&lissajousSamples[0], (BL_FLOAT)LISSAJOUS_SCALE);
@@ -473,10 +486,13 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
     {
         if (mGraphs[FIREWORKS_MODE_ID] != NULL)
         {
-            WDL_TypedBuf<BL_FLOAT> samplesIn[2] = { mSamples[0], mSamples[1] };
+            //WDL_TypedBuf<BL_FLOAT> samplesIn[2] = { mSamples[0], mSamples[1] };
+            WDL_TypedBuf<BL_FLOAT> *samplesIn = mTmpBuf4;
+            BLUtils::FastQueueToBuf(mSamples[0], &samplesIn[0]);
+            BLUtils::FastQueueToBuf(mSamples[1], &samplesIn[1]);
             
-            WDL_TypedBuf<BL_FLOAT> polarSamples[2];
-            WDL_TypedBuf<BL_FLOAT> polarSamplesMax[2];
+            WDL_TypedBuf<BL_FLOAT> *polarSamples = mTmpBuf5;
+            WDL_TypedBuf<BL_FLOAT> *polarSamplesMax = mTmpBuf6;
             mFireworks->ComputePoints(samplesIn, polarSamples, polarSamplesMax);
             
             // Adjust to the circle graph drawer
@@ -499,9 +515,12 @@ BLVectorscope::AddSamples(vector<WDL_TypedBuf<BL_FLOAT> > samples)
     {
         if (mGraphs[SOURCE_MODE_ID] != NULL)
         {
-            WDL_TypedBuf<BL_FLOAT> samplesIn[2] = { mSamples[0], mSamples[1] };
+            //WDL_TypedBuf<BL_FLOAT> samplesIn[2] = { mSamples[0], mSamples[1] };
+            WDL_TypedBuf<BL_FLOAT> *samplesIn = mTmpBuf7;
+            BLUtils::FastQueueToBuf(mSamples[0], &samplesIn[0]);
+            BLUtils::FastQueueToBuf(mSamples[1], &samplesIn[1]);
             
-            WDL_TypedBuf<BL_FLOAT> polarSamples[2];
+            WDL_TypedBuf<BL_FLOAT> *polarSamples = mTmpBuf8;
             mSourceComputer->ComputePoints(samplesIn, polarSamples);
             
             // Adjust to the circle graph drawer
