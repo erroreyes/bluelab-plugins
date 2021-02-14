@@ -47,6 +47,11 @@ protected:
     
     // Vol Render
     WavesRender *mWavesRender;
+
+private:
+    // Tmp buffer
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
 };
 
 #endif /* defined(__BL_Waves__WavesProcess__) */

@@ -130,7 +130,7 @@ WavesRender::Reset(BL_FLOAT sampleRate)
 void
 WavesRender::AddMagns(const WDL_TypedBuf<BL_FLOAT> &magns)
 {
-    vector<LinesRender2::Point> points;
+    vector<LinesRender2::Point> &points = mTmpBuf0;
     MagnsToPoints(&points, magns);
     
     mLinesRender->AddSlice(points);
@@ -448,17 +448,18 @@ WavesRender::MagnsToPoints(vector<LinesRender2::Point> *points,
 
     hzPerBin *= MEL_COEFF;
     
-    WDL_TypedBuf<BL_FLOAT> magnsMel;
+    WDL_TypedBuf<BL_FLOAT> &magnsMel = mTmpBuf1;
     BLUtils::FreqsToMelNorm(&magnsMel, magns, hzPerBin);
     
     // NOTE: Changes the display spread, but may not be so cool
 #if 0 // Convert to dB
 #define EPS 1e-15
 #define MIN_DB -45.0
-    WDL_TypedBuf<BL_FLOAT> magnsDB;
+    WDL_TypedBuf<BL_FLOAT> &magnsDB = mTmpBuf2;
     BLUtils::AmpToDBNorm(&magnsDB, magnsMel, EPS, MIN_DB);
 #else
-    WDL_TypedBuf<BL_FLOAT> magnsDB = magnsMel;
+    WDL_TypedBuf<BL_FLOAT> &magnsDB = mTmpBuf3;
+    magnsDB = magnsMel;
 #endif
     
 #if ENABLE_ORXX_MODE
@@ -503,7 +504,7 @@ WavesRender::TransformORXX(WDL_TypedBuf<BL_FLOAT> *magns)
 #define HIGH_SCALE 3.0
     
     // Take the first half
-    WDL_TypedBuf<BL_FLOAT> firstHalf;
+    WDL_TypedBuf<BL_FLOAT> &firstHalf = mTmpBuf4;
     firstHalf.Resize(magns->GetSize()*PERCENT_KEEP);
     for (int i = 0; i < firstHalf.GetSize(); i++)
     {
@@ -516,7 +517,9 @@ WavesRender::TransformORXX(WDL_TypedBuf<BL_FLOAT> *magns)
     BLUtils::ResizeLinear2(&firstHalf, magns->GetSize()/2);
     
     // Mirror it
-    WDL_TypedBuf<BL_FLOAT> secondHalf = firstHalf;
+    WDL_TypedBuf<BL_FLOAT> &secondHalf = mTmpBuf5;
+    secondHalf = firstHalf;
+    
     BLUtils::Reverse(&secondHalf);
     
     // Compute the step and left/right ratio
@@ -565,7 +568,8 @@ WavesRender::FreqToMelNorm(BL_FLOAT freq)
     // Hack: something is not really correct here...
     freq *= 2.0;
     
-    BL_FLOAT result = BLUtils::FreqToMelNorm((BL_FLOAT)(freq*MEL_COEFF), hzPerBin, mBufferSize);
+    BL_FLOAT result =
+    BLUtils::FreqToMelNorm((BL_FLOAT)(freq*MEL_COEFF), hzPerBin, mBufferSize);
     
     return result;
 }
@@ -689,7 +693,8 @@ WavesRender::UpdateAmpsAxis(bool dBScale)
         if (!dBScale)
             mAmpsAxis->UpdateLabels(labels, normPos, NUM_AXIS_DATA_LINEAR, p0, p1);
         else
-            mAmpsAxis->UpdateLabels(labelsDBScale, normPosDBScale, NUM_AXIS_DATA_DBSCALE, p0, p1);
+            mAmpsAxis->UpdateLabels(labelsDBScale, normPosDBScale,
+                                    NUM_AXIS_DATA_DBSCALE, p0, p1);
     }
 }
 

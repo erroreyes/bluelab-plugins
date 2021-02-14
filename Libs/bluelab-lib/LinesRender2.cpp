@@ -105,13 +105,16 @@ CameraModelProjMat(int winWidth, int winHeight, float angle0, float angle1,
     
     glm::mat4 viewMat = glm::lookAt(pos, target, up);
     
-    glm::mat4 perspMat = glm::perspective((float)perspAngle/*45.0f*//*60.0f*/, ((float)winWidth)/winHeight, NEAR_PLANE, FAR_PLANE);
+    glm::mat4 perspMat = glm::perspective((float)perspAngle/*45.0f*//*60.0f*/,
+                                          ((float)winWidth)/winHeight,
+                                          NEAR_PLANE, FAR_PLANE);
     
     glm::mat4 modelMat = glm::scale(glm::mat4(1.0f), glm::vec3(1.3f, 1.3f, 1.3f));
     
     modelMat = glm::translate(modelMat, glm::vec3(0.0f, -0.5f, 0.0f)); //
     modelMat = glm::rotate(modelMat, angle0, glm::vec3(0.0f, 1.0f, 0.0f));
-    modelMat = glm::translate(modelMat, glm::vec3(0.0f, 0.5+0.33/*0.33*//*0.0f*/, 0.0f));
+    modelMat = glm::translate(modelMat,
+                              glm::vec3(0.0f, 0.5+0.33/*0.33*//*0.0f*/, 0.0f));
     
     *model = viewMat * modelMat;
     *proj = perspMat;
@@ -227,7 +230,9 @@ LinesRender2::Init()
 {
     // Fill with zero values
     // To have a flat grid at the beginning
-    vector<Point> points;
+    vector<Point> &points = mTmpBuf2;
+    if (!mDensePointsFlag)
+        points.clear();
     
     if (mDensePointsFlag)
     {
@@ -296,11 +301,14 @@ LinesRender2::PreDraw(NVGcontext *vg, int width, int height)
     mViewWidth = width;
     mViewHeight = height;
     
-    vector<vector<Point> > points = mPrevProjPoints;
+    vector<vector<Point> > &points = mTmpBuf3;
+    points = mPrevProjPoints;
 
     // Make a copy of the sensitive variables, to be able to release
     // the mutex early
-    deque<vector<Point> > slices = mSlices;
+    //deque<vector<Point> > slices = mSlices;
+    bl_queue<vector<Point> > &slices = mTmpBuf4;
+    slices = mSlices;
     
     if (mMustRecomputeProj)
     {
@@ -381,7 +389,8 @@ LinesRender2::DoDrawPoints(NVGcontext *vg, const vector<vector<Point> > &points,
     
     for (int i = 0; i < points.size(); i++)
     {
-        vector<Point> points0 = points[i];
+        vector<Point> &points0 = mTmpBuf5;
+        points0 = points[i];
         
         for (int j = 0; j < points0.size(); j++)
         {
@@ -403,10 +412,11 @@ LinesRender2::DoDrawPoints(NVGcontext *vg, const vector<vector<Point> > &points,
 #endif
             
             // Quad rendering
-            float corners[4][2] = { { (float)(x - pointSize/2.0), (float)(yf - pointSize/2.0) },
-                                    { (float)(x + pointSize/2.0), (float)(yf - pointSize/2.0) },
-                                    { (float)(x + pointSize/2.0), (float)(yf + pointSize/2.0) },
-                                    { (float)(x - pointSize/2.0), (float)(yf + pointSize/2.0) } };
+            float corners[4][2] =
+            { { (float)(x - pointSize/2.0), (float)(yf - pointSize/2.0) },
+              { (float)(x + pointSize/2.0), (float)(yf - pointSize/2.0) },
+              { (float)(x + pointSize/2.0), (float)(yf + pointSize/2.0) },
+              { (float)(x - pointSize/2.0), (float)(yf + pointSize/2.0) } };
             
             if (mWhitePixImg < 0)
             {
@@ -588,7 +598,8 @@ LinesRender2::DoDrawPoints(NVGcontext *vg, const vector<vector<Point> > &points,
 {
     for (int i = 0; i < points.size(); i++)
     {
-        vector<Point> points0 = points[i];
+        vector<Point> &points0 = mTmpBuf6;
+        points0 = points[i];
         
         for (int j = 0; j < points0.size(); j++)
         {
@@ -619,10 +630,11 @@ LinesRender2::DoDrawPoints(NVGcontext *vg, const vector<vector<Point> > &points,
 #endif
             
             // Quad rendering
-            float corners[4][2] = { { (float)(x - pointSize/2.0), (float)(yf - pointSize/2.0) },
-                                    { (float)(x + pointSize/2.0), (float)(yf - pointSize/2.0) },
-                                    { (float)(x + pointSize/2.0), (float)(yf + pointSize/2.0) },
-                                    { (float)(x - pointSize/2.0), (float)(yf + pointSize/2.0) } };
+            float corners[4][2] =
+            { { (float)(x - pointSize/2.0), (float)(yf - pointSize/2.0) },
+              { (float)(x + pointSize/2.0), (float)(yf - pointSize/2.0) },
+              { (float)(x + pointSize/2.0), (float)(yf + pointSize/2.0) },
+              { (float)(x - pointSize/2.0), (float)(yf + pointSize/2.0) } };
             
             if (mWhitePixImg < 0)
             {
@@ -661,6 +673,7 @@ LinesRender2::DoDrawGrid(NVGcontext *vg, const vector<vector<Point> > &points,
 void
 LinesRender2::ClearSlices()
 {
+    mSlices.unfreeze();
     mSlices.clear();
     
     Init();
@@ -680,11 +693,20 @@ LinesRender2::AddSlice(const vector<Point> &points)
             return;
     }
     
-    vector<Point> points0 = points;
-    
-    mSlices.push_back(points0);
-    while (mSlices.size() > mNumSlices)
-        mSlices.pop_front();
+    vector<Point> &points0 = mTmpBuf7;
+    points0 = points;
+
+    if (mSlices.size() != mNumSlices)
+    {
+        mSlices.push_back(points0);
+        while (mSlices.size() > mNumSlices)
+            mSlices.pop_front();
+    }
+    else
+    {
+        mSlices.freeze();
+        mSlices.push_pop(points0);
+    }
     
     mNumLinesAdded++;
     
@@ -806,8 +828,9 @@ LinesRender2::ProjectPoints(vector<Point> *points, int width, int height)
 
 void
 LinesRender2::ProjectSlices(vector<vector<Point> > *points,
-                             const deque<vector<Point> > &slices,
-                             int width, int height)
+                            //const deque<vector<Point> > &slices,
+                            const bl_queue<vector<Point> > &slices,
+                            int width, int height)
 {
     int densityNumSlicesI = mDensityNumSlices;
     int densityNumSlicesJ = mDensityNumSlices;
@@ -858,7 +881,7 @@ LinesRender2::ProjectSlices(vector<vector<Point> > *points,
         if (mDensePointsFlag)
         {
             // Rescale on j
-            vector<Point> newPoints;
+            vector<Point> &newPoints = mTmpBuf8;
             newPoints.resize(densityNumSlicesJ);
             
             // Optim
@@ -982,7 +1005,8 @@ LinesRender2::ProjectSlices(vector<vector<Point> > *points,
 
 void
 LinesRender2::ProjectSlices2(vector<vector<Point> > *points,
-                             const deque<vector<Point> > &slices,
+                             //const deque<vector<Point> > &slices,
+                             const bl_queue<vector<Point> > &slices,
                              int width, int height)
 {
     int densityNumSlicesI = mDensityNumSlices;
@@ -997,7 +1021,7 @@ LinesRender2::ProjectSlices2(vector<vector<Point> > *points,
         densityNumSlicesI = DENSITY_MAX_NUM_SLICES;
     
     points->resize(densityNumSlicesI);
-    WDL_TypedBuf<BL_FLOAT> pointsZ;
+    WDL_TypedBuf<BL_FLOAT> &pointsZ = mTmpBuf0;
     pointsZ.Resize(points->size());
     
     BL_FLOAT iStep = ((BL_FLOAT)mNumSlices)/densityNumSlicesI;
@@ -1018,7 +1042,7 @@ LinesRender2::ProjectSlices2(vector<vector<Point> > *points,
         if (mDensePointsFlag)
         {
             // Rescale on j
-            vector<Point> newPoints;
+            vector<Point> &newPoints = mTmpBuf9;
             newPoints.resize(densityNumSlicesJ);
             
             BL_FLOAT jStep = ((BL_FLOAT)slices[(int)iIdx].size())/densityNumSlicesJ;
@@ -1129,7 +1153,8 @@ LinesRender2::ProjectSlices2(vector<vector<Point> > *points,
 
 void
 LinesRender2::ProjectSlices3(vector<vector<Point> > *points,
-                             const deque<vector<Point> > &slices,
+                             //const deque<vector<Point> > &slices,
+                             const bl_queue<vector<Point> > &slices,
                              int width, int height)
 {
     // Decimate the right way:
@@ -1150,7 +1175,7 @@ LinesRender2::ProjectSlices3(vector<vector<Point> > *points,
     
     // Keep computed Z, to use them later
     points->resize(densityNumSlicesI);
-    WDL_TypedBuf<BL_FLOAT> pointsZ;
+    WDL_TypedBuf<BL_FLOAT> &pointsZ = mTmpBuf1;
     pointsZ.Resize((int)points->size());
     
     BL_FLOAT iCoeff = ((BL_FLOAT)mNumSlices)/densityNumSlicesI;
@@ -1173,7 +1198,7 @@ LinesRender2::ProjectSlices3(vector<vector<Point> > *points,
         if (mDensePointsFlag)
         {
             // Decimate / augment on j (lines)
-            vector<Point> newPoints;
+            vector<Point> &newPoints = mTmpBuf10;
             newPoints.resize(densityNumSlicesJ);
             
             BL_FLOAT jCoeff = ((BL_FLOAT)slices[targetIIdx].size())/densityNumSlicesJ;
@@ -1269,14 +1294,15 @@ LinesRender2::ProjectSlices3(vector<vector<Point> > *points,
 
 void
 LinesRender2::ProjectSlicesNoDecim(vector<vector<Point> > *points,
-                                   const deque<vector<Point> > &slices,
+                                   //const deque<vector<Point> > &slices,
+                                   const bl_queue<vector<Point> > &slices,
                                    int width, int height)
 {
     points->resize(slices.size());
     for (int i = 0; i < slices.size(); i++)
     {
         // Rescale on j
-        vector<Point> newPoints;
+        vector<Point> &newPoints = mTmpBuf11;
         newPoints.resize(slices[i].size());
         for (int j = 0; j < slices[i].size(); j++)
         {
@@ -1460,16 +1486,22 @@ LinesRender2::DrawAdditionalLines(NVGcontext *vg, int width, int height)
     if (mAdditionalLines.empty())
         return;
 
-    vector<Line> lines = mAdditionalLines;
+    vector<Line> &lines = mTmpBuf12;
+    lines = mAdditionalLines;
     //ProjectAdditionalLines(&lines, width, height);
     
     ProjectAdditionalLines2(&lines, width, height);
+
+    vector<vector<Point> > &line0 = mTmpBuf13;
+    line0.resize(lines.size());
     
     for (int i = 0; i < lines.size(); i++)
     {
         Line &line = lines[i];
-        vector<vector<Point> > line0;
-        line0.push_back(line.mPoints);
+        
+        //line0.push_back(line.mPoints);
+        line0[i] = line.mPoints;
+        
         DoDrawLinesFreq(vg, line0, line.mColor,
                         mAdditionalLinesWidth);
     }
@@ -1524,9 +1556,14 @@ LinesRender2::ProjectAdditionalLines2(vector<Line> *lines, int width, int height
     {
         Line &line = (*lines)[i];
         
-        Line newLine;
+        Line &newLine = mTmpLine;
         for (int k = 0; k < 4; k++)
             newLine.mColor[k] = line.mColor[k];
+
+        int pointOffset = line.mPoints.empty() ? 0 : 1;
+        newLine.mPoints.resize(line.mPoints.size()/step + pointOffset);
+        int pointIdx = 0;
+        
         for (int j = 0; j < line.mPoints.size(); j += (int)step)
         {
             LinesRender2::Point p = line.mPoints[j];
@@ -1551,7 +1588,8 @@ LinesRender2::ProjectAdditionalLines2(vector<Line> *lines, int width, int height
             
             p.mY *= mScale;
             
-            newLine.mPoints.push_back(p);
+            //newLine.mPoints.push_back(p);
+            newLine.mPoints[pointIdx++] = p;
         }
         
 #if 1
@@ -1578,7 +1616,8 @@ LinesRender2::ProjectAdditionalLines2(vector<Line> *lines, int width, int height
                 
                 p.mY *= mScale;
             
-                newLine.mPoints.push_back(p);
+                //newLine.mPoints.push_back(p);
+                newLine.mPoints[pointIdx++] = p;
             }
         }
 #endif
@@ -1614,7 +1653,8 @@ LinesRender2::DecimateStraightLine(vector<Point> *points)
     if (mMode != LINES_FREQ)
         return;
     
-    vector<Point> newPoints;
+    //
+    int numPoints = 0;
     for (int i = 0; i < points->size(); i++)
     {
         const Point &p = (*points)[i];
@@ -1622,8 +1662,10 @@ LinesRender2::DecimateStraightLine(vector<Point> *points)
         bool skip = false;
         if ((i > 0) && (i < points->size() - 1))
         {
-	  if ((std::fabs((*points)[i - 1].mY - (*points)[i].mY) < OPTIM_STRAIGHT_LINES_EPS) &&
-	      (std::fabs((*points)[i].mY - (*points)[i + 1].mY) < OPTIM_STRAIGHT_LINES_EPS))
+            if ((std::fabs((*points)[i - 1].mY - (*points)[i].mY) <
+                 OPTIM_STRAIGHT_LINES_EPS) &&
+                (std::fabs((*points)[i].mY - (*points)[i + 1].mY) <
+                 OPTIM_STRAIGHT_LINES_EPS))
                 // We are on a straight line
             {
                 skip = true;
@@ -1631,7 +1673,33 @@ LinesRender2::DecimateStraightLine(vector<Point> *points)
         }
         
         if (!skip)
-            newPoints.push_back(p);
+            numPoints++;
+    }
+
+    vector<Point> &newPoints = mTmpBuf14;
+    newPoints.resize(numPoints);
+    int pointIdx = 0;
+    
+    for (int i = 0; i < points->size(); i++)
+    {
+        const Point &p = (*points)[i];
+    
+        bool skip = false;
+        if ((i > 0) && (i < points->size() - 1))
+        {
+            if ((std::fabs((*points)[i - 1].mY - (*points)[i].mY) <
+                 OPTIM_STRAIGHT_LINES_EPS) &&
+                (std::fabs((*points)[i].mY - (*points)[i + 1].mY) <
+                 OPTIM_STRAIGHT_LINES_EPS))
+                // We are on a straight line
+            {
+                skip = true;
+            }
+        }
+        
+        if (!skip)
+            //newPoints.push_back(p);
+            newPoints[pointIdx++] = p;
     }
     
     *points = newPoints;
@@ -1651,8 +1719,10 @@ LinesRender2::OptimStraightLineX(vector<vector<Point> > *points)
             bool skip = false;
             if ((j > 0) && (j < line.size() - 1))
             {
-                if ((std::fabs(line[j - 1].mY - line[j].mY) < OPTIM_STRAIGHT_LINES_EPS) &&
-                    (std::fabs(line[j].mY - line[j + 1].mY) < OPTIM_STRAIGHT_LINES_EPS))
+                if ((std::fabs(line[j - 1].mY - line[j].mY) <
+                     OPTIM_STRAIGHT_LINES_EPS) &&
+                    (std::fabs(line[j].mY - line[j + 1].mY) <
+                     OPTIM_STRAIGHT_LINES_EPS))
                     // We are on a straight line
                 {
                     skip = true;
@@ -1679,8 +1749,10 @@ LinesRender2::OptimStraightLineZ(vector<vector<Point> > *points)
             bool skip = false;
             if ((i > 0) && (i < points->size() - 1))
             {
-                if ((std::fabs((*points)[i - 1][j].mY - (*points)[i][j].mY) < OPTIM_STRAIGHT_LINES_EPS) &&
-                    (std::fabs((*points)[i][j].mY - (*points)[i + 1][j].mY) < OPTIM_STRAIGHT_LINES_EPS))
+                if ((std::fabs((*points)[i - 1][j].mY - (*points)[i][j].mY) <
+                     OPTIM_STRAIGHT_LINES_EPS) &&
+                    (std::fabs((*points)[i][j].mY - (*points)[i + 1][j].mY) <
+                     OPTIM_STRAIGHT_LINES_EPS))
                     // We are on a straight line
                 {
                     skip = true;

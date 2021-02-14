@@ -57,12 +57,14 @@ WavesProcess::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer,
                                const WDL_TypedBuf<WDL_FFT_COMPLEX> *scBuffer)
 
 {
-    WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples = *ioBuffer;
+    //WDL_TypedBuf<WDL_FFT_COMPLEX> fftSamples = *ioBuffer;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSamples = mTmpBuf0;
     
     // Take half of the complexes
-    BLUtils::TakeHalf(&fftSamples);
+    //BLUtils::TakeHalf(&fftSamples);
+    BLUtils::TakeHalf(*ioBuffer, &fftSamples);
     
-    WDL_TypedBuf<BL_FLOAT> magns;
+    WDL_TypedBuf<BL_FLOAT> &magns = mTmpBuf1;
     BLUtils::ComplexToMagn(&magns, fftSamples);
     
     if (mWavesRender != NULL)

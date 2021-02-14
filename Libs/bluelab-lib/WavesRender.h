@@ -133,6 +133,15 @@ protected:
     // Easter Egg
     bool mORXXMode;
     int mORXXKeyGuessStep;
+
+private:
+    // Tmp buffers
+    vector<LinesRender2::Point> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf2;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf3;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
 };
 
 #endif // IGRAPHICS_NANOVG

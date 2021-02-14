@@ -15,6 +15,8 @@
 #include <deque>
 using namespace std;
 
+#include <bl_queue.h>
+
 #include <GraphControl12.h>
 #include <Axis3D.h>
 
@@ -161,21 +163,25 @@ protected:
     void ProjectPoints(vector<Point> *slices, int width, int height);
     
     void ProjectSlices(vector<vector<Point> > *points,
-                       const deque<vector<Point> > &slices,
+                       //const deque<vector<Point> > &slices,
+                       const bl_queue<vector<Point> > &slices,
                        int width, int height);
     // Re-written the method, more simple, with fixes
     void ProjectSlices2(vector<vector<Point> > *points,
-                        const deque<vector<Point> > &slices,
+                        //const deque<vector<Point> > &slices,
+                        const bl_queue<vector<Point> > &slices,
                         int width, int height);
     
     // GOOD method, do it the best way
     void ProjectSlices3(vector<vector<Point> > *points,
-                        const deque<vector<Point> > &slices,
+                        //const deque<vector<Point> > &slices,
+                        const bl_queue<vector<Point> > &slices,
                         int width, int height);
     
     // For debugging: display all
     void ProjectSlicesNoDecim(vector<vector<Point> > *points,
-                              const deque<vector<Point> > &slices,
+                              //const deque<vector<Point> > &slices,
+                              const bl_queue<vector<Point> > &slices,
                               int width, int height);
 
     
@@ -216,7 +222,8 @@ protected:
     
     
     //
-    deque<vector<Point> > mSlices;
+    //deque<vector<Point> > mSlices;
+    bl_queue<vector<Point> > mSlices;
     
     //
     
@@ -288,6 +295,25 @@ protected:
     
     // Debug
     bool mDbgForceDensityNumSlices;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf1;
+    vector<Point> mTmpBuf2;
+    vector<vector<Point> > mTmpBuf3;
+    bl_queue<vector<Point> > mTmpBuf4;
+    vector<Point> mTmpBuf5;
+    vector<Point> mTmpBuf6;
+    vector<Point> mTmpBuf7;
+    vector<Point> mTmpBuf8;
+    vector<Point> mTmpBuf9;
+    vector<Point> mTmpBuf10;
+    vector<Point> mTmpBuf11;
+    vector<Line> mTmpBuf12;
+    vector<vector<Point> > mTmpBuf13;
+    Line mTmpLine;
+    vector<Point> mTmpBuf14;
 };
 
 #endif // IGRAPHICS_NANOVG
