@@ -4,17 +4,6 @@ Maybe 25 fps for old Macs. 60fps for Windows 10 + high windows configs. 60 fps f
 
 - Metal for new Macs, OpenGL for old Macs
 
-Port plugins:
-- plug name .png, manual, RELEASE-NOTEX.txt
-- bl_config.h
-- GUID
-- use 2 functions for MyMakeGraphics() & MyMakeLayout()
-- remove printf("create controls")
-- remove UpdateText()
-- remove MakeDefaultPReset()
-- double -> BL_FLOAT
-- remove kNumPrograms
-
 TODO: gain smother: use CParamSmooth
 
 Knobs style: see Ableton (minimalist and useful)! (but with graduations)
@@ -75,24 +64,12 @@ Website: don’t forget on website to create an image with a spaceship an Earth 
 
 Heads for spatializer: find 3d model of female dummy head, and render it!
 
-ProcessObj: remove mInput and mOutput (not used, was used for Shaper display only)
-
-- OPTIM: to optimize, pre-allocate all BL_FLOAT wdl buffers and grow them if needed
-=> e.g when dumping in Rebalance, there are 128MB allocated and freed at each song
-(many buffers that are grown inside functions, and freed at the end, everywhere)
-And create a super class for buffer Add/ConsumeLeft (with an internal cursor)
-- and for deque<WDL buf>, use vector + shift and assign the last element
-(check that when we assign the same size, it is not reallocated)
-
 - ParamSmooth -> “CParamSmooth” + denormalize
 - TimeAxis6 (instead of 5) everywhere!
 
 - TODO: Indent everything correcly with emacs
 
 NOTE: emacs: installed auto-complete with melpa
-
-TODO: mae a classe bl_queue, with a push_pop() method, all in once, no memory alloc
-a vector inside, with shift().
 
 TODO: if the bug Cubase/Ableton 10 + Windows 10 + Intel + OpenGL is not solved, try Direct X for nanovg
 
@@ -141,11 +118,7 @@ xcb github:
 https://github.com/xkbcommon/libxkbcommon/blob/master/xkbcommon/xkbcommon.h
 
 ----------
-- TODO: add resources to CMakeList
-- TODO: for all plugs, GetScaleForScreen(2 params)
 - TODO: for many plugs, replace OnIdle() by OnGUIIdle() (for vst3 with OnIdle() disabled (???)
-- TODO: for all plugs, add after attach background:
-pGraphics->AttachTextEntryControl();
 - TODO: MUTEX => MUTEX; (macro)
 
 - TODO: detect "Cmd" on Linux?
@@ -154,12 +127,8 @@ pGraphics->AttachTextEntryControl();
 (TODO => set default color to black, not white)
 
 - TODO: think of compiling Linux LV2 format too
-
 - TODO: for all plugs: INF => BL_INF
-
 - TODO: check denormal class in WDL
-- TODO: check fastqueue in WDL (is it a fast deque ?)
-or use a ring buffer (cyclic queue)
 - TODO: iPlug/Extra/Smoothers => for param smoother !!!
 (not sure it will work like this, maybe need some modification)
 
@@ -173,10 +142,7 @@ by 0x42F15F8D: xcbt_connect_init (xcbt.c:478)
 
 ln -s ../../BL-Plugins/BL-Chroma
 
-NOTE: in App mode, the first time, there is a popup to say to check soundcard settings in preferences (very good!). Check preference file (.ini ?)
-
 ------
-LINUX: take care if the rendering is done at 60fps by default, even if we define another FPS (this seems to be the case...).
 - TODO: put version number and watermark in bold fond (here, it is not currently readable)
 
 emacs -nw (inside term)
@@ -194,20 +160,10 @@ https://perf.wiki.kernel.org/index.php/Main_Page
 (what about kde?)
 - NOTE: SWELL uses gdk for app menus => need to test on linux with kde!
 
-WIP:
-AutoGain: vumeter doesn't move
-
-- TODO: memory reuse for all plugs
-- TODO: improve queue (WDL fast queue ? / cyclic queue ?)
-
-- BUG: App, all plugins. At first launch, message "set soundcard". We se once. We relaunch. It is reset. After setting a second time this is ok.
-
-- TODO: all plugins - remove darknet marcos in bl_config.h (except in BL-Rebalance)
+- TODO: dragn drop file on linux (xkbd xdnd protocol)
 
 - SITE: bundle: check the checkbox "is bundle", and add all the plugins
 => so in user account, there also will be all plugins separately
-
-- TODO: check memory of all plugins, but when manipulating all knobs/options
 
 BL-SampleFinder:
 The plugin for finding sound in a point cloud is: XLN Audio XO
@@ -223,15 +179,10 @@ IDEA: hdf5 -> does hdf5 of 2 close data are also close?
 -> try to find hash function that keeps the "closeness"
 Try to classify the sounds with some fiew criteria
 (maybe see: "Traite des objets musicaux" for criteria)
-
 - TODO: zoom on cloud with mouse wheel or zoom gesture
 - TODO: drag'n drop from the app, to anywhere in the filesystem, (to copy), or to a DAW track, to import. (transform the drag in file drag for each system).
 
 emacs multi-occur-in-matching-buffers "then type '.' for all buffers"
-
-
-- TODO (all plugs before Ghost): BLUtils::SetBuf() and BLUtils::SetBufResize() instad of memcpy
-- TODO: all plugs (except Rebalance): remove darknlet macros in bl_config
 
 #### valgrind with gdb:
 valgrind --tool=memcheck --vgdb=yes --vgdb-error=0 reaper
@@ -267,3 +218,5 @@ captain blood uses real black
 - use a band at the bottom on the whole width (include logo, plug name, version, logo)
 
 Website: for categories "menu", add a submenu to "PLUGINS" on the bar, and add the most used category pages as submenu entries (should be feasible as it is!)
+
+- TODO: check memory of all plugins, but when manipulating all knobs/options
