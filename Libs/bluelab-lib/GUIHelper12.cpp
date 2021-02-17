@@ -44,7 +44,11 @@ GUIHelper12::GUIHelper12(Style style)
     if (style == STYLE_UST)
     {
         mCreateTitles = false;
-        
+
+        mCreatePlugName = false;
+        mCreateLogo = false;
+        mCreateHelpButton = false;
+    
         mTitleTextSize = 13.0;
         mTitleTextOffsetX = 0.0;
         mTitleTextOffsetY = -18.0;
@@ -59,6 +63,8 @@ GUIHelper12::GUIHelper12(Style style)
         mValueTextFGColor = mValueTextColor;
         mValueTextBGColor = IColor(0, 0, 0, 0);
         mValueTextFont = "font-bold";
+
+        mVersionPosition = BOTTOM;
         
         mVersionTextSize = 12.0;
         mVersionTextOffsetX = 100.0;
@@ -74,6 +80,10 @@ GUIHelper12::GUIHelper12(Style style)
     if (style == STYLE_BLUELAB)
     {
         mCreateTitles = true;
+
+        mCreatePlugName = true;
+        mCreateLogo = true;
+        mCreateHelpButton = true;
         
         mTitleTextSize = 16.0;
         mTitleTextOffsetX = 0.0;
@@ -98,6 +108,8 @@ GUIHelper12::GUIHelper12(Style style)
         mValueTextBGColor = IColor(0, 0, 0, 0);
         //mValueTextFont = "font-regular";
         mValueTextFont = "font-bold";
+
+        mVersionPosition = BOTTOM;
         
         mVersionTextSize = 12.0;
         mVersionTextOffsetX = 100.0;
@@ -162,6 +174,114 @@ GUIHelper12::GUIHelper12(Style style)
 
         mGraphCurveColorGray = IColor(255, 64, 64, 64);
         mGraphCurveColorRed = IColor(255, 255, 64, 64);
+    }
+
+    if (style == STYLE_BLUELAB_V3)
+    {
+        mCreateTitles = false;
+
+        mCreatePlugName = false;
+        mCreateLogo = false;
+        mCreateHelpButton = false;
+        
+        mTitleTextSize = 16.0;
+        mTitleTextOffsetX = 0.0;
+        mTitleTextOffsetY = -23.0;
+        mTitleTextColor = IColor(255, 110, 110, 110);
+        
+        mHilightTextColor = IColor(255, 248, 248, 248);
+        
+        mTitleTextSizeBig = 20.0;
+        mTitleTextOffsetXBig = 0.0;
+        mTitleTextOffsetYBig = -32.0;
+        
+        mDefaultTitleSize = SIZE_SMALL;
+        mTitleFont = "font-bold";
+        
+        mValueCaptionOffset = 0.0;
+        // This is 10 in Inkscape, but here, must use a bigger size
+        // to get the same result (don't know why...)
+        mValueTextSize = 19.0; //10.0;
+        mValueTextOffsetX = -1.0;
+        mValueTextOffsetY = 31.0; //14.0;
+        mValueTextColor = IColor(255, 235, 242, 250); //v3
+        mValueTextFGColor = mValueTextColor;
+        mValueTextBGColor = IColor(0, 0, 0, 0);
+        mValueTextFont = "OpenSans-ExtraBold";
+
+        mVersionPosition = LOWER_RIGHT;
+        
+        mVersionTextSize = 13.0; //8.0; //12.0;
+        mVersionTextOffsetX = 48.0; //100.0;
+        mVersionTextOffsetY = 5.0; //3.0;
+        mVersionTextColor = IColor(255, 147, 147, 147);
+        mVersionTextFont = "Roboto-Bold";
+        
+        mVumeterColor = IColor(255, 131 , 152, 214);
+        mVumeterNeedleColor = IColor(255, 237, 120, 31);
+        mVumeterNeedleDepth = 2.0;
+        
+        mLogoOffsetX = 0.0;
+        mLogoOffsetY = -1.0;
+        mAnimLogoSpeed = 0.5;
+        
+        mPlugNameOffsetX = 5.0;
+        mPlugNameOffsetY = 6.0;
+        
+        mTrialOffsetX = 0.0;
+        mTrialOffsetY = 7.0;
+        
+        mHelpButtonOffsetX = -44.0;
+        mHelpButtonOffsetY = -4.0;
+        
+        mDemoTextSize = 10.0;
+        mDemoTextOffsetX = 2.0;
+        mDemoTextOffsetY = 2.0;
+        mDemoTextColor = IColor(255, 200, 0, 0);
+        mDemoFont = "font-regular";
+        
+        mWatermarkTextSize = 10.0;
+        mWatermarkTextOffsetX = 2.0;
+        mWatermarkTextOffsetY = 2.0;
+        mWatermarkTextColor = IColor(255, 0, 128, 255);
+        mWatermarkFont = "font-regular";
+        
+        mRadioLabelTextSize = 15;
+        mRadioLabelTextOffsetX = 6.0;
+        mRadioLabelTextColor = IColor(255, 100, 100, 161);
+        mLabelTextFont = "font-bold";
+        
+        mButtonLabelTextOffsetX = 3.0;
+        mButtonLabelTextOffsetY = 3.0;
+        
+        // Graph
+        mGraphAxisColor = IColor(255, 48, 48, 48);
+        //mGraphAxisColor = IColor(255, 21, 21, 117); // Dark blue
+        // Choose maximum brightness color for labels,
+        // to see them well over clear spectrograms
+        mGraphAxisOverlayColor = IColor(255, 255, 255, 255);
+        mGraphAxisLabelColor = IColor(255, 255, 255, 255);
+        mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
+        mGraphAxisLineWidth = 1.0;
+        mGraphAxisLineWidthBold = 2.0;
+        
+        mGraphCurveDescriptionColor = IColor(255, 170, 170, 170);
+        mGraphCurveColorBlue = IColor(255, 64, 64, 255);
+        mGraphCurveColorGreen = IColor(255, 194, 243, 61);
+        mGraphCurveColorLightBlue = IColor(255, 200, 200, 255);
+        mGraphCurveFillAlpha = 0.5;
+        mGraphCurveFillAlphaLight = 0.2;
+
+        mGraphCurveColorGray = IColor(255, 64, 64, 64);
+        mGraphCurveColorRed = IColor(255, 255, 64, 64);
+
+        // Circle drawer
+        mCircleGDCircleLineWidth = 2.5; //3.0; //2.0;
+        mCircleGDLinesWidth = 1.5; //1.0;
+        mCircleGDLinesColor = IColor(255, 147, 147, 147);
+        //IColor(255, 128, 128, 128);
+        mCircleGDTextColor = IColor(255, 147, 147, 147);
+        // IColor(255, 128, 128, 128);
     }
 }
 
@@ -431,7 +551,7 @@ GUIHelper12::CreateBitmap(IGraphics *graphics,
 
 void
 GUIHelper12::CreateVersion(Plugin *plug, IGraphics *graphics,
-                           const char *versionStr, Position pos)
+                           const char *versionStr)
 {
     // Lower left corner
     char versionStr0[256];
@@ -442,7 +562,7 @@ GUIHelper12::CreateVersion(Plugin *plug, IGraphics *graphics,
     
     EAlign textAlign = EAlign::Near;
     
-    if (pos == LOWER_LEFT)
+    if (mVersionPosition == LOWER_LEFT)
     {
         x = mVersionTextOffsetX;
         y = graphics->Height() - mVersionTextSize - mVersionTextOffsetY;
@@ -450,7 +570,7 @@ GUIHelper12::CreateVersion(Plugin *plug, IGraphics *graphics,
         textAlign = EAlign::Near;
     }
     
-    if (pos == LOWER_RIGHT)
+    if (mVersionPosition == LOWER_RIGHT)
     {
         int strWidth = (int)(strlen(versionStr0)*mVersionTextSize);
         
@@ -465,7 +585,7 @@ GUIHelper12::CreateVersion(Plugin *plug, IGraphics *graphics,
     IText versionText(mVersionTextSize,
                       mVersionTextColor, mVersionTextFont, textAlign);
     
-    if (pos == BOTTOM)
+    if (mVersionPosition == BOTTOM)
     {
         float textWidth = GetTextWidth(graphics, versionText, versionStr0);
         
@@ -487,6 +607,9 @@ void
 GUIHelper12::CreateLogo(Plugin *plug, IGraphics *graphics,
                         const char *logoFname, Position pos)
 {
+    if (!mCreateLogo)
+        return;
+    
     IBitmap bmp = graphics->LoadBitmap(logoFname, 1);
     
     float x = 0.0;
@@ -518,6 +641,9 @@ void
 GUIHelper12::CreateLogoAnim(Plugin *plug, IGraphics *graphics,
                             const char *logoFname, int nStates, Position pos)
 {
+    if (!mCreateLogo)
+        return;
+    
     IBitmap bmp = graphics->LoadBitmap(logoFname, nStates);
     
     float x = 0.0;
@@ -553,6 +679,9 @@ GUIHelper12::CreateHelpButton(Plugin *plug, IGraphics *graphics,
                               const char *manualFileName,
                               Position pos)
 {
+    if (!mCreateHelpButton)
+        return;
+    
     IBitmap bitmap = graphics->LoadBitmap(bmpFname, 1);
     
     float x = 0.0;
@@ -608,6 +737,9 @@ void
 GUIHelper12::CreatePlugName(Plugin *plug, IGraphics *graphics,
                             const char *plugNameFname, Position pos)
 {
+    if (!mCreatePlugName)
+        return;
+    
     IBitmap bmp = graphics->LoadBitmap(plugNameFname, 1);
     
     float x = 0;
@@ -1106,6 +1238,30 @@ GUIHelper12::CreateValueText(IGraphics *graphics,
     
     return control;
 }    
+
+void
+GUIHelper12::GetCircleGDCircleLineWidth(float *circleLineWidth)
+{
+    *circleLineWidth = mCircleGDCircleLineWidth;
+}
+
+void
+GUIHelper12::GetCircleGDLinesWidth(float *linesWidth)
+{
+    *linesWidth = mCircleGDLinesWidth;
+}
+
+void
+GUIHelper12::GetCircleGDLinesColor(IColor *linesColor)
+{
+    *linesColor = mCircleGDLinesColor;
+}
+
+void
+GUIHelper12::GetCircleGDTextColor(IColor *textColor)
+{
+    *textColor = mCircleGDTextColor;
+}
 
 float
 GUIHelper12::GetTextWidth(IGraphics *graphics, const IText &text, const char *textStr)

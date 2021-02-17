@@ -220,3 +220,46 @@ captain blood uses real black
 Website: for categories "menu", add a submenu to "PLUGINS" on the bar, and add the most used category pages as submenu entries (should be feasible as it is!)
 
 - TODO: check memory of all plugins, but when manipulating all knobs/options
+
+Triadic color calculator:
+https://www.sessions.edu/color-calculator/
+https://material.io/resources/color/#!/?view.left=1&view.right=1&primary.color=5252ff
+https://learnui.design/tools/data-color-picker.html#single
+
+#5252ff
+
+StereoWidth:
+- circle more fat (bold)
+- biggest margin all around plugin
+- every text more fat and bold
+- [1 2 3 4 5] => over graph and top left
+- knob titles under the knobs!
+
+WIP:
+- make gradient a bit darker (otherwise too silimar to bluecat
+- change fonts for titles and values
+
+Google font browser: https://fonts.google.com/?preview.text_type=custom&category=Serif&preview.text=a
+
+- TODO(design): use the green/yellow from the logo, to apply to the "green" curve in the graph.
+
+WIP: the bright white color is too bright?
+(compare with other plugins...) maybe set it just a bit darker (except for the plugin title)
+to test it: push the screen at the maximum => it should not be too bright
+
+- NOTE: must export knobs with odd number of frames (so the middle frames is exactly the zero position of the knob)
+
+------------------
+For all plugins:
+- TODO: remame knob.png => big-knob.png in bl_config.h and CMakeList.txt
+- TODO: add fonts to bl_config, CMakeList.txt, and to resources
+(and load them in main())
+- TODO: CreateVersion(), now we have suppressed the position argument
+- Don't forget to remove the version from the background
+
+WIP: need to recenter knob (ajdjust to pixels) => so they are exactly in place when integrated to code (compare to white circle markers)
+
+TODO: margin at left and right of circle
+do style for lissajous and depth
+fatten a bit the vectorscope modes buttons
+------------------

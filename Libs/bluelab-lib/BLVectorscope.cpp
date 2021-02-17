@@ -225,7 +225,8 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
                          GraphControl12 *graph1,
                          GraphControl12 *graph2,
                          GraphControl12 *graph3,
-                         GraphControl12 *graph4)
+                         GraphControl12 *graph4,
+                         GUIHelper12 *guiHelper)
 {
     // Assign
     mGraphs[POLAR_SAMPLE_MODE_ID] = graph0;
@@ -269,7 +270,8 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         mGraphs[POLAR_SAMPLE_MODE_ID]->SetBounds(0.0, 0.0, 1.0, 1.0);
         mGraphs[POLAR_SAMPLE_MODE_ID]->SetClearColor(0, 0, 0, 255);
     
-        mCircleDrawerPolarSamples = new BLCircleGraphDrawer("POLAR SAMPLES");
+        mCircleDrawerPolarSamples = new BLCircleGraphDrawer(guiHelper,
+                                                            "POLAR SAMPLES");
         mGraphs[POLAR_SAMPLE_MODE_ID]->AddCustomDrawer(mCircleDrawerPolarSamples);
     
         // Style
@@ -332,7 +334,7 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         mGraphs[FIREWORKS_MODE_ID]->SetBounds(0.0, 0.0, 1.0, 1.0);
         mGraphs[FIREWORKS_MODE_ID]->SetClearColor(0, 0, 0, 255);
         
-        mCircleDrawerFireworks = new BLCircleGraphDrawer("FLAME");
+        mCircleDrawerFireworks = new BLCircleGraphDrawer(guiHelper, "FLAME");
         mGraphs[FIREWORKS_MODE_ID]->AddCustomDrawer(mCircleDrawerFireworks);
         
         // Style

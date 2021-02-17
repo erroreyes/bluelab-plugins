@@ -37,7 +37,8 @@ public:
     enum Style
     {
         STYLE_BLUELAB,
-        STYLE_UST
+        STYLE_UST,
+        STYLE_BLUELAB_V3
     };
     
     enum Position
@@ -132,7 +133,7 @@ public:
 
     
     void CreateVersion(Plugin *plug, IGraphics *graphics,
-                       const char *versionStr, Position pos);
+                       const char *versionStr);
     
     void CreateLogo(Plugin *plug, IGraphics *graphics,
                     const char *logoFname, Position pos);
@@ -218,6 +219,12 @@ public:
     ITextControl *CreateValueText(IGraphics *graphics,
                                   float x, float y,
                                   const char *textValue);
+
+    // Circle graph drawer
+    void GetCircleGDCircleLineWidth(float *circleLineWidth);
+    void GetCircleGDLinesWidth(float *linesWidth);
+    void GetCircleGDLinesColor(IColor *linesColor);
+    void GetCircleGDTextColor(IColor *textColor);
     
 protected:
     ITextControl *CreateText(IGraphics *graphics, float x, float y,
@@ -244,6 +251,10 @@ protected:
     Style mStyle;
     
     bool mCreateTitles;
+
+    bool mCreatePlugName;
+    bool mCreateLogo;
+    bool mCreateHelpButton;
     
     float mTitleTextSize;
     float mTitleTextOffsetX;
@@ -266,6 +277,8 @@ protected:
     IColor mValueTextFGColor;
     IColor mValueTextBGColor;
     char *mValueTextFont;
+
+    Position mVersionPosition;
     
     float mVersionTextSize;
     float mVersionTextOffsetX;
@@ -327,6 +340,12 @@ protected:
 
     IColor mGraphCurveColorGray;
     IColor mGraphCurveColorRed;
+
+    // Circle graph drawer
+    float mCircleGDCircleLineWidth;
+    float mCircleGDLinesWidth;
+    IColor mCircleGDLinesColor;
+    IColor mCircleGDTextColor;
 };
 
 #endif /* GUIHelper12_hpp */

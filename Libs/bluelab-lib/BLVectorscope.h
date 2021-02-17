@@ -61,6 +61,7 @@ public:
 // USTVectorscope4: use fireworks view instead of polar levels
 // BLVectorscope: from USTVectorscope4
 //
+class GUIHelper12;
 class BLVectorscope : public GraphCustomControl
 {
 public:
@@ -91,7 +92,8 @@ public:
                    GraphControl12 *graph1,
                    GraphControl12 *graph2,
                    GraphControl12 *graph3,
-                   GraphControl12 *graph4);
+                   GraphControl12 *graph4,
+                   GUIHelper12 *guiHelper = NULL);
 
     void AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples);
 

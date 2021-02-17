@@ -16,10 +16,12 @@
 // From StereoWidthGraphDrawer2
 // BLCircleGraphDrawer: from USTCircleGraphDrawer
 //
+class GUIHelper12;
 class BLCircleGraphDrawer : public GraphCustomDrawer
 {
 public:
-    BLCircleGraphDrawer(const char *title = NULL);
+    BLCircleGraphDrawer(GUIHelper12 *guiHelper = NULL,
+                        const char *title = NULL);
     
     virtual ~BLCircleGraphDrawer() {}
     
@@ -28,6 +30,13 @@ public:
 protected:
     bool mTitleSet;
     char mTitleText[256];
+
+    // Style
+    float mCircleLineWidth;
+    float mLinesWidth;
+    IColor mLinesColor;
+    IColor mTextColor;
+    
 };
 
 #endif // IGRAPHICS_NANOVG

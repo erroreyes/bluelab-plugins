@@ -30,7 +30,9 @@
 #include "GraphControl12.h"
 
 //#define GRAPH_FONT "font"
-#define GRAPH_FONT "font-bold"
+//#define GRAPH_FONT "font-bold"
+
+#define GRAPH_FONT "Roboto-Bold"
 
 // Disabled for UST + IPlug2
 // Because DrawFillCurve() took a lot of resources.

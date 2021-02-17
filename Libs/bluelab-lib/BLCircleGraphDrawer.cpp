@@ -10,6 +10,9 @@
 
 #include <GraphSwapColor.h>
 
+#include <GUIHelper12.h>
+#undef DrawText
+
 #include "BLCircleGraphDrawer.h"
 
 #define FIX_CIRCLE_DRAWER_BOTTOM_LINE 1
@@ -26,7 +29,8 @@
 #define TITLE_POS_Y FONT_SIZE*0.5
 
 
-BLCircleGraphDrawer::BLCircleGraphDrawer(const char *title)
+BLCircleGraphDrawer::BLCircleGraphDrawer(GUIHelper12 *guiHelper,
+                                         const char *title)
 {
     mTitleSet = false;
     
@@ -36,21 +40,43 @@ BLCircleGraphDrawer::BLCircleGraphDrawer(const char *title)
         
         sprintf(mTitleText, "%s", title);
     }
+
+    // Style
+    if (guiHelper == NULL)
+    {
+        mCircleLineWidth = 2.0;
+        mLinesWidth = 1.0;
+        
+        mLinesColor = IColor(255, 128, 128, 128);
+        mTextColor = IColor(255, 128, 128, 128);
+    }
+    else
+    {
+        guiHelper->GetCircleGDCircleLineWidth(&mCircleLineWidth);
+        guiHelper->GetCircleGDLinesWidth(&mLinesWidth);
+        guiHelper->GetCircleGDLinesColor(&mLinesColor);
+        guiHelper->GetCircleGDTextColor(&mTextColor);
+    }
 }
 
 void
 BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 {
-    BL_FLOAT circleStrokeWidth = 2.0; //3.0;
+    /*BL_FLOAT circleStrokeWidth = 2.0; //3.0;
     BL_FLOAT linesStrokeWidth = 1.0;
     
     int color[4] = { 128, 128, 128, 255 };
-    int fillColor[4] = { 0, 128, 255, 255 };
     int fontColor[4] = { 128, 128, 128, 255 };
+    */
     
-    nvgStrokeWidth(vg, circleStrokeWidth);
+    int fillColor[4] = { 0, 128, 255, 255 };
     
+    nvgStrokeWidth(vg, mCircleLineWidth);
+
+    int color[4] = { mLinesColor.R, mLinesColor.G,
+                     mLinesColor.B, mLinesColor.A };
     SWAP_COLOR(color);
+    
     nvgStrokeColor(vg, nvgRGBA(color[0], color[1], color[2], color[3]));
     
     SWAP_COLOR(fillColor);
@@ -85,7 +111,7 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 #define COS_PI4 0.707106781186548
 #define ADJUST_OFFSET 1
     
-    nvgStrokeWidth(vg, linesStrokeWidth);
+    nvgStrokeWidth(vg, mLinesWidth);
 
     BL_FLOAT offsetYf = OFFSET_Y;
     BL_FLOAT lYf = COS_PI4*RADIUS - ADJUST_OFFSET + OFFSET_Y;
@@ -113,6 +139,8 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
     
     // Draw the texts
+    int fontColor[4] = { mTextColor.R, mTextColor.G,
+                         mTextColor.B, mTextColor.A };
     SWAP_COLOR(fontColor);
     
     //
@@ -127,7 +155,8 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 
     // Left
     GraphControl12::DrawText(vg,
-                             (1.0 - COS_PI4)*RADIUS*radiusRatio + OFFSET_X - TEXT_OFFSET_X,
+                             (1.0 - COS_PI4)*RADIUS*radiusRatio +
+                             OFFSET_X - TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, leftText, fontColor,
