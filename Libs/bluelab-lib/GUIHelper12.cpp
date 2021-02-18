@@ -182,7 +182,8 @@ GUIHelper12::GUIHelper12(Style style)
 
         mCreatePlugName = false;
         mCreateLogo = false;
-        mCreateHelpButton = false;
+        //mCreateHelpButton = false;
+        mCreateHelpButton = true;
         
         mTitleTextSize = 16.0;
         mTitleTextOffsetX = 0.0;
@@ -213,7 +214,7 @@ GUIHelper12::GUIHelper12(Style style)
         
         mVersionTextSize = 13.0; //8.0; //12.0;
         mVersionTextOffsetX = 48.0; //100.0;
-        mVersionTextOffsetY = 5.0; //3.0;
+        mVersionTextOffsetY = 7.0; //5.0; //3.0;
         mVersionTextColor = IColor(255, 147, 147, 147);
         mVersionTextFont = "Roboto-Bold";
         
@@ -231,8 +232,8 @@ GUIHelper12::GUIHelper12(Style style)
         mTrialOffsetX = 0.0;
         mTrialOffsetY = 7.0;
         
-        mHelpButtonOffsetX = -44.0;
-        mHelpButtonOffsetY = -4.0;
+        mHelpButtonOffsetX = -14.0; //-30.0; //-44.0;
+        mHelpButtonOffsetY = -10.0; //-4.0;
         
         mDemoTextSize = 10.0;
         mDemoTextOffsetX = 2.0;

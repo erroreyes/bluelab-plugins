@@ -247,22 +247,14 @@ WIP: the bright white color is too bright?
 (compare with other plugins...) maybe set it just a bit darker (except for the plugin title)
 to test it: push the screen at the maximum => it should not be too bright
 
-- NOTE: must export knobs with odd number of frames (so the middle frames is exactly the zero position of the knob)
-
 ------------------
 For all plugins:
 - TODO: remame knob.png => big-knob.png in bl_config.h and CMakeList.txt
 - TODO: add fonts to bl_config, CMakeList.txt, and to resources
 (and load them in main())
 - TODO: CreateVersion(), now we have suppressed the position argument
+- NOTE: must export knobs with odd number of frames (so the middle frames is exactly the zero position of the knob)
 - Don't forget to remove the version from the background
-- Help button: make it transparent over background (and check well its position)
---
-WIP: need to recenter knob (adjust to pixels) => so they are exactly in place when integrated to code (compare to white circle markers)
-
-TODO:
-re-do the width meter, with right color
-and re-do the correlation meter -> more visible, with red/green color (nd less large)
 ------------------
 
 TODO: knob design: try the little white circles dark grey instead

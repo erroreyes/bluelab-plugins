@@ -8,7 +8,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="BL-GUI-v3.4.1.svg"
+   sodipodi:docname="BL-GUI-v3.5.0.svg"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    id="svg8"
    version="1.1"
@@ -82,7 +82,8 @@
        x1="58.208332"
        y1="0"
        x2="58.208332"
-       y2="-66.145836" />
+       y2="-61.786873"
+       gradientTransform="matrix(1,0,0,1.0619869,0,1.8254833e-4)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient1395"
@@ -111,19 +112,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4929796"
-     inkscape:cx="-500.63613"
-     inkscape:cy="-152.66486"
+     inkscape:zoom="1.055696"
+     inkscape:cx="74.041087"
+     inkscape:cy="-233.34224"
      inkscape:document-units="px"
-     inkscape:current-layer="layer19"
+     inkscape:current-layer="layer4"
      inkscape:document-rotation="0"
      showgrid="true"
-     inkscape:window-width="1261"
-     inkscape:window-height="824"
-     inkscape:window-x="69"
+     inkscape:window-width="1440"
+     inkscape:window-height="849"
+     inkscape:window-x="0"
      inkscape:window-y="25"
-     inkscape:window-maximized="0"
-     showguides="true"
+     inkscape:window-maximized="1"
+     showguides="false"
      inkscape:guide-bbox="true"
      units="px"
      inkscape:snap-path-clip="false"
@@ -142,8 +143,8 @@
        empspacing="1"
        spacingx="0.52916667"
        spacingy="0.52916667"
-       visible="false"
-       enabled="false"
+       visible="true"
+       enabled="true"
        snapvisiblegridlinesonly="false" />
     <sodipodi:guide
        position="3.7041667,294.35417"
@@ -209,8 +210,9 @@
        type="xygrid"
        id="grid1326"
        empspacing="1"
-       enabled="true"
-       snapvisiblegridlinesonly="false" />
+       enabled="false"
+       snapvisiblegridlinesonly="false"
+       visible="false" />
     <sodipodi:guide
        position="-179.3875,361.55834"
        orientation="1,0"
@@ -454,7 +456,8 @@
      inkscape:groupmode="layer"
      id="layer15"
      inkscape:label="Colors"
-     style="display:inline;mix-blend-mode:normal">
+     style="display:inline;mix-blend-mode:normal"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#000000;fill-opacity:1;stroke:#939393;stroke-width:0.384969;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect10109"
@@ -537,7 +540,7 @@
      inkscape:groupmode="layer"
      id="g880"
      inkscape:label="Background-gradient - Full height"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <rect
        style="fill:url(#linearGradient888);fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
@@ -554,15 +557,16 @@
      inkscape:groupmode="layer"
      id="g1080"
      inkscape:label="Background-gradient - Half Height"
-     style="display:none">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:url(#linearGradient1082);fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect1078"
        width="120.6395"
-       height="129.11372"
+       height="137.1171"
        x="0.017908979"
-       y="-129.11667"
-       inkscape:export-filename="/home/niko/Documents/Dev/plugs-dev/bluelab/Design/GUI/Exports/Elements/background-all-StereoWidth.png"
+       y="-137.12004"
+       inkscape:export-filename="/home/niko/Documents/Dev/plugs-dev/bluelab/Design/GUI/Exports/Elements/v3.5.0/background-StereoWidth-all.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
   </g>
@@ -841,7 +845,7 @@
              rx="6.7217069"
              ry="6.6957583" />
           <path
-             style="fill:none;stroke:#5252ff;stroke-width:0.781875;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.994869"
+             style="fill:none;stroke:#5252ff;stroke-width:0.781875;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              d="m -30.1625,-99.169882 v -6.349998"
              id="path1264" />
         </g>
@@ -1539,8 +1543,8 @@
        id="rect9854"
        width="120.61224"
        height="63.49852"
-       x="0.037755057"
-       y="-129.11667"
+       x="0.037753448"
+       y="-137.05269"
        inkscape:export-filename="/home/niko/Documents/Dev/plugs-dev/bluelab/Design/GUI/Exports/Elements/graph-StereoWidth.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
@@ -1852,8 +1856,8 @@
      inkscape:groupmode="layer"
      id="layer18"
      inkscape:label="Stereo width meter"
-     sodipodi:insensitive="true"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.298847;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect1318"
@@ -1879,7 +1883,8 @@
      inkscape:groupmode="layer"
      id="layer19"
      inkscape:label="Correlation meter background"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.256653;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect1351"
@@ -1897,65 +1902,68 @@
      inkscape:label="Correlation meter gradient"
      style="display:inline"
      sodipodi:insensitive="true">
-    <rect
-       style="display:inline;fill:url(#linearGradient1383);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       id="rect1357"
-       width="51.593735"
-       height="0.53108448"
-       x="-176.47708"
-       y="-54.239586"
-       inkscape:export-filename="/home/niko/Documents/Dev/plugs-dev/bluelab/Design/GUI/Exports/Elements/Width meter/3.4.1/width-meter-bar.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <rect
-       style="display:inline;fill:url(#linearGradient1403);fill-opacity:1;stroke:none;stroke-width:0.081585;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       id="rect1371"
-       width="51.59375"
-       height="0.52944988"
-       x="-122.2375"
-       y="-54.239868"
-       inkscape:export-filename="/home/niko/Documents/Dev/plugs-dev/bluelab/Design/GUI/Exports/Elements/Width meter/3.4.1/width-meter-bar.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-178.81079"
-       y="-53.219936"
-       id="text1407"><tspan
-         sodipodi:role="line"
-         id="tspan1405"
+    <g
+       id="g1477">
+      <rect
+         style="display:inline;fill:url(#linearGradient1383);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="rect1357"
+         width="51.593735"
+         height="0.53108448"
+         x="-176.47708"
+         y="-54.239586"
+         inkscape:export-filename="/home/niko/Documents/Dev/plugs-dev/bluelab/Design/GUI/Exports/Elements/Width meter/3.4.1/width-meter-bar.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <rect
+         style="display:inline;fill:url(#linearGradient1403);fill-opacity:1;stroke:none;stroke-width:0.081585;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="rect1371"
+         width="51.59375"
+         height="0.52944988"
+         x="-122.2375"
+         y="-54.239868"
+         inkscape:export-filename="/home/niko/Documents/Dev/plugs-dev/bluelab/Design/GUI/Exports/Elements/Width meter/3.4.1/width-meter-bar.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          x="-178.81079"
          y="-53.219936"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#939393;fill-opacity:1;stroke-width:0.264583">-1</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-70.141998"
-       y="-53.219936"
-       id="text1414"><tspan
-         sodipodi:role="line"
-         id="tspan1412"
+         id="text1407"><tspan
+           sodipodi:role="line"
+           id="tspan1405"
+           x="-178.81079"
+           y="-53.219936"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#939393;fill-opacity:1;stroke-width:0.264583">-1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          x="-70.141998"
          y="-53.219936"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#939393;fill-opacity:1;stroke-width:0.264583">+1</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-124.13571"
-       y="-53.219036"
-       id="text1418"><tspan
-         sodipodi:role="line"
-         id="tspan1416"
+         id="text1414"><tspan
+           sodipodi:role="line"
+           id="tspan1412"
+           x="-70.141998"
+           y="-53.219936"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#939393;fill-opacity:1;stroke-width:0.264583">+1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;display:inline;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          x="-124.13571"
          y="-53.219036"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#939393;fill-opacity:1;stroke-width:0.264583">0</tspan></text>
+         id="text1418"><tspan
+           sodipodi:role="line"
+           id="tspan1416"
+           x="-124.13571"
+           y="-53.219036"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:2.11667px;font-family:'Open Sans';-inkscape-font-specification:'Open Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#939393;fill-opacity:1;stroke-width:0.264583">0</tspan></text>
+    </g>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer21"
      inkscape:label="Correlation meter needle"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <rect
        style="display:inline;fill:#d1d8df;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
@@ -1964,5 +1972,55 @@
        height="3.1749942"
        x="-124.08958"
        y="-55.5625" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer23"
+     inkscape:label="BL-StereoWidth meters BG"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <rect
+       style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="rect1494"
+       width="120.65"
+       height="7.937499"
+       x="0"
+       y="-73.554169" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer22"
+     inkscape:label="BL-StereoWidth meters"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <g
+       id="g1488"
+       transform="translate(183.89807,-16.933049)">
+      <use
+         x="0"
+         y="0"
+         xlink:href="#rect1351"
+         id="use1483"
+         style="display:inline"
+         width="100%"
+         height="100%" />
+      <use
+         x="0"
+         y="0"
+         xlink:href="#g1477"
+         id="use1480"
+         style="display:inline"
+         width="100%"
+         height="100%" />
+    </g>
+    <use
+       x="0"
+       y="0"
+       xlink:href="#rect1320"
+       id="use1490"
+       style="display:inline"
+       transform="translate(183.89808,-28.839585)"
+       width="100%"
+       height="100%" />
   </g>
 </svg>
