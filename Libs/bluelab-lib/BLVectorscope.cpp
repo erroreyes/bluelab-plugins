@@ -85,7 +85,10 @@
 
 // Same as BLVectorscopeProcess::CLIP_DISTANCE
 // So when saturate, the saturation line will be exactly on the circle drawer
-#define SCALE_POLAR_Y 0.95
+//#define SCALE_POLAR_Y 0.95
+// New design:
+#define SCALE_POLAR_X 0.96 //0.95
+#define SCALE_POLAR_Y 0.91
 
 
 //
@@ -458,6 +461,10 @@ BLVectorscope::AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples)
                                                       polarSamples);
             
             // Adjust to the circle graph drawer
+            // New
+            BLUtils::MultValues(&polarSamples[0], (BL_FLOAT)SCALE_POLAR_X);
+
+            // Origin
             BLUtils::MultValues(&polarSamples[1], (BL_FLOAT)SCALE_POLAR_Y);
             
             mCurves[POLAR_SAMPLE_MODE_ID]->SetValuesPoint(polarSamples[0], polarSamples[1]);
@@ -501,6 +508,11 @@ BLVectorscope::AddSamples(const vector<WDL_TypedBuf<BL_FLOAT> > &samples)
             mFireworks->ComputePoints(samplesIn, polarSamples, polarSamplesMax);
             
             // Adjust to the circle graph drawer
+            // New
+            BLUtils::MultValues(&polarSamples[0], (BL_FLOAT)SCALE_POLAR_X);
+            BLUtils::MultValues(&polarSamplesMax[0], (BL_FLOAT)SCALE_POLAR_X);
+
+            // Origin
             BLUtils::MultValues(&polarSamples[1], (BL_FLOAT)SCALE_POLAR_Y);
             BLUtils::MultValues(&polarSamplesMax[1], (BL_FLOAT)SCALE_POLAR_Y);
             

@@ -18,6 +18,13 @@
 #define TITLE_POS_X FONT_SIZE*0.5
 #define TITLE_POS_Y FONT_SIZE*0.5
 
+// With this, the 0 data points are not centerd
+//#define GLOBAL_OFFSET_Y -4
+
+// Fixed
+#define GLOBAL_OFFSET_Y 0
+
+
 BLLissajousGraphDrawer::BLLissajousGraphDrawer(BL_FLOAT scale,
                                                GUIHelper12 *guiHelper,
                                                const char *title)
@@ -109,9 +116,6 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
         crossCorners[i][0] *= mScale;
         crossCorners[i][1] *= mScale;
     }
-    
-
-#define GLOBAL_OFFSET_Y -4
     
     // Scale corners to graph size
     for (int i = 0; i < 4; i++)
