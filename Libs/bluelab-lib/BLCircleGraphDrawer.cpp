@@ -17,7 +17,7 @@
 
 #define FIX_CIRCLE_DRAWER_BOTTOM_LINE 1
 
-#define OFFSET_X 8.0
+//#define OFFSET_X 8.0
 
 #if !FIX_CIRCLE_DRAWER_BOTTOM_LINE
 #define OFFSET_Y 2.0
@@ -25,7 +25,7 @@
 #define OFFSET_Y 1.0
 #endif
 
-#define TITLE_POS_X FONT_SIZE*0.5
+//#define TITLE_POS_X FONT_SIZE*0.5
 #define TITLE_POS_Y FONT_SIZE*0.5
 
 
@@ -49,6 +49,9 @@ BLCircleGraphDrawer::BLCircleGraphDrawer(GUIHelper12 *guiHelper,
         
         mLinesColor = IColor(255, 128, 128, 128);
         mTextColor = IColor(255, 128, 128, 128);
+
+        mOffsetX = 8;
+        mTitleOffsetY = TITLE_POS_Y;
     }
     else
     {
@@ -56,6 +59,9 @@ BLCircleGraphDrawer::BLCircleGraphDrawer(GUIHelper12 *guiHelper,
         guiHelper->GetCircleGDLinesWidth(&mLinesWidth);
         guiHelper->GetCircleGDLinesColor(&mLinesColor);
         guiHelper->GetCircleGDTextColor(&mTextColor);
+
+        guiHelper->GetCircleGDOffsetX(&mOffsetX);
+        guiHelper->GetCircleGDOffsetY(&mTitleOffsetY);
     }
 }
 
@@ -76,6 +82,8 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     int color[4] = { mLinesColor.R, mLinesColor.G,
                      mLinesColor.B, mLinesColor.A };
     SWAP_COLOR(color);
+
+#define OFFSET_X mOffsetX
     
     nvgStrokeColor(vg, nvgRGBA(color[0], color[1], color[2], color[3]));
     
@@ -114,7 +122,8 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     nvgStrokeWidth(vg, mLinesWidth);
 
     BL_FLOAT offsetYf = OFFSET_Y;
-    BL_FLOAT lYf = COS_PI4*RADIUS - ADJUST_OFFSET + OFFSET_Y;
+    //BL_FLOAT lYf = COS_PI4*RADIUS - ADJUST_OFFSET + OFFSET_Y;
+    BL_FLOAT lYf = COS_PI4*(RADIUS + mCircleLineWidth*0.5) - ADJUST_OFFSET + OFFSET_Y;
 #if GRAPH_CONTROL_FLIP_Y
     offsetYf = height - offsetYf;
     lYf = height - lYf;
@@ -144,7 +153,8 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     SWAP_COLOR(fontColor);
     
     //
-#define TEXT_OFFSET_X 6.0
+    //#define TEXT_OFFSET_X 6.0
+#define TEXT_OFFSET_X mOffsetX
 #define TEXT_OFFSET_Y 20.0
     
     char *leftText = "LEFT";
@@ -156,7 +166,8 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     // Left
     GraphControl12::DrawText(vg,
                              (1.0 - COS_PI4)*RADIUS*radiusRatio +
-                             OFFSET_X - TEXT_OFFSET_X,
+                             //OFFSET_X - TEXT_OFFSET_X,
+                             OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, leftText, fontColor,
@@ -164,7 +175,9 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
     // Right
     GraphControl12::DrawText(vg,
-                             (1.0 + COS_PI4)*RADIUS*radiusRatio + OFFSET_X + TEXT_OFFSET_X,
+                             (1.0 + COS_PI4)*RADIUS*radiusRatio +
+                             //OFFSET_X + TEXT_OFFSET_X,
+                             OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, rightText, fontColor,
@@ -173,8 +186,10 @@ BLCircleGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     if (mTitleSet)
     {
         GraphControl12::DrawText(vg,
-                                 TITLE_POS_X,
-                                 height - TITLE_POS_Y,
+                                 //TITLE_POS_X,
+                                 TEXT_OFFSET_X,
+                                 //height - TITLE_POS_Y,
+                                 height - mTitleOffsetY,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,
                                  NVG_ALIGN_LEFT, NVG_ALIGN_TOP);

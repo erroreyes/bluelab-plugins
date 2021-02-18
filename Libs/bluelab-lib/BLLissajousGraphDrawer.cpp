@@ -41,6 +41,9 @@ BLLissajousGraphDrawer::BLLissajousGraphDrawer(BL_FLOAT scale,
         
         mLinesColor = IColor(255, 128, 128, 128);
         mTextColor = IColor(255, 128, 128, 128);
+
+        mOffsetX = 8;
+        mTitleOffsetY = TITLE_POS_Y;
     }
     else
     {
@@ -48,6 +51,9 @@ BLLissajousGraphDrawer::BLLissajousGraphDrawer(BL_FLOAT scale,
         guiHelper->GetCircleGDLinesWidth(&mLinesWidth);
         guiHelper->GetCircleGDLinesColor(&mLinesColor);
         guiHelper->GetCircleGDTextColor(&mTextColor);
+
+        guiHelper->GetCircleGDOffsetX(&mOffsetX);
+        guiHelper->GetCircleGDOffsetY(&mTitleOffsetY);
     }
 }
 
@@ -104,19 +110,21 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
         crossCorners[i][1] *= mScale;
     }
     
+
+#define GLOBAL_OFFSET_Y -4
     
     // Scale corners to graph size
     for (int i = 0; i < 4; i++)
     {
         corners[i][0] = (corners[i][0] + 1.0)*0.5*height; //width;
-        corners[i][1] = (corners[i][1] + 1.0)*0.5*height;
+        corners[i][1] = (corners[i][1] + 1.0)*0.5*height + GLOBAL_OFFSET_Y;
     }
     
     // Scale cross corners to graph size
     for (int i = 0; i < 4; i++)
     {
         crossCorners[i][0] = (crossCorners[i][0] + 1.0)*0.5*height; //width;
-        crossCorners[i][1] = (crossCorners[i][1] + 1.0)*0.5*height;
+        crossCorners[i][1] = (crossCorners[i][1] + 1.0)*0.5*height + GLOBAL_OFFSET_Y;
     }
     
     // Offset in order to center
@@ -177,8 +185,10 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     // Draw texts
     SWAP_COLOR(fontColor); // ?
     
-#define TEXT_OFFSET_X 6.0
-#define TEXT_OFFSET_Y 6.0 //2.0
+    //#define TEXT_OFFSET_X 6.0
+#define TEXT_OFFSET_X mOffsetX
+#define TEXT_OFFSET_Y 6.0 + GLOBAL_OFFSET_Y - 2.0//2.0
+#define LEFT_RIGHT_OFFSET_X 50
     
     char *leftText = "LEFT";
     char *rightText = "RIGHT";
@@ -186,14 +196,23 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     BL_FLOAT textY = height/2.0 - FONT_SIZE/2.0 - FONT_SIZE/4.0;
     
     // Left
-    GraphControl12::DrawText(vg, FONT_SIZE + TEXT_OFFSET_X,
+    GraphControl12::DrawText(vg,
+                             FONT_SIZE + TEXT_OFFSET_X + LEFT_RIGHT_OFFSET_X,
                              textY + FONT_SIZE/2 + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, leftText, fontColor,
                              NVG_ALIGN_CENTER, NVG_ALIGN_MIDDLE);
+
+#define RIGHT_LABEL_OFFSET_X 3
     
     // Right
-    GraphControl12::DrawText(vg, width - FONT_SIZE - TEXT_OFFSET_X,
+    GraphControl12::DrawText(vg,
+                             //width - FONT_SIZE - TEXT_OFFSET_X -
+                             //LEFT_RIGHT_OFFSET_X,
+
+                             width - FONT_SIZE - TEXT_OFFSET_X -
+                             LEFT_RIGHT_OFFSET_X + RIGHT_LABEL_OFFSET_X,
+                             
                              textY + FONT_SIZE/2 + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, rightText, fontColor,
@@ -202,7 +221,10 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     if (mTitleSet)
     {
         GraphControl12::DrawText(vg,
-                                 TITLE_POS_X, height - TITLE_POS_Y,
+                                 //TITLE_POS_X,
+                                 TEXT_OFFSET_X,
+                                 //height - TITLE_POS_Y,
+                                 height - mTitleOffsetY,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,
                                  NVG_ALIGN_LEFT, NVG_ALIGN_TOP);

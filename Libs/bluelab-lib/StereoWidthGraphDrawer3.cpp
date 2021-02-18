@@ -17,7 +17,7 @@
 
 #define FIX_CIRCLE_DRAWER_BOTTOM_LINE 1
 
-#define OFFSET_X 8.0
+//#define OFFSET_X 8.0
 
 #if !FIX_CIRCLE_DRAWER_BOTTOM_LINE
 #define OFFSET_Y 2.0
@@ -47,12 +47,18 @@ StereoWidthGraphDrawer3::StereoWidthGraphDrawer3(GUIHelper12 *guiHelper,
        
         mLinesColor = IColor(255, 128, 128, 128);
         mTextColor = IColor(255, 128, 128, 128);
+
+        mOffsetX = 8;
+        mTitleOffsetY = TITLE_POS_Y;
     }
     else
     {
         guiHelper->GetCircleGDCircleLineWidth(&mCircleLineWidth);
         guiHelper->GetCircleGDLinesColor(&mLinesColor);
         guiHelper->GetCircleGDTextColor(&mTextColor);
+
+        guiHelper->GetCircleGDOffsetX(&mOffsetX);
+        guiHelper->GetCircleGDOffsetY(&mTitleOffsetY);
     }
 }
 
@@ -85,6 +91,8 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
     yf = height - yf;
     yf2 = height - yf2;
 #endif
+
+#define OFFSET_X mOffsetX
     
     nvgBeginPath(vg);
     nvgCircle(vg, width/2.0, yf, width/2.0 - OFFSET_X);
@@ -104,7 +112,8 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
     // Draw the texts
     SWAP_COLOR(fontColor); // ?
     
-#define TEXT_OFFSET_X 6.0
+    //#define TEXT_OFFSET_X 6.0
+#define TEXT_OFFSET_X mOffsetX
 #define TEXT_OFFSET_Y 20.0
     
     char *leftText = "LEFT";
@@ -123,7 +132,8 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
     
     // Right
     GraphControl12::DrawText(vg,
-                             (1.0 + COS_PI4)*RADIUS*radiusRatio + OFFSET_X + TEXT_OFFSET_X,
+                             (1.0 + COS_PI4)*RADIUS*radiusRatio +
+                             OFFSET_X + TEXT_OFFSET_X,
                              COS_PI4*RADIUS*radiusRatio + TEXT_OFFSET_Y,
                              width, height,
                              FONT_SIZE, rightText, fontColor,
@@ -132,7 +142,10 @@ StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
     if (mTitleSet)
     {
         GraphControl12::DrawText(vg,
-                                 TITLE_POS_X, height - TITLE_POS_Y,
+                                 //TITLE_POS_X,
+                                 TEXT_OFFSET_X,
+                                 //height - TITLE_POS_Y,
+                                 height - mTitleOffsetY,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,
                                  NVG_ALIGN_LEFT, NVG_ALIGN_TOP /*NVG_ALIGN_BOTTOM*/);

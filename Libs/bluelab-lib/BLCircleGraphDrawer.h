@@ -36,7 +36,8 @@ protected:
     float mLinesWidth;
     IColor mLinesColor;
     IColor mTextColor;
-    
+    int mOffsetX;
+    int mTitleOffsetY;
 };
 
 #endif // IGRAPHICS_NANOVG

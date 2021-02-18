@@ -225,6 +225,8 @@ public:
     void GetCircleGDLinesWidth(float *linesWidth);
     void GetCircleGDLinesColor(IColor *linesColor);
     void GetCircleGDTextColor(IColor *textColor);
+    void GetCircleGDOffsetX(int *x);
+    void GetCircleGDOffsetY(int *y);
     
 protected:
     ITextControl *CreateText(IGraphics *graphics, float x, float y,
@@ -346,6 +348,8 @@ protected:
     float mCircleGDLinesWidth;
     IColor mCircleGDLinesColor;
     IColor mCircleGDTextColor;
+    int mCircleGDOffsetX;
+    int mCircleGDOffsetY;
 };
 
 #endif /* GUIHelper12_hpp */

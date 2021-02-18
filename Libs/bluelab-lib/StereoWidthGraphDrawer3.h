@@ -37,6 +37,8 @@ protected:
     float mCircleLineWidth;
     IColor mLinesColor;
     IColor mTextColor;
+    int mOffsetX;
+    int mTitleOffsetY;
 };
 
 #endif

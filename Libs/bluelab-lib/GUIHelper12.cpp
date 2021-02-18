@@ -282,6 +282,8 @@ GUIHelper12::GUIHelper12(Style style)
         //IColor(255, 128, 128, 128);
         mCircleGDTextColor = IColor(255, 147, 147, 147);
         // IColor(255, 128, 128, 128);
+        mCircleGDOffsetX = 18; //15; //8;
+        mCircleGDOffsetY = 14; //16;
     }
 }
 
@@ -1261,6 +1263,18 @@ void
 GUIHelper12::GetCircleGDTextColor(IColor *textColor)
 {
     *textColor = mCircleGDTextColor;
+}
+
+void
+GUIHelper12::GetCircleGDOffsetX(int *x)
+{
+    *x = mCircleGDOffsetX;
+}
+
+void
+GUIHelper12::GetCircleGDOffsetY(int *x)
+{
+    *x = mCircleGDOffsetY;
 }
 
 float

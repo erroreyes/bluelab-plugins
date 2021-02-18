@@ -21,8 +21,13 @@
 #endif
 
 // Grid and circle geometry
-#define MIN_ANGLE -0.35
-#define MAX_ANGLE 0.35
+//
+
+// Use smaller angle, to have margins on theleft and on the right
+#define ANGLE_COEFF 0.9
+
+#define MIN_ANGLE -0.35*ANGLE_COEFF
+#define MAX_ANGLE 0.35*ANGLE_COEFF
 
 #define ANGLE_OFFSET M_PI/2.0
 
@@ -30,6 +35,7 @@
 #define END_CIRCLE_RAD 0.75
 
 #define Y_OFFSET 2.0
+#define Y_OFFSET2 -32.0
 
 //
 #define NUM_ARCS 5
@@ -37,7 +43,8 @@
 
 // Source
 #define MIN_SOURCE_RAD 0.1
-#define MAX_SOURCE_RAD 0.2
+//#define MAX_SOURCE_RAD 0.2
+#define MAX_SOURCE_RAD 0.18
 
 #define TITLE_POS_X FONT_SIZE*0.5
 #define TITLE_POS_Y FONT_SIZE*0.5
@@ -86,6 +93,9 @@ BLUpmixGraphDrawer::BLUpmixGraphDrawer(BLVectorscopePlug *plug,
         
         mLinesColor = IColor(255, 128, 128, 128);
         mTextColor = IColor(255, 128, 128, 128);
+
+        mOffsetX = 8;
+        mTitleOffsetY = TITLE_POS_Y;
     }
     else
     {
@@ -93,6 +103,9 @@ BLUpmixGraphDrawer::BLUpmixGraphDrawer(BLVectorscopePlug *plug,
         guiHelper->GetCircleGDLinesWidth(&mLinesWidth);
         guiHelper->GetCircleGDLinesColor(&mLinesColor);
         guiHelper->GetCircleGDTextColor(&mTextColor);
+
+        guiHelper->GetCircleGDOffsetX(&mOffsetX);
+        guiHelper->GetCircleGDOffsetY(&mTitleOffsetY);
     }
 }
 
@@ -119,7 +132,7 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     SWAP_COLOR(gridColor);
     nvgStrokeColor(vg, nvgRGBA(gridColor[0], gridColor[1],
                                gridColor[2], gridColor[3]));
-
+    
     // Arcs
     for (int i = 0; i < NUM_ARCS; i++)
     {
@@ -134,7 +147,7 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
         
         BL_FLOAT origin[2];
         origin[0] = 0.5*width;
-        origin[1] = (START_CIRCLE_RAD - Y_OFFSET)*height;
+        origin[1] = (START_CIRCLE_RAD - Y_OFFSET)*height + Y_OFFSET2;
         
         BL_FLOAT origin1Yf = origin[1];
         BL_FLOAT a0 = MIN_ANGLE + ANGLE_OFFSET;
@@ -179,7 +192,7 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     
         BL_FLOAT origin[2];
         origin[0] = 0.5*width;
-        origin[1] = (START_CIRCLE_RAD - Y_OFFSET)*height;
+        origin[1] = (START_CIRCLE_RAD - Y_OFFSET)*height + Y_OFFSET2;
     
         BL_FLOAT p0[2];
         p0[0] = origin[0] + r0*cos(angle + ANGLE_OFFSET);
@@ -204,13 +217,19 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
         nvgLineTo(vg, p1[0], p1Yf);
         nvgStroke(vg);
     }
+
+#define TEXT_OFFSET_X mOffsetX
+#define TEXT_OFFSET_Y 20.0
     
     DrawSource(vg, width, height);
     
     if (mTitleSet)
     {
         GraphControl12::DrawText(vg,
-                                 TITLE_POS_X, height - TITLE_POS_Y,
+                                 //TITLE_POS_X,
+                                 TEXT_OFFSET_X,
+                                 //height - TITLE_POS_Y,
+                                 height - mTitleOffsetY,
                                  width, height,
                                  FONT_SIZE, mTitleText, fontColor,
                                  NVG_ALIGN_LEFT, NVG_ALIGN_TOP);
@@ -321,9 +340,10 @@ BLUpmixGraphDrawer::DrawSource(NVGcontext *vg, int width, int height)
     
     // Inner circle
     SWAP_COLOR(circleColor0);
-    nvgFillColor(vg, nvgRGBA(circleColor0[0], circleColor0[1], circleColor0[2], circleColor0[3]));
+    nvgFillColor(vg, nvgRGBA(circleColor0[0], circleColor0[1],
+                             circleColor0[2], circleColor0[3]));
     
-    BL_FLOAT centerYf = center[1];
+    BL_FLOAT centerYf = center[1] + Y_OFFSET2;
 #if GRAPH_CONTROL_FLIP_Y
     centerYf = height - centerYf;
 #endif
@@ -334,7 +354,8 @@ BLUpmixGraphDrawer::DrawSource(NVGcontext *vg, int width, int height)
     
     // Outer circle
     SWAP_COLOR(circleColor1);
-    nvgFillColor(vg, nvgRGBA(circleColor1[0], circleColor1[1], circleColor1[2], circleColor1[3]));
+    nvgFillColor(vg, nvgRGBA(circleColor1[0], circleColor1[1],
+                             circleColor1[2], circleColor1[3]));
     
     nvgBeginPath(vg);
     nvgCircle(vg, center[0], centerYf, radius1);
@@ -354,7 +375,8 @@ BLUpmixGraphDrawer::DrawSource(NVGcontext *vg, int width, int height)
     
     // Inner circle
     SWAP_COLOR(strokeColor0);
-    nvgStrokeColor(vg, nvgRGBA(strokeColor0[0], strokeColor0[1], strokeColor0[2], strokeColor0[3]));
+    nvgStrokeColor(vg, nvgRGBA(strokeColor0[0], strokeColor0[1],
+                               strokeColor0[2], strokeColor0[3]));
     
     nvgBeginPath(vg);
     nvgCircle(vg, center[0], centerYf, radius0);
@@ -362,7 +384,8 @@ BLUpmixGraphDrawer::DrawSource(NVGcontext *vg, int width, int height)
     
     // Outer circle
     SWAP_COLOR(strokeColor1);
-    nvgStrokeColor(vg, nvgRGBA(strokeColor1[0], strokeColor1[1], strokeColor1[2], strokeColor1[3]));
+    nvgStrokeColor(vg, nvgRGBA(strokeColor1[0], strokeColor1[1],
+                               strokeColor1[2], strokeColor1[3]));
     
     nvgBeginPath(vg);
     nvgCircle(vg, center[0], centerYf, radius1);
@@ -377,7 +400,9 @@ BLUpmixGraphDrawer::ComputeSourceCenter(BL_FLOAT center[2],
     normPan = 1.0 - normPan;
     BL_FLOAT angle = (1.0 - normPan)*MIN_ANGLE + normPan*MAX_ANGLE;
     
-    BL_FLOAT radius = (1.0 - mDepth)*START_CIRCLE_RAD + mDepth*END_CIRCLE_RAD + Y_OFFSET;
+    BL_FLOAT radius = (1.0 - mDepth)*START_CIRCLE_RAD +
+    mDepth*END_CIRCLE_RAD + Y_OFFSET;
+    
     radius *= height;
     
     BL_FLOAT origin[2];
