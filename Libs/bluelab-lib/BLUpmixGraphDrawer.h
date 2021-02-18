@@ -14,14 +14,16 @@
 #include <GraphControl12.h>
 
 class BLVectorscopePlug;
+class GUIHelper12;
 
 // BLUpmixGraphDrawer.h: from USTUpmixGraphDrawer.h
 //
 class BLUpmixGraphDrawer : public GraphCustomDrawer,
-                            public GraphCustomControl
+                           public GraphCustomControl
 {
 public:
     BLUpmixGraphDrawer(BLVectorscopePlug *plug, GraphControl12 *graph,
+                       GUIHelper12 *guiHelper = NULL,
                        const char *title = NULL);
     
     virtual ~BLUpmixGraphDrawer();
@@ -71,6 +73,12 @@ protected:
     // Title
     bool mTitleSet;
     char mTitleText[256];
+
+    // Style
+    float mCircleLineWidth;
+    float mLinesWidth;
+    IColor mLinesColor;
+    IColor mTextColor;
 };
 
 #endif // IGRAPHICS_NANOVG

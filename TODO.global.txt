@@ -256,10 +256,15 @@ For all plugins:
 (and load them in main())
 - TODO: CreateVersion(), now we have suppressed the position argument
 - Don't forget to remove the version from the background
-
+- Help button: make it transparent over background (and check well its position)
+--
 WIP: need to recenter knob (ajdjust to pixels) => so they are exactly in place when integrated to code (compare to white circle markers)
 
-TODO: margin at left and right of circle
+TODO: margin at left and right of circle (and top and bottom also)
 do style for lissajous and depth
 fatten a bit the vectorscope modes buttons
+re-do the width meter, with right color
+and re-do the correlation meter -> more visible, with red/green color (nd less large)
 ------------------
+
+TODO design: try the little white circles dark grey instead

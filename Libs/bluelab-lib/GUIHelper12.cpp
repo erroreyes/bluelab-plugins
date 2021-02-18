@@ -277,7 +277,7 @@ GUIHelper12::GUIHelper12(Style style)
 
         // Circle drawer
         mCircleGDCircleLineWidth = 2.5; //3.0; //2.0;
-        mCircleGDLinesWidth = 1.5; //1.0;
+        mCircleGDLinesWidth = 2.0; //1.5; //1.0;
         mCircleGDLinesColor = IColor(255, 147, 147, 147);
         //IColor(255, 128, 128, 128);
         mCircleGDTextColor = IColor(255, 147, 147, 147);

@@ -10,6 +10,9 @@
 
 #include <GraphSwapColor.h>
 
+#include <GUIHelper12.h>
+#undef DrawText
+
 #include "StereoWidthGraphDrawer3.h"
 
 #define FIX_CIRCLE_DRAWER_BOTTOM_LINE 1
@@ -25,7 +28,8 @@
 #define TITLE_POS_X FONT_SIZE*0.5
 #define TITLE_POS_Y FONT_SIZE*0.5
 
-StereoWidthGraphDrawer3::StereoWidthGraphDrawer3(const char *title)
+StereoWidthGraphDrawer3::StereoWidthGraphDrawer3(GUIHelper12 *guiHelper,
+                                                 const char *title)
 {
     mTitleSet = false;
     
@@ -35,17 +39,35 @@ StereoWidthGraphDrawer3::StereoWidthGraphDrawer3(const char *title)
         
         sprintf(mTitleText, "%s", title);
     }
+
+    // Style
+    if (guiHelper == NULL)
+    {
+        mCircleLineWidth = 2.0;
+       
+        mLinesColor = IColor(255, 128, 128, 128);
+        mTextColor = IColor(255, 128, 128, 128);
+    }
+    else
+    {
+        guiHelper->GetCircleGDCircleLineWidth(&mCircleLineWidth);
+        guiHelper->GetCircleGDLinesColor(&mLinesColor);
+        guiHelper->GetCircleGDTextColor(&mTextColor);
+    }
 }
 
 void
 StereoWidthGraphDrawer3::PreDraw(NVGcontext *vg, int width, int height)
 {
-    BL_FLOAT circleStrokeWidth = 2.0; //3.0;
-    BL_FLOAT linesStrokeWidth = 1.0;
+    BL_FLOAT circleStrokeWidth = mCircleLineWidth;
+
+    int color[4] = { mLinesColor.R, mLinesColor.G,
+                     mLinesColor.B, mLinesColor.A };
     
-    int color[4] = { 128, 128, 128, 255 };
+    int fontColor[4] = { mTextColor.R, mTextColor.G,
+                         mTextColor.B, mTextColor.A };
+
     int fillColor[4] = { 0, 128, 255, 255 };
-    int fontColor[4] = { 128, 128, 128, 255 };
     
     //
     nvgStrokeWidth(vg, circleStrokeWidth);

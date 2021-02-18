@@ -18,10 +18,12 @@
 //
 // StereoWidthGraphDrawer3 from BLCircleGraphDrawer (to get the same style)
 //
+class GUIHelper12;
 class StereoWidthGraphDrawer3 : public GraphCustomDrawer
 {
 public:
-    StereoWidthGraphDrawer3(const char *title = NULL);
+    StereoWidthGraphDrawer3(GUIHelper12 *guiHelper = NULL,
+                            const char *title = NULL);
     
     virtual ~StereoWidthGraphDrawer3() {}
     
@@ -30,6 +32,11 @@ public:
 protected:
     bool mTitleSet;
     char mTitleText[256];
+
+    // Style
+    float mCircleLineWidth;
+    IColor mLinesColor;
+    IColor mTextColor;
 };
 
 #endif

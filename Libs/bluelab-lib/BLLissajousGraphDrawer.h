@@ -16,10 +16,13 @@
 // From StereoWidthGraphDrawer2
 // BLLissajousGraphDrawer: from USTLissajousGraphDrawer
 //
+class GUIHelper12;
 class BLLissajousGraphDrawer : public GraphCustomDrawer
 {
 public:
-    BLLissajousGraphDrawer(BL_FLOAT scale, const char *title = NULL);
+    BLLissajousGraphDrawer(BL_FLOAT scale,
+                           GUIHelper12 *guiHelper = NULL,
+                           const char *title = NULL);
     
     virtual ~BLLissajousGraphDrawer();
     
@@ -30,6 +33,12 @@ protected:
     
     bool mTitleSet;
     char mTitleText[256];
+
+    // Style
+    float mCircleLineWidth;
+    float mLinesWidth;
+    IColor mLinesColor;
+    IColor mTextColor;
 };
 
 #endif // IGRAPHICS_NANOVG

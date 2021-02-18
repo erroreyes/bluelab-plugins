@@ -303,7 +303,9 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         mGraphs[LISSAJOUS_MODE_ID]->SetBounds(0.0, 0.0, 1.0, 1.0);
         mGraphs[LISSAJOUS_MODE_ID]->SetClearColor(0, 0, 0, 255);
         
-        mLissajousDrawer = new BLLissajousGraphDrawer(LISSAJOUS_SCALE, "LISSAJOUS");
+        mLissajousDrawer = new BLLissajousGraphDrawer(LISSAJOUS_SCALE,
+                                                      guiHelper,
+                                                      "LISSAJOUS");
         mGraphs[LISSAJOUS_MODE_ID]->AddCustomDrawer(mLissajousDrawer);
         
         // Style
@@ -381,7 +383,8 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         mGraphs[UPMIX_MODE_ID]->SetBounds(0.0, 0.0, 1.0, 1.0);
         mGraphs[UPMIX_MODE_ID]->SetClearColor(0, 0, 0, 255);
         
-        mUpmixDrawer = new BLUpmixGraphDrawer(mPlug, mGraphs[UPMIX_MODE_ID], "GRID");
+        mUpmixDrawer = new BLUpmixGraphDrawer(mPlug, mGraphs[UPMIX_MODE_ID],
+                                              guiHelper, "GRID");
         mGraphs[UPMIX_MODE_ID]->AddCustomDrawer(mUpmixDrawer);
         
         mGraphs[UPMIX_MODE_ID]->SetDisablePointOffsetHack(true);
@@ -393,7 +396,7 @@ BLVectorscope::SetGraphs(GraphControl12 *graph0,
         mGraphs[SOURCE_MODE_ID]->SetBounds(0.0, 0.0, 1.0, 1.0);
         mGraphs[SOURCE_MODE_ID]->SetClearColor(0, 0, 0, 255);
         
-        mCircleDrawerSource = new StereoWidthGraphDrawer3("SOURCE");
+        mCircleDrawerSource = new StereoWidthGraphDrawer3(guiHelper, "SOURCE");
         
         mGraphs[SOURCE_MODE_ID]->AddCustomDrawer(mCircleDrawerSource);
         

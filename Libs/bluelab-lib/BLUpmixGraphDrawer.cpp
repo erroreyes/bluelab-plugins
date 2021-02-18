@@ -11,6 +11,9 @@
 #include <BLVectorscope.h>
 #include <GraphSwapColor.h>
 
+#include <GUIHelper12.h>
+#undef DrawText
+
 #include "BLUpmixGraphDrawer.h"
 
 #ifndef M_PI 
@@ -47,6 +50,7 @@
 
 BLUpmixGraphDrawer::BLUpmixGraphDrawer(BLVectorscopePlug *plug,
                                        GraphControl12 *graph,
+                                       GUIHelper12 *guiHelper,
                                        const char *title)
 {
     mGain = 0.0;
@@ -73,6 +77,23 @@ BLUpmixGraphDrawer::BLUpmixGraphDrawer(BLVectorscopePlug *plug,
         
         sprintf(mTitleText, "%s", title);
     }
+
+    // Style
+    if (guiHelper == NULL)
+    {
+        mCircleLineWidth = 2.0;
+        mLinesWidth = 1.0;
+        
+        mLinesColor = IColor(255, 128, 128, 128);
+        mTextColor = IColor(255, 128, 128, 128);
+    }
+    else
+    {
+        guiHelper->GetCircleGDCircleLineWidth(&mCircleLineWidth);
+        guiHelper->GetCircleGDLinesWidth(&mLinesWidth);
+        guiHelper->GetCircleGDLinesColor(&mLinesColor);
+        guiHelper->GetCircleGDTextColor(&mTextColor);
+    }
 }
 
 BLUpmixGraphDrawer::~BLUpmixGraphDrawer() {}
@@ -84,18 +105,29 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     mHeight = height;
 
     //
-    BL_FLOAT strokeWidth = 2.0;
-    int gridColor[4] = { 128, 128, 128, 255 };
-    int fontColor[4] = { 128, 128, 128, 255 };
+    BL_FLOAT strokeWidthOut = mCircleLineWidth;
+    BL_FLOAT strokeWidthIn = mLinesWidth;
+    
+    int gridColor[4] = { mLinesColor.R, mLinesColor.G,
+                         mLinesColor.B, mLinesColor.A };
 
-    nvgStrokeWidth(vg, strokeWidth);
+    int fontColor[4] = { mTextColor.R, mTextColor.G,
+                         mTextColor.B, mTextColor.A };
+
+    //nvgStrokeWidth(vg, strokeWidth);
     
     SWAP_COLOR(gridColor);
-    nvgStrokeColor(vg, nvgRGBA(gridColor[0], gridColor[1], gridColor[2], gridColor[3]));
+    nvgStrokeColor(vg, nvgRGBA(gridColor[0], gridColor[1],
+                               gridColor[2], gridColor[3]));
 
     // Arcs
     for (int i = 0; i < NUM_ARCS; i++)
     {
+        if ((i == 0) || (i == NUM_ARCS - 1))
+            nvgStrokeWidth(vg, strokeWidthOut);
+        else
+            nvgStrokeWidth(vg, strokeWidthIn);
+        
         BL_FLOAT t = ((BL_FLOAT)i)/(NUM_ARCS - 1);
         
         BL_FLOAT r = (1.0 - t)*START_CIRCLE_RAD + t*END_CIRCLE_RAD + Y_OFFSET;
@@ -132,6 +164,11 @@ BLUpmixGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     // Lines
     for (int i = 0; i < NUM_LINES; i++)
     {
+        if ((i == 0) || (i == NUM_LINES - 1))
+            nvgStrokeWidth(vg, strokeWidthOut);
+        else
+            nvgStrokeWidth(vg, strokeWidthIn);
+        
         BL_FLOAT t = ((BL_FLOAT)i)/(NUM_LINES - 1);
         
         BL_FLOAT angle = (1.0 - t)*MIN_ANGLE + t*MAX_ANGLE;

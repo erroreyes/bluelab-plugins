@@ -10,12 +10,17 @@
 
 #include <GraphSwapColor.h>
 
+#include <GUIHelper12.h>
+#undef DrawText
+
 #include "BLLissajousGraphDrawer.h"
 
 #define TITLE_POS_X FONT_SIZE*0.5
 #define TITLE_POS_Y FONT_SIZE*0.5
 
-BLLissajousGraphDrawer::BLLissajousGraphDrawer(BL_FLOAT scale, const char *title)
+BLLissajousGraphDrawer::BLLissajousGraphDrawer(BL_FLOAT scale,
+                                               GUIHelper12 *guiHelper,
+                                               const char *title)
 {
     mScale = scale;
     
@@ -27,6 +32,23 @@ BLLissajousGraphDrawer::BLLissajousGraphDrawer(BL_FLOAT scale, const char *title
         
         sprintf(mTitleText, "%s", title);
     }
+
+    // Style
+    if (guiHelper == NULL)
+    {
+        mCircleLineWidth = 2.0;
+        mLinesWidth = 1.0;
+        
+        mLinesColor = IColor(255, 128, 128, 128);
+        mTextColor = IColor(255, 128, 128, 128);
+    }
+    else
+    {
+        guiHelper->GetCircleGDCircleLineWidth(&mCircleLineWidth);
+        guiHelper->GetCircleGDLinesWidth(&mLinesWidth);
+        guiHelper->GetCircleGDLinesColor(&mLinesColor);
+        guiHelper->GetCircleGDTextColor(&mTextColor);
+    }
 }
 
 BLLissajousGraphDrawer::~BLLissajousGraphDrawer() {}
@@ -34,13 +56,16 @@ BLLissajousGraphDrawer::~BLLissajousGraphDrawer() {}
 void
 BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
 {
-    BL_FLOAT strokeWidthOut = 2.0;
-    BL_FLOAT strokeWidthIn = 1.0;
+    BL_FLOAT strokeWidthOut = mCircleLineWidth;
+    BL_FLOAT strokeWidthIn = mLinesWidth;
     
-    int color[4] = { 128, 128, 128, 255 };
-    int fillColor[4] = { 0, 128, 255, 255 };
-    int fontColor[4] = { 128, 128, 128, 255 };
+    int color[4] = { mLinesColor.R, mLinesColor.G,
+                     mLinesColor.B, mLinesColor.A };
 
+    int fontColor[4] = { mTextColor.R, mTextColor.G,
+                         mTextColor.B, mTextColor.A };
+
+    int fillColor[4] = { 0, 128, 255, 255 };
     
     SWAP_COLOR(color);
     nvgStrokeColor(vg, nvgRGBA(color[0], color[1], color[2], color[3]));
@@ -49,7 +74,8 @@ BLLissajousGraphDrawer::PreDraw(NVGcontext *vg, int width, int height)
     nvgFillColor(vg, nvgRGBA(fillColor[0], fillColor[1], fillColor[2], fillColor[3]));
     
     // Corners
-    BL_FLOAT corners[4][2] = { { 0.0, 1.0 }, { 1.0, 0.0 }, { 0.0, -1.0 }, { -1.0, 0.0} };
+    BL_FLOAT corners[4][2] = { { 0.0, 1.0 }, { 1.0, 0.0 },
+                               { 0.0, -1.0 }, { -1.0, 0.0} };
     
     // Cross corners
     BL_FLOAT crossCorners[4][2];
