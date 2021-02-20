@@ -258,3 +258,56 @@ For all plugins:
 ------------------
 
 TODO: knob design: try the little white circles dark grey instead
+
+---links design
+https://www.sessions.edu/color-calculator/
+https://learnui.design/tools/data-color-picker.html#single
+https://material.io/resources/color/#!/?view.left=1&view.right=1&primary.color=5252ff
+https://www.plugin-alliance.com/en/products/bx_stereomaker.html
+https://valhalladsp.com/shop/reverb/valhalla-vintage-verb/
+https://valhalladsp.com/shop/reverb/valhalla-supermassive/
+https://www.izotope.com/en/products/rx/features/voice-de-noise.html
+https://www.free-vst-plugins.com/harmonicboost-free-harmonic-enhancer-plugin/?fbclid=IwAR2cTeTlSwCdvk9yU55eaAEg5uNWM3s7HKNnOZgWxIfOSbDuC3swSGL4EUI
+---
+
+--------
+--perf--
+Modify system config files:
+set number in /proc/sys/kernel/perf_event_paranoid from 4 to -1
+set number in /proc/sys/kernel/kptr_restrict from 1 to 0
+
+perf record
+perf report -g -i perf.data
+
+Hotspot:
+perf record --call-graph dwarf <app>
+then: hotspot
+
+Launch for 10 seconds, at 99Hz
+perf record -F 99 --call-graph dwarf -p $(pgrep BL-Air) sleep 10
+
+perf record -g
+
+perf stat -p $(pgrep BL-Air)
+-> cycles
+
+Compile with -g -fno-omit-frame-pointer
+
+Steps:
+perf stat -e cpu-cycles,instructions,L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores <command>
+=> outputs result
+=> optimize, re do perf stat, compare
+
+perf report: press 'a' to see anotated code
+
+perf record -g -e L1-dcache-load-misses ../plugs-dev/bluelab/BL-Plugins/BL-Air/build-linux/BL-Air-app/BL-Air 
+
+perf record -g -e instructions ../plugs-dev/bluelab/BL-Plugins/BL-Air/build-linux/BL-Air-app/BL-Air
+
+See: https://indico.cern.ch/event/814979/contributions/3401196/attachments/1831466/3109819/PerformanceTools.pdf
+
+-------
+TODO(?): set FastMath(fast) for all the plugins that doesn't output sound
+
+TODO: use SetValues5() instead of SetValues4() everywhere
+TODO: everywhere, Scale::ApplyScale -> check if we can use the ForEach versions

@@ -255,17 +255,33 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
             return;
     
         softMask->Resize(mMixtureHistory[0].GetSize());
-        for (int i = 0; i < softMask->GetSize(); i++)
-        {
-            WDL_FFT_COMPLEX mix = sigma2Mixture.Get()[i];
-            WDL_FFT_COMPLEX masked = sigma2MaskedMixture.Get()[i];
+
+        int softMaskSize = softMask->GetSize();
+        WDL_FFT_COMPLEX *softMaskData = softMask->Get();
         
-            WDL_FFT_COMPLEX maskVal;
+        WDL_FFT_COMPLEX *sigma2MixtureData = sigma2Mixture.Get();
+        WDL_FFT_COMPLEX *sigma2MaskedMixtureData = sigma2MaskedMixture.Get();
+
+        WDL_FFT_COMPLEX maskVal;
+        WDL_FFT_COMPLEX mixSum;
+
+        BL_FLOAT maskMagnInv;
+        BL_FLOAT maskMagn;
+        
+        //for (int i = 0; i < softMask->GetSize(); i++)
+        for (int i = 0; i < softMaskSize; i++)
+        {
+            //const WDL_FFT_COMPLEX &mix = sigma2Mixture.Get()[i];
+            const WDL_FFT_COMPLEX &mix = sigma2MixtureData[i];
+            //const WDL_FFT_COMPLEX &masked = sigma2MaskedMixture.Get()[i];
+            const WDL_FFT_COMPLEX &masked = sigma2MaskedMixtureData[i];
+        
+            //WDL_FFT_COMPLEX maskVal;
             maskVal.re = 0.0;
             maskVal.im = 0.0;
         
 #if MIXTURE_SUB
-            WDL_FFT_COMPLEX mixSum = mix;
+            mixSum = mix;
         
             // This is the correct formula!
             // var == sigma^2 (standard deviation ^ 2)
@@ -278,16 +294,18 @@ SoftMaskingComp3::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMixture,
             {
                 COMP_DIV(masked, mixSum, maskVal);
             }
-        
-            BL_FLOAT maskMagn = COMP_MAGN(maskVal);
+
+            maskMagn = COMP_MAGN(maskVal);
             if (maskMagn >  1.0)
             {
-                BL_FLOAT maskMagnInv = 1.0/maskMagn;
+                //BL_FLOAT maskMagnInv = 1.0/maskMagn;
+                maskMagnInv = 1.0/maskMagn;
                 maskVal.re *= maskMagnInv;
                 maskVal.im *= maskMagnInv;
             }
-        
-            softMask->Get()[i] = maskVal;
+            
+            //softMask->Get()[i] = maskVal;
+            softMaskData[i] = maskVal;
         }
     }
     
@@ -489,6 +507,8 @@ SoftMaskingComp3::ComputeSigma2(//deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history
 }
 #endif
 
+// NOTE: the loops on i and j could be reversed, to optimize
+#if 0
 #if USE_REAL_EXPECTATION
 // Optimized version
 //
@@ -559,5 +579,87 @@ SoftMaskingComp3::ComputeSigma2(//deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history
         // Result
         outSigma2->Get()[i] = expect;
     }
+}
+#endif
+#endif
+
+// Optimized version: reversed loop on i and j
+#if USE_REAL_EXPECTATION
+// Optimized version
+//
+// NOTE: variance is equal to sigma^2
+void
+SoftMaskingComp3::ComputeSigma2(//deque<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+                                bl_queue<WDL_TypedBuf<WDL_FFT_COMPLEX> > &history,
+                                WDL_TypedBuf<WDL_FFT_COMPLEX> *outSigma2)
+{    
+    if (history.empty())
+        return;
+    
+    outSigma2->Resize(history[0].GetSize());
+        
+    // Convert deque of vector to vector of vector
+    vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &historyVec = mTmpBuf9;
+    historyVec.resize(history.size());
+    for (int i = 0; i < historyVec.size(); i++)
+        historyVec[i] = history[i];
+
+    // Result sum
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &currentSum = mTmpBuf10;
+    currentSum.Resize(historyVec[0].GetSize());
+    BLUtils::FillAllZero(&currentSum);
+
+    // Window
+    if (mWindow.GetSize() != historyVec.size())
+    {
+        Window::MakeHanning(historyVec.size(), &mWindow);
+    }
+    BL_FLOAT sumProba = BLUtils::ComputeSum(mWindow);
+    BL_FLOAT sumProbaInv = 0.0;
+    if (sumProba > BL_EPS)
+        sumProbaInv = 1.0/sumProba;
+    
+    //
+    for (int j = 0; j < historyVec.size(); j++)
+    {
+        const WDL_TypedBuf<WDL_FFT_COMPLEX> &currentLine = historyVec[j];
+
+        BL_FLOAT p = mWindow.Get()[j];
+        
+        for (int i = 0; i < currentLine.GetSize(); i++)
+        {
+            WDL_FFT_COMPLEX &expect = currentSum.Get()[i];
+            
+            // Compute expectation
+            WDL_FFT_COMPLEX tmp;
+            WDL_FFT_COMPLEX valConj;
+        
+            WDL_FFT_COMPLEX val = currentLine.Get()[i];
+
+            // See: https://hal.inria.fr/hal-01881425/document
+            // |x|^2
+            // NOTE: square abs => complex conjugate
+            // (better like that !)
+            tmp = val;
+            valConj.re = val.re;
+            valConj.im = -val.im;
+            COMP_MULT(tmp, valConj, val);
+            
+            //tmp = val;
+            //COMP_MULT(tmp, tmp, val);
+                
+            expect.re += p*val.re;
+            expect.im += p*val.im;
+        }
+    }
+
+    // Divide by sum probas
+    if (sumProba > BL_EPS)
+    {
+        BLUtils::MultValues(&currentSum, sumProbaInv);
+    }
+        
+    // Result
+    *outSigma2 = currentSum;
 }
 #endif

@@ -182,6 +182,14 @@ GraphCurve5::SetYScale(Scale::Type scale, BL_GUI_FLOAT minY, BL_GUI_FLOAT maxY)
 }
 
 void
+GraphCurve5::GetYScale(Scale::Type *scale, BL_GUI_FLOAT *minY, BL_GUI_FLOAT *maxY)
+{
+    *scale = mYScale;
+    *minY = mMinY;
+    *maxY = mMaxY;
+}
+
+void
 GraphCurve5::FillAllYValues(BL_GUI_FLOAT val)
 {
     for (int i = 0; i < mYValues.GetSize(); i++)
@@ -714,7 +722,8 @@ GraphCurve5::SetValues3(const WDL_TypedBuf<BL_GUI_FLOAT> *values)
 // Avoid having undefined values
 // values (y) must be in amp units
 void
-GraphCurve5::SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values)
+GraphCurve5::SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
+                        bool applyYScale)
 {
     //if (mYValues.GetSize() != values.GetSize())
     //    return;
@@ -724,23 +733,41 @@ GraphCurve5::SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values)
     int height = mViewSize[1];
     
     mXValues.Resize(values.GetSize());
-    for (int i = 0; i < mXValues.GetSize(); i++)
+    int numXValues = mXValues.GetSize();
+    BL_GUI_FLOAT *xValuesData = mXValues.Get();
+    
+    BL_GUI_FLOAT t = 0.0;
+    BL_GUI_FLOAT tincr = 0.0;
+    if (mXValues.GetSize() > 1)
+        tincr = 1.0/(mXValues.GetSize() - 1);
+    for (int i = 0; i < numXValues; i++)
     {
-        BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(mXValues.GetSize() - 1);
+        //BL_GUI_FLOAT t = ((BL_GUI_FLOAT)i)/(mXValues.GetSize() - 1);
         
         BL_GUI_FLOAT x = mScale->ApplyScale(mXScale, t, mMinX, mMaxX);
         
         // Scale for the interface
         x = x * width;
         
-        mXValues.Get()[i] = x;
+        //mXValues.Get()[i] = x;
+        xValuesData[i] = x;
+
+        t += tincr;
     }
     
     mYValues.Resize(values.GetSize());
-    for (int i = 0; i < mYValues.GetSize(); i++)
+    int numYValues = mYValues.GetSize();
+    BL_GUI_FLOAT *yValuesData = mYValues.Get();
+    
+    BL_GUI_FLOAT *valuesData = values.Get();
+    for (int i = 0; i < numYValues; i++)
     {
-        BL_GUI_FLOAT y = values.Get()[i];
-        y = ConvertY(y, height);
+        BL_GUI_FLOAT y = valuesData[i];
+
+        if (applyYScale)
+            y = ConvertY(y, height);
+        else
+            y = ConvertYNoScale(y, height);
         
         // For Ghost and mini view
         if (mLimitToBounds)
@@ -755,7 +782,75 @@ GraphCurve5::SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values)
         // No need, this is done in ConvertY()
         //y = y * height;
         
-        mYValues.Get()[i] = y;
+        //mYValues.Get()[i] = y;
+        yValuesData[i] = y;
+    }
+    
+    NotifyGraph();
+}
+
+// Avoid having undefined values
+// values (y) must be in amp units
+//
+// And unroll some code
+void
+GraphCurve5::SetValues5(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
+                        bool applyYScale)
+{
+    // Normalize, then adapt to the graph
+    int width = mViewSize[0];
+    int height = mViewSize[1];
+
+    // X
+    mXValues.Resize(values.GetSize());
+    int numXValues = mXValues.GetSize();
+    BL_GUI_FLOAT *xValuesData = mXValues.Get();
+
+    BL_GUI_FLOAT t = 0.0;
+    BL_GUI_FLOAT tincr = 0.0;
+    if (mXValues.GetSize() > 1)
+        tincr = 1.0/(mXValues.GetSize() - 1);
+    for (int i = 0; i < numXValues; i++)
+    {
+        xValuesData[i] = t;
+        t += tincr;
+    }
+
+    mScale->ApplyScaleForEach(mXScale, &mXValues, mMinX, mMaxX);
+
+    BLUtils::MultValues(&mXValues, (BL_GUI_FLOAT)width);
+    
+    // Y
+    mYValues = values;
+    int numYValues = mYValues.GetSize();
+    BL_GUI_FLOAT *yValuesData = mYValues.Get();
+    
+    if (applyYScale)
+    {
+        if (mYScale != Scale::LINEAR)
+            mScale->ApplyScaleForEach(mYScale, &mYValues, mMinY, mMaxY);
+        else
+            mScale->ApplyScaleForEach(Scale::NORMALIZED, &mYValues, mMinY, mMaxY);
+    }
+    
+    BL_FLOAT factor = mAutoAdjustFactor * mYScaleFactor * height;
+    BLUtils::MultValues(&mYValues, factor);
+
+    // For Ghost and mini view
+    if (mLimitToBounds)
+    {
+        for (int i = 0; i < numYValues; i++)
+        {
+            BL_GUI_FLOAT y = yValuesData[i];
+        
+            if (y < (1.0 - mBounds[3])*height)
+                y = (1.0 - mBounds[3])*height;
+            
+            if (y > (1.0 - mBounds[1])*height)
+                y = (1.0 - mBounds[1])*height;
+
+            yValuesData[i] = y;
+        }
     }
     
     NotifyGraph();
@@ -1055,6 +1150,18 @@ GraphCurve5::ConvertY(BL_GUI_FLOAT val, BL_GUI_FLOAT height)
         else
             y = (y - mMinY)/(mMaxY - mMinY);
         
+        y = y * mAutoAdjustFactor * mYScaleFactor * height;
+    }
+    
+    return y;
+}
+
+BL_GUI_FLOAT
+GraphCurve5::ConvertYNoScale(BL_GUI_FLOAT val, BL_GUI_FLOAT height)
+{
+    BL_GUI_FLOAT y = val;
+    if (y < CURVE_VALUE_UNDEFINED)
+    {
         y = y * mAutoAdjustFactor * mYScaleFactor * height;
     }
     

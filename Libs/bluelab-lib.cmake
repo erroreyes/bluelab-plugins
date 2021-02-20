@@ -191,6 +191,8 @@ set(_bluelab-lib_src
   EQHackFftObj.cpp
   EQHackFftObj.h
   EQHackPluginInterface.h
+  FastMath.cpp
+  FastMath.h
   FastRTConvolver3.cpp
   FastRTConvolver3.h
   FftConvolver2.cpp

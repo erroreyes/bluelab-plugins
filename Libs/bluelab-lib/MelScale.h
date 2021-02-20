@@ -48,10 +48,10 @@ public:
                           const WDL_TypedBuf<BL_FLOAT> &mfccMagns);
     
 protected:
-    static BL_FLOAT ComputeTriangleAreaBetween(BL_FLOAT txmin,
-                                               BL_FLOAT txmid,
-                                               BL_FLOAT txmax,
-                                               BL_FLOAT x0, BL_FLOAT x1);
+    /*static*/ BL_FLOAT ComputeTriangleAreaBetween(BL_FLOAT txmin,
+                                                   BL_FLOAT txmid,
+                                                   BL_FLOAT txmax,
+                                                   BL_FLOAT x0, BL_FLOAT x1);
     static BL_FLOAT ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax,
                                      BL_FLOAT x);
     
@@ -91,6 +91,10 @@ protected:
     //
     FilterBank mHzToMelFilterBank;
     FilterBank mMelToHzFilterBank;
+
+private:
+    // Tmp buffers
+    vector<BL_FLOAT> mTmpBuf0;
 };
 
 #endif /* MelScale_hpp */

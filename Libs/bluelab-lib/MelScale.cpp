@@ -14,6 +14,8 @@ using namespace std;
 #include <BLUtils.h>
 #include <BLDebug.h>
 
+#include <FastMath.h>
+
 extern "C" {
 #include <fast-dct-lee.h>
 }
@@ -58,7 +60,8 @@ MelScale::~MelScale() {}
 BL_FLOAT
 MelScale::HzToMel(BL_FLOAT freq)
 {
-    BL_FLOAT mel = 2595.0*std::log10((BL_FLOAT)(1.0 + freq/700.0));
+    //BL_FLOAT mel = 2595.0*std::log10((BL_FLOAT)(1.0 + freq/700.0));
+    BL_FLOAT mel = 2595.0*FastMath::log10((BL_FLOAT)(1.0 + freq/700.0));
     
     return mel;
 }
@@ -66,7 +69,7 @@ MelScale::HzToMel(BL_FLOAT freq)
 BL_FLOAT
 MelScale::MelToHz(BL_FLOAT mel)
 {
-    BL_FLOAT hz = 700.0*(std::pow((BL_FLOAT)10.0, (BL_FLOAT)(mel/2595.0)) - 1.0);
+    BL_FLOAT hz = 700.0*(FastMath::pow((BL_FLOAT)10.0, (BL_FLOAT)(mel/2595.0)) - 1.0);
     
     return hz;
 }
@@ -121,7 +124,6 @@ MelScale::HzToMel(WDL_TypedBuf<BL_FLOAT> *resultMagns,
         resultMagnsData[i] = magn;
     }
 }
-
 
 void
 MelScale::MelToHz(WDL_TypedBuf<BL_FLOAT> *resultMagns,
@@ -205,12 +207,19 @@ MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT tx
     if ((x0 > txmax) || (x1 < txmin))
         return 0.0;
     
-    vector<BL_FLOAT> x;
-    x.push_back(txmin);
-    x.push_back(txmid);
-    x.push_back(txmax);
-    x.push_back(x0);
-    x.push_back(x1);
+    vector<BL_FLOAT> &x = mTmpBuf0;
+    //x.push_back(txmin);
+    //x.push_back(txmid);
+    //x.push_back(txmax);
+    //x.push_back(x0);
+    //x.push_back(x1);
+    x.resize(5);
+    x[0] = txmin;
+    x[1] = txmid;
+    x[2] = txmax;
+    x[3] = x0;
+    x[4] = x1;
+    
     sort(x.begin(), x.end());
     
     BL_FLOAT points[5][2];
@@ -245,7 +254,6 @@ MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT tx
     return area;
 }
 
-
 BL_FLOAT
 MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax,
                            BL_FLOAT x)
@@ -273,7 +281,7 @@ MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax,
 void
 MelScale::CreateFilterBankHzToMel(FilterBank *filterBank, int dataSize,
                                   BL_FLOAT sampleRate, int numFilters)
-{
+{    
     filterBank->mDataSize = dataSize;
     filterBank->mSampleRate = sampleRate;
     filterBank->mNumFilters = numFilters;
@@ -370,7 +378,7 @@ MelScale::CreateFilterBankHzToMel(FilterBank *filterBank, int dataSize,
 void
 MelScale::CreateFilterBankMelToHz(FilterBank *filterBank, int dataSize,
                                   BL_FLOAT sampleRate, int numFilters)
-{
+{    
     filterBank->mDataSize = dataSize;
     filterBank->mSampleRate = sampleRate;
     filterBank->mNumFilters = numFilters;
@@ -512,6 +520,10 @@ MelScale::ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
     {
         const FilterBank::Filter &filter = filterBank.mFilters[m];
 
+        const BL_FLOAT *filterData = filter.mData.Get();
+        BL_FLOAT *resultData = result->Get();
+        BL_FLOAT *magnsData = magns.Get();
+        
         // For each destination value
         for (int i = filter.mBounds[0] - 1; i < filter.mBounds[1] + 1; i++)
         {
@@ -521,8 +533,9 @@ MelScale::ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
                 continue;
             
             // Apply the filter value
-            BL_FLOAT tarea = filter.mData.Get()[i];
-            result->Get()[m] += tarea*magns.Get()[i];
+            //BL_FLOAT tarea = filter.mData.Get()[i];
+            //result->Get()[m] += tarea*magns.Get()[i];
+            resultData[m] += filterData[i]*magnsData[i];
         }
     }
 }

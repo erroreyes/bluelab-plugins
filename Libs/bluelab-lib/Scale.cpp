@@ -12,6 +12,8 @@
 #include <BLUtils.h>
 #include <MelScale.h>
 
+#include <FastMath.h>
+
 #include "Scale.h"
 
 #define LOG_SCALE_FACTOR 0.25
@@ -32,7 +34,11 @@ BL_FLOAT
 Scale::ApplyScale(Type scaleType,
                   BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
-    if (scaleType == DB)
+    if (scaleType == NORMALIZED)
+    {
+        x = ValueToNormalized(x, minValue, maxValue);
+    }
+    else if (scaleType == DB)
     {
         x = NormalizedToDB(x, minValue, maxValue);
     }
@@ -73,7 +79,11 @@ BL_FLOAT
 Scale::ApplyScaleInv(Type scaleType,
                      BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
-    if (scaleType == DB)
+    if (scaleType == NORMALIZED)
+    {
+        x = ValueToNormalizedInv(x, minValue, maxValue);
+    }
+    else if (scaleType == DB)
     {
         x = NormalizedToDBInv(x, minValue, maxValue);
     }
@@ -100,6 +110,82 @@ Scale::ApplyScaleInv(Type scaleType,
 }
 //template float Scale::ApplyScaleInv(Type scaleType, float y, float mindB, float maxdB);
 //template double Scale::ApplyScaleInv(Type scaleType, double y, double mindB, double maxdB);
+
+void
+Scale::ApplyScaleForEach(Type scaleType,
+                         WDL_TypedBuf<BL_FLOAT> *values,
+                         BL_FLOAT minValue,
+                         BL_FLOAT maxValue)
+{
+    if (scaleType == NORMALIZED)
+    {
+        ValueToNormalizedForEach(values, minValue, maxValue);
+    }
+    else if (scaleType == DB)
+    {
+        NormalizedToDBForEach(values, minValue, maxValue);
+    }
+    else if (scaleType == LOG)
+    {
+        NormalizedToLogForEach(values, minValue, maxValue);
+    }
+#if 0
+    else if (scaleType == LOG_FACTOR)
+    {
+        NormalizedToLogFactorForEach(values, minValue, maxValue);
+    }
+#endif
+    else if (scaleType == LOG_FACTOR)
+    {
+        NormalizedToLogScaleForEach(values);
+    }
+    else if ((scaleType == MEL) || (scaleType == MEL_FILTER))
+    {
+        NormalizedToMelForEach(values, minValue, maxValue);
+    }
+    else if ((scaleType == MEL_INV) || (scaleType == MEL_FILTER_INV))
+    {
+        NormalizedToMelInvForEach(values, minValue, maxValue);
+    }
+    else if (scaleType == DB_INV)
+    {
+        NormalizedToDBInvForEach(values, minValue, maxValue);
+    }
+}
+    
+void
+Scale::ApplyScaleInvForEach(Type scaleType,
+                            WDL_TypedBuf<BL_FLOAT> *values,
+                            BL_FLOAT minValue,
+                            BL_FLOAT maxValue)
+{
+    if (scaleType == NORMALIZED)
+    {
+        ValueToNormalizedInvForEach(values, minValue, maxValue);
+    }
+    else if (scaleType == DB)
+    {
+        NormalizedToDBInvForEach(values, minValue, maxValue);
+    }
+    else if (scaleType == LOG)
+    {
+        NormalizedToLogInvForEach(values, minValue, maxValue);
+    }
+#if 0
+    else if (scaleType == LOG_FACTOR)
+    {
+        NormalizedToLogFactorInvForEach(values, minValue, maxValue);
+    }
+#endif
+    else if (scaleType == LOG_FACTOR)
+    {
+        NormalizedToLogScaleInvForEach(values);
+    }
+    else if ((scaleType == MEL) || (scaleType == MEL_FILTER))
+    {
+        NormalizedToMelInvForEach(values, minValue, maxValue);
+    }
+}
 
 //template <typename FLOAT_TYPE>
 void
@@ -132,6 +218,25 @@ Scale::ApplyScale(Type scaleType,
 //template void Scale::ApplyScale(Type scaleType, WDL_TypedBuf<BL_FLOAT> *values,
 //                                BL_FLOAT minValue, BL_FLOAT maxValue);
 
+BL_FLOAT
+Scale::ValueToNormalized(BL_FLOAT y,
+                         BL_FLOAT minValue,
+                         BL_FLOAT maxValue)
+{
+    y = (y - minValue)/(maxValue - minValue);
+
+    return y;
+}
+
+BL_FLOAT
+Scale::ValueToNormalizedInv(BL_FLOAT y,
+                            BL_FLOAT minValue,
+                            BL_FLOAT maxValue)
+{
+    y = y*(maxValue - minValue) + minValue;
+
+    return y;
+}
 
 //template <typename FLOAT_TYPE>
 BL_FLOAT
@@ -180,10 +285,14 @@ Scale::NormalizedToLog(BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
     x = x*(maxValue - minValue) + minValue;
     
-    x = std::log10(1.0 + x);
+    //x = std::log10(1.0 + x);
+    x = FastMath::log10(1.0 + x);
     
-    BL_FLOAT lMin = std::log10(1.0 + minValue);
-    BL_FLOAT lMax = std::log10(1.0 + maxValue);
+    //BL_FLOAT lMin = std::log10(1.0 + minValue);
+    //BL_FLOAT lMax = std::log10(1.0 + maxValue);
+
+    BL_FLOAT lMin = FastMath::log10(1.0 + minValue);
+    BL_FLOAT lMax = FastMath::log10(1.0 + maxValue);
     
     x = (x - lMin)/(lMax - lMin);
     
@@ -197,12 +306,15 @@ Scale::NormalizedToLog(BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 BL_FLOAT
 Scale::NormalizedToLogInv(BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 {
-    BL_FLOAT lMin = std::log10(1.0 + minValue);
-    BL_FLOAT lMax = std::log10(1.0 + maxValue);
+    //BL_FLOAT lMin = std::log10(1.0 + minValue);
+    //BL_FLOAT lMax = std::log10(1.0 + maxValue);
+    BL_FLOAT lMin = FastMath::log10(1.0 + minValue);
+    BL_FLOAT lMax = FastMath::log10(1.0 + maxValue);
     
     x = x*(lMax - lMin) + lMin;
     
-    x = std::pow((BL_FLOAT)10.0, x) - 1.0;
+    //x = std::pow((BL_FLOAT)10.0, x) - 1.0;
+    x = FastMath::pow((BL_FLOAT)10.0, x) - 1.0;
     
     x = (x - minValue)/(maxValue - minValue);
     
@@ -233,9 +345,10 @@ Scale::NormalizedToLogCoeff(BL_FLOAT x, BL_FLOAT minValue, BL_FLOAT maxValue)
 BL_FLOAT
 Scale::NormalizedToLogScale(BL_FLOAT value)
 {
-    BL_FLOAT t0 =
-    std::log((BL_FLOAT)1.0 + value*(std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR;
-                        
+    //BL_FLOAT t0 = std::log((BL_FLOAT)1.0 + value*(std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR;
+
+    BL_FLOAT t0 = FastMath::log((BL_FLOAT)1.0 + value*(FastMath::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR;
+    
     return t0;
 }
 //template float Scale::NormalizedToLogScale(float value);
@@ -246,8 +359,8 @@ Scale::NormalizedToLogScale(BL_FLOAT value)
 BL_FLOAT
 Scale::NormalizedToLogScaleInv(BL_FLOAT value)
 {
-    BL_FLOAT t0 =
-    (std::exp(value) - 1.0)/(((std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
+    //BL_FLOAT t0 = (std::exp(value) - 1.0)/(((std::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
+    BL_FLOAT t0 = (FastMath::exp(value) - 1.0)/(((FastMath::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
     
     return t0;
 }
@@ -271,7 +384,8 @@ Scale::DataToLogScale(WDL_TypedBuf<BL_FLOAT> *values)
         
         // "Inverse" process for data
         t0 *= LOG_SCALE2_FACTOR;
-        BL_FLOAT t = (std::exp(t0) - 1.0)/(std::exp(LOG_SCALE2_FACTOR) - 1.0);
+        //BL_FLOAT t = (std::exp(t0) - 1.0)/(std::exp(LOG_SCALE2_FACTOR) - 1.0);
+        BL_FLOAT t = (FastMath::exp(t0) - 1.0)/(FastMath::exp(LOG_SCALE2_FACTOR) - 1.0);
         
         int dstIdx = (int)(t*valuesSize);
         
@@ -348,15 +462,20 @@ Scale::DataToMel(WDL_TypedBuf<BL_FLOAT> *values,
     
     BL_FLOAT minMel = MelScale::HzToMel(minFreq);
     BL_FLOAT maxMel = MelScale::HzToMel(maxFreq);
-    
+
+    BL_FLOAT t0 = 0.0;
+    BL_FLOAT t0incr = 1.0/valuesSize;
+
+    BL_FLOAT freqCoeff = 1.0/(maxFreq - minFreq);
     for (int i = 0; i < valuesSize; i++)
     {
-        BL_FLOAT t0 = ((BL_FLOAT)i)/valuesSize;
+        //BL_FLOAT t0 = ((BL_FLOAT)i)/valuesSize;
 
         // "Inverse" process for data
         BL_FLOAT mel = minMel + t0*(maxMel - minMel);
         BL_FLOAT freq = MelScale::MelToHz(mel);
-        BL_FLOAT t = (freq - minFreq)/(maxFreq - minFreq);
+        //BL_FLOAT t = (freq - minFreq)/(maxFreq - minFreq);
+        BL_FLOAT t = (freq - minFreq)*freqCoeff;
 
         int dstIdx = (int)(t*valuesSize);
         
@@ -370,6 +489,8 @@ Scale::DataToMel(WDL_TypedBuf<BL_FLOAT> *values,
         
         BL_FLOAT dstVal = origValuesData[dstIdx];
         valuesData[i] = dstVal;
+
+        t0 += t0incr;
     }
 }
 //template void Scale::DataToMel(WDL_TypedBuf<float> *values,
@@ -414,3 +535,269 @@ Scale::DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
 ////                                        double minFreq, double maxFreq);
 //template void Scale::DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
 //                                        BL_FLOAT minFreq, BL_FLOAT maxFreq);
+
+// OPTIMS: compute in loops, to optimize some points
+//
+
+void
+Scale::ValueToNormalizedForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                BL_FLOAT minValue, BL_FLOAT maxValue)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    BL_FLOAT coeffInv = 0.0;
+    if (maxValue - minValue > BL_EPS)
+        coeffInv = 1.0/(maxValue - minValue);
+    
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+
+        //x = (x - minValue)/(maxValue - minValue);
+        x = (x - minValue)*coeffInv;
+        
+         valuesData[i] = x;
+    }
+}
+    
+void
+Scale::ValueToNormalizedInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                   BL_FLOAT minValue, BL_FLOAT maxValue)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+
+        x = x*(maxValue - minValue) + minValue;
+        
+        valuesData[i] = x;
+    }
+}
+
+void
+Scale::NormalizedToDBForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                             BL_FLOAT mindB,
+                             BL_FLOAT maxdB)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    BL_FLOAT coeffInv = 0.0;
+    if (maxdB - mindB > BL_EPS)
+        coeffInv = 1.0/(maxdB - mindB);
+    
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+        
+        if (std::fabs(x) < BL_EPS)
+            x = mindB;
+        else
+            x = BLUtils::AmpToDB(x);
+        
+        //x = (x - mindB)/(maxdB - mindB);
+        x = (x - mindB)*coeffInv;
+        
+        // Avoid negative values, for very low x dB
+        if (x < 0.0)
+            x = 0.0;
+
+        valuesData[i] = x;
+    }
+}
+
+void
+Scale::NormalizedToDBInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                BL_FLOAT mindB,
+                                BL_FLOAT maxdB)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+        
+        x = mindB + x*(maxdB - mindB);
+        
+        x = BLUtils::DBToAmp(x);
+        
+        // Avoid negative values, for very low x dB
+        if (x < 0.0)
+            x = 0.0;
+
+        valuesData[i] = x;
+    }
+}
+    
+void
+Scale::NormalizedToLogForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                              BL_FLOAT minValue,
+                              BL_FLOAT maxValue)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    //BL_FLOAT lMin = std::log10(1.0 + minValue);
+    //BL_FLOAT lMax = std::log10(1.0 + maxValue);
+    BL_FLOAT lMin = FastMath::log10(1.0 + minValue);
+    BL_FLOAT lMax = FastMath::log10(1.0 + maxValue);
+        
+    BL_FLOAT coeffInv = 0.0;
+    if (lMax - lMin > BL_EPS)
+        coeffInv = 1.0/(lMax - lMin);
+                        
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+        
+        x = x*(maxValue - minValue) + minValue;
+    
+        //x = std::log10(1.0 + x);
+        x = FastMath::log10(1.0 + x);
+    
+        //x = (x - lMin)/(lMax - lMin);
+        x = (x - lMin)*coeffInv;
+
+        valuesData[i] = x;
+    }
+}
+    
+ 
+void
+Scale::NormalizedToLogInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                 BL_FLOAT minValue,
+                                 BL_FLOAT maxValue)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    //BL_FLOAT lMin = std::log10(1.0 + minValue);
+    //BL_FLOAT lMax = std::log10(1.0 + maxValue);
+    BL_FLOAT lMin = FastMath::log10(1.0 + minValue);
+    BL_FLOAT lMax = FastMath::log10(1.0 + maxValue);
+        
+    BL_FLOAT coeffInv = 0.0;
+    if (maxValue - minValue > BL_EPS)
+        coeffInv = 1.0/(maxValue - minValue);
+    
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+        
+        x = x*(lMax - lMin) + lMin;
+    
+        //x = std::pow((BL_FLOAT)10.0, x) - 1.0;
+        x = FastMath::pow((BL_FLOAT)10.0, x) - 1.0;
+    
+        //x = (x - minValue)/(maxValue - minValue);
+        x = (x - minValue)*coeffInv;
+
+        valuesData[i] = x;
+    }
+}
+       
+void
+Scale::NormalizedToLogScaleForEach(WDL_TypedBuf<BL_FLOAT> *values)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    BL_FLOAT coeffInv = 1.0/LOG_SCALE2_FACTOR;
+    BL_FLOAT coeff2 = FastMath::exp(LOG_SCALE2_FACTOR) - 1.0;
+    
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+        
+        //x = FastMath::log((BL_FLOAT)1.0 + x*(FastMath::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR;
+        //x = FastMath::log((BL_FLOAT)1.0 + x*(FastMath::exp(LOG_SCALE2_FACTOR) - 1.0))*coeffInv;
+        x = FastMath::log((BL_FLOAT)1.0 + x*coeff2)*coeffInv;
+        valuesData[i] = x;
+    }
+}
+    
+void
+Scale::NormalizedToLogScaleInvForEach(WDL_TypedBuf<BL_FLOAT> *values)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    //BL_FLOAT coeffInv = 1.0/LOG_SCALE2_FACTOR;
+    BL_FLOAT coeffInv = 1.0/(((FastMath::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
+    
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+        
+        //x = (FastMath::exp(x) - 1.0)/(((FastMath::exp(LOG_SCALE2_FACTOR) - 1.0))/LOG_SCALE2_FACTOR);
+        //x = (FastMath::exp(x) - 1.0)/(((FastMath::exp(LOG_SCALE2_FACTOR) - 1.0))*coeffInv);
+        x = (FastMath::exp(x) - 1.0)*coeffInv;
+        
+        valuesData[i] = x;
+    }
+}
+    
+void
+Scale::NormalizedToMelForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                              BL_FLOAT minFreq,
+                              BL_FLOAT maxFreq)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    BL_FLOAT lMin = MelScale::HzToMel(minFreq);
+    BL_FLOAT lMax = MelScale::HzToMel(maxFreq);
+        
+    BL_FLOAT coeffInv = 0.0;
+    if (lMax - lMin > BL_EPS)
+        coeffInv = 1.0/(lMax - lMin);
+    
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+        
+        x = x*(maxFreq - minFreq) + minFreq;
+    
+        x = MelScale::HzToMel(x);
+    
+        //x = (x - lMin)/(lMax - lMin);
+        x = (x - lMin)*coeffInv;;
+
+        valuesData[i] = x;
+    }
+}
+    
+void
+Scale::NormalizedToMelInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                 BL_FLOAT minFreq,
+                                 BL_FLOAT maxFreq)
+{
+    int numValues = values->GetSize();
+    BL_FLOAT *valuesData = values->Get();
+
+    BL_FLOAT minMel = MelScale::HzToMel(minFreq);
+    BL_FLOAT maxMel = MelScale::HzToMel(maxFreq);
+        
+    BL_FLOAT coeffInv = 0.0;
+    if (maxFreq - minFreq > BL_EPS)
+        coeffInv = 1.0/(maxFreq - minFreq);
+    
+    for (int i = 0; i < numValues; i++)
+    {
+        BL_FLOAT x = valuesData[i];
+    
+        x = x*(maxMel - minMel) + minMel;
+        
+        x = MelScale::MelToHz(x);
+    
+        //x = (x - minFreq)/(maxFreq - minFreq);
+        x = (x - minFreq)*coeffInv;
+        
+        valuesData[i] = x;
+    }
+}

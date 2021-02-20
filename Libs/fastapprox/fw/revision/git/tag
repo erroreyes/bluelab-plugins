@@ -1,0 +1,44 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                                 tag                                 
+# 
+# Recursively tag the current directory with the (version) tag
+# indicated by the --tag argument.
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+#                           chicken and egg                           
+#---------------------------------------------------------------------
+
+test -f "${FW_ROOT}/share/fw/sh/fw-find.sh" && fws="${FW_ROOT}/share/fw/sh/fw-find.sh"
+test -f "fw/sh/fw-find.sh" && fws="fw/sh/fw-find.sh"
+test -f "fw.local/sh/fw-find.sh" && fws="fw.local/sh/fw-find.sh"
+test ! -z "$fws" || {
+  echo "revision/git/tag: fatal: can't locate fw-find.sh" 1>&2
+  exit 1
+}
+
+. "$fws"
+
+#---------------------------------------------------------------------
+#                              routines                               
+#---------------------------------------------------------------------
+
+fw_source "revision/git/tag" "sh/fatal.sh"
+fw_source "revision/git/tag" "sh/parse-args.sh"
+fw_source "revision/git/tag" "sh/validate-args.sh"
+
+#---------------------------------------------------------------------
+#                                main                                 
+#---------------------------------------------------------------------
+
+parse_args "revision/git/tag" "$@"
+
+validate_args "revision/git/tag" "tag" ""
+
+eval `fw-exec "template/$template/load-config"`
+
+git tag -m "tag '$tag' created by fw-revision-git" -a $tag
+
+exit 0

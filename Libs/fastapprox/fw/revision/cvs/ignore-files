@@ -1,0 +1,18 @@
+#! /bin/sh
+
+test -z "${FW_TRACE}" || set -x
+
+touch .cvsignore
+
+egrep "^/\.cvsignore/" CVS/Entries >/dev/null 2>/dev/null || \
+cvs -Q add .cvsignore
+
+(
+  cat .cvsignore
+  for x in "$@"
+    do
+      echo "$x"
+    done
+) | perl -ne 'print $_ unless $seen{$_}++;' > .cvsignore_new
+
+mv -f .cvsignore_new .cvsignore

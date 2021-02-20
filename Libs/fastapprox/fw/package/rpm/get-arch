@@ -1,0 +1,48 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                           chicken and egg                           
+#---------------------------------------------------------------------
+
+test -f "${FW_ROOT}/share/fw/sh/fw-find.sh" && fws="${FW_ROOT}/share/fw/sh/fw-find.sh"
+test -f "fw/sh/fw-find.sh" && fws="fw/sh/fw-find.sh"
+test -f "fw.local/sh/fw-find.sh" && fws="fw.local/sh/fw-find.sh"
+test ! -z "$fws" || {
+  echo "package/rpm/get-arch: fatal: can't locate fw-find.sh" 1>&2
+  exit 1
+}
+
+. "$fws"
+
+#---------------------------------------------------------------------
+#                              routines                               
+#---------------------------------------------------------------------
+
+fw_source "package/rpm/get-arch" "sh/fatal.sh"
+fw_source "package/rpm/get-arch" "sh/fw-exec.sh"
+fw_source "package/rpm/get-arch" "sh/parse-args.sh"
+fw_source "package/rpm/get-arch" "sh/validate-args.sh"
+
+#---------------------------------------------------------------------
+#                                main                                 
+#---------------------------------------------------------------------
+
+parse_args "package/rpm/get-arch" "$@"
+
+validate_args "package/rpm/get-arch" "template" "template"
+
+which rpm >/dev/null 2>/dev/null || {
+  echo "package/rpm/get-arch: error: rpm not installed" 1>&2
+  fatal "package/rpm/get-arch"
+}
+
+eval `fw_exec "template/$template/load-config"`
+
+if test "$FW_PACKAGE_ARCHITECTURE_DEPENDENT" = "1" || test -n "$build"
+  then
+    arch=`rpm -q rpm --queryformat %{arch}`
+  else
+    arch="noarch"
+  fi
+
+printf "%s" "$arch"

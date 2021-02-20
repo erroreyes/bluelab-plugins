@@ -1,0 +1,121 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                           chicken and egg                           
+#---------------------------------------------------------------------
+
+test -f "${FW_ROOT}/share/fw/sh/fw-find.sh" && fws="${FW_ROOT}/share/fw/sh/fw-find.sh"
+test -f "fw/sh/fw-find.sh" && fws="fw/sh/fw-find.sh"
+test -f "fw.local/sh/fw-find.sh" && fws="fw.local/sh/fw-find.sh"
+test ! -z "$fws" || {
+  echo "package/rpm/make-build-package: fatal: can't locate fw-find.sh" 1>&2
+  exit 1
+}
+
+. "$fws"
+
+#---------------------------------------------------------------------
+#                              routines                               
+#---------------------------------------------------------------------
+
+fw_source "package/rpm/make-build-package" "sh/fatal.sh"
+fw_source "package/rpm/make-build-package" "sh/fw-exec.sh"
+fw_source "package/rpm/make-build-package" "sh/parse-args.sh"
+fw_source "package/rpm/make-build-package" "sh/validate-args.sh"
+
+make_spec_file () \
+  {
+    local depends
+    local files
+    local dir
+    local tmpdir
+
+    depends=`fw_exec "package/rpm/dependency-closure"           \
+                     "$arch"                                    \
+                     "$FW_PACKAGE_BUILD_DEPENDS"                \
+                     "$release" | perl -pe 's/\(=/= /g; s/\)//g;';`
+
+    test -n "$depends" || fatal "package/rpm/make-build-package"
+
+    mkdir "$destdir"/_TMP || fatal "package/rpm/make-build-package"
+    chmod 755 "$destdir"/_TMP || fatal "package/rpm/make-build-package"
+
+    cat <<EOD > "$destdir"/_TMP/package.spec
+Summary: Build environment for $package $version.
+Name: ${package}_build
+Version: $version
+Release: $releasenum
+License: Unknown
+Group: Optional
+Source: file:///dev/null
+BuildArch: $arch
+#URL:
+#Distribution:
+#Vendor:
+#Packager:
+Requires: $depends
+#Conflicts: 
+
+%description
+This package contains the build environment for $package $version.
+
+%prep
+true
+
+%build
+true
+
+%install
+true
+
+%files
+EOD
+  }
+
+#---------------------------------------------------------------------
+#                                main                                 
+#---------------------------------------------------------------------
+
+parse_args "package/rpm/make-build-package" "$@"
+
+validate_args "package/rpm/make-build-package" "destdir outdir release template" "template"
+
+which rpm >/dev/null 2>/dev/null || {
+  echo "package/rpm/make-build-package: error: rpm not installed" 1>&2
+  fatal "package/rpm/make-build-package"
+}
+
+which rpmbuild >/dev/null 2>/dev/null || {
+  echo "package/rpm/make-build-package: error: rpm-build not installed" 1>&2
+  fatal "package/rpm/make-build-package"
+}
+
+eval `fw_exec "template/$template/load-config"`
+
+package=`fw-exec package/rpm/canonicalize-package "${FW_PACKAGE_NAME}"` || fatal package/rpm/make-build-package
+version=`fw-exec package/rpm/canonicalize-version "${FW_PACKAGE_VERSION}"` || fatal package/rpm/make-build-package
+
+arch=`rpm -q rpm --queryformat %{arch}`
+
+if test "x$release" = xyes
+  then
+    releasenum="1"
+  else
+    releasenum="TEST1"
+  fi
+
+make_spec_file
+
+mkdir -p "$destdir"/_TMP/root/rpmbuild/{BUILD,RPMS,S{OURCE,PEC,RPM}S}
+mkdir -p "$destdir"/_TMP/root/var/tmp
+mkdir -p "$destdir"/_TMP/root/"$destdir"/_TMP
+ln -s "$destdir"/_TMP/root "$destdir"/_TMP/root/"$destdir"/_TMP/root
+(cd /usr/src/redhat; find . -print | cpio -pd "$destdir"/_TMP/root/rpmbuild >/dev/null 2>/dev/null)
+rpmbuild --quiet --root "$destdir"/_TMP/root --define "%_topdir $destdir/_TMP/root/rpmbuild" -bb "$destdir"/_TMP/package.spec
+test $? -eq 0 || fatal "package/rpm/make-build-package"
+
+cp -f "$destdir"/_TMP/root/rpmbuild/RPMS/$arch/${package}_build-${version}-${releasenum}.${arch}.rpm "${outdir}"
+
+rm -rf "$destdir"/_TMP
+
+exit 0

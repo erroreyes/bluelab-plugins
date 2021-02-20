@@ -16,6 +16,7 @@
 using namespace std;
 
 #include "IPlug_include_in_plug_hdr.h"
+using namespace iplug;
 
 #include "../../WDL/fft.h"
 
@@ -76,6 +77,8 @@ public:
     
     template <typename FLOAT_TYPE>
     static void DumpPhases(const char *filename, const FLOAT_TYPE *data, int size);
+
+    static bool ExitAfter(Plugin *plug, int numSeconds);
 };
 
 #endif /* defined(__Denoiser__BLDebug__) */

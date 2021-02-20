@@ -1,0 +1,325 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                           chicken and egg                           
+#---------------------------------------------------------------------
+
+test -f "${FW_ROOT}/share/fw/sh/fw-find.sh" && fws="${FW_ROOT}/share/fw/sh/fw-find.sh"
+test -f "fw/sh/fw-find.sh" && fws="fw/sh/fw-find.sh"
+test -f "fw.local/sh/fw-find.sh" && fws="fw.local/sh/fw-find.sh"
+test ! -z "$fws" || {
+  echo "package/rpm/make-package: fatal: can't locate fw-find.sh" 1>&2
+  exit 1
+}
+
+. "$fws"
+
+#---------------------------------------------------------------------
+#                              routines                               
+#---------------------------------------------------------------------
+
+fw_source "package/rpm/make-package" "sh/fatal.sh"
+fw_source "package/rpm/make-package" "sh/fw-exec.sh"
+fw_source "package/rpm/make-package" "sh/parse-args.sh"
+fw_source "package/rpm/make-package" "sh/validate-args.sh"
+
+# automatic dependencies ... rpmbuild does this so skip it ...
+
+make_spec_file () \
+  {
+    local conflicts
+    local conflictstag
+    local depends
+    local dependstag
+    local hookdir
+    local postinst
+    local postremove
+    local preinst
+    local preremove
+    local provides
+    local providestag
+
+    if test "x$FW_PACKAGE_DEPENDS" = x
+      then
+        depends=""
+      else
+        depends=`fw_exec "package/rpm/dependency-range"             \
+                         "$FW_PACKAGE_DEPENDS" |                    \
+                 perl -pe 's/\((\s*[<=>][^)]+)\)/ \1/g ;
+                           s/>>/>/g ;
+                           s/<</</g'`
+      fi
+
+    if test "x$depends" = x
+      then
+        dependstag="#Requires:"
+      else
+        dependstag="Requires: $depends"
+      fi
+
+    conflicts=`perl -le '$ARGV[0] =~ s/\((\s*[<=>][^)]+)\)/ \1/g ; $ARGV[0] =~ s/>>/>/g; $ARGV[0] =~ s/<</</g ; $ARGV[0] =~ s/\s\s/ /g; $ARGV[0] =~ s/,(\S)/, \1/g; print $ARGV[0]' "$FW_PACKAGE_CONFLICTS"`
+
+    test $? -eq 0 || fatal "package/rpm/make-package"
+
+    if test "x$conflicts" = x
+      then
+        conflictstag="#Conflicts:"
+      else
+        conflictstag="Conflicts: $conflicts"
+      fi
+
+    provides=`perl -le '$ARGV[0] =~ s/\((\s*[<=>][^)]+)\)/ \1/g ; $ARGV[0] =~ s/>>/>/g; $ARGV[0] =~ s/<</</g ; $ARGV[0] =~ s/\s\s/ /g; $ARGV[0] =~ s/,(\S)/, \1/g; print $ARGV[0]' "$FW_PACKAGE_PROVIDES"`
+
+    test $? -eq 0 || fatal "package/rpm/make-package"
+
+    if test "x$provides" = x
+      then
+        providestag="#Provides:"
+      else
+        providestag="Provides: $provides"
+      fi
+
+    mkdir "$destdir"/_TMP || fatal "package/rpm/make-package"
+    chmod 755 "$destdir"/_TMP || fatal "package/rpm/make-package"
+
+    hookdir="${libexecdir}/fw/$FW_PACKAGE_NAME-$FW_PACKAGE_VERSION"
+
+    for x in pre-install post-install pre-remove post-remove
+      do
+        perl -ne '
+          do 
+            {
+              print STDERR "package/rpm/make-package: ",
+                           "fatal: line $. of $ARGV[0] starts with % ",
+                           "or _RPMEOF\n";
+              exit 1;
+            }
+          if (m/^(%|_RPMEOF)/);
+        ' "${destdir}/${hookdir}/$x" ||                    \
+        fatal "package/rpm/make-package"
+      done
+
+    if test -s "${destdir}/${hookdir}/pre-install"
+      then
+        preinst=`cat "${destdir}/${hookdir}/pre-install"`
+      else
+        preinst="#! /bin/sh\nexit 0"
+      fi
+
+    if test -s "${destdir}/${hookdir}/post-install"
+      then
+        postinst=`cat "${destdir}/${hookdir}/post-install"`
+      else
+        postinst="#! /bin/sh\nexit 0"
+      fi
+
+    if test -s "${destdir}/${hookdir}/pre-remove"
+      then
+        preremove=`cat "${destdir}/${hookdir}/pre-remove"`
+      else
+        preremove="#! /bin/sh\nexit 0"
+      fi
+
+    if test -s "${destdir}/${hookdir}/post-remove"
+      then
+        postremove=`cat "${destdir}/${hookdir}/post-remove"`
+      else
+        postremove="#! /bin/sh\nexit 0"
+      fi
+
+    cat <<EOD > "$destdir"/_TMP/package.spec
+# redhat tends to make -debuginfo packages which framewerk doesn't know
+# how to deal with, so we'll just turn them off
+%define debug_package %{nil}
+
+Summary: $FW_PACKAGE_SHORT_DESCRIPTION
+Name: ${package}
+Version: $version
+Release: $releasenum
+License: Unknown
+Group: Optional
+Source: file:///${package}-${version}.tar.gz
+BuildArch: $arch
+BuildRoot: %{_tmppath}/%{name}-buildroot
+#URL:
+#Distribution:
+#Vendor:
+#Packager:
+$dependstag
+$conflictstag
+$providestag
+
+%description
+$FW_PACKAGE_DESCRIPTION
+
+%prep
+%setup
+
+%build
+if [ -d "\$RPM_BUILD_ROOT" ]; then rm -rf "\$RPM_BUILD_ROOT"; fi
+mkdir -p "\$RPM_BUILD_ROOT"
+CFLAGS="\$RPM_OPT_FLAGS" ./build --disable-hardcore
+
+%install
+# TODO: ERROR ... using make breaks abstraction
+make DESTDIR="\$RPM_BUILD_ROOT" source_install-rpm
+
+%clean
+if [ -d "\$RPM_BUILD_ROOT" ]; then rm -rf "\$RPM_BUILD_ROOT"; fi
+rm -rf "\$RPM_BUILD_DIR/%{name}-%{version}"
+
+%pretrans
+set +e
+rpm -q "$FW_PACKAGE_NAME" --queryformat '%{VERSION}' | grep -v 'not installed' > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".old_version
+set -e
+printf "%s" "$FW_PACKAGE_VERSION" > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".new_version
+cat <<'_RPMEOF' > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpreinst
+$preinst
+_RPMEOF
+chmod +x \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpreinst
+cat <<'_RPMEOF' > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpostinst
+$postinst
+_RPMEOF
+chmod +x \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpostinst
+cat <<'_RPMEOF' > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpreremove
+$preremove
+_RPMEOF
+chmod +x \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpreremove
+cat <<'_RPMEOF' > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpostremove
+$postremove
+_RPMEOF
+chmod +x \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpostremove
+exit 0
+%pre
+set -e
+if test "\$1" -eq 1
+  then
+    \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpreinst install
+  else
+    \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpreremove failed-upgrade "\`cat \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".old_version\`" && \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpreinst upgrade "\`cat \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".old_version\`"
+  fi
+
+exit 0
+%post -p /sbin/ldconfig
+%preun
+set -e
+if test "\$1" -eq 0
+  then
+    cat <<'_RPMEOF' > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".oldpreremove
+$preremove
+_RPMEOF
+    chmod +x \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".oldpreremove
+
+    \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".oldpreremove remove
+  else
+    \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpostremove failed-upgrade "\`cat \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".old_version\`"
+  fi
+
+exit 0
+%postun
+set -e
+if test "\$1" -eq 0
+  then
+    cat <<'_RPMEOF' > \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".oldpostremove
+$postremove
+_RPMEOF
+    chmod +x \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".oldpostremove
+
+    \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".oldpostremove remove
+    rm -f \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".*
+  else
+    true
+  fi
+
+/sbin/ldconfig
+exit 0
+%posttrans
+set -e
+\${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".newpostinst configure "\`cat \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".old_version\`"
+rm -f \${TMPDIR:=/tmp}/."$FW_PACKAGE_NAME".*
+exit 0
+%files
+%defattr(-,root,root,-)
+EOD
+# TODO: this is a bit dangerous because the files list might be architecture 
+# dependent
+    find "$destdir" -type f -or -type l | \
+    perl -ne 'BEGIN { $l = length shift @ARGV; };
+              $s = substr ($_, $l);
+              next unless $s =~ /\S/;
+              next if $s =~ m%^/?_TMP%;
+              $s =~ s%(/man\d/.*\.\d)%$1.gz%;
+              print $s;' "$destdir" >> "$destdir"/_TMP/package.spec
+
+    find "$destdir" -type d | \
+    perl -lne 'BEGIN { $l = length shift @ARGV; };
+               chomp;
+               $s = substr ($_, $l);
+               next unless $s =~ /\S/;
+               next if $s =~ m%^/?_TMP%;
+               next if -l $s;            # fix the /etc/init.d problem
+               print "%dir $s";' "$destdir" >> "$destdir"/_TMP/package.spec
+
+    for x in start stop
+      do
+        if test "$x" = "start"
+          then
+            okmd5=7a8768f94ba14a74361731a2c4bf9d20
+          else
+            okmd5=71e59480baed6df5ce42e42f69d5a077
+          fi
+
+        test -f "${destdir}/${hookdir}/$x" &&                           \
+        test "`md5sum "${destdir}/${hookdir}/$x" | cut -f1 -d' '`" != $okmd5 && \
+        echo "package/rpm/make-package: warning: $x hook not supported" 1>&2
+      done
+  }
+
+#---------------------------------------------------------------------
+#                                main                                 
+#---------------------------------------------------------------------
+
+parse_args "package/rpm/make-package" "$@"
+
+validate_args "package/rpm/make-package" "destdir libexecdir ldd outdir release template" "template"
+
+which rpm >/dev/null 2>/dev/null || {
+  echo "package/rpm/make-package: error: rpm not installed" 1>&2
+  fatal "package/rpm/make-package"
+}
+
+eval `fw_exec "template/$template/load-config"`
+
+package=`fw-exec package/rpm/canonicalize-package "${FW_PACKAGE_NAME}"` || fatal package/rpm/make-package
+version=`fw-exec package/rpm/canonicalize-version "${FW_PACKAGE_VERSION}"` || fatal package/rpm/make-package
+
+if test "$FW_PACKAGE_ARCHITECTURE_DEPENDENT" = "1"
+  then
+    arch=`rpm -q rpm --queryformat %{arch}`
+  else
+    arch="noarch"
+  fi
+
+if test "x$release" = xyes
+  then
+    releasenum="1"
+  else
+    releasenum="TEST1"
+  fi
+
+make_spec_file
+
+make -s dist || fatal "package/rpm/make-package"
+
+mkdir -p "$destdir"/_TMP/root/rpmbuild/{BUILD,RPMS,S{OURCE,PEC,RPM}S}
+(cd /usr/src/redhat; find . -print | cpio -pd "$destdir"/_TMP/root/rpmbuild >/dev/null 2>/dev/null)
+cp ${package}-${version}.tar.gz "$destdir"/_TMP/root/rpmbuild/SOURCES/
+rpmbuild --quiet --buildroot "$destdir/_TMP/build" --define "_topdir $destdir/_TMP/root/rpmbuild" -ba "$destdir"/_TMP/package.spec
+test $? -eq 0 || fatal "package/rpm/make-package"
+
+cp -f "$destdir"/_TMP/root/rpmbuild/SRPMS/${package}-${version}-${releasenum}.src.rpm "${outdir}"
+cp -f "$destdir"/_TMP/root/rpmbuild/RPMS/$arch/${package}-${version}-${releasenum}.$arch.rpm "${outdir}"
+
+rm -rf "$destdir"/_TMP
+
+exit 0

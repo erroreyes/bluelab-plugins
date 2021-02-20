@@ -1,0 +1,59 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                              bootstrap                              
+# 
+# This will be called by the template bootstrap function, which is
+# itself called by fw-bootstrap, which is in turn invoked by the
+# bootstrap executable deposited at the top of the source project.
+# It is intended for running any setup activity required prior to
+# building.
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+#                           chicken and egg                           
+#---------------------------------------------------------------------
+
+test -f "${FW_ROOT}/share/fw/sh/fw-find.sh" && fws="${FW_ROOT}/share/fw/sh/fw-find.sh"
+test -f "fw/sh/fw-find.sh" && fws="fw/sh/fw-find.sh"
+test -f "fw.local/sh/fw-find.sh" && fws="fw.local/sh/fw-find.sh"
+test ! -z "$fws" || {
+  echo "Cxx/bootstrap: fatal: can't locate fw-find.sh" 1>&2
+  exit 1
+}
+
+. "$fws"
+
+#---------------------------------------------------------------------
+#                              routines                               
+#---------------------------------------------------------------------
+
+fw_source "Cxx/bootstrap" "sh/bootstrap-util.sh"
+fw_source "Cxx/bootstrap" "sh/fw-exec.sh"
+fw_source "Cxx/bootstrap" "sh/parse-args.sh"
+fw_source "Cxx/bootstrap" "sh/validate-args.sh"
+
+#---------------------------------------------------------------------
+#                                main                                 
+#---------------------------------------------------------------------
+
+parse_args "Cxx/bootstrap" "$@"
+
+validate_args "Cxx/bootstrap" "" ""
+
+for dir in . src tests
+  do
+    for x in Makefile_dot_am            \
+             configure.ac 
+      do
+        target=`echo "$x" | perl -pe 's/_dot_am/.am/;'`
+
+        bootstrap_link_optional "template/Cxx/$dir/$x"          \
+                                "$dir"                          \
+                                "$target"                       \
+        || fatal "Cxx/bootstrap"
+
+      done
+  done
+
+fw_exec "template/C/bootstrap" "$@"

@@ -1,0 +1,7 @@
+#! /bin/sh
+
+test -z "${FW_TRACE}" || set -x
+
+which git >/dev/null 2>/dev/null || exit 1
+
+git rm --ignore-unmatch -q -f $@

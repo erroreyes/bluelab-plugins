@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @FW_PACKAGE_NAME@
+Description: @FW_PACKAGE_SHORT_DESCRIPTION@
+Version: @FW_PACKAGE_VERSION@
+Requires: @FW_PKGCONFIG_REQUIRES@ @FW_PKGCONFIG_REQUIRES_EXTRA@
+Libs:  @FW_PKGCONFIG_LIBS_EXTRA@
+Cflags: -I${includedir}/@PACKAGE_NAME@-@FW_PACKAGE_MAJOR_VERSION@/ @FW_PKGCONFIG_CFLAGS_EXTRA@
+
+@FW_PKGCONFIG_EXTRA@

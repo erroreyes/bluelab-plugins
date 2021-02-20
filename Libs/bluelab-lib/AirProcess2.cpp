@@ -27,8 +27,8 @@
 #define DISABLE_NOISE_SOFT_MASKING 1
 
 AirProcess2::AirProcess2(int bufferSize,
-                        BL_FLOAT overlapping, BL_FLOAT oversampling,
-                        BL_FLOAT sampleRate)
+                         BL_FLOAT overlapping, BL_FLOAT oversampling,
+                         BL_FLOAT sampleRate)
 : ProcessObj(bufferSize)
 {
     mBufferSize = bufferSize;
@@ -93,7 +93,8 @@ AirProcess2::Reset(int bufferSize, int overlapping, int oversampling,
     mSampleRate = sampleRate;
     
 #if FIX_RESET
-    mPartialTracker->Reset();
+    //mPartialTracker->Reset();
+    mPartialTracker->Reset(bufferSize, sampleRate);
 #endif
     
 #if USE_SOFT_MASKING
@@ -202,10 +203,21 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
         noiseRatio.Resize(noise.GetSize());
         WDL_TypedBuf<BL_FLOAT> &harmoRatio = mTmpBuf9;
         harmoRatio.Resize(harmo.GetSize());
-        for (int i = 0; i < noiseRatio.GetSize(); i++)
+
+        int noiseRatioSize = noiseRatio.GetSize();
+        BL_FLOAT *noiseRatioData = noiseRatio.Get();
+        BL_FLOAT *harmoRatioData = harmoRatio.Get();
+        BL_FLOAT *noiseData = noise.Get();
+        BL_FLOAT *harmoData = harmo.Get();
+        BL_FLOAT *magnsData = magns.Get();
+        
+        //for (int i = 0; i < noiseRatio.GetSize(); i++)
+        for (int i = 0; i < noiseRatioSize; i++)
         {
-            BL_FLOAT n = noise.Get()[i];
-            BL_FLOAT h = harmo.Get()[i];
+            //BL_FLOAT n = noise.Get()[i];
+            //BL_FLOAT h = harmo.Get()[i];
+            BL_FLOAT n = noiseData[i];
+            BL_FLOAT h = harmoData[i];
             
             //BL_FLOAT nr = 0.0;
             //if (n + h > BL_EPS)
@@ -214,17 +226,24 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
             // Warning: the sum of noise + harmo could be greater
             // than the total magn.
             // This is because we fill the holes in the noise.
-            BL_FLOAT m = magns.Get()[i];
+            //BL_FLOAT m = magns.Get()[i];
+            BL_FLOAT m = magnsData[i];
             BL_FLOAT nr = 0.0;
             BL_FLOAT hr = 0.0;
             if (m > BL_EPS)
             {
-                nr = n/m;
-                hr = h/m;
+                //nr = n/m;
+                //hr = h/m;
+
+                BL_FLOAT mInv = 1.0/m;
+                nr = n*mInv;
+                hr = h*mInv;
             }
             
-            noiseRatio.Get()[i] = nr;
-            harmoRatio.Get()[i] = 1.0 - nr;
+            //noiseRatio.Get()[i] = nr;
+            //harmoRatio.Get()[i] = 1.0 - nr;
+            noiseRatioData[i] = nr;
+            harmoRatioData[i] = 1.0 - nr;
         }
         
         // 0: noise, 1: harmo
@@ -244,8 +263,7 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
             
             WDL_TypedBuf<WDL_FFT_COMPLEX> &softMask = mTmpBuf13;
             mSoftMaskingComps[i]->ProcessCentered(&fftSamples0,
-                                                  &inMask,
-                                                  &softMask);
+                                                  &inMask, &softMask);
         
             if (mSoftMaskingComps[i]->IsProcessingEnabled())
             {
@@ -265,20 +283,33 @@ AirProcess2::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
         // Combine the result
         WDL_TypedBuf<WDL_FFT_COMPLEX> &outResult = mTmpBuf14;
         outResult.Resize(result[0].GetSize());
-        for (int i = 0; i < outResult.GetSize(); i++)
+
+        int outResultSize = outResult.GetSize();
+        WDL_FFT_COMPLEX *outResultData = outResult.Get();
+
+        WDL_FFT_COMPLEX *result0Data = result[0].Get();
+        WDL_FFT_COMPLEX *result1Data = result[1].Get();
+
+        WDL_FFT_COMPLEX res;
+        
+        //for (int i = 0; i < outResult.GetSize(); i++)
+        for (int i = 0; i < outResultSize; i++)
         {
-            WDL_FFT_COMPLEX n = result[0].Get()[i];
+            //WDL_FFT_COMPLEX n = result[0].Get()[i];
+            WDL_FFT_COMPLEX &n = result0Data[i];
             n.re *= noiseCoeff;
             n.im *= noiseCoeff;
             
-            WDL_FFT_COMPLEX h = result[1].Get()[i];
+            //WDL_FFT_COMPLEX h = result[1].Get()[i];
+            WDL_FFT_COMPLEX &h = result1Data[i];
             h.re *= harmoCoeff;
             h.im *= harmoCoeff;
             
-            WDL_FFT_COMPLEX res;
+            //WDL_FFT_COMPLEX res;
             COMP_ADD(n, h, res);
             
-            outResult.Get()[i] = res;
+            //outResult.Get()[i] = res;
+            outResultData[i] = res;
         }
         
         BLUtils::ComplexToMagn(&mSum, outResult);

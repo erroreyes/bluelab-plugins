@@ -1,0 +1,25 @@
+#! /usr/bin/env perl
+
+my $package = $ARGV[0];
+
+#---------------------------------------------------------------------
+#                            Package names                            
+# 
+# This link suggests that "only lowercase characters, numbers, dashes
+# or pluses or dots" should be allowed in RPM package names.  It also
+# mentions "the possible addition of '_'" so we'll throw that in.
+# 
+# http://www.mail-archive.com/rpm-devel@rpm5.org/msg03327.html
+#---------------------------------------------------------------------
+
+if ($package =~ m/[^a-z0-9\+\.\-_]/)
+  { 
+    die "package/rpm/canonicalize-package: fatal: package '$package' may contain only lowercase characters, numbers, dashes, pluses, dots, or '_'.\n";
+  }
+
+if (length ($package) < 1)
+  {
+    die "package/rpm/canonicalize-package: fatal: package '$package' needs to be at least length 1.\n"
+  }
+
+print $package;

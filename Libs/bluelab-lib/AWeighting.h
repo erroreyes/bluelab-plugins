@@ -27,7 +27,7 @@ public:
     static void ComputeAWeights(WDL_TypedBuf<BL_FLOAT> *result,
                                 int numBins, BL_FLOAT sampleRate);
     
-    static BL_FLOAT ComputeAWeights(int binNum, int numBins, BL_FLOAT sampleRate);
+    static BL_FLOAT ComputeAWeight(int binNum, int numBins, BL_FLOAT sampleRate);
     
 protected:
     static BL_FLOAT ComputeR(BL_FLOAT frequency);

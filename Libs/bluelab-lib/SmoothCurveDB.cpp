@@ -70,13 +70,27 @@ SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset)
 
     WDL_TypedBuf<BL_FLOAT> &avgValues = mTmpBuf2;
     avgValues = values0;
-    
+
+    // Check if we have the same scale
+    bool sameScale = false;
+    Scale::Type curveScale;
+    BL_GUI_FLOAT curveMinY;
+    BL_GUI_FLOAT curveMaxY;
+    mCurve->GetYScale(&curveScale, &curveMinY, &curveMaxY);
+    if ((curveScale == Scale::DB) &&
+        (fabs(curveMinY - mMinDB) < BL_EPS) &&
+        (fabs(curveMaxY - mMaxDB) < BL_EPS))
+        sameScale = true;
+        
     if (!reset)
     {
         mHistogram->AddValues(values0);
 
         // Process values and update curve
-        mHistogram->GetValues(&avgValues);
+        if (!sameScale)
+            mHistogram->GetValues(&avgValues);
+        else
+            mHistogram->GetValuesDB(&avgValues);
     }
     else
     {
@@ -94,11 +108,14 @@ SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset)
     }
 #endif
     
-#if 1 // New version: avoid the risk to have undefined values
-    mCurve->SetValues4(avgValues);
+#if 0 // New version: avoid the risk to have undefined values
+    mCurve->SetValues4(avgValues, !sameScale);    
+#endif
+
+#if 1 // New version: optimized in GraphCurve5 and Scale
+    mCurve->SetValues5(avgValues, !sameScale);    
 #endif
 }
-
 
 void
 SmoothCurveDB::GetValues(WDL_TypedBuf<BL_FLOAT> *values)

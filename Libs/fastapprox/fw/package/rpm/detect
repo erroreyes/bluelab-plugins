@@ -1,0 +1,7 @@
+#! /bin/sh
+
+which rpm >/dev/null 2>/dev/null
+
+test $? = 0 || exit 1
+
+rpm -q framewerk 2>/dev/null | grep -v 'not installed' >/dev/null 2>/dev/null

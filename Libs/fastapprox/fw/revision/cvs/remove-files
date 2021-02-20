@@ -1,0 +1,7 @@
+#! /bin/sh
+
+test -z "${FW_TRACE}" || set -x
+
+cvs -n -q up "$@" >/dev/null 2>/dev/null || exit 1
+
+cvs -Q remove -f "$@"

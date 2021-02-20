@@ -238,6 +238,7 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     mYScale = Scale::DB;
     
     //
+    //mXScaleInv = Scale::MEL_INV;
     mXScaleInv = Scale::MEL_FILTER_INV;
     mYScaleInv = Scale::DB_INV;
     
@@ -246,6 +247,9 @@ PartialTracker5::PartialTracker5(int bufferSize, BL_FLOAT sampleRate,
     
     mDbgParam = 1.0;
 
+    // Optim
+    ComputeAWeights(bufferSize/2, sampleRate);
+    
     ReserveTmpBufs();
 }
 
@@ -285,6 +289,9 @@ PartialTracker5::Reset(int bufferSize, BL_FLOAT sampleRate)
     
     Reset();
 
+    // Optim
+    ComputeAWeights(bufferSize/2, sampleRate);
+    
     ReserveTmpBufs();
 }
 
@@ -2322,12 +2329,17 @@ void
 PartialTracker5::PreProcessDataXY(WDL_TypedBuf<BL_FLOAT> *data)
 {
     // Y
+#if 0 // one by one
     for (int i = 0; i < data->GetSize(); i++)
     {
         BL_FLOAT d = data->Get()[i];
         d = mScale->ApplyScale(mYScale, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
         data->Get()[i] = d;
     }
+#endif
+#if 1 // OPTIM; in block
+    mScale->ApplyScaleForEach(mYScale, data, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+#endif
     
     // Better tracking on high frequencies with this!
     PreProcessAWeighting(data, true);
@@ -2353,7 +2365,7 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
 #if MEL_UNWRAP_PHASES
     BLUtils::UnwrapPhases(phases);
 #endif
-    
+
     // Phases
     mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 
@@ -2437,7 +2449,8 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
         
         // Reverse Mel
         BL_FLOAT freq = partial.mFreq;
-        freq = mScale->ApplyScale(mXScaleInv, freq, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+        freq = mScale->ApplyScale(mXScaleInv, freq, (BL_FLOAT)0.0,
+                                  (BL_FLOAT)(mSampleRate*0.5));
         partial.mFreq = freq;
         
         // Convert to real freqs
@@ -2445,7 +2458,8 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
         
         // Reverse AWeighting
         int binNum = partial.mFreq/hzPerBin;
-        partial.mAmp = ProcessAWeighting(binNum, mBufferSize*0.5, partial.mAmp, false);
+        partial.mAmp = ProcessAWeighting(binNum, mBufferSize*0.5,
+                                         partial.mAmp, false);
     
         // Y
         partial.mAmp = mScale->ApplyScale(mYScaleInv, partial.mAmp,
@@ -2463,12 +2477,17 @@ PartialTracker5::DenormData(WDL_TypedBuf<BL_FLOAT> *data)
     PreProcessAWeighting(data, false);
     
     // Y
+#if 0 // one by one
     for (int i = 0; i < data->GetSize(); i++)
     {
         BL_FLOAT d = data->Get()[i];
         d = mScale->ApplyScale(mYScaleInv, d, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
         data->Get()[i] = d;
     }
+#endif
+#if 1 // OPTIM: process by block
+    mScale->ApplyScaleForEach(mYScaleInv, data, (BL_FLOAT)MIN_AMP_DB, (BL_FLOAT)0.0);
+#endif
 }
 
 void
@@ -2489,8 +2508,9 @@ PartialTracker5::PreProcessAWeighting(WDL_TypedBuf<BL_FLOAT> *magns,
     // Input magns are in normalized dB
     
     WDL_TypedBuf<BL_FLOAT> &weights = mTmpBuf6;
-    int numBins = magns->GetSize();
-    AWeighting::ComputeAWeights(&weights, numBins, mSampleRate);
+    //int numBins = magns->GetSize();
+    //AWeighting::ComputeAWeights(&weights, numBins, mSampleRate);
+    weights = mAWeights;
     
     BL_FLOAT hzPerBin = 0.5*mSampleRate/magns->GetSize();
     
@@ -2537,7 +2557,8 @@ PartialTracker5::ProcessAWeighting(int binNum, int numBins,
         // Do nothing
         return magn;
     
-    BL_FLOAT a = AWeighting::ComputeAWeights(binNum, numBins, mSampleRate);
+    //BL_FLOAT a = AWeighting::ComputeAWeight(binNum, numBins, mSampleRate);
+    BL_FLOAT a = mAWeights.Get()[binNum];
     
     BL_FLOAT normDbMagn = magn;
     BL_FLOAT dbMagn = (1.0 - normDbMagn)*MIN_AMP_DB;
@@ -2555,6 +2576,13 @@ PartialTracker5::ProcessAWeighting(int binNum, int numBins,
         normDbMagn = 1.0;
         
     return normDbMagn;
+}
+
+// Optim: pre-compute a weights
+void
+PartialTracker5::ComputeAWeights(int numBins, BL_FLOAT sampleRate)
+{
+    AWeighting::ComputeAWeights(&mAWeights, numBins, sampleRate);
 }
 
 void

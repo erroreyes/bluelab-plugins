@@ -39,6 +39,8 @@ extern "C" {
 
 #include <IPlugPaths.h>
 
+#include <FastMath.h>
+
 #include "BLUtils.h"
 
 using namespace iplug;
@@ -4735,7 +4737,8 @@ template <typename FLOAT_TYPE>
 FLOAT_TYPE
 BLUtils::DBToAmp(FLOAT_TYPE dB)
 {
-    return std::exp(((FLOAT_TYPE)BL_IAMP_DB) * dB);
+    //return FastMath::exp(((FLOAT_TYPE)BL_IAMP_DB)*dB);
+    return FastMath::exp(((FLOAT_TYPE)BL_IAMP_DB)*dB);
 }
 template float BLUtils::DBToAmp(float dB);
 template double BLUtils::DBToAmp(double dB);
@@ -4744,7 +4747,8 @@ template <typename FLOAT_TYPE>
 FLOAT_TYPE
 BLUtils::AmpToDB(FLOAT_TYPE dB)
 {
-    return ((FLOAT_TYPE)BL_AMP_DB) * std::log(std::fabs(dB));
+    //return ((FLOAT_TYPE)BL_AMP_DB) * std::log(std::fabs(dB));
+    return ((FLOAT_TYPE)BL_AMP_DB)*FastMath::log(std::fabs(dB));
 }
 template float BLUtils::AmpToDB(float dB);
 template double BLUtils::AmpToDB(double dB);
@@ -8156,9 +8160,9 @@ BLUtils::SamplesIdsToFftIds(const WDL_TypedBuf<FLOAT_TYPE> &phases,
     }
 }
 template void BLUtils::SamplesIdsToFftIds(const WDL_TypedBuf<float> &phases,
-                               WDL_TypedBuf<int> *fftIds);
+                                          WDL_TypedBuf<int> *fftIds);
 template void BLUtils::SamplesIdsToFftIds(const WDL_TypedBuf<double> &phases,
-                               WDL_TypedBuf<int> *fftIds);
+                                          WDL_TypedBuf<int> *fftIds);
 
 // See: https://gist.github.com/arrai/451426
 template <typename FLOAT_TYPE>
@@ -8166,7 +8170,7 @@ FLOAT_TYPE
 BLUtils::fmod_negative(FLOAT_TYPE x, FLOAT_TYPE y)
 {
     // Move input to range 0.. 2*pi
-    if(x < 0.0)
+    if (x < 0.0)
     {
         // fmod only supports positive numbers. Thus we have
         // to emulate negative numbers

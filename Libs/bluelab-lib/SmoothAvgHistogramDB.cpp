@@ -76,6 +76,19 @@ SmoothAvgHistogramDB::GetValues(WDL_TypedBuf<BL_FLOAT> *values)
 }
 
 void
+SmoothAvgHistogramDB::GetValuesDB(WDL_TypedBuf<BL_FLOAT> *values)
+{
+    values->Resize(mData.GetSize());
+    
+    for (int i = 0; i < mData.GetSize(); i++)
+    {
+        BL_FLOAT val = mData.Get()[i];
+        
+        values->Get()[i] = val;
+    }
+}
+
+void
 SmoothAvgHistogramDB::SetValues(const WDL_TypedBuf<BL_FLOAT> *values)
 {
     mData = *values;

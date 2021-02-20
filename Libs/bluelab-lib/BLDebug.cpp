@@ -361,3 +361,30 @@ BLDebug::DumpPhases(const char *filename, const FLOAT_TYPE *data, int size)
 }
 template void BLDebug::DumpPhases(const char *filename, const float *data, int size);
 template void BLDebug::DumpPhases(const char *filename, const double *data, int size);
+
+bool
+BLDebug::ExitAfter(Plugin *plug, int numSeconds)
+{
+    static int numSamples = 0;
+
+    BL_FLOAT sampleRate = plug->GetSampleRate();
+    int blockSize = plug->GetBlockSize();
+    
+    int maxNumSamples = numSeconds*sampleRate;
+    if (numSamples >= maxNumSamples)
+    {
+        //plug->CloseAudio();
+        //plug->GetUI()->CloseWindow();
+        //delete plug->GetUI(); // segfault
+        //exit(EXIT_SUCCESS);
+        
+        // This makes a segfault, but close everything...
+        delete plug;
+
+        //return true;
+        return false;
+    }
+    numSamples += blockSize;
+
+    return false;
+}

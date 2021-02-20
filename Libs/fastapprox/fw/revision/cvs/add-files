@@ -1,0 +1,16 @@
+#! /bin/sh
+
+test -z "${FW_TRACE}" || set -x
+
+test -f CVS/Entries || exit 1
+
+files=`
+for x in "$@"
+  do
+    if test -f "$x"
+      then
+        perl -ne 'BEGIN { $p = shift @ARGV; }; exit 0 if (m%^/\Q$p\E/%); } { print "\"$p\" ";' "$x" CVS/Entries
+      fi
+  done`
+
+test -z "$files" || eval cvs -Q add $files

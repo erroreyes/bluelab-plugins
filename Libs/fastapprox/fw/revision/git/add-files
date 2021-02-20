@@ -1,0 +1,16 @@
+#! /bin/sh
+
+test -z "${FW_TRACE}" || set -x
+
+which git >/dev/null 2>/dev/null || exit 1
+
+files=`
+for x in "$@"
+  do
+    if test -f "$x"
+      then
+        echo "$x"
+      fi
+  done`
+
+test -z "$files" || git add $files

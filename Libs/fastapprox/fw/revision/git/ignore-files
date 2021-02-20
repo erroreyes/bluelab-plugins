@@ -1,0 +1,28 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                            ignore-files                             
+# 
+# Add the filenames supplied as arguments to the set of files
+# ignored by the version control system.  Should be idempotent.
+#---------------------------------------------------------------------
+
+test -z "${FW_TRACE}" || set -x
+
+prog="`which git 2>/dev/null`"
+
+test -z "$prog" && {
+  echo "revision/git/ignore-files: fatal: git not installed" 1>&2
+  exit 1
+}
+
+touch .gitignore
+
+git add .gitignore
+
+(
+  cat .gitignore
+  for x in "$@"; do echo "$x"; done
+) | LANG=C sort | uniq > .gitignore_new
+
+mv -f .gitignore_new .gitignore

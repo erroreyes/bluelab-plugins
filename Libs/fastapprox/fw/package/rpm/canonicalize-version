@@ -1,0 +1,25 @@
+#! /usr/bin/env perl
+
+
+#---------------------------------------------------------------------
+#                               Version                               
+# 
+# The only restriction placed on the version is that it cannot
+# contain a dash ``-''.
+# 
+# http://www.rikers.org/rpmbook/node118.html
+#---------------------------------------------------------------------
+
+my $version = $ARGV[0];
+
+if ($version =~ /-/)
+  {
+    die "package/rpm/canonicalize: fatal: version '$version' cannot contain a dash.\n";
+  }
+
+if (length ($version) < 1)
+  {
+    die "package/rpm/canonicalize-package: fatal: version '$version' needs to be at least length 1.\n"
+  }
+
+print $version;

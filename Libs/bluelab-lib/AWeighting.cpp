@@ -16,7 +16,8 @@
 #define DB_EPS 1e-15
 
 void
-AWeighting::ComputeAWeights(WDL_TypedBuf<BL_FLOAT> *result, int numBins, BL_FLOAT sampleRate)
+AWeighting::ComputeAWeights(WDL_TypedBuf<BL_FLOAT> *result,
+                            int numBins, BL_FLOAT sampleRate)
 {
     result->Resize(numBins);
     
@@ -32,7 +33,7 @@ AWeighting::ComputeAWeights(WDL_TypedBuf<BL_FLOAT> *result, int numBins, BL_FLOA
 }
 
 BL_FLOAT
-AWeighting::ComputeAWeights(int binNum, int numBins, BL_FLOAT sampleRate)
+AWeighting::ComputeAWeight(int binNum, int numBins, BL_FLOAT sampleRate)
 {
     BL_FLOAT hzPerBin = sampleRate/(numBins*2);
     

@@ -1,0 +1,129 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                           chicken and egg                           
+#---------------------------------------------------------------------
+
+test -f "${FW_ROOT}/share/fw/sh/fw-find.sh" && fws="${FW_ROOT}/share/fw/sh/fw-find.sh"
+test -f "fw/sh/fw-find.sh" && fws="fw/sh/fw-find.sh"
+test -f "fw.local/sh/fw-find.sh" && fws="fw.local/sh/fw-find.sh"
+test ! -z "$fws" || {
+  echo "rpm/release-package: fatal: can't locate fw-find.sh" 1>&2
+  exit 1
+}
+
+. "$fws"
+
+#---------------------------------------------------------------------
+#                              routines                               
+#---------------------------------------------------------------------
+
+fw_source "package/rpm/release-package" "sh/fatal.sh"
+fw_source "package/rpm/release-package" "sh/fw-exec.sh"
+fw_source "package/rpm/release-package" "sh/parse-args.sh"
+fw_source "package/rpm/release-package" "sh/validate-args.sh"
+
+#---------------------------------------------------------------------
+#                                main                                 
+#---------------------------------------------------------------------
+
+parse_args "package/rpm/make-package" "$@"
+
+validate_args "package/rpm/make-package" "outdir template" "template"
+
+which rpm > /dev/null 2>/dev/null || {
+  echo "rpm/release-package: error: dupload not installed" 1>&2
+  fatal "rpm/release-package"
+}
+
+eval `fw_exec "template/$template/load-config"`
+
+for x in FW_RPM_REPO_HOST FW_RPM_REPO_USER FW_RPM_REPO_BASEDIR
+  do
+    eval test -n \"\$$x\" || { 
+      eval echo "rpm/release-package: error: \\\$$x not defined" 1>&2
+      fatal "rpm/release-package"
+    }
+  done
+
+package=`fw-exec package/rpm/canonicalize-package "${FW_PACKAGE_NAME}"` || fatal package/rpm/release-package
+version=`fw-exec package/rpm/canonicalize-version "${FW_PACKAGE_VERSION}"` || fatal package/rpm/release-package
+
+if test "$FW_PACKAGE_ARCHITECTURE_DEPENDENT" = "1"
+  then
+    arch=`rpm -q rpm --queryformat %{arch}`
+  else
+    arch="noarch"
+  fi
+
+if test "x$release" = xyes
+  then
+    releasenum="1"
+  else
+    releasenum="TEST1"
+  fi
+
+buildarch=`rpm -q rpm --queryformat %{arch}`
+
+ssh -q "${FW_RPM_REPO_USER}@${FW_RPM_REPO_HOST}"                      \
+       "which createrepo >/dev/null 2>/dev/null" || {
+  echo "rpm/release-package: createrepo not found on '$FW_RPM_REPO_HOST'" 1>&2
+  fatal "rpm/release-package"
+}
+
+for rpm in "${package}-${version}-${releasenum}.src.rpm"                \
+           "${package}-${version}-${releasenum}.${arch}.rpm"            \
+           "${package}_build-${version}-${releasenum}.${buildarch}.rpm"
+  do
+    case $rpm in
+      *.src.rpm)
+        printf "(SRPM) %s " "$rpm"
+        ssh -q "${FW_RPM_REPO_USER}@${FW_RPM_REPO_HOST}"                      \
+            "mkdir -p '${FW_RPM_REPO_BASEDIR}/SRPMS'" ||
+          fatal "rpm/release-package"
+        printf "+ " 
+        scp -q "${outdir}/${rpm}"                                       \
+               "${FW_RPM_REPO_USER}@${FW_RPM_REPO_HOST}:${FW_RPM_REPO_BASEDIR}/SRPMS" ||
+          fatal "rpm/release-package"
+        printf "*\n"
+        ;;
+      *)
+        packarch=`perl -e '$ARGV[0] =~ /\.([^\.]+).rpm$/ && print $1' "$rpm"`
+        printf "(%s) %s " "$packarch" "$rpm"
+        ssh -q "${FW_RPM_REPO_USER}@${FW_RPM_REPO_HOST}"                      \
+            "mkdir -p '${FW_RPM_REPO_BASEDIR}/${packarch}'" ||
+          fatal "rpm/release-package"
+        printf "+ " 
+        scp -q "${outdir}/${rpm}"                                       \
+               "${FW_RPM_REPO_USER}@${FW_RPM_REPO_HOST}:${FW_RPM_REPO_BASEDIR}/${packarch}" ||
+          fatal "rpm/release-package"
+        printf "*\n"
+        ;;
+    esac
+  done
+
+case "x$FW_RPM_CREATEREPO_INCREMENTAL" in
+  xno)
+    updatearg=""
+    ;;
+  xyes)
+    updatearg="--update"
+    ;;
+  *)
+    if 
+      ssh -q "${FW_RPM_REPO_USER}@${FW_RPM_REPO_HOST}"                      \
+             "test -f ${FW_RPM_REPO_BASEDIR}/repodata/primary.xml.gz"
+    then
+      updatearg="--update"
+    else
+      updatearg=""
+    fi
+
+    ;;
+esac
+
+args=${FW_RPM_CREATEREPO_ARGS:="-q --database"}
+
+ssh -q "${FW_RPM_REPO_USER}@${FW_RPM_REPO_HOST}"                      \
+       "cd '${FW_RPM_REPO_BASEDIR}'; 
+        createrepo $updatearg $args . && ${FW_RPM_POSTCREATEREPO_COMMANDS:=true}"

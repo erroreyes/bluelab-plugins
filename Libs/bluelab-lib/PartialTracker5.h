@@ -211,7 +211,8 @@ protected:
     
     // Advanced method
     BL_FLOAT ComputePeakIndexHalfProminenceAvg(const WDL_TypedBuf<BL_FLOAT> &magns,
-                                               int peakIndex, int leftIndex, int rightIndex);
+                                               int peakIndex,
+                                               int leftIndex, int rightIndex);
     
     // Peak amp
     //
@@ -235,7 +236,8 @@ protected:
     
     // Glue the barbs to the main partial
     // Return true if some barbs have been glued
-    bool GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns, vector<Partial> *partials);
+    bool GluePartialBarbs(const WDL_TypedBuf<BL_FLOAT> &magns,
+                          vector<Partial> *partials);
     
     // Suppress the "barbs" (tiny partials on a side of a bigger partial)
     void SuppressBarbs(vector<Partial> *partials);
@@ -346,7 +348,10 @@ protected:
     // Adaptive threshold, depending on bin num;
     BL_FLOAT GetThreshold(int binNum);
     BL_FLOAT GetDeltaFreqCoeff(int binNum);
-    
+
+    // Optim: pre-compute a weights
+    void ComputeAWeights(int numBins, BL_FLOAT sampleRate);
+        
     // Debug
     void DBG_DumpPartials(const char *fileName,
                           const vector<Partial> &partials,
@@ -402,6 +407,9 @@ protected:
     BL_FLOAT mTimeSmoothNoiseCoeff;
     WDL_TypedBuf<BL_FLOAT> mTimeSmoothPrevNoise;
 
+    // Optim
+    WDL_TypedBuf<BL_FLOAT> mAWeights;
+    
 private:
     // Tmp buffers
     WDL_TypedBuf<BL_FLOAT> mTmpBuf0;

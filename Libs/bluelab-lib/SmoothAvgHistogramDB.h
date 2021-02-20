@@ -29,8 +29,12 @@ public:
     void AddValues(const WDL_TypedBuf<BL_FLOAT> &values);
     
     int GetNumValues();
-    
+
+    // Get values scaled back to amp
     void GetValues(WDL_TypedBuf<BL_FLOAT> *values);
+
+    // OPTIM: Get internal values, which are in DB
+    void GetValuesDB(WDL_TypedBuf<BL_FLOAT> *values);
     
     // Force the internal values to be the new values,
     // (withtout smoothing)

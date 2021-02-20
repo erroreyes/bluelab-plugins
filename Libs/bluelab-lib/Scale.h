@@ -19,6 +19,7 @@ public:
     enum Type
     {
      LINEAR,
+     NORMALIZED,
      DB,
      LOG,
      LOG_FACTOR,
@@ -31,6 +32,10 @@ public:
     
     Scale();
     virtual ~Scale();
+
+    // Apply to Y
+
+    // Apply value by value
     
     // Generic
     //template <typename FLOAT_TYPE>
@@ -44,6 +49,19 @@ public:
                                       BL_FLOAT x,
                                       BL_FLOAT minValue = -1.0,
                                       BL_FLOAT maxValue = -1.0);
+
+    // OPTIM: Apply for each value
+    void ApplyScaleForEach(Type scaleType,
+                           WDL_TypedBuf<BL_FLOAT> *values,
+                           BL_FLOAT minValue = -1.0,
+                           BL_FLOAT maxValue = -1.0);
+    
+    void ApplyScaleInvForEach(Type scaleType,
+                              WDL_TypedBuf<BL_FLOAT> *values,
+                              BL_FLOAT minValue = -1.0,
+                              BL_FLOAT maxValue = -1.0);
+    
+    // Apply to X
     
     //template <typename FLOAT_TYPE>
     void ApplyScale(Type scaleType,
@@ -52,6 +70,14 @@ public:
                     BL_FLOAT maxValue = -1.0);
     
 protected:
+    BL_FLOAT ValueToNormalized(BL_FLOAT y,
+                               BL_FLOAT minValue,
+                               BL_FLOAT maxValue);
+
+    BL_FLOAT ValueToNormalizedInv(BL_FLOAT y,
+                                  BL_FLOAT minValue,
+                                  BL_FLOAT maxValue);
+    
     //template <typename FLOAT_TYPE>
     /*static*/ BL_FLOAT NormalizedToDB(BL_FLOAT y, BL_FLOAT mindB,
                                        BL_FLOAT maxdB);
@@ -107,7 +133,36 @@ protected:
     //template <typename FLOAT_TYPE>
     void DataToMelFilterInv(WDL_TypedBuf<BL_FLOAT> *values,
                             BL_FLOAT minFreq, BL_FLOAT maxFreq);
+
+    // OPTIM: process in block
+    //
+    void ValueToNormalizedForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                  BL_FLOAT minValue, BL_FLOAT maxValue);
     
+    void ValueToNormalizedInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                     BL_FLOAT minValue, BL_FLOAT maxValue);
+    
+    void NormalizedToDBForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                               BL_FLOAT mindB, BL_FLOAT maxdB);
+
+    void NormalizedToDBInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                  BL_FLOAT mindB, BL_FLOAT maxdB);    
+ 
+    void NormalizedToLogForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                BL_FLOAT minValue, BL_FLOAT maxValue);
+ 
+    void NormalizedToLogInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                   BL_FLOAT minValue, BL_FLOAT maxValue);
+        
+    void NormalizedToLogScaleForEach(WDL_TypedBuf<BL_FLOAT> *values);
+    
+    void NormalizedToLogScaleInvForEach(WDL_TypedBuf<BL_FLOAT> *values);
+    
+    void NormalizedToMelForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                BL_FLOAT minFreq, BL_FLOAT maxFreq);
+    
+    void NormalizedToMelInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                   BL_FLOAT minFreq, BL_FLOAT maxFreq);
     //
     // Must keep the object, for precomputed filter bank
     MelScale *mMelScale;

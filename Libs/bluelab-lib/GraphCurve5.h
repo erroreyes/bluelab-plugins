@@ -45,7 +45,11 @@ public:
     
     void ClearValues();
     
-    void SetYScale(Scale::Type scale, BL_GUI_FLOAT minY = -120.0, BL_GUI_FLOAT maxY = 0.0);
+    void SetYScale(Scale::Type scale,
+                   BL_GUI_FLOAT minY = -120.0,
+                   BL_GUI_FLOAT maxY = 0.0);
+
+    void GetYScale(Scale::Type *scale, BL_GUI_FLOAT *minY, BL_GUI_FLOAT *maxY);
     
     // Fill linearly
     void FillAllXValues(BL_GUI_FLOAT minX, BL_GUI_FLOAT maxX);
@@ -139,7 +143,14 @@ public:
     
     // Avoid having undefined values
     // values (y) must be in amp units
-    void SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values);
+    //
+    // OPTIM: Set applyYScale to false if the values are already in dB
+    void SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
+                    bool applyYScale = true);
+
+    // OPTIM: unroll the code inside, to avoid too many computation
+    void SetValues5(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
+                    bool applyYScale = true);
     
     // Use simple decimation
     void SetValuesDecimateSimple(const WDL_TypedBuf<BL_GUI_FLOAT> *values);
@@ -196,6 +207,7 @@ protected:
     
     BL_GUI_FLOAT ConvertX(BL_GUI_FLOAT val, BL_GUI_FLOAT width);
     BL_GUI_FLOAT ConvertY(BL_GUI_FLOAT val, BL_GUI_FLOAT height);
+    BL_GUI_FLOAT ConvertYNoScale(BL_GUI_FLOAT val, BL_GUI_FLOAT height);
     
     // Optimized versions
     void ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width);

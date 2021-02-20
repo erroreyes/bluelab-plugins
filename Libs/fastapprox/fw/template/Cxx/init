@@ -1,0 +1,91 @@
+#! /bin/sh
+
+#---------------------------------------------------------------------
+#                                init                                 
+# 
+# This is called by the template init method, which is itself called
+# by fw-init when a project is being initialized.  It is intended
+# for creating files in the project that will remain in the project
+# and are owned by the project.  Creation of (symlinks to) files
+# owned by the build method should be done at bootstrap time.
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+#                           chicken and egg                           
+#---------------------------------------------------------------------
+
+which perl >/dev/null 2>/dev/null || {
+  echo "Cxx/init: fatal: can't locate perl" 1>&2
+  exit 1
+}
+
+if test -z "${FW_ROOT}"
+  then
+    FW_ROOT=`echo "$0" | perl -pe 's%fw/template/Cxx/init$%%;'`
+    export FW_ROOT
+  fi
+
+test -f "${FW_ROOT}/share/fw/sh/fw-find.sh" || {
+  echo "Cxx/init: fatal: can't determine FW_ROOT" 1>&2
+  echo "Cxx/init: please set the environment variable" 1>&2
+  exit 1
+}
+
+. "${FW_ROOT}/share/fw/sh/fw-find.sh"
+
+#---------------------------------------------------------------------
+#                              routines                               
+#---------------------------------------------------------------------
+
+fw_source "Cxx/init" "sh/fw-exec.sh"
+fw_source "Cxx/init" "sh/parse-args.sh"
+fw_source "Cxx/init" "sh/validate-args.sh"
+
+#---------------------------------------------------------------------
+#                                main                                 
+#---------------------------------------------------------------------
+
+fw_exec "template/C/init" "$@" || fatal "Cxx/init"
+
+parse_args "Cxx/init" "$@"
+
+validate_args "Cxx/init" "name" ""
+
+for dir in src tests 
+  do
+    for x in Makefile.am.local
+      do
+        fw_find "template/Cxx/$dir/$x" file
+        test -z "$file" && fatal "Cxx/init"
+        cp -f "$file" "$dir" || fatal "Cxx/init"
+        chmod +w "$dir/$x" || fatal "Cxx/init"
+      done
+
+    for x in testprog.cc myprog.cc mylib.cc mylib.hh
+      do
+        fw_find "template/Cxx/$dir/$x" file
+        test -z "$file" || {
+          cp -f "$file" "$dir" || fatal "Cxx/init"
+          chmod +w "$dir/$x" || fatal "Cxx/init"
+        }
+      done
+
+    (
+      cd "$dir"                                                       \
+      && fw_exec "revision/$revision/remove-files" testprog.c         \
+                                                   myprog.c           \
+                                                   mylib.c            \
+                                                   mylib.h            \
+      && fw_exec "revision/$revision/add-files" testprog.cc           \
+                                                myprog.cc             \
+                                                mylib.cc              \
+                                                mylib.hh              \
+                                                Makefile.am.local
+    ) || fatal "Cxx/init"
+  done
+
+(
+  cd "src" &&                                                   \
+  fw_exec "revision/$revision/ignore-files"                     \
+    "${name}.hh"                                                \
+) || fatal "Cxx/init"
