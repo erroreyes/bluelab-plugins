@@ -1,0 +1,311 @@
+//
+//  SoftMaskingComp4.cpp
+//  BL-DUET
+//
+//  Created by applematuer on 5/8/20.
+//
+//
+
+#include <Window.h>
+
+#include <BLUtils.h>
+
+#include "SoftMaskingComp4.h"
+
+
+//
+SoftMaskingComp4::HistoryLine::HistoryLine()
+{
+    mSize = 0;
+}
+
+SoftMaskingComp4::HistoryLine::HistoryLine(const HistoryLine &other)
+{
+    mSize = other.mSize;
+
+    Resize(mSize);
+    
+    mSum = other.mSum;
+    mMasked0Square = other.mMasked0Square;
+    mMasked1Square = other.mMasked1Square;
+}
+
+SoftMaskingComp4::HistoryLine::~HistoryLine() {}
+
+void
+SoftMaskingComp4::HistoryLine::Resize(int size)
+{
+    mSize = size;
+    
+    mSum.Resize(mSize);
+    mMasked0Square.Resize(mSize);
+    mMasked1Square.Resize(mSize);
+}
+
+int
+SoftMaskingComp4::HistoryLine::GetSize()
+{
+    return mSize;
+}
+
+//
+
+SoftMaskingComp4::SoftMaskingComp4(int bufferSize, int overlapping, int historySize)
+{
+    mBufferSize = bufferSize;
+    mOverlapping = overlapping;
+    
+    mHistorySize = historySize;
+    
+    mProcessingEnabled = true;
+}
+
+SoftMaskingComp4::~SoftMaskingComp4() {}
+
+void
+SoftMaskingComp4::Reset(int bufferSize, int overlapping)
+{
+    mBufferSize = bufferSize;
+    mOverlapping = overlapping;
+    
+    Reset();
+}
+
+void
+SoftMaskingComp4::Reset()
+{    
+    mHistory.resize(0);
+}
+
+void
+SoftMaskingComp4::SetHistorySize(int size)
+{
+    mHistorySize = size;
+    
+    Reset();
+}
+
+int
+SoftMaskingComp4::GetHistorySize()
+{
+    return mHistorySize;
+}
+
+void
+SoftMaskingComp4::SetProcessingEnabled(bool flag)
+{
+    mProcessingEnabled = flag;
+}
+
+bool
+SoftMaskingComp4::IsProcessingEnabled()
+{
+    return mProcessingEnabled;
+}
+
+int
+SoftMaskingComp4::GetLatency()
+{
+    int latency = (mHistorySize/2)*(mBufferSize/mOverlapping);
+    
+    // Hack
+    latency *= 0.75;
+
+    return latency;
+}
+
+// Process over time
+void
+SoftMaskingComp4::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioSum,
+                                  const WDL_TypedBuf<BL_FLOAT> &mask,
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMaskedResult0,
+                                  WDL_TypedBuf<WDL_FFT_COMPLEX> *ioMaskedResult1)
+{
+
+    HistoryLine &newHistoLine = mTmpHistoryLine;
+    newHistoLine.Resize(ioSum->GetSize());
+
+    newHistoLine.mSum = *ioSum;
+
+    // masked0 = sum*mask
+    newHistoLine.mMasked0Square = *ioSum;
+    BLUtils::MultValues(&newHistoLine.mMasked0Square, mask);
+    
+
+    // maskd1 = sum - masked0
+    newHistoLine.mMasked1Square = *ioSum;
+    BLUtils::SubstractValues(&newHistoLine.mMasked1Square,
+                             newHistoLine.mMasked0Square);
+
+    // See: https://hal.inria.fr/hal-01881425/document
+    // |x|^2
+    // NOTE: square abs => complex conjugate
+    
+    // Compute squares (using complex conjugate)
+    BLUtils::ComputeSquareConjugate(&newHistoLine.mMasked0Square);
+    BLUtils::ComputeSquareConjugate(&newHistoLine.mMasked1Square);
+    
+    // Manage the history
+    if (mHistory.empty())
+    {
+        // Fill the whole history with the first line
+        mHistory.resize(mHistorySize);
+        mHistory.clear(newHistoLine);
+    }
+    else
+    {
+        mHistory.freeze();
+        mHistory.push_pop(newHistoLine);
+    }
+    
+    if (mProcessingEnabled)
+    {
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &sigma2Mask0 = mTmpBuf0;
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &sigma2Mask1 = mTmpBuf1;
+        ComputeSigma2(&sigma2Mask0, &sigma2Mask1);
+
+        WDL_FFT_COMPLEX *s0Data = sigma2Mask0.Get();
+        WDL_FFT_COMPLEX *s1Data = sigma2Mask1.Get();
+        
+        // Create the mask
+        if (mHistory.empty()) // Just in case
+            return;
+
+        WDL_TypedBuf<WDL_FFT_COMPLEX> &softMask0 = mTmpBuf4;
+        softMask0.Resize(mHistory[0].GetSize());
+
+        int softMask0Size = softMask0.GetSize();
+        WDL_FFT_COMPLEX *softMask0Data = softMask0.Get();
+        
+        // Compute soft mask 0
+        WDL_FFT_COMPLEX csum;
+        WDL_FFT_COMPLEX maskVal;
+        for (int i = 0; i < softMask0Size; i++)
+        {
+            const WDL_FFT_COMPLEX &s0 = s0Data[i];
+            const WDL_FFT_COMPLEX &s1 = s1Data[i];
+
+            // Compute s0 + s1
+            csum = s0;
+            csum.re += s1.re;
+            csum.im += s1.im;
+        
+            if ((std::fabs(csum.re) > BL_EPS) ||
+                (std::fabs(csum.im) > BL_EPS))
+            {
+                COMP_DIV(s0, csum, maskVal);
+            }
+
+            BL_FLOAT maskMagn = COMP_MAGN(maskVal);
+
+            // Limit to 1
+            if (maskMagn >  1.0)
+            {
+                BL_FLOAT maskMagnInv = 1.0/maskMagn;
+                maskVal.re *= maskMagnInv;
+                maskVal.im *= maskMagnInv;
+            }
+            
+            softMask0Data[i] = maskVal;
+        }
+
+        // Result when enabled
+        
+        // Apply mask 0
+        *ioMaskedResult0 = mHistory[mHistory.size()/2].mSum;
+        BLUtils::MultValues(ioMaskedResult0, softMask0);
+
+        // Fake mask 1
+        if (ioMaskedResult1 != NULL)
+        {
+            *ioMaskedResult1 = *ioSum;
+            BLUtils::SubstractValues(ioMaskedResult1, *ioMaskedResult0);
+        }
+    }
+    
+    // Even if processing enabled is true or false,
+    // update the data from the history
+    
+    // Compute the centered values
+    if (!mHistory.empty())
+    {
+        // Shifted input data
+        *ioSum = mHistory[mHistory.size()/2].mSum;
+    }
+}
+
+// NOTE: variance is equal to sigma^2
+void
+SoftMaskingComp4::ComputeSigma2(WDL_TypedBuf<WDL_FFT_COMPLEX> *outSigma2Mask0,
+                                WDL_TypedBuf<WDL_FFT_COMPLEX> *outSigma2Mask1)
+{    
+    if (mHistory.empty())
+        return;
+    
+    outSigma2Mask0->Resize(mHistory[0].GetSize());
+    outSigma2Mask1->Resize(mHistory[0].GetSize());
+    
+    // Result sum 0
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &currentSum0 = mTmpBuf2;
+    currentSum0.Resize(mHistory[0].GetSize());
+    BLUtils::FillAllZero(&currentSum0);
+
+    WDL_FFT_COMPLEX *currentSum0Data = currentSum0.Get();
+    
+    // Result sum 1
+    WDL_TypedBuf<WDL_FFT_COMPLEX> &currentSum1 = mTmpBuf3;
+    currentSum1.Resize(mHistory[0].GetSize());
+    BLUtils::FillAllZero(&currentSum1);
+
+    WDL_FFT_COMPLEX *currentSum1Data = currentSum1.Get();
+    
+    // Window
+    if (mWindow.GetSize() != mHistory.size())
+    {
+        Window::MakeHanning(mHistory.size(), &mWindow);
+    }
+    
+    BL_FLOAT sumProba = BLUtils::ComputeSum(mWindow);
+    BL_FLOAT sumProbaInv = 0.0;
+    if (sumProba > BL_EPS)
+        sumProbaInv = 1.0/sumProba;
+    
+    //
+    for (int j = 0; j < mHistory.size(); j++)
+    {
+        const HistoryLine &line = mHistory[j];
+        
+        const WDL_TypedBuf<WDL_FFT_COMPLEX> &line0 = line.mMasked0Square;
+        int line0Size = line0.GetSize();
+        WDL_FFT_COMPLEX *line0Data = line0.Get();
+        
+        const WDL_TypedBuf<WDL_FFT_COMPLEX> &line1 = line.mMasked1Square;
+        WDL_FFT_COMPLEX *line1Data = line1.Get();
+        
+        BL_FLOAT p = mWindow.Get()[j];
+        
+        for (int i = 0; i < line0Size; i++)
+        {
+            WDL_FFT_COMPLEX &expect0 = currentSum0Data[i];
+            const WDL_FFT_COMPLEX &val0 = line0Data[i];
+            expect0.re += p*val0.re;
+            expect0.im += p*val0.im;
+
+            WDL_FFT_COMPLEX &expect1 = currentSum1Data[i];
+            const WDL_FFT_COMPLEX &val1 = line1Data[i];
+            expect1.re += p*val1.re;
+            expect1.im += p*val1.im;
+        }
+    }
+
+    // Divide by sum probas
+    if (sumProba > BL_EPS)
+    {
+        BLUtils::MultValues(&currentSum0, sumProbaInv);
+        BLUtils::MultValues(&currentSum1, sumProbaInv);
+    }
+        
+    // Result
+    *outSigma2Mask0 = currentSum0;
+    *outSigma2Mask1 = currentSum1;
+}

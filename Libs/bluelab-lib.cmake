@@ -8,6 +8,8 @@ set(_bluelab-lib_src
   AirProcess2.h
   AirProcess.cpp
   AirProcess.h
+  AirProcess3.cpp
+  AirProcess3.h
   AnticlickObj.cpp
   AnticlickObj.h
   AudioFile.cpp
@@ -663,6 +665,8 @@ set(_bluelab-lib_src
   SoftMaskingComp2.h
   SoftMaskingComp3.cpp
   SoftMaskingComp3.h
+  SoftMaskingComp4.cpp
+  SoftMaskingComp4.h
   SoftMaskingComp.cpp
   SoftMaskingComp.h
   SoftMasking.cpp

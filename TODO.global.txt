@@ -108,6 +108,9 @@ gdb -i=mi ~/Documents/Apps/reaper_linux_x86_64/REAPER/reaper
 -j3
 export CMAKE_BUILD_PARALLEL_LEVEL=3
 
+make vst2 BUILD_CONFIG=Release
+
+
 emacs:
 M-x customize-group auto-complete
 
@@ -309,5 +312,6 @@ See: https://indico.cern.ch/event/814979/contributions/3401196/attachments/18314
 -------
 TODO(?): set FastMath(fast) for all the plugins that doesn't output sound
 
-TODO: use SetValues5() instead of SetValues4() everywhere
-TODO: everywhere, Scale::ApplyScale -> check if we can use the ForEach versions
+- TODO(!!): everywhere use Curve::SetValues5() instead of SetValues4() everywhere
+- TODO(!!): everywhere, Scale::ApplyScale -> check if we can use the ForEach versions
+- TODO(!!): everywhere: use SoftMaskComp4 (warning, input and outputs have changed)

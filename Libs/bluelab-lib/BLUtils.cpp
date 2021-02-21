@@ -435,6 +435,28 @@ BLUtils::ComputeSquare(WDL_TypedBuf<FLOAT_TYPE> *buf)
 template void BLUtils::ComputeSquare(WDL_TypedBuf<float> *buf);
 template void BLUtils::ComputeSquare(WDL_TypedBuf<double> *buf);
 
+void
+BLUtils::ComputeSquareConjugate(WDL_TypedBuf<WDL_FFT_COMPLEX> *buf)
+{
+    int bufSize = buf->GetSize();
+    WDL_FFT_COMPLEX *bufData = buf->Get();
+
+    WDL_FFT_COMPLEX conj;
+    WDL_FFT_COMPLEX tmp;
+    for (int i = 0; i < bufSize; i++)
+    {
+        WDL_FFT_COMPLEX &c = bufData[i];
+        
+        conj.re = c.re;
+        conj.im = -c.im;
+
+        tmp = c;
+        
+        COMP_MULT(tmp, conj, c);
+    }
+}
+
+
 template <typename FLOAT_TYPE>
 FLOAT_TYPE
 BLUtils::ComputeAbsAvg(const FLOAT_TYPE *buf, int nFrames)
