@@ -112,6 +112,7 @@ private:
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf2;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf3;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf4;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf5;
 };
 
 #endif /* defined(__BL_DUET__SoftMaskingComp4__) */

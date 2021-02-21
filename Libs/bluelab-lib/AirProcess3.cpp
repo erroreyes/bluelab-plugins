@@ -14,9 +14,15 @@
 
 #include "AirProcess3.h"
 
-#define USE_SOFT_MASKING 0 //1 // 0
+#define USE_SOFT_MASKING 1 // 0
 // 8 gives more gating, but less musical noise remaining
 #define SOFT_MASKING_HISTO_SIZE 8
+
+// Set bin #0 to 0 after soft masking
+//
+// FIX: fixed output peak at bin 0 when harmo only
+// (this was due to noise result not at 0 for bin #0)
+#define SOFT_MASKING_FIX_BIN0 1
 
 
 AirProcess3::AirProcess3(int bufferSize,
@@ -98,13 +104,13 @@ AirProcess3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
         //
         
         // Noise "envelope"
-        mPartialTracker->GetNoiseEnvelope(&mNoise);
+        mPartialTracker->GetNoiseEnvelope(&mNoise);        
         mPartialTracker->DenormData(&mNoise);
-                        
+        
         // Harmonic "envelope"
         mPartialTracker->GetHarmonicEnvelope(&mHarmo);
         mPartialTracker->DenormData(&mHarmo);
-                
+        
         BL_FLOAT noiseCoeff;
         BL_FLOAT harmoCoeff;
         BLUtils::MixParamToCoeffs(mMix, &noiseCoeff, &harmoCoeff);
@@ -133,22 +139,34 @@ AirProcess3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
 #else // Use oft masking
 
         // Compute noise mask
-        WDL_TypedBuf<BL_FLOAT> &noiseMask = mTmpBuf17;
-        ComputeNoiseMask(mNoise, mHarmo, &noiseMask);
+        WDL_TypedBuf<BL_FLOAT> &mask = mTmpBuf17;
+        // Noise mask
+        //ComputeMask(mNoise, mHarmo, &noiseMask);
+        // Harmo mask
+        ComputeMask(mHarmo, mNoise, &mask);
 
+#if SOFT_MASKING_FIX_BIN0
+        mask.Get()[0] = 0.0;
+#endif
+        
         WDL_TypedBuf<WDL_FFT_COMPLEX> &softMaskedResult0 = mTmpBuf18;
         WDL_TypedBuf<WDL_FFT_COMPLEX> &softMaskedResult1 = mTmpBuf19;
-        mSoftMaskingComp->ProcessCentered(&fftSamples,
-                                          noiseMask,
-                                          &softMaskedResult0,
-                                          &softMaskedResult1);
-    
+        mSoftMaskingComp->ProcessCentered(&fftSamples, mask,
+                                          &softMaskedResult0, &softMaskedResult1);
+  
         if (mSoftMaskingComp->IsProcessingEnabled())
         {
             // Apply "mix"
-            BLUtils::MultValues(&softMaskedResult0, noiseCoeff);
-            BLUtils::MultValues(&softMaskedResult1, harmoCoeff);
-
+            //
+            
+            // 0 is noise mask
+            //BLUtils::MultValues(&softMaskedResult0, noiseCoeff);
+            //BLUtils::MultValues(&softMaskedResult1, harmoCoeff);
+            
+            // 0 is harmo mask
+            BLUtils::MultValues(&softMaskedResult0, harmoCoeff);
+            BLUtils::MultValues(&softMaskedResult1, noiseCoeff);
+            
             // Sum
             fftSamples = softMaskedResult0;
             BLUtils::AddValues(&fftSamples, softMaskedResult1);
@@ -156,7 +174,7 @@ AirProcess3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
 
         // Keep the sum
         BLUtils::ComplexToMagn(&mSum, fftSamples);
-
+        
         // Result
         BLUtils::FillSecondFftHalf(fftSamples, ioBuffer0);
 #endif
@@ -222,24 +240,25 @@ AirProcess3::DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
     mPartialTracker->ExtractNoiseEnvelope();
 }
 
+// NOTE: need to take care of very small input values...
 void
-AirProcess3::ComputeNoiseMask(const WDL_TypedBuf<BL_FLOAT> &noise,
-                              const WDL_TypedBuf<BL_FLOAT> &harmo,
-                              WDL_TypedBuf<BL_FLOAT> *noiseMask)
+AirProcess3::ComputeMask(const WDL_TypedBuf<BL_FLOAT> &s0Buf,
+                         const WDL_TypedBuf<BL_FLOAT> &s1Buf,
+                         WDL_TypedBuf<BL_FLOAT> *s0Mask)
 {
-    noiseMask->Resize(noise.GetSize());
-    BLUtils::FillAllZero(noiseMask);
+    s0Mask->Resize(s0Buf.GetSize());
+    BLUtils::FillAllZero(s0Mask);
     
-    for (int i = 0; i < noise.GetSize(); i++)
+    for (int i = 0; i < s0Buf.GetSize(); i++)
     {
-        BL_FLOAT n = noise.Get()[i];
-        BL_FLOAT h = harmo.Get()[i];
+        BL_FLOAT s0 = s0Buf.Get()[i];
+        BL_FLOAT s1 = s1Buf.Get()[i];
 
-        BL_FLOAT s = n + h;
-        if (s > BL_EPS)
+        BL_FLOAT sum = s0 + s1;
+        if (sum > BL_EPS)
         {
-            BL_FLOAT m = n/s;
-            noiseMask->Get()[i] = m;
+            BL_FLOAT m = s0/sum;
+            s0Mask->Get()[i] = m;
         }
     }
 }

@@ -49,10 +49,10 @@ protected:
     void DetectPartials(const WDL_TypedBuf<BL_FLOAT> &magns,
                         const WDL_TypedBuf<BL_FLOAT> &phases);
 
-    // Compute mask from noise and harmo envelopes
-    void ComputeNoiseMask(const WDL_TypedBuf<BL_FLOAT> &noise,
-                          const WDL_TypedBuf<BL_FLOAT> &harmo,
-                          WDL_TypedBuf<BL_FLOAT> *noiseMask);
+    // Compute mask for s0, from s0 and s1
+    void ComputeMask(const WDL_TypedBuf<BL_FLOAT> &s0Buf,
+                     const WDL_TypedBuf<BL_FLOAT> &s1Buf,
+                     WDL_TypedBuf<BL_FLOAT> *s0Mask);
         
     //
     int mBufferSize;

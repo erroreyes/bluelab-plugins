@@ -12,6 +12,9 @@
 
 #include "SoftMaskingComp4.h"
 
+// Use fake mask for second mask?
+// Fake mask seem to work well, and is optimized
+#define USE_FAKE_MASK1 1 // 0
 
 //
 SoftMaskingComp4::HistoryLine::HistoryLine()
@@ -136,7 +139,7 @@ SoftMaskingComp4::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioSum,
     newHistoLine.mMasked1Square = *ioSum;
     BLUtils::SubstractValues(&newHistoLine.mMasked1Square,
                              newHistoLine.mMasked0Square);
-
+    
     // See: https://hal.inria.fr/hal-01881425/document
     // |x|^2
     // NOTE: square abs => complex conjugate
@@ -215,11 +218,62 @@ SoftMaskingComp4::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioSum,
         *ioMaskedResult0 = mHistory[mHistory.size()/2].mSum;
         BLUtils::MultValues(ioMaskedResult0, softMask0);
 
-        // Fake mask 1
+        // Mask 1
         if (ioMaskedResult1 != NULL)
         {
-            *ioMaskedResult1 = *ioSum;
+#if USE_FAKE_MASK1
+            // Fake mask 1
+            // Simple difference
+            *ioMaskedResult1 = mHistory[mHistory.size()/2].mSum;;
             BLUtils::SubstractValues(ioMaskedResult1, *ioMaskedResult0);
+#else
+            // Use real mask for second mask
+            
+            WDL_TypedBuf<WDL_FFT_COMPLEX> &softMask1 = mTmpBuf5;
+            softMask1.Resize(mHistory[0].GetSize());
+
+            int softMask1Size = softMask1.GetSize();
+            WDL_FFT_COMPLEX *softMask1Data = softMask1.Get();
+        
+            // Compute soft mask 1
+            WDL_FFT_COMPLEX csum;
+            WDL_FFT_COMPLEX maskVal;
+            for (int i = 0; i < softMask1Size; i++)
+            {
+                // TODO: optimize, by re-using softMask0
+                // and making 1 - mask0, with complex
+                
+                const WDL_FFT_COMPLEX &s0 = s0Data[i];
+                const WDL_FFT_COMPLEX &s1 = s1Data[i];
+                
+                // Compute s0 + s1
+                csum = s0;
+                csum.re += s1.re;
+                csum.im += s1.im;
+        
+                if ((std::fabs(csum.re) > BL_EPS) ||
+                    (std::fabs(csum.im) > BL_EPS))
+                {
+                    COMP_DIV(s1, csum, maskVal);
+                }
+
+                BL_FLOAT maskMagn = COMP_MAGN(maskVal);
+
+                // Limit to 1
+                if (maskMagn >  1.0)
+                {
+                    BL_FLOAT maskMagnInv = 1.0/maskMagn;
+                    maskVal.re *= maskMagnInv;
+                    maskVal.im *= maskMagnInv;
+                }
+                
+                softMask1Data[i] = maskVal;
+            }
+
+            // Apply mask 1
+            *ioMaskedResult1 = mHistory[mHistory.size()/2].mSum;
+            BLUtils::MultValues(ioMaskedResult1, softMask1);
+#endif
         }
     }
     
