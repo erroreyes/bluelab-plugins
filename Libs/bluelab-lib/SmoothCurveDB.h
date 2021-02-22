@@ -22,11 +22,12 @@ public:
     SmoothCurveDB(GraphCurve5 *curve,
                   BL_FLOAT smoothFactor,
                   int size, BL_FLOAT defaultValue,
-                  BL_FLOAT minDB, BL_FLOAT maxDB);
+                  BL_FLOAT minDB, BL_FLOAT maxDB,
+                  BL_FLOAT sampleRate);
     
     virtual ~SmoothCurveDB();
     
-    void Reset();
+    void Reset(BL_FLOAT sampleRate);
     void ClearValues();
     
     void SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset = false);
@@ -40,6 +41,8 @@ protected:
     BL_FLOAT mMinDB;
     BL_FLOAT mMaxDB;
 
+    BL_FLOAT mSampleRate;
+    
 private:
     // Tmp Buffers
     WDL_TypedBuf<BL_FLOAT> mTmpBuf0;

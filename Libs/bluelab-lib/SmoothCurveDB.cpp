@@ -19,7 +19,8 @@
 SmoothCurveDB::SmoothCurveDB(GraphCurve5 *curve,
                              BL_FLOAT smoothFactor,
                              int size, BL_FLOAT defaultValue,
-                             BL_FLOAT minDB, BL_FLOAT maxDB)
+                             BL_FLOAT minDB, BL_FLOAT maxDB,
+                             BL_FLOAT sampleRate)
 {
     mMinDB = minDB;
     mMaxDB = maxDB;
@@ -28,6 +29,8 @@ SmoothCurveDB::SmoothCurveDB(GraphCurve5 *curve,
                                           defaultValue, minDB, maxDB);
     
     mCurve = curve;
+
+    mSampleRate = sampleRate;
 }
 
 SmoothCurveDB::~SmoothCurveDB()
@@ -36,9 +39,11 @@ SmoothCurveDB::~SmoothCurveDB()
 }
 
 void
-SmoothCurveDB::Reset()
+SmoothCurveDB::Reset(BL_FLOAT sampleRate)
 {
     mHistogram->Reset();
+
+    mSampleRate = sampleRate;
 }
 
 void
@@ -57,6 +62,10 @@ SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset)
     
     WDL_TypedBuf<BL_FLOAT> &values0 = mTmpBuf0;
     values0 = values;
+
+    bool useFilterBank = false;
+    
+#if 0 // ORIGIN
     if (values0.GetSize() > histoNumValues)
     {
         // Decimate
@@ -67,7 +76,24 @@ SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset)
         
         values0 = decimValues;
     }
+#endif
+#if 1 // Filter banks
+    useFilterBank = true;
+    
+    WDL_TypedBuf<BL_FLOAT> &decimValues = mTmpBuf1;
 
+    //BLDebug::DumpData("data0.txt", values0);
+    
+    Scale::FilterBankType type =
+                    mCurve->mScale->TypeToFilterBankType(mCurve->mXScale);
+    mCurve->mScale->ApplyScaleFilterBank(type, &decimValues, values0,
+                                         mSampleRate, histoNumValues);
+    
+    values0 = decimValues;
+
+    //BLDebug::DumpData("data1.txt", values0);
+#endif
+    
     WDL_TypedBuf<BL_FLOAT> &avgValues = mTmpBuf2;
     avgValues = values0;
 
@@ -113,7 +139,7 @@ SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset)
 #endif
 
 #if 1 // New version: optimized in GraphCurve5 and Scale
-    mCurve->SetValues5(avgValues, !sameScale);    
+    mCurve->SetValues5(avgValues, !useFilterBank, !sameScale);    
 #endif
 }
 

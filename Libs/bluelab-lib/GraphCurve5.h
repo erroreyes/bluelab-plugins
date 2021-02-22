@@ -150,7 +150,7 @@ public:
 
     // OPTIM: unroll the code inside, to avoid too many computation
     void SetValues5(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
-                    bool applyYScale = true);
+                    bool applyXScale = true, bool applyYScale = true);
     
     // Use simple decimation
     void SetValuesDecimateSimple(const WDL_TypedBuf<BL_GUI_FLOAT> *values);
@@ -301,6 +301,7 @@ protected:
     
     ParamSmoother mParamSmoother;
 
+    friend class SmoothCurveDB;
     Scale *mScale;
     
 private:

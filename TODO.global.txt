@@ -315,3 +315,11 @@ TODO(?): set FastMath(fast) for all the plugins that doesn't output sound
 - TODO(!!): everywhere use Curve::SetValues5() instead of SetValues4() everywhere
 - TODO(!!): everywhere, Scale::ApplyScale -> check if we can use the ForEach versions
 - TODO(!!): everywhere: use SoftMaskComp4 (warning, input and outputs have changed)
+- TODO(!!): every spectrograms: use filter bank for log scale frequencies (faster)
+
+------- Design:
+GUI kits
+https://uimother.com/collections/gui-kits
+(Blackway FX)
+And see also: https://dribbble.com/tags/vst_plugin_gui_design
+===> Try to make renders with BLENDER!!!

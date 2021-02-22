@@ -795,7 +795,7 @@ GraphCurve5::SetValues4(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
 // And unroll some code
 void
 GraphCurve5::SetValues5(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
-                        bool applyYScale)
+                        bool applyXScale, bool applyYScale)
 {
     // Normalize, then adapt to the graph
     int width = mViewSize[0];
@@ -816,7 +816,8 @@ GraphCurve5::SetValues5(const WDL_TypedBuf<BL_GUI_FLOAT> &values,
         t += tincr;
     }
 
-    mScale->ApplyScaleForEach(mXScale, &mXValues, mMinX, mMaxX);
+    if (applyXScale)
+        mScale->ApplyScaleForEach(mXScale, &mXValues, mMinX, mMaxX);
 
     BLUtils::MultValues(&mXValues, (BL_GUI_FLOAT)width);
     
@@ -1192,6 +1193,7 @@ GraphCurve5::ConvertX(WDL_TypedBuf<BL_GUI_FLOAT> *vals, BL_GUI_FLOAT width)
                 }
             }
             else if ((mXScale == Scale::LOG) ||
+                     (mXScale == Scale::LOG10) ||
                      (mXScale == Scale::LOG_FACTOR) ||
                      (mXScale == Scale::MEL))
             {
@@ -1236,6 +1238,7 @@ GraphCurve5::ConvertY(WDL_TypedBuf<BL_GUI_FLOAT> *vals,
                 }
             }
             else if ((mYScale == Scale::LOG) ||
+                     (mYScale == Scale::LOG10) ||
                      (mYScale == Scale::LOG_FACTOR) ||
                      (mYScale == Scale::MEL))
             {

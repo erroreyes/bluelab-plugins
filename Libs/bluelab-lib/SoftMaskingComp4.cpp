@@ -192,7 +192,10 @@ SoftMaskingComp4::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioSum,
             csum = s0;
             csum.re += s1.re;
             csum.im += s1.im;
-        
+
+            maskVal.re = 0.0;
+            maskVal.im = 0.0;
+            
             if ((std::fabs(csum.re) > BL_EPS) ||
                 (std::fabs(csum.im) > BL_EPS))
             {

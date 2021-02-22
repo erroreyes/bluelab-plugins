@@ -12,24 +12,37 @@
 #include "IPlug_include_in_plug_hdr.h"
 
 class MelScale;
+class FilterBank;
 class Scale
 {
 public:
     // Note: log10, or log-anything is the same since we use normalized values
     enum Type
     {
-     LINEAR,
-     NORMALIZED,
-     DB,
-     LOG,
-     LOG_FACTOR,
-     MEL, // Quick Mel
-     MEL_FILTER, // Mel with real filters,
-     MEL_INV,
-     MEL_FILTER_INV,
-     DB_INV
+        LINEAR = 0,
+        NORMALIZED,
+        DB,
+        LOG,
+        LOG10,
+        LOG_FACTOR,
+        MEL, // Quick Mel
+        MEL_FILTER, // Mel with real filters,
+        MEL_INV,
+        MEL_FILTER_INV,
+        DB_INV
     };
-    
+
+    // Filter banks
+    enum FilterBankType
+    {
+        FILTER_BANK_LINEAR = 0,
+        FILTER_BANK_LOG,
+        FILTER_BANK_LOG10,
+        FILTER_BANK_LOG_FACTOR,
+        FILTER_BANK_MEL,
+        NUM_FILTER_BANKS
+    };
+     
     Scale();
     virtual ~Scale();
 
@@ -68,6 +81,24 @@ public:
                     WDL_TypedBuf<BL_FLOAT> *values,
                     BL_FLOAT minValue = -1.0,
                     BL_FLOAT maxValue = -1.0);
+
+    // Filter banks
+    //
+    // NOTE: can decimate or increase the data size
+    // as the same time as scaling!
+    
+    void ApplyScaleFilterBank(FilterBankType type,
+                              WDL_TypedBuf<BL_FLOAT> *result,
+                              const WDL_TypedBuf<BL_FLOAT> &magns,
+                              BL_FLOAT sampleRate, int numFilters);
+
+    void ApplyScaleFilterBankInv(FilterBankType type,
+                                 WDL_TypedBuf<BL_FLOAT> *result,
+                                 const WDL_TypedBuf<BL_FLOAT> &magns,
+                                 BL_FLOAT sampleRate, int numFilters);
+
+    FilterBankType TypeToFilterBankType(Type type);
+    Type FilterBankTypeToType(FilterBankType fbType);
     
 protected:
     BL_FLOAT ValueToNormalized(BL_FLOAT y,
@@ -87,12 +118,18 @@ protected:
                                           BL_FLOAT maxdB);
     
     //template <typename FLOAT_TYPE>
-    /*static*/ BL_FLOAT NormalizedToLog(BL_FLOAT x, BL_FLOAT minValue,
-                                        BL_FLOAT maxValue);
+    /*static*/ BL_FLOAT NormalizedToLog10(BL_FLOAT x, BL_FLOAT minValue,
+                                          BL_FLOAT maxValue);
     
     //template <typename FLOAT_TYPE>
-    /*static*/ BL_FLOAT NormalizedToLogInv(BL_FLOAT x, BL_FLOAT minValue,
-                                           BL_FLOAT maxValue);
+    /*static*/ BL_FLOAT NormalizedToLog10Inv(BL_FLOAT x, BL_FLOAT minValue,
+                                             BL_FLOAT maxValue);
+
+    BL_FLOAT NormalizedToLog(BL_FLOAT x, BL_FLOAT minValue,
+                             BL_FLOAT maxValue);
+    
+    BL_FLOAT NormalizedToLogInv(BL_FLOAT x, BL_FLOAT minValue,
+                                BL_FLOAT maxValue);
     
 #if 0 // Legacy test
     //template <typename FLOAT_TYPE>
@@ -148,12 +185,18 @@ protected:
     void NormalizedToDBInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
                                   BL_FLOAT mindB, BL_FLOAT maxdB);    
  
+    void NormalizedToLog10ForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                  BL_FLOAT minValue, BL_FLOAT maxValue);
+    
+    void NormalizedToLog10InvForEach(WDL_TypedBuf<BL_FLOAT> *values,
+                                     BL_FLOAT minValue, BL_FLOAT maxValue);
+
     void NormalizedToLogForEach(WDL_TypedBuf<BL_FLOAT> *values,
                                 BL_FLOAT minValue, BL_FLOAT maxValue);
- 
+    
     void NormalizedToLogInvForEach(WDL_TypedBuf<BL_FLOAT> *values,
                                    BL_FLOAT minValue, BL_FLOAT maxValue);
-        
+    
     void NormalizedToLogScaleForEach(WDL_TypedBuf<BL_FLOAT> *values);
     
     void NormalizedToLogScaleInvForEach(WDL_TypedBuf<BL_FLOAT> *values);
@@ -166,7 +209,9 @@ protected:
     //
     // Must keep the object, for precomputed filter bank
     MelScale *mMelScale;
-
+    
+    FilterBank *mFilterBanks[NUM_FILTER_BANKS];
+    
 private:
     // Tmp buffers
     WDL_TypedBuf<BL_FLOAT> mTmpBuf0;

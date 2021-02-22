@@ -304,7 +304,10 @@ GraphFreqAxis2::Update()
                    freqsFull, labelsFull,
                    minHzValue, maxHzValue);
     }
-    else if ((mScale == Scale::LOG) || (mScale == Scale::MEL))
+    else if ((mScale == Scale::LOG) ||
+             (mScale == Scale::LOG10) ||
+             (mScale == Scale::LOG_FACTOR) ||
+             (mScale == Scale::MEL))
     {
         if (mMaxFreq <= 30.0)
             UpdateAxis(NUM_AXIS_DATA_LOG25,
@@ -388,4 +391,3 @@ GraphFreqAxis2::UpdateAxis(int numAxisData,
 }
 
 #endif
-

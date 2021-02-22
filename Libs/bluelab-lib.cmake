@@ -226,6 +226,8 @@ set(_bluelab-lib_src
   FifoDecimator.cpp
   FifoDecimator.h
   FillTriangle.hpp
+  FilterBank.cpp
+  FilterBank.h
   FilterButterworthLPF.cpp
   FilterButterworthLPF.h
   FilterButterworthLPFNX.cpp
