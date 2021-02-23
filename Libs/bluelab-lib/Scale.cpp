@@ -303,6 +303,7 @@ Scale::TypeToFilterBankType(Type type)
             break;
 
         case MEL:
+        case MEL_FILTER:
             return FILTER_BANK_MEL;
             break;
 

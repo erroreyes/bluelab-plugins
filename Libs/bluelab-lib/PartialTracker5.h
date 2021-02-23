@@ -419,8 +419,12 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf4;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
-
+    
     void ReserveTmpBufs();
+
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf7;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf8;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf9;
     
     vector<Partial> mTmpPartials0;
     vector<Partial> mTmpPartials1;

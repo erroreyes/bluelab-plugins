@@ -2321,8 +2321,16 @@ PartialTracker5::GetDeltaFreqCoeff(int binNum)
 void
 PartialTracker5::PreProcessDataX(WDL_TypedBuf<BL_FLOAT> *data)
 {
+    // ORIGIN scale: use MelScale internally
     // X
-    mScale->ApplyScale(mXScale, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    //mScale->ApplyScale(mXScale, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+
+    // NEW version; use FilterBank internally (avoid stairs effect)
+    WDL_TypedBuf<BL_FLOAT> &scaledData = mTmpBuf8;
+    Scale::FilterBankType type = mScale->TypeToFilterBankType(mXScale);
+    mScale->ApplyScaleFilterBank(type, &scaledData, *data,
+                                 mSampleRate, data->GetSize());
+    *data = scaledData;
 }
 
 void
@@ -2367,8 +2375,16 @@ PartialTracker5::PreProcess(WDL_TypedBuf<BL_FLOAT> *magns,
 #endif
 
     // Phases
-    mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
 
+    // ORIGIN version, use MelScale internally
+    //mScale->ApplyScale(mXScale, phases, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+
+    WDL_TypedBuf<BL_FLOAT> &scaledPhases = mTmpBuf9;
+    Scale::FilterBankType type = mScale->TypeToFilterBankType(mXScale);
+    mScale->ApplyScaleFilterBank(type, &scaledPhases, *phases,
+                                 mSampleRate, phases->GetSize());
+    *phases = scaledPhases;
+    
 #if MEL_UNWRAP_PHASES
     // NOTE: commented, because we will need unwrapped phases later!
     // (in ComputePeakMagnPhaseInterp())
@@ -2470,8 +2486,16 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
 void
 PartialTracker5::DenormData(WDL_TypedBuf<BL_FLOAT> *data)
 {
+    // ORIGIN version: use MelFilter internally
     // X
-    mScale->ApplyScale(mXScaleInv, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+    //mScale->ApplyScale(mXScaleInv, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+
+    // NEW version; use FilterBank internally (avoid stairs effect)
+    WDL_TypedBuf<BL_FLOAT> &scaledData = mTmpBuf7;
+    Scale::FilterBankType type = mScale->TypeToFilterBankType(mXScale);
+    mScale->ApplyScaleFilterBankInv(type, &scaledData, *data,
+                                    mSampleRate, data->GetSize());
+    *data = scaledData;
     
     // A-Weighting
     PreProcessAWeighting(data, false);
