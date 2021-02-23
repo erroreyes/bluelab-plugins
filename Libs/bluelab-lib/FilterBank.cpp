@@ -248,33 +248,33 @@ FilterBank::CreateFilterBankHzToTarget(FilterBankObj *filterBank, int dataSize,
         
         bin.Get()[i] = val;
     }
-
-    // NOTE: to optimize the filter back creation,
-    // it would be good to invert the two loops
-    // (so computing the filter values only inside the bounds)
     
-    // For each destination value
-    for (int i = 0; i < dataSize; i++)
+    // For each filter
+    for (int m = 1; m < numFilters + 1; m++)
     {
-        // For each filter
-        for (int m = 1; m < numFilters + 1; m++)
-        {
-            BL_FLOAT fmin = bin.Get()[m - 1]; // left
-            BL_FLOAT fmid = bin.Get()[m];     // center
-            BL_FLOAT fmax = bin.Get()[m + 1]; // right
+        BL_FLOAT fmin = bin.Get()[m - 1]; // left
+        BL_FLOAT fmid = bin.Get()[m];     // center
+        BL_FLOAT fmax = bin.Get()[m + 1]; // right
 
 #if FIX_ALIASING_LOW_FREQS
-            FixSmallTriangles(&fmin, &fmax, dataSize);
+        FixSmallTriangles(&fmin, &fmax, dataSize);
 #endif
             
-            //
-            filterBank->mFilters[m - 1].mBounds[0] = std::floor(fmin);
-            filterBank->mFilters[m - 1].mBounds[1] = std::ceil(fmax);
-            
-            // Keep floating values
-            //filterBank->mFilters[m - 1].mBounds[0] = fmin;
-            //filterBank->mFilters[m - 1].mBounds[1] = fmax;
-            
+        //
+        filterBank->mFilters[m - 1].mBounds[0] = std::floor(fmin);
+        filterBank->mFilters[m - 1].mBounds[1] = std::ceil(fmax);
+        
+        // Keep floating values
+        //filterBank->mFilters[m - 1].mBounds[0] = fmin;
+        //filterBank->mFilters[m - 1].mBounds[1] = fmax;
+
+        // Check upper bound
+        if (filterBank->mFilters[m - 1].mBounds[1] > dataSize - 1)
+            filterBank->mFilters[m - 1].mBounds[1] = dataSize - 1;
+        
+        for (int i = filterBank->mFilters[m - 1].mBounds[0];
+             i <= filterBank->mFilters[m - 1].mBounds[1]; i++)
+        {
             // Trapezoid
             BL_FLOAT x0 = i;
             if (fmin > x0)
@@ -360,24 +360,28 @@ FilterBank::CreateFilterBankTargetToHz(FilterBankObj *filterBank, int dataSize,
         bin.Get()[i] = val;
     }
     
-    // For each destination value
-    for (int i = 0; i < dataSize; i++)
+    // For each filter
+    for (int m = 1; m < numFilters; m++)
     {
-        // For each filter
-        for (int m = 1; m < numFilters; m++)
-        {
-            BL_FLOAT fmin = bin.Get()[m - 1]; // left
-            BL_FLOAT fmid = bin.Get()[m];     // center
-            BL_FLOAT fmax = bin.Get()[m + 1]; // right
+        BL_FLOAT fmin = bin.Get()[m - 1]; // left
+        BL_FLOAT fmid = bin.Get()[m];     // center
+        BL_FLOAT fmax = bin.Get()[m + 1]; // right
 
 #if FIX_ALIASING_LOW_FREQS
-            FixSmallTriangles(&fmin, &fmax, dataSize);
+        FixSmallTriangles(&fmin, &fmax, dataSize);
 #endif
             
-            //
-            filterBank->mFilters[m].mBounds[0] = std::floor(fmin);
-            filterBank->mFilters[m].mBounds[1] = std::ceil(fmax);
-            
+        //
+        filterBank->mFilters[m].mBounds[0] = std::floor(fmin);
+        filterBank->mFilters[m].mBounds[1] = std::ceil(fmax);
+
+        // Check upper bound
+        if (filterBank->mFilters[m ].mBounds[1] > dataSize - 1)
+            filterBank->mFilters[m].mBounds[1] = dataSize - 1;
+        
+        for (int i = filterBank->mFilters[m].mBounds[0];
+             i <= filterBank->mFilters[m].mBounds[1]; i++)
+        {
             // Trapezoid
             BL_FLOAT x0 = i;
             if (fmin > x0)
@@ -504,6 +508,9 @@ FilterBank::ApplyScaleInv(BL_FLOAT val, BL_FLOAT minFreq, BL_FLOAT maxFreq)
 void
 FilterBank::FixSmallTriangles(BL_FLOAT *fmin, BL_FLOAT *fmax, int dataSize)
 {
+    if (dataSize < FIX_ALIASING_MIN_TRIANGLE_WIDTH)
+        return;
+    
     // Hard fix: grow by 1 on the left and on the right
     /* *fmin = *fmin - 1.0;
        if (*fmin < 0.0)
