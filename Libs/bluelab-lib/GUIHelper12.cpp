@@ -162,8 +162,8 @@ GUIHelper12::GUIHelper12(Style style)
         mGraphAxisOverlayColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
-        mGraphAxisLineWidth = 1.0;
-        mGraphAxisLineWidthBold = 2.0;
+        mGraphAxisLineWidth = 2.0; //1.0;
+        mGraphAxisLineWidthBold = 3.0; //2.0;
         
         mGraphCurveDescriptionColor = IColor(255, 170, 170, 170);
         mGraphCurveColorBlue = IColor(255, 64, 64, 255);
@@ -263,8 +263,8 @@ GUIHelper12::GUIHelper12(Style style)
         mGraphAxisOverlayColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
-        mGraphAxisLineWidth = 1.0;
-        mGraphAxisLineWidthBold = 2.0;
+        mGraphAxisLineWidth = 2.0; //1.0;
+        mGraphAxisLineWidthBold = 3.0; //2.0;
         
         mGraphCurveDescriptionColor = IColor(255, 170, 170, 170);
         mGraphCurveColorBlue = IColor(255, 64, 64, 255);

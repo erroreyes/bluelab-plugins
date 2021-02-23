@@ -183,6 +183,7 @@ GraphFreqAxis2::Init(GraphAxis2 *graphAxis, GUIHelper12 *guiHelper,
     guiHelper->GetGraphAxisLabelOverlayColor(axisLabelOverlayColor);
     
     BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidth();
+    //BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidthBold();
     
     if (!mDisplayLines)
     {

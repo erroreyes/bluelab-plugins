@@ -49,6 +49,7 @@ GraphAmpAxis::Init(GraphAxis2 *graphAxis,
     guiHelper->GetGraphAxisLabelOverlayColor(axisLabelOverlayColor);
     
     BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidth();
+    //BL_GUI_FLOAT lineWidth = guiHelper->GetGraphAxisLineWidthBold();
     
     // NOTE: this is important to set the labels linearly
     // (the data must be set with db scale however)
