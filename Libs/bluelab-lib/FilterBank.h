@@ -84,6 +84,11 @@ protected:
     void ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
                          const WDL_TypedBuf<BL_FLOAT> &magns,
                          const FilterBankObj &filterBank);
+
+    void FixSmallTriangles(BL_FLOAT *fmin, BL_FLOAT *fmax, int dataSize);
+        
+    // DEBUG
+    void DBG_DumpFilterBank(const FilterBankObj &filterBank);
     
     //
     FilterBankObj mHzToTargetFilterBank;

@@ -82,16 +82,12 @@ SmoothCurveDB::SetValues(const WDL_TypedBuf<BL_FLOAT> &values, bool reset)
     
     WDL_TypedBuf<BL_FLOAT> &decimValues = mTmpBuf1;
 
-    //BLDebug::DumpData("data0.txt", values0);
-    
     Scale::FilterBankType type =
-                    mCurve->mScale->TypeToFilterBankType(mCurve->mXScale);
+    mCurve->mScale->TypeToFilterBankType(mCurve->mXScale);
     mCurve->mScale->ApplyScaleFilterBank(type, &decimValues, values0,
                                          mSampleRate, histoNumValues);
     
     values0 = decimValues;
-
-    //BLDebug::DumpData("data1.txt", values0);
 #endif
     
     WDL_TypedBuf<BL_FLOAT> &avgValues = mTmpBuf2;

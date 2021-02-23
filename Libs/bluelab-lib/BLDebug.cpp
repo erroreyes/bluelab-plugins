@@ -213,7 +213,7 @@ template void BLDebug::AppendValue(const char *filename, float value);
 template void BLDebug::AppendValue(const char *filename, double value);
 
 void
-BLDebug::AppendNewline(const char *filename)
+BLDebug::AppendNewLine(const char *filename)
 {
     char fullFilename[MAX_PATH];
     sprintf(fullFilename, BASE_FILE"%s", filename);

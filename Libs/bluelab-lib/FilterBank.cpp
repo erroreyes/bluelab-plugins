@@ -18,6 +18,17 @@ using namespace std;
 
 #include "FilterBank.h"
 
+// When using for example a log scale, there is aliasing on the lower values
+// (big stairs effect). This is because the triangle filters are smaller than 1 bin.
+// And also because several successive triangles match exactly the same bin.
+// So this makes pure horizontal series of values (plateau).
+//
+// To avoid this, grow the triangles that are too small on the left
+// and on the right. It works to fix aliasing, because we use normalization
+// based on triangles areas in floating format. So we have a good continuity.
+#define FIX_ALIASING_LOW_FREQS 1
+#define FIX_ALIASING_MIN_TRIANGLE_WIDTH 2.0
+
 // Filter bank
 FilterBank::FilterBankObj::FilterBankObj(int dataSize,
                                          BL_FLOAT sampleRate,
@@ -237,6 +248,10 @@ FilterBank::CreateFilterBankHzToTarget(FilterBankObj *filterBank, int dataSize,
         
         bin.Get()[i] = val;
     }
+
+    // NOTE: to optimize the filter back creation,
+    // it would be good to invert the two loops
+    // (so computing the filter values only inside the bounds)
     
     // For each destination value
     for (int i = 0; i < dataSize; i++)
@@ -247,10 +262,18 @@ FilterBank::CreateFilterBankHzToTarget(FilterBankObj *filterBank, int dataSize,
             BL_FLOAT fmin = bin.Get()[m - 1]; // left
             BL_FLOAT fmid = bin.Get()[m];     // center
             BL_FLOAT fmax = bin.Get()[m + 1]; // right
+
+#if FIX_ALIASING_LOW_FREQS
+            FixSmallTriangles(&fmin, &fmax, dataSize);
+#endif
             
             //
             filterBank->mFilters[m - 1].mBounds[0] = std::floor(fmin);
             filterBank->mFilters[m - 1].mBounds[1] = std::ceil(fmax);
+            
+            // Keep floating values
+            //filterBank->mFilters[m - 1].mBounds[0] = fmin;
+            //filterBank->mFilters[m - 1].mBounds[1] = fmax;
             
             // Trapezoid
             BL_FLOAT x0 = i;
@@ -260,7 +283,7 @@ FilterBank::CreateFilterBankHzToTarget(FilterBankObj *filterBank, int dataSize,
             BL_FLOAT x1 = i + 1;
             if (fmax < x1)
                 x1 = fmax;
-            
+
             BL_FLOAT tarea = ComputeTriangleAreaBetween(fmin, fmid, fmax, x0, x1);
             
             // Normalize
@@ -346,6 +369,10 @@ FilterBank::CreateFilterBankTargetToHz(FilterBankObj *filterBank, int dataSize,
             BL_FLOAT fmin = bin.Get()[m - 1]; // left
             BL_FLOAT fmid = bin.Get()[m];     // center
             BL_FLOAT fmax = bin.Get()[m + 1]; // right
+
+#if FIX_ALIASING_LOW_FREQS
+            FixSmallTriangles(&fmin, &fmax, dataSize);
+#endif
             
             //
             filterBank->mFilters[m].mBounds[0] = std::floor(fmin);
@@ -406,6 +433,38 @@ FilterBank::ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
     }
 }
 
+void
+FilterBank::DBG_DumpFilterBank(const FilterBankObj &filterBank)
+{
+    for (int m = 0; m < filterBank.mNumFilters; m++)
+    {
+        const FilterBankObj::Filter &filter = filterBank.mFilters[m];
+        
+        if (m == 0)
+            BLDebug::DumpData("filters.txt", filter.mData);
+        else
+            BLDebug::AppendData("filters.txt", filter.mData);
+        BLDebug::AppendNewLine("filters.txt");
+
+#if 0   // If we want to use this, we must turn the bounds to float,
+        // and remove ceil and floor 
+        if (m == 0)
+            BLDebug::DumpValue("centers.txt",
+                               ((BL_FLOAT)(filter.mBounds[1] + filter.mBounds[0]))*0.5);
+        else
+            BLDebug::AppendValue("centers.txt",
+                                 ((BL_FLOAT)(filter.mBounds[1] + filter.mBounds[0]))*0.5);
+
+        if (m == 0)
+            BLDebug::DumpValue("widths.txt",
+                               ((BL_FLOAT)(filter.mBounds[1] - filter.mBounds[0])));
+        else
+            BLDebug::AppendValue("widths.txt",
+                                 ((BL_FLOAT)(filter.mBounds[1] - filter.mBounds[0])));
+#endif
+    }
+}
+
 BL_FLOAT
 FilterBank::ApplyScale(BL_FLOAT val, BL_FLOAT minFreq, BL_FLOAT maxFreq)
 {
@@ -440,4 +499,36 @@ FilterBank::ApplyScaleInv(BL_FLOAT val, BL_FLOAT minFreq, BL_FLOAT maxFreq)
     val = val*(maxFreq - minFreq) + minFreq;
     
     return val;
+}
+
+void
+FilterBank::FixSmallTriangles(BL_FLOAT *fmin, BL_FLOAT *fmax, int dataSize)
+{
+    // Hard fix: grow by 1 on the left and on the right
+    /* *fmin = *fmin - 1.0;
+       if (*fmin < 0.0)
+       *fmin = 0.0;
+       *fmax = *fmax + 1.0;
+       if (*fmax > dataSize - 1)
+       *fmax = dataSize - 1;*/
+
+    // Smart fix
+    if (*fmax - *fmin < FIX_ALIASING_MIN_TRIANGLE_WIDTH)
+    {
+        BL_FLOAT diff = FIX_ALIASING_MIN_TRIANGLE_WIDTH - (*fmax - *fmin);
+        *fmin -= diff*0.5;
+        *fmax += diff*0.5;
+
+        if (*fmin < 0.0)
+        {
+            *fmax += -*fmin;
+            *fmin = 0.0;
+        }
+
+        if (*fmax > dataSize - 1)
+        {
+            *fmin -= *fmax - (dataSize - 1);
+            *fmax = dataSize - 1;
+        }
+    }
 }
