@@ -273,7 +273,9 @@ https://www.izotope.com/en/products/rx/features/voice-de-noise.html
 https://www.free-vst-plugins.com/harmonicboost-free-harmonic-enhancer-plugin/?fbclid=IwAR2cTeTlSwCdvk9yU55eaAEg5uNWM3s7HKNnOZgWxIfOSbDuC3swSGL4EUI
 ---
 
---------
+Then try another Design (see paper): black/blue/white, high contrast
+
+------------------
 --perf--
 Modify system config files:
 set number in /proc/sys/kernel/perf_event_paranoid from 4 to -1
@@ -328,5 +330,3 @@ And see also: https://dribbble.com/tags/vst_plugin_gui_design
 https://forum.hise.audio/topic/2463/quick-demonstration-of-knob-making-in-blender
 https://www.youtube.com/watch?v=IprKsHje6aI
 https://github.com/tfwio/blender-knob
-
--30

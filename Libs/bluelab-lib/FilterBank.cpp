@@ -424,12 +424,19 @@ FilterBank::ApplyFilterBank(WDL_TypedBuf<BL_FLOAT> *result,
         BL_FLOAT *magnsData = magns.Get();
         
         // For each destination value
-        for (int i = filter.mBounds[0] - 1; i < filter.mBounds[1] + 1; i++)
+
+        // NOTE: no need to take margin around bounds
+        // Bounds are now well set (since anti stairs fix)
+        
+        //for (int i = filter.mBounds[0] - 1; i < filter.mBounds[1] + 1; i++)
+        for (int i = filter.mBounds[0]; i <= filter.mBounds[1]; i++)
         {
-            if (i < 0)
-                continue;
-            if (i >= magns.GetSize())
-                continue;
+            // NOTE: we previously check well bounds
+            // so do not check here (may save some resources)
+            //if (i < 0)
+            //    continue;
+            //if (i >= magns.GetSize())
+            //    continue;
             
             // Apply the filter value
             resultData[m] += filterData[i]*magnsData[i];
