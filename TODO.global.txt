@@ -312,10 +312,11 @@ See: https://indico.cern.ch/event/814979/contributions/3401196/attachments/18314
 -------
 TODO(?): set FastMath(fast) for all the plugins that doesn't output sound
 
-- TODO(!!): everywhere use Curve::SetValues5() instead of SetValues4() everywhere
-- TODO(!!): everywhere, Scale::ApplyScale -> check if we can use the ForEach versions
-- TODO(!!): everywhere: use SoftMaskComp4 (warning, input and outputs have changed)
-- TODO(!!): every spectrograms: use filter bank for log scale frequencies (faster)
+- TODO(all): everywhere use Curve::SetValues5() instead of SetValues4() everywhere
+- TODO(all): everywhere, Scale::ApplyScale -> check if we can use the ForEach versions
+- TODO(all): everywhere: use SoftMaskComp4 (warning, input and outputs have changed)
+- TODO(all): every spectrograms: use filter bank for log scale frequencies (faster)
+- TODO(all): use FilterBank instead of MelScale (no stairs effect)
 
 ------- Design:
 GUI kits
@@ -323,3 +324,9 @@ https://uimother.com/collections/gui-kits
 (Blackway FX)
 And see also: https://dribbble.com/tags/vst_plugin_gui_design
 ===> Try to make renders with BLENDER!!!
+(so we can render with knob height for website)
+https://forum.hise.audio/topic/2463/quick-demonstration-of-knob-making-in-blender
+https://www.youtube.com/watch?v=IprKsHje6aI
+https://github.com/tfwio/blender-knob
+
+-30

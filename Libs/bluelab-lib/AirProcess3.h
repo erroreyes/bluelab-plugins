@@ -38,6 +38,8 @@ public:
     
     void SetThreshold(BL_FLOAT threshold);
     void SetMix(BL_FLOAT mix);
+
+    void SetUseSoftMasks(bool flag);
     
     int GetLatency();
     
@@ -63,6 +65,8 @@ protected:
     PartialTracker5 *mPartialTracker;
     
     BL_FLOAT mMix;
+
+    bool mUseSoftMasks;
     
     // First is noise masking, second is harmo masking
     SoftMaskingComp4 *mSoftMaskingComp;
