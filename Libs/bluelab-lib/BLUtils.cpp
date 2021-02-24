@@ -456,6 +456,19 @@ BLUtils::ComputeSquareConjugate(WDL_TypedBuf<WDL_FFT_COMPLEX> *buf)
     }
 }
 
+template <typename FLOAT_TYPE>
+void
+BLUtils::ComputeOpposite(WDL_TypedBuf<FLOAT_TYPE> *buf)
+{
+    for (int i = 0; i < buf->GetSize(); i++)
+    {
+        FLOAT_TYPE val = buf->Get()[i];
+        val = (FLOAT_TYPE)1.0 - val;
+        buf->Get()[i] = val;
+    }
+}
+template void BLUtils::ComputeOpposite(WDL_TypedBuf<float> *buf);
+template void BLUtils::ComputeOpposite(WDL_TypedBuf<double> *buf);
 
 template <typename FLOAT_TYPE>
 FLOAT_TYPE

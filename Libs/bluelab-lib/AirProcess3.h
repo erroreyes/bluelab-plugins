@@ -97,6 +97,9 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf17;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf18;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf19;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf20;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf21;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf22;
 };
 
 #endif /* defined(__BL_Air__AirProcess3__) */

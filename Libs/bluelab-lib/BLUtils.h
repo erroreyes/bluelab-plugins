@@ -373,6 +373,9 @@ public:
     static void ComputeSquare(WDL_TypedBuf<FLOAT_TYPE> *buf);
 
     static void ComputeSquareConjugate(WDL_TypedBuf<WDL_FFT_COMPLEX> *buf);
+
+    template <typename FLOAT_TYPE>
+    static void ComputeOpposite(WDL_TypedBuf<FLOAT_TYPE> *buf);
     
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE ComputeAbsAvg(const FLOAT_TYPE *buf, int nFrames);

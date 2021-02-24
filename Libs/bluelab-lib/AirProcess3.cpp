@@ -109,42 +109,58 @@ AirProcess3::ProcessFftBuffer(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioBuffer0,
         BL_FLOAT noiseCoeff;
         BL_FLOAT harmoCoeff;
         BLUtils::MixParamToCoeffs(mMix, &noiseCoeff, &harmoCoeff);
-     
+
+        // Compute harmo mask
+        WDL_TypedBuf<BL_FLOAT> &mask = mTmpBuf17;
+        // Noise mask
+        //ComputeMask(mNoise, mHarmo, &noiseMask);
+        // Harmo mask
+        ComputeMask(mHarmo, mNoise, &mask);
+        
+#if SOFT_MASKING_FIX_BIN0
+        mask.Get()[0] = 0.0;
+#endif
+            
         if (!mUseSoftMasks)
         {
-            // Result
-            WDL_TypedBuf<BL_FLOAT> &newMagns = mTmpBuf7;
-            newMagns.Resize(magns.GetSize());
-            for (int i = 0; i < newMagns.GetSize(); i++)
+            // Use input data, and mask it
+            // (do not use directly denormed data => the sound is not good)
+            
+            // harmo is 0, noise is 1
+            WDL_TypedBuf<WDL_FFT_COMPLEX> &maskedResult0 = mTmpBuf20;
+            WDL_TypedBuf<WDL_FFT_COMPLEX> &maskedResult1 = mTmpBuf21;
+
+            // Harmo
+            maskedResult0 = fftSamples;
+            BLUtils::MultValues(&maskedResult0, mask);
+            BLUtils::MultValues(&maskedResult0, harmoCoeff);
+            
+            // Noise
+            WDL_TypedBuf<BL_FLOAT> &maskOpposite = mTmpBuf22;
+            maskOpposite = mask;
+            BLUtils::ComputeOpposite(&maskOpposite);
+            
+            maskedResult1 = fftSamples;
+            BLUtils::MultValues(&maskedResult1, maskOpposite);
+            BLUtils::MultValues(&maskedResult1, noiseCoeff);
+ 
+            for (int i = 0; i < fftSamples.GetSize(); i++)
             {
-                BL_FLOAT n = mNoise.Get()[i];
-                BL_FLOAT h = mHarmo.Get()[i];
+                const WDL_FFT_COMPLEX &h = maskedResult0.Get()[i];
+                const WDL_FFT_COMPLEX &n = maskedResult1.Get()[i];
                 
-                BL_FLOAT val = n*noiseCoeff + h*harmoCoeff;
-                newMagns.Get()[i] = val;
+                WDL_FFT_COMPLEX &res = fftSamples.Get()[i];
+                
+                COMP_ADD(h, n, res);
             }
-            magns = newMagns;
-            
-            mSum = magns;
-            
-            // Result
-            BLUtils::MagnPhaseToComplex(&fftSamples, magns, phases);
+
+            // Keep the sum
+            BLUtils::ComplexToMagn(&mSum, fftSamples);
             
             BLUtils::FillSecondFftHalf(fftSamples, ioBuffer0);
         }
         else // Use oft masking
         {
-            // Compute noise mask
-            WDL_TypedBuf<BL_FLOAT> &mask = mTmpBuf17;
-            // Noise mask
-            //ComputeMask(mNoise, mHarmo, &noiseMask);
-            // Harmo mask
-            ComputeMask(mHarmo, mNoise, &mask);
-            
-#if SOFT_MASKING_FIX_BIN0
-            mask.Get()[0] = 0.0;
-#endif
-        
             WDL_TypedBuf<WDL_FFT_COMPLEX> &softMaskedResult0 = mTmpBuf18;
             WDL_TypedBuf<WDL_FFT_COMPLEX> &softMaskedResult1 = mTmpBuf19;
             mSoftMaskingComp->ProcessCentered(&fftSamples, mask,

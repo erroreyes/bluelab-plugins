@@ -124,6 +124,8 @@ using namespace std;
 // Better mel filtering of phase if they ar eunwrapped!
 #define MEL_UNWRAP_PHASES 1
 
+#define USE_FILTER_BANKS 1
+
 unsigned long PartialTracker5::Partial::mCurrentId = 0;
 
 
@@ -2321,16 +2323,18 @@ PartialTracker5::GetDeltaFreqCoeff(int binNum)
 void
 PartialTracker5::PreProcessDataX(WDL_TypedBuf<BL_FLOAT> *data)
 {
+#if !USE_FILTER_BANKS
     // ORIGIN scale: use MelScale internally
     // X
-    //mScale->ApplyScale(mXScale, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-
+    mScale->ApplyScale(mXScale, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+#else
     // NEW version; use FilterBank internally (avoid stairs effect)
     WDL_TypedBuf<BL_FLOAT> &scaledData = mTmpBuf8;
     Scale::FilterBankType type = mScale->TypeToFilterBankType(mXScale);
     mScale->ApplyScaleFilterBank(type, &scaledData, *data,
                                  mSampleRate, data->GetSize());
     *data = scaledData;
+#endif
 }
 
 void
@@ -2486,16 +2490,18 @@ PartialTracker5::DenormPartials(vector<PartialTracker5::Partial> *partials)
 void
 PartialTracker5::DenormData(WDL_TypedBuf<BL_FLOAT> *data)
 {
+#if !USE_FILTER_BANKS
     // ORIGIN version: use MelFilter internally
     // X
-    //mScale->ApplyScale(mXScaleInv, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
-
+    mScale->ApplyScale(mXScaleInv, data, (BL_FLOAT)0.0, (BL_FLOAT)(mSampleRate*0.5));
+#else
     // NEW version; use FilterBank internally (avoid stairs effect)
     WDL_TypedBuf<BL_FLOAT> &scaledData = mTmpBuf7;
     Scale::FilterBankType type = mScale->TypeToFilterBankType(mXScale);
     mScale->ApplyScaleFilterBankInv(type, &scaledData, *data,
                                     mSampleRate, data->GetSize());
     *data = scaledData;
+#endif
     
     // A-Weighting
     PreProcessAWeighting(data, false);
