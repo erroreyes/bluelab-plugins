@@ -58,6 +58,12 @@ public:
         mTargetValue = val;
     }
 
+    inline void ResetToTargetValue(BL_FLOAT val)
+    {
+        mTargetValue = val;
+        mZ = mTargetValue;
+    }
+
     inline BL_FLOAT Process()
     {
         mZ = (mTargetValue * mB) + (mZ * mA);
@@ -65,6 +71,17 @@ public:
         FIX_FLT_DENORMAL(mZ);
         
         return mZ;
+    }
+
+    // Get current value without processing
+    inline BL_FLOAT PickCurrentValue()
+    {
+        return mZ;
+    }
+    
+    inline bool IsStable()
+    {
+        return (std::fabs(mZ, mTargetValue) < BL_EPS10);
     }
     
 protected:

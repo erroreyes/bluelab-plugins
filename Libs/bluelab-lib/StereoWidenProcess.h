@@ -15,7 +15,7 @@ using namespace std;
 #include "IPlug_include_in_plug_hdr.h"
 
 class DelayObj4;
-class ParamSmoother;
+class ParamSmoother2;
 
 // From USTProcess
 class StereoWidenProcess
@@ -25,25 +25,25 @@ public:
                             BL_FLOAT widthFactor);
     
     static void StereoWiden(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
-                            ParamSmoother *widthFactorSmoother);
+                            ParamSmoother2 *widthFactorSmoother);
     
     // For SoundMetaViewer
     static void StereoWiden(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioSamples,
                             BL_FLOAT widthFactor);
 
     static void ComputeStereoWidth(const WDL_TypedBuf<BL_FLOAT> magns[2],
-				   const WDL_TypedBuf<BL_FLOAT> phases[2],
-				   WDL_TypedBuf<BL_FLOAT> *width);
+                                   const WDL_TypedBuf<BL_FLOAT> phases[2],
+                                   WDL_TypedBuf<BL_FLOAT> *width);
       
     static BL_FLOAT ComputeStereoWidth(BL_FLOAT magn0, BL_FLOAT magn1,
-				       BL_FLOAT phase0, BL_FLOAT phase1);
+                                       BL_FLOAT phase0, BL_FLOAT phase1);
       
     // Correct mehod for balance (no pan law)
     static void Balance(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
                         BL_FLOAT balance);
     
     static void Balance(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
-                        ParamSmoother *balanceSmoother);
+                        ParamSmoother2 *balanceSmoother);
     
     static void MonoToStereo(vector<WDL_TypedBuf<BL_FLOAT> > *samplesVec,
                              DelayObj4 *delayObj);

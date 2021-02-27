@@ -11,7 +11,7 @@
 #include <DelayObj4.h>
 
 #include <FftProcessObj16.h>
-#include <ParamSmoother.h>
+#include <ParamSmoother2.h>
 
 #define STEREO_WIDEN_COMPLEX_OPTIM 1
 
@@ -110,15 +110,14 @@ StereoWidenProcess::StereoWiden(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
 #if !STEREO_WIDEN_COMPLEX_OPTIM
 void
 StereoWidenProcess::StereoWiden(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
-                                ParamSmoother *widthFactorSmoother)
+                                ParamSmoother2 *widthFactorSmoother)
 {
     // See: http://www.musicdsp.org/showArchiveComment.php?ArchiveID=256
     
     // Then do this per sample
     for (int i = 0; i < (*ioSamples)[0]->GetSize(); i++)
     {
-        widthFactorSmoother->Update();
-        BL_FLOAT widthFactor = widthFactorSmoother->GetCurrentValue();
+        BL_FLOAT widthFactor = widthFactorSmoother->Process();
         
         BL_FLOAT width = ComputeFactor(widthFactor, MAX_WIDTH_FACTOR);
         
@@ -141,7 +140,7 @@ StereoWidenProcess::StereoWiden(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
 #else
 void
 StereoWidenProcess::StereoWiden(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
-                                ParamSmoother *widthFactorSmoother)
+                                ParamSmoother2 *widthFactorSmoother)
 {
     // See: http://www.musicdsp.org/showArchiveComment.php?ArchiveID=256
     
@@ -151,8 +150,7 @@ StereoWidenProcess::StereoWiden(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
     // Then do this per sample
     for (int i = 0; i < (*ioSamples)[0]->GetSize(); i++)
     {
-        widthFactorSmoother->Update();
-        BL_FLOAT widthFactor = widthFactorSmoother->GetCurrentValue();
+        BL_FLOAT widthFactor = widthFactorSmoother->Process();
         
         BL_FLOAT width = ComputeFactor(widthFactor, MAX_WIDTH_FACTOR);
         
@@ -204,42 +202,42 @@ StereoWidenProcess::StereoWiden(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioSamp
 // NOTE: Totally ignore phases
 void
 StereoWidenProcess::ComputeStereoWidth(const WDL_TypedBuf<BL_FLOAT> magns[2],
-				       const WDL_TypedBuf<BL_FLOAT> phases[2],
-				       WDL_TypedBuf<BL_FLOAT> *width)
+                                       const WDL_TypedBuf<BL_FLOAT> phases[2],
+                                       WDL_TypedBuf<BL_FLOAT> *width)
 {
-  width->Resize(magns[0].GetSize());
+    width->Resize(magns[0].GetSize());
 
-  WDL_FFT_COMPLEX angle0 = StereoWidenProcess::StereoWidenComputeAngle0();
+    WDL_FFT_COMPLEX angle0 = StereoWidenProcess::StereoWidenComputeAngle0();
 
-  for (int i = 0; i < width->GetSize(); i++)
-  {
-    BL_FLOAT l = magns[0].Get()[i];
-    BL_FLOAT r = magns[1].Get()[i];
+    for (int i = 0; i < width->GetSize(); i++)
+    {
+        BL_FLOAT l = magns[0].Get()[i];
+        BL_FLOAT r = magns[1].Get()[i];
 
-    BL_FLOAT w = ComputeStereoWidth(l, r, angle0);
+        BL_FLOAT w = ComputeStereoWidth(l, r, angle0);
       
-    // Normalize
-    //BL_FLOAT mono = (l + r)*0.5;
-    //if (mono > BL_EPS)
-    //    w /= mono;
+        // Normalize
+        //BL_FLOAT mono = (l + r)*0.5;
+        //if (mono > BL_EPS)
+        //    w /= mono;
       
-    width->Get()[i] = w;
-  }
+        width->Get()[i] = w;
+    }
 }
 
 BL_FLOAT
 StereoWidenProcess::ComputeStereoWidth(BL_FLOAT l, BL_FLOAT r, WDL_FFT_COMPLEX angle0)
 {
-  // Init
-  WDL_FFT_COMPLEX signal0;
-  signal0.re = l;
-  signal0.im = r;
+    // Init
+    WDL_FFT_COMPLEX signal0;
+    signal0.re = l;
+    signal0.im = r;
     
-  // Rotate
-  WDL_FFT_COMPLEX signal1;
-  COMP_MULT(signal0, angle0, signal1);
+    // Rotate
+    WDL_FFT_COMPLEX signal1;
+    COMP_MULT(signal0, angle0, signal1);
 
-  BL_FLOAT w = std::fabs(signal1.im);
+    BL_FLOAT w = std::fabs(signal1.im);
 
     return w;
 }
@@ -287,14 +285,13 @@ StereoWidenProcess::Balance(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
 // Same, with smoother
 void
 StereoWidenProcess::Balance(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples,
-                            ParamSmoother *balanceSmoother)
+                            ParamSmoother2 *balanceSmoother)
 {
-  BL_FLOAT sqrtTwo = std::sqrt(2.0);
+    BL_FLOAT sqrtTwo = std::sqrt(2.0);
     
     for (int i = 0; i < (*ioSamples)[0]->GetSize(); i++)
     {
-        balanceSmoother->Update();
-        BL_FLOAT balance = balanceSmoother->GetCurrentValue();
+        BL_FLOAT balance = balanceSmoother->Process();
     
         BL_FLOAT p = M_PI*(balance + 1.0)/4.0;
         BL_FLOAT gl = std::cos(p);
