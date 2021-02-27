@@ -38,6 +38,10 @@ using namespace iplug;
 #define M_PI 3.1415926535897932384
 #endif
 
+#ifndef M_TWO_PI
+#define M_TWO_PI 6.28318530717958647692
+#endif
+
 #ifndef MIN
 #define MIN(__x__, __y__) ((__x__ < __y__) ? __x__ : __y__)
 #endif
