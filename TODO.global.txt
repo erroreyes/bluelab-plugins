@@ -106,7 +106,7 @@ gdb -i=mi ~/Documents/Apps/reaper_linux_x86_64/REAPER/reaper
 *gdb* target remote | vgdb
 
 -j3
-export CMAKE_BUILD_PARALLEL_LEVEL=3
+export CMAKE_BUILD_PARALLEL_LEVEL=2
 
 make vst2 BUILD_CONFIG=Release
 
@@ -330,3 +330,45 @@ And see also: https://dribbble.com/tags/vst_plugin_gui_design
 https://forum.hise.audio/topic/2463/quick-demonstration-of-knob-making-in-blender
 https://www.youtube.com/watch?v=IprKsHje6aI
 https://github.com/tfwio/blender-knob
+https://docs.blender.org/manual/en/latest/modeling/meshes/primitives.html?highlight=cube
+
+Video brushed metal: https://www.youtube.com/watch?v=8D4exODUKmk
+
+Blender scale ued: 2 pixels = 10mm
+
+To have anisotropic (for cirle brushed metal) => choose render engine Cylce (instead of Eevee), and render without world hdr
+
+TODO: take car of needle + boolean substract resultion at render
+
+======
+TODO: Blender, brushed metal (black/background)
+IDEA: avoid anyzotropic, too much "Jacky" (and also bruhed metal?) (use metal with small grains instead?)
+- NOTE: camera ortho scale is not set exactly
+IDEA render: (hdri, white, no texture): https://www.aifosdesign.se/tutorial-how-to-rotate-an-hdri-environment-texture-in-blender/
+
+
+NOTE: Cicfy: monophonic pitch detection without latency, very efficient:
+https://www.cycfi.com/2020/07/fast-and-efficient-pitch-detection-revisited/
+
+===
+IDEA Design: For monitor, don't use a checkbox, but a button to toggle on and off
+
+TODO/WIP: Update the design for StereoWidth!
+Then continue fixing/ updating plugins (check Air for new ParamSmoother etc.)
+
+NOTE: knob design for Inkscape: https://synthpanels.design/
+
+Inscape tips:
+"Pattern along path":
+- before, raise patter objet to top! (to set correct selection order)
+(pattern must be on the top of the selection)
+- convert both objects to path
+- choose "repeated"
+NOTE: inkscape "Patter to path" for knob: parameters: 5.2, 0, 19.1
+
+TODO Design:
+- Info bulles!
+- rollover on checkboxes?
+- StereoWidth: more space circle/width meter/correlation meter ?
+- Footer -> header?
+- Graph: font more fat?

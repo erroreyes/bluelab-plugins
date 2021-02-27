@@ -205,7 +205,8 @@ GUIHelper12::GUIHelper12(Style style)
         mValueTextSize = 19.0; //10.0;
         mValueTextOffsetX = -1.0;
         mValueTextOffsetY = 31.0; //14.0;
-        mValueTextColor = IColor(255, 235, 242, 250); //v3
+        //mValueTextColor = IColor(255, 235, 242, 250); //v3
+        mValueTextColor = IColor(255, 147, 147, 147); //Design v3.6.8
         mValueTextFGColor = mValueTextColor;
         mValueTextBGColor = IColor(0, 0, 0, 0);
         mValueTextFont = "OpenSans-ExtraBold";
