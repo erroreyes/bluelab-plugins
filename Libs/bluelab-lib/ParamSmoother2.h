@@ -28,26 +28,26 @@
 class ParamSmoother2
 {
 public:
-    ParamSmoother2(BL_FLOAT samplingRate,
+    ParamSmoother2(BL_FLOAT sampleRate,
                    BL_FLOAT value,
                    BL_FLOAT smoothingTimeMs = DEFAULT_SMOOTHING_TIME_MS)
     {
         mSmoothingTimeMs = smoothingTimeMs;
-        mSampleRate = samplingRate;
+        mSampleRate = sampleRate;
 
         mZ = value;
         mTargetValue = value;
         
-        Reset(samplingRate);
+        Reset(sampleRate);
     }
     
     virtual ~ParamSmoother2() {}
     
-    inline void Reset(BL_FLOAT samplingRate)
+    inline void Reset(BL_FLOAT sampleRate)
     {
-        mSampleRate = samplingRate;
+        mSampleRate = sampleRate;
         
-        mA = std::exp(-(BL_FLOAT)M_TWO_PI/(mSmoothingTimeMs * 0.001 * samplingRate));
+        mA = std::exp(-(BL_FLOAT)M_TWO_PI/(mSmoothingTimeMs * 0.001 * sampleRate));
         mB = 1.0 - mA;
         //mZ = 0.0;
         mZ = mTargetValue;
