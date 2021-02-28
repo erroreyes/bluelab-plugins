@@ -10,6 +10,7 @@
 #include <ParamSmoother.h>
 
 #include <BLUtils.h>
+#include <BLDebug.h>
 
 #include "AutoGainObj.h"
 
@@ -326,7 +327,7 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
     if (scBuffer != NULL)
     {
         vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > &scBufferCopy = mTmpBuf3;
-        //scBufferCopy = *scBuffer;
+        scBufferCopy = *scBuffer;
         
         scIn.resize(scBufferCopy.size());
         

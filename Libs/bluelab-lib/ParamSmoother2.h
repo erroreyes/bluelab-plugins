@@ -47,7 +47,8 @@ public:
     {
         mSampleRate = sampleRate;
         
-        mA = std::exp(-(BL_FLOAT)M_TWO_PI/(mSmoothingTimeMs * 0.001 * sampleRate));
+        mA = std::exp(-(BL_FLOAT)M_TWO_PI/
+                      (mSmoothingTimeMs * (BL_FLOAT)0.001 * sampleRate));
         mB = 1.0 - mA;
         //mZ = 0.0;
         mZ = mTargetValue;
@@ -81,7 +82,7 @@ public:
     
     inline bool IsStable()
     {
-        return (std::fabs(mZ, mTargetValue) < BL_EPS10);
+        return (std::fabs(mZ - mTargetValue) < BL_EPS10);
     }
     
 protected:
