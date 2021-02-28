@@ -146,10 +146,13 @@ AutoGainObj::Reset()
     mScSamplesSmoother->Reset();
     mInSamplesSmoother->Reset();
     mGainSmoother->Reset();
-    
+
+#if 0 // NOTE: with this at 1, when no sc, the sc gain is always 0 until we turn the
+      // sc gain knob again 
     // NEW
     mGain = 0.0;
     mScGain = 0.0;
+#endif
     
 #if SKIP_FIRST_FRAME
     mNumSamples = 0;
@@ -194,10 +197,13 @@ AutoGainObj::Reset(int bufferSize, int overlapping,
     mInSamplesSmoother->Reset();
     
     mGainSmoother->Reset();
-    
+
+#if 0 // NOTE: with this at 1, when no sc, the sc gain is always 0 until we turn the
+      // sc gain knob again 
     // NEW
     mGain = 0.0;
     mScGain = 0.0;
+#endif
     
 #if SKIP_FIRST_FRAME
     mNumSamples = 0;
@@ -559,6 +565,13 @@ AutoGainObj::ComputeOutGainSpectConstantSc(const vector<WDL_TypedBuf<BL_FLOAT> >
     
     BL_FLOAT result = ComputeOutGainSpectAux(dbIn, dbSc, inGain);
     
+    // Hack
+    // Overwrite the sc curve, if we have constant sc
+    // Use a fake db curve, centered around -60dB
+    BL_FLOAT constantFcValueDB = BLUtils::AmpToDB(constantScValue);
+    mCurveSignal1.Resize(monoIn.GetSize());
+    BLUtils::FillAllValue(&mCurveSignal1, constantFcValueDB);
+    
     return result;
 }
 
@@ -601,18 +614,28 @@ AutoGainObj::ComputeOutGainSpectAux(const WDL_TypedBuf<BL_FLOAT> &dbIn,
     mAvgHistoIn->AddValues(dbIn);
     WDL_TypedBuf<BL_FLOAT> &avgIn = mTmpBuf17;
     mAvgHistoIn->GetValues(&avgIn);
-    
-#if !SILENCE_THRS_ALGO2
-    BL_FLOAT outGain = ComputeFftGain(avgIn, avgSc);
-    
-    // Avoid amplifying silences (to avoid amplifying noise)
-    if (inGain < mThreshold)
+
+
+    BL_FLOAT outGain = 0.0;
+    if (!mConstantSc)
     {
-        outGain = 0.0;
-    }
+#if !SILENCE_THRS_ALGO2
+        outGain = ComputeFftGain(avgIn, avgSc);
+    
+        // Avoid amplifying silences (to avoid amplifying noise)
+        if (inGain < mThreshold)
+        {
+            outGain = 0.0;
+        }
 #else
-    BL_FLOAT outGain = ComputeFftGain2(avgIn, avgSc);
+        outGain = ComputeFftGain2(avgIn, avgSc);
 #endif
+    }
+    else
+    {
+        // NEW: put directly the gain if sc is not set
+        outGain = mScGain;
+    }
     
     // Bound and smooth gain before applyting it to the curve
     // So the curve will be smoothed too
