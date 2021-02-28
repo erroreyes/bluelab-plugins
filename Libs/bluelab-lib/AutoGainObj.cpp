@@ -50,6 +50,10 @@
 // FIX: for fix for constant level whatever the sample rate
 #define REF_SAMPLE_RATE 44100.0
 
+// In theory, we should compute RMS gain with samples,
+// not fft
+#define FIX_COMPUTE_IN_GAIN 0 //1
+
 
 AutoGainObj::AutoGainObj(int bufferSize, int oversampling, int freqRes,
                          BL_FLOAT sampleRate,
@@ -259,6 +263,11 @@ void
 AutoGainObj::SetScGain(BL_FLOAT gain)
 {
     mScGain = gain;
+
+    if (mMode == BYPASS_WRITE)
+    {
+        mGain = mScGain;
+    }   
 }
 
 void
@@ -271,6 +280,23 @@ AutoGainObj::ProcessInputSamplesWin(vector<WDL_TypedBuf<BL_FLOAT> * > *ioSamples
     // So we can use the plug on a single track without sidechain
     mConstantSc = false;
     mScConstantValue = 0.0;
+
+#if FIX_COMPUTE_IN_GAIN
+    if (!ioSamples->empty())
+    {
+        WDL_TypedBuf<BL_FLOAT> &monoIn = mTmpBuf31;
+        monoIn = *(*ioSamples)[0];
+
+        if (ioSamples->size() >= 2)
+        {
+            BLUtils::StereoToMono(&monoIn, *(*ioSamples)[0], *(*ioSamples)[1]);
+        }
+        
+        BL_FLOAT inGain = ComputeInGainSamples(monoIn);
+
+        // TODO: put it in a member variable for later use
+    }
+#endif
     
     // Hack for VST !
     // For VST, if we create sidechain, even not connect,
@@ -494,7 +520,7 @@ AutoGainObj::ComputeOutGainSpect(const vector<WDL_TypedBuf<BL_FLOAT> > &inSample
 {
     if (scIn.empty())
         return 0.0;
-    
+
     // We have at least one sidechain channel
     
     // Stereo to mono
@@ -518,15 +544,19 @@ AutoGainObj::ComputeOutGainSpect(const vector<WDL_TypedBuf<BL_FLOAT> > &inSample
     }
     else
         monoIn.Resize(0);
-    
+
     //Convert to dB
     WDL_TypedBuf<BL_FLOAT> &dbSc = mTmpBuf10;
     BLUtils::AmpToDB(&dbSc, sideChain, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
     
     WDL_TypedBuf<BL_FLOAT> &dbIn = mTmpBuf11;
     BLUtils::AmpToDB(&dbIn, monoIn, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
-    
-    BL_FLOAT inGain = ComputeInGain(monoIn);
+
+    BLDebug::DumpData("in.txt", dbIn);
+    BLDebug::DumpData("sc.txt", dbSc);
+
+    // See: FIX_COMPUTE_IN_GAIN
+    BL_FLOAT inGain = ComputeInGainFft(monoIn);
     
     BL_FLOAT result = ComputeOutGainSpectAux(dbIn, dbSc, inGain);
     
@@ -561,7 +591,8 @@ AutoGainObj::ComputeOutGainSpectConstantSc(const vector<WDL_TypedBuf<BL_FLOAT> >
     WDL_TypedBuf<BL_FLOAT> &dbIn = mTmpBuf15;
     BLUtils::AmpToDB(&dbIn, monoIn, (BL_FLOAT)BL_EPS, /*DB_INF*/(BL_FLOAT)DB_INF2);
     
-    BL_FLOAT inGain = ComputeInGain(monoIn);
+    //BL_FLOAT inGain = ComputeInGain(monoIn);
+    BL_FLOAT inGain = ComputeInGainFft(monoIn);
     
     BL_FLOAT result = ComputeOutGainSpectAux(dbIn, dbSc, inGain);
     
@@ -615,7 +646,6 @@ AutoGainObj::ComputeOutGainSpectAux(const WDL_TypedBuf<BL_FLOAT> &dbIn,
     WDL_TypedBuf<BL_FLOAT> &avgIn = mTmpBuf17;
     mAvgHistoIn->GetValues(&avgIn);
 
-
     BL_FLOAT outGain = 0.0;
     if (!mConstantSc)
     {
@@ -668,10 +698,11 @@ AutoGainObj::ComputeOutGainSpectAux(const WDL_TypedBuf<BL_FLOAT> &dbIn,
     return outGain;
 }
 
+// With samples, compute the RMS
 BL_FLOAT
-AutoGainObj::ComputeInGain(const WDL_TypedBuf<BL_FLOAT> &monoIn)
+AutoGainObj::ComputeInGainSamples(const WDL_TypedBuf<BL_FLOAT> &monoIn)
 {
-    BL_FLOAT inAvg = BLUtils::ComputeRMSAvg2(monoIn.Get(), monoIn.GetSize());
+    BL_FLOAT inAvg = BLUtils::ComputeRMSAvg/*2*/(monoIn.Get(), monoIn.GetSize());
     BL_FLOAT inGain = BLUtils::AmpToDB(inAvg, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
     
     mInSamplesSmoother->SetNewValue(inGain);
@@ -681,7 +712,23 @@ AutoGainObj::ComputeInGain(const WDL_TypedBuf<BL_FLOAT> &monoIn)
     return inGain;
 }
 
-// Note used ?
+// With FFT, compute the max peak (this should be an acceptable approximation)
+// (we can't compute the RMS over frequencies, imagine a single pure sine wave,
+// if we compute the RMS, the computed gain will be very small)
+BL_FLOAT
+AutoGainObj::ComputeInGainFft(const WDL_TypedBuf<BL_FLOAT> &monoIn)
+{
+    BL_FLOAT inMax = BLUtils::ComputeMax(monoIn.Get(), monoIn.GetSize());
+    BL_FLOAT inGain = BLUtils::AmpToDB(inMax, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
+    
+    mInSamplesSmoother->SetNewValue(inGain);
+    mInSamplesSmoother->Update();
+    inGain = mInSamplesSmoother->GetCurrentValue();
+    
+    return inGain;
+}
+
+// Note used anymore!
 BL_FLOAT
 AutoGainObj::ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
                                const vector<WDL_TypedBuf<BL_FLOAT> > &scIn)

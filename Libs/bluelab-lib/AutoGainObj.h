@@ -24,6 +24,11 @@ using namespace std;
 // (detected on Protools)
 #define FIX_START_JUMP 1
 
+// Use silence threshold on fft data, not on avg
+// This make possible to compare the frequencies only when
+// both input and sidechain are defined
+#define SILENCE_THRS_ALGO2 1
+
 class SmoothAvgHistogram;
 class ParamSmoother;
 class AutoGainObj : public MultichannelProcess
@@ -93,8 +98,9 @@ protected:
                                     const WDL_TypedBuf<BL_FLOAT> &dbSc,
                                     BL_FLOAT inGain);
     
-    BL_FLOAT ComputeInGain(const WDL_TypedBuf<BL_FLOAT> &monoIn);
-    
+    BL_FLOAT ComputeInGainSamples(const WDL_TypedBuf<BL_FLOAT> &monoIn);
+    BL_FLOAT ComputeInGainFft(const WDL_TypedBuf<BL_FLOAT> &monoIn);
+
     //
     BL_FLOAT ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
                                const vector<WDL_TypedBuf<BL_FLOAT> > &scIn);
@@ -197,6 +203,7 @@ private:
     vector<WDL_TypedBuf<WDL_FFT_COMPLEX> > mTmpBuf28;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf29;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf30;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf31;
 };
 
 #endif /* AutoGainObj_hpp */

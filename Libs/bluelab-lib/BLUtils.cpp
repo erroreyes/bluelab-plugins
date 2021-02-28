@@ -163,7 +163,8 @@ BLUtils::ComputeRMSAvg(const FLOAT_TYPE *values, int nFrames)
 #else
     FLOAT_TYPE avg = ComputeSquareSum(values, nFrames);
 #endif
-    
+
+    // Real formula !
     avg = std::sqrt(avg/nFrames);
     
     //avg = std::sqrt(avg)/nFrames;
@@ -235,7 +236,8 @@ BLUtils::ComputeRMSAvg2(const FLOAT_TYPE *values, int nFrames)
 #else
     FLOAT_TYPE avg = ComputeSquareSum(values, nFrames);
 #endif
-    
+
+    // Fake formula, see ComputeRMSAvg() for real formula 
     avg = std::sqrt(avg)/nFrames;
     
     return avg;
