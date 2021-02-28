@@ -107,7 +107,7 @@ protected:
     
     BL_FLOAT ComputeFftGain(const WDL_TypedBuf<BL_FLOAT> &avgIn,
                             const WDL_TypedBuf<BL_FLOAT> &avgSc);
-    
+
     BL_FLOAT ComputeFftGain2(const WDL_TypedBuf<BL_FLOAT> &avgIn,
                              const WDL_TypedBuf<BL_FLOAT> &avgSc);
     

@@ -552,9 +552,6 @@ AutoGainObj::ComputeOutGainSpect(const vector<WDL_TypedBuf<BL_FLOAT> > &inSample
     WDL_TypedBuf<BL_FLOAT> &dbIn = mTmpBuf11;
     BLUtils::AmpToDB(&dbIn, monoIn, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
 
-    BLDebug::DumpData("in.txt", dbIn);
-    BLDebug::DumpData("sc.txt", dbSc);
-
     // See: FIX_COMPUTE_IN_GAIN
     BL_FLOAT inGain = ComputeInGainFft(monoIn);
     
@@ -838,6 +835,7 @@ AutoGainObj::ComputeFftGain(const WDL_TypedBuf<BL_FLOAT> &avgIn,
     return avgDiff;
 }
 
+// Compute by difference in dB
 BL_FLOAT
 AutoGainObj::ComputeFftGain2(const WDL_TypedBuf<BL_FLOAT> &avgIn,
                              const WDL_TypedBuf<BL_FLOAT> &avgSc)
