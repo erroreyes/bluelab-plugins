@@ -833,7 +833,8 @@ AutoGainObj::SetGainSmooth(BL_FLOAT gainSmooth)
 #define SHAPE_EXP 0.125
     
     // This was in percent
-    BL_FLOAT coeff = gainSmooth/100.0;
+    //BL_FLOAT coeff = gainSmooth/100.0;
+    BL_FLOAT coeff = gainSmooth;
     
     // Set shape
     coeff = pow(coeff, SHAPE_EXP);
