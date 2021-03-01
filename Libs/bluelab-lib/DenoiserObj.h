@@ -24,7 +24,8 @@ using namespace iplug;
 
 // DenoiserObj
 class Denoiser;
-class SoftMaskingComp3;
+//class SoftMaskingComp3;
+class SoftMaskingComp4;
 class SmoothAvgHistogram;
 class DenoiserObj : public ProcessObj
 {
@@ -141,7 +142,8 @@ protected:
 #if USE_AUTO_RES_NOISE
     bool mAutoResNoise;
     // The first for the signal, the second for the noise
-    SoftMaskingComp3 *mSoftMaskingComps[2];
+    //SoftMaskingComp3 *mSoftMaskingComps[2];
+    SoftMaskingComp4 *mSoftMaskingComps[2];
 #endif
     
     // Noise capture
@@ -199,20 +201,22 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf5;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf6;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf7;
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf8;
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf9;
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf10;
+    //WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf8;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf9;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf10;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf11;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf12;
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf13;
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf14;
-    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf15;
+    //WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf13;
+    //WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf14;
+    //WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf15;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf16;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf17;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf18;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf19;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf20;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf21;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf22;
+    WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf23;
 };
 
 #endif /* defined(__BL_Denoiser__DenoiserObj__) */

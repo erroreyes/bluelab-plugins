@@ -2,6 +2,7 @@
 #define BL_QUEUE_H
 
 #include <vector>
+#include <deque>
 using namespace std;
 
 // Implementation of queue with fixed size, and circular buffer
