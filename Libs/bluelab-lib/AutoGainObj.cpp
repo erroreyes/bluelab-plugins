@@ -461,6 +461,7 @@ AutoGainObj::GetCurveResult(WDL_TypedBuf<BL_FLOAT> *result)
     *result = mCurveResult;
 }
 
+#if 0 // Origin version
 void
 AutoGainObj::ApplyGain(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
                        vector<WDL_TypedBuf<BL_FLOAT> > *outSamples,
@@ -482,6 +483,34 @@ AutoGainObj::ApplyGain(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
         }
     }
 }
+#endif
+#if 1 // optim version
+void
+AutoGainObj::ApplyGain(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
+                       vector<WDL_TypedBuf<BL_FLOAT> > *outSamples,
+                       BL_FLOAT gainDB)
+{
+    if (inSamples.empty())
+        return;
+    
+    int nFrames = inSamples[0].GetSize();
+    
+    BL_FLOAT gain = DBToAmp(gainDB);
+
+    for (int j = 0; j < 2; j++)
+    {
+        if ((j < inSamples.size()) && (j < (*outSamples).size()))
+        {
+            BL_FLOAT *inSamplesData = inSamples[j].Get();
+            BL_FLOAT *outSamplesData = (*outSamples)[j].Get();
+            for (int i = 0; i < nFrames; i++)
+            {   
+                outSamplesData[i] = gain*inSamplesData[i];
+            }
+        }
+    }
+}
+#endif
 
 void
 AutoGainObj::ApplyGainConstantSc(BL_FLOAT *scConstantValue,
@@ -492,6 +521,7 @@ AutoGainObj::ApplyGainConstantSc(BL_FLOAT *scConstantValue,
     *scConstantValue *= gain;
 }
 
+#if 0 // origin version
 void
 AutoGainObj::ApplyDryWet(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
                          vector<WDL_TypedBuf<BL_FLOAT> > *outSamples,
@@ -516,6 +546,36 @@ AutoGainObj::ApplyDryWet(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
         }
     }
 }
+#endif
+#if 1 // Optim version
+void
+AutoGainObj::ApplyDryWet(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
+                         vector<WDL_TypedBuf<BL_FLOAT> > *outSamples,
+                         BL_FLOAT dryWet)
+{
+    if (inSamples.empty())
+        return;
+    
+    int nFrames = inSamples[0].GetSize();
+
+    for (int j = 0; j < 2; j++)
+    {
+        if ((j < inSamples.size()) && (j < (*outSamples).size()))
+        {
+            BL_FLOAT *inSamplesData = inSamples[j].Get();
+            BL_FLOAT *outSamplesData = (*outSamples)[j].Get();
+            for (int i = 0; i < nFrames; i++)
+            {
+        
+                BL_FLOAT drySample = inSamplesData[i];
+                BL_FLOAT wetSample = outSamplesData[i];
+                
+                outSamplesData[i] = (1.0 - dryWet)*drySample + dryWet*wetSample;
+            }
+        }
+    }
+}
+#endif
 
 // Stereo to mono with Fft: valid ?
 BL_FLOAT
@@ -579,7 +639,8 @@ AutoGainObj::ComputeOutGainSpectConstantSc(const vector<WDL_TypedBuf<BL_FLOAT> >
     }
     else
         monoIn.Resize(0);
-    
+
+#if 0 // Origin version
     // Dummy Sc magn array
     WDL_TypedBuf<BL_FLOAT> &scMagns = mTmpBuf13;
     BLUtils::ResizeFillValue(&scMagns, monoIn.GetSize(), constantScValue);
@@ -587,6 +648,15 @@ AutoGainObj::ComputeOutGainSpectConstantSc(const vector<WDL_TypedBuf<BL_FLOAT> >
     //Convert to dB
     WDL_TypedBuf<BL_FLOAT> &dbSc = mTmpBuf14;
     BLUtils::AmpToDB(&dbSc, scMagns, (BL_FLOAT)BL_EPS, (BL_FLOAT)DB_INF);
+#endif
+#if 1 // Optim version
+    BL_FLOAT constantScValueDB = BLUtils::AmpToDB(constantScValue,
+                                                  (BL_FLOAT)BL_EPS,
+                                                  (BL_FLOAT)DB_INF);
+    // Dummy Db Sc magn array
+    WDL_TypedBuf<BL_FLOAT> &dbSc = mTmpBuf14;
+    BLUtils::ResizeFillValue(&dbSc, monoIn.GetSize(), constantScValueDB);
+#endif
     
     // FIX: fix flat end of result curve, when using sample rate > 44100
     WDL_TypedBuf<BL_FLOAT> &dbIn = mTmpBuf15;

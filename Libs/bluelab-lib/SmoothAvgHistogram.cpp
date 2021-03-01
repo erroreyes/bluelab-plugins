@@ -41,10 +41,16 @@ SmoothAvgHistogram::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
 {
     if (values.GetSize() != mData.GetSize())
         return;
+
+    int valuesSize = values.GetSize();
+    const BL_FLOAT *valuesData = values.Get();
+    BL_FLOAT *data = mData.Get();
     
-    for (int i = 0; i < values.GetSize(); i++)
+    //for (int i = 0; i < values.GetSize(); i++)
+    for (int i = 0; i < valuesSize; i++)
     {
-        BL_FLOAT val = values.Get()[i];
+        //BL_FLOAT val = values.Get()[i];
+        BL_FLOAT val = valuesData[i];
         
         //if (mData.Get()[i] < RESET_VALUE / 2)
         //    // Initialize
@@ -52,7 +58,8 @@ SmoothAvgHistogram::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
         //else
         
         BL_FLOAT newVal = (1.0 - mSmoothCoeff) * val + mSmoothCoeff*mData.Get()[i];
-        mData.Get()[i] = newVal;
+        //mData.Get()[i] = newVal;
+        data[i] = newVal;
     }
 }
 
@@ -60,15 +67,20 @@ void
 SmoothAvgHistogram::GetValues(WDL_TypedBuf<BL_FLOAT> *values)
 {
     values->Resize(mData.GetSize());
+
+    int dataSize = mData.GetSize();
+    BL_FLOAT *valuesData = values->Get();
     
-    for (int i = 0; i < mData.GetSize(); i++)
+    //for (int i = 0; i < mData.GetSize(); i++)
+    for (int i = 0; i < dataSize; i++)
     {
         //BL_FLOAT val = 0.0;
         
         //if (mData.Get()[i] > RESET_VALUE/2)
         BL_FLOAT val = mData.Get()[i];
         
-        values->Get()[i] = val;
+        //values->Get()[i] = val;
+        valuesData[i] = val;
     }
 }
 

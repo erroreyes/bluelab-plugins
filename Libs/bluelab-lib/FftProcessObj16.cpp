@@ -2821,34 +2821,44 @@ FftProcessObj16::ComputeFft(const WDL_TypedBuf<BL_FLOAT> &samples,
       // Test just in case (added for AutoGain FLStudio Win graphic freeze)
       coeff = 1.0/bufSize;
 #endif
+
+    WDL_FFT_COMPLEX *tmpFftBufData = tmpFftBuf.Get();
+    BL_FLOAT *samplesData = samples.Get();
     
     // Fill the fft buf
     for (int i = 0; i < bufSize; i++)
     {
         // No need to divide by mBufSize if we ponderate analysis hanning window
-        tmpFftBuf.Get()[i].re = samples.Get()[i]*coeff;
-        tmpFftBuf.Get()[i].im = 0.0;
+        //tmpFftBuf.Get()[i].re = samples.Get()[i]*coeff;
+        //tmpFftBuf.Get()[i].im = 0.0;
+        tmpFftBufData[i].re = samplesData[i]*coeff;
+        tmpFftBufData[i].im = 0.0;
     }
     
     // Take FREQ_RES into account
     // Not sure we must do that only when normalizing or not
     for (int i = 0; i < bufSize; i++)
-        tmpFftBuf.Get()[i].re *= freqRes;
+        //tmpFftBuf.Get()[i].re *= freqRes;
+        tmpFftBufData[i].re *= freqRes;
     
     // Do the fft
     // Do it on the window but also in following the empty space, to capture remaining waves
     WDL_fft(tmpFftBuf.Get(), bufSize, false);
     
     // Sort the fft buffer
+    WDL_FFT_COMPLEX *fftSamplesData = fftSamples->Get();
     for (int i = 0; i < bufSize; i++)
     {
         int k = WDL_fft_permute(bufSize, i);
 
 #if !DENOISER_OPTIM3
-        fftSamples->Get()[i].re = tmpFftBuf.Get()[k].re;
-        fftSamples->Get()[i].im = tmpFftBuf.Get()[k].im;
+        //fftSamples->Get()[i].re = tmpFftBuf.Get()[k].re;
+        //fftSamples->Get()[i].im = tmpFftBuf.Get()[k].im;
+        fftSamplesData()[i].re = tmpFftBufData[k].re;
+        fftSamplesData()[i].im = tmpFftBufData[k].im;
 #else
-        fftSamples->Get()[i] = tmpFftBuf.Get()[k];
+        //fftSamples->Get()[i] = tmpFftBuf.Get()[k];
+        fftSamplesData[i] = tmpFftBufData[k];
 #endif
     }
 }
@@ -2876,15 +2886,20 @@ FftProcessObj16::ComputeInverseFft(const WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSampl
 		return;
 	}
 
+    WDL_FFT_COMPLEX *tmpFftBufData = tmpFftBuf.Get();
+    WDL_FFT_COMPLEX *fftSamplesData = fftSamples.Get();
     for (int i = 0; i < bufSize; i++)
     {
         int k = WDL_fft_permute(bufSize, i);
         
 #if !DENOISER_OPTIM3
-        tmpFftBuf.Get()[k].re = fftSamples.Get()[i].re;
-        tmpFftBuf.Get()[k].im = fftSamples.Get()[i].im;
+        //tmpFftBuf.Get()[k].re = fftSamples.Get()[i].re;
+        //tmpFftBuf.Get()[k].im = fftSamples.Get()[i].im;
+        tmpFftBufData[k].re = fftSamplesData[i].re;
+        tmpFftBufData[k].im = fftSamplesData[i].im;
 #else
-        tmpFftBuf.Get()[k] = fftSamples.Get()[i];
+        //tmpFftBuf.Get()[k] = fftSamples.Get()[i];
+        tmpFftBufData[k] = fftSamplesData[i];
 #endif
     }
     
@@ -2893,8 +2908,10 @@ FftProcessObj16::ComputeInverseFft(const WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSampl
     // Do the ifft
     WDL_fft(tmpFftBuf.Get(), bufSize, true);
 
+    BL_FLOAT *samplesData = samples->Get();
     for (int i = 0; i < bufSize; i++)
-        samples->Get()[i] = tmpFftBuf.Get()[i].re;
+        //samples->Get()[i] = tmpFftBuf.Get()[i].re;
+        samplesData[i] = tmpFftBufData[i].re;
     
     // fft
     BL_FLOAT coeff = 1.0;
@@ -2909,7 +2926,8 @@ FftProcessObj16::ComputeInverseFft(const WDL_TypedBuf<WDL_FFT_COMPLEX> &fftSampl
     
 #if !OPTIM_SIMD
     for (int i = 0; i < bufSize; i++)
-        samples->Get()[i] *= coeff;
+        //samples->Get()[i] *= coeff;
+        samplesData[i] *= coeff;
 #else
     BLUtils::MultValues(samples, coeff);
 #endif

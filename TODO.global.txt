@@ -229,12 +229,13 @@ to test it: push the screen at the maximum => it should not be too bright
 ------------------
 For all plugins (=> new Design): 
 - TODO: remame knob.png => big-knob.png in bl_config.h and CMakeList.txt
-- TODO: add fonts to bl_config, CMakeList.txt, and to resources folder, and load them in main()
+
 - TODO: arguments to frequency scale
 - TODO: CreateVersion(), now we have suppressed the position argument
 - NOTE: must export knobs with odd number of frames (so the middle frames is exactly the zero position of the knob)
 - Don't forget to remove the version from the background
 - use new SoftMasking comp
+- DONE: add fonts to bl_config, CMakeList.txt, and to resources folder, and load them in main()
 ------------------
 
 ---links design
@@ -257,7 +258,6 @@ set number in /proc/sys/kernel/perf_event_paranoid from 4 to -1
 set number in /proc/sys/kernel/kptr_restrict from 1 to 0
 
 perf record
-perf report -g -i perf.data
 
 Hotspot:
 perf record --call-graph dwarf <app>
@@ -274,15 +274,20 @@ perf stat -p $(pgrep BL-Air)
 Compile with -g -fno-omit-frame-pointer
 
 Steps:
+1 -
 perf stat -e cpu-cycles,instructions,L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores <command>
 => outputs result
 => optimize, re do perf stat, compare
 
 perf report: press 'a' to see anotated code
 
+2 - 
 perf record -g -e L1-dcache-load-misses ../plugs-dev/bluelab/BL-Plugins/BL-Air/build-linux/BL-Air-app/BL-Air 
 
 perf record -g -e instructions ../plugs-dev/bluelab/BL-Plugins/BL-Air/build-linux/BL-Air-app/BL-Air
+
+3 -
+perf report -g -i perf.data
 
 See: https://indico.cern.ch/event/814979/contributions/3401196/attachments/1831466/3109819/PerformanceTools.pdf
 
@@ -346,3 +351,5 @@ TODO Design:
 - Graph: font more fat?
 
 WIP: continue fixing/ updating plugins
+
+TODO: FftProcessObj16, avoid .Get() and .GetSize() everywhere

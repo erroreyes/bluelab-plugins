@@ -200,7 +200,7 @@ private:
     WDL_TypedBuf<BL_FLOAT> mTmpBuf10;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf11;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf12;
-    WDL_TypedBuf<BL_FLOAT> mTmpBuf13;
+    //WDL_TypedBuf<BL_FLOAT> mTmpBuf13;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf14;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf15;
     WDL_TypedBuf<BL_FLOAT> mTmpBuf16;
