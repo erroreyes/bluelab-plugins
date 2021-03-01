@@ -51,3 +51,5 @@ BLVumeter2SidesControl::Draw(IGraphics& g)
     
     g.FillRect(mColor, rect);
 }
+
+    

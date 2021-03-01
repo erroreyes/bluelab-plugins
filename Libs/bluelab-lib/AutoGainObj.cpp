@@ -416,8 +416,7 @@ AutoGainObj::ProcessInputFft(vector<WDL_TypedBuf<WDL_FFT_COMPLEX> * > *ioFftSamp
         // Process dry/wet
         ApplyDryWet(in, &out, mDryWet);
     }
-    else
-        // mMode == READ
+    else // mMode == READ
     {
         // Apply the gain
         ApplyGain(in, &out, mGain);
