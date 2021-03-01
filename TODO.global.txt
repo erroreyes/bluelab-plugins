@@ -234,6 +234,7 @@ For all plugins (=> new Design):
 - TODO: CreateVersion(), now we have suppressed the position argument
 - NOTE: must export knobs with odd number of frames (so the middle frames is exactly the zero position of the knob)
 - Don't forget to remove the version from the background
+- use new SoftMasking comp
 ------------------
 
 ---links design
