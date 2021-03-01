@@ -69,8 +69,11 @@ AutoGainObj::AutoGainObj(int bufferSize, int oversampling, int freqRes,
     mMaxGain = maxGain;
     
     mMode = BYPASS_WRITE;
-    
+
+#if USE_LEGACY_SILENCE_THRESHOLD
     mThreshold = -120.0;
+#endif
+    
     mPrecision = 50.0;
     mDryWet = 1.0;
     
@@ -229,11 +232,13 @@ AutoGainObj::SetMode(Mode mode)
     mMode = mode;
 }
 
+#if USE_LEGACY_SILENCE_THRESHOLD
 void
 AutoGainObj::SetThreshold(BL_FLOAT threshold)
 {
     mThreshold = threshold;
 }
+#endif
 
 void
 AutoGainObj::SetPrecision(BL_FLOAT precision)
@@ -655,7 +660,11 @@ AutoGainObj::ComputeOutGainSpectAux(const WDL_TypedBuf<BL_FLOAT> &dbIn,
             outGain = 0.0;
         }
 #else
+#if USE_LEGACY_SILENCE_THRESHOLD
         outGain = ComputeFftGain2(avgIn, avgSc);
+#else
+        outGain = ComputeFftGain3(avgIn, avgSc);
+#endif
 #endif
     }
     else
@@ -725,6 +734,7 @@ AutoGainObj::ComputeInGainFft(const WDL_TypedBuf<BL_FLOAT> &monoIn)
     return inGain;
 }
 
+#if 0
 // Note used anymore!
 BL_FLOAT
 AutoGainObj::ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
@@ -807,6 +817,7 @@ AutoGainObj::ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
     
     return outGain;
 }
+#endif
 
 BL_FLOAT
 AutoGainObj::ComputeFftGain(const WDL_TypedBuf<BL_FLOAT> &avgIn,
@@ -835,6 +846,7 @@ AutoGainObj::ComputeFftGain(const WDL_TypedBuf<BL_FLOAT> &avgIn,
     return avgDiff;
 }
 
+#if USE_LEGACY_SILENCE_THRESHOLD
 // Compute by difference in dB
 BL_FLOAT
 AutoGainObj::ComputeFftGain2(const WDL_TypedBuf<BL_FLOAT> &avgIn,
@@ -863,6 +875,45 @@ AutoGainObj::ComputeFftGain2(const WDL_TypedBuf<BL_FLOAT> &avgIn,
     if (avgNumValues > 0)
         avgDiff /= avgNumValues;
     
+#if 1 // FIX: with constant sc, gain increases while samplerate increases
+    BL_FLOAT coeff = REF_SAMPLE_RATE/mSampleRate;
+    
+    avgDiff *= coeff;
+#endif
+    
+    return avgDiff;
+}
+#endif
+
+// Ponderate diff by dB position
+// NOTE: seems to work very well, and no need to use a silence threshold parameter!
+BL_FLOAT
+AutoGainObj::ComputeFftGain3(const WDL_TypedBuf<BL_FLOAT> &avgIn,
+                             const WDL_TypedBuf<BL_FLOAT> &avgSc)
+{
+    // Add the diff only if both input and sidechain ore below
+    // the silence threshold
+    BL_FLOAT avgDiff = 0.0;
+    BL_FLOAT avgSumWeights = 0;
+    
+    for (int i = 0; i < avgIn.GetSize(); i++)
+    {
+        BL_FLOAT inVal = avgIn.Get()[i];
+        BL_FLOAT scVal = avgSc.Get()[i];
+
+        BL_FLOAT w = BLUtils::DBToAmp((inVal + scVal)*0.5);
+        
+        BL_FLOAT diff = scVal - inVal;
+        avgDiff += w*diff;
+        
+        avgSumWeights += w;
+    }
+    
+    if (avgSumWeights > 0.0)
+    {
+        avgDiff /= avgSumWeights;
+    }
+
 #if 1 // FIX: with constant sc, gain increases while samplerate increases
     BL_FLOAT coeff = REF_SAMPLE_RATE/mSampleRate;
     

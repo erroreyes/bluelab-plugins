@@ -29,6 +29,9 @@ using namespace std;
 // both input and sidechain are defined
 #define SILENCE_THRS_ALGO2 1
 
+// Legacy method. Not need anymore. And it will remove an obscure parameter
+#define USE_LEGACY_SILENCE_THRESHOLD 0
+
 class SmoothAvgHistogram;
 class ParamSmoother;
 class AutoGainObj : public MultichannelProcess
@@ -52,8 +55,11 @@ public:
                int oversampling, BL_FLOAT sampleRate);
     
     void SetMode(Mode mode);
-    
+
+#if USE_LEGACY_SILENCE_THRESHOLD
     void SetThreshold(BL_FLOAT threshold);
+#endif
+    
     void SetPrecision(BL_FLOAT precision);
     void SetDryWet(BL_FLOAT dryWet);
     
@@ -101,14 +107,20 @@ protected:
     BL_FLOAT ComputeInGainSamples(const WDL_TypedBuf<BL_FLOAT> &monoIn);
     BL_FLOAT ComputeInGainFft(const WDL_TypedBuf<BL_FLOAT> &monoIn);
 
-    //
-    BL_FLOAT ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
-                               const vector<WDL_TypedBuf<BL_FLOAT> > &scIn);
+    // Not used anymore
+    //BL_FLOAT ComputeOutGainRMS(const vector<WDL_TypedBuf<BL_FLOAT> > &inSamples,
+    //                           const vector<WDL_TypedBuf<BL_FLOAT> > &scIn);
     
     BL_FLOAT ComputeFftGain(const WDL_TypedBuf<BL_FLOAT> &avgIn,
                             const WDL_TypedBuf<BL_FLOAT> &avgSc);
 
+#if USE_LEGACY_SILENCE_THRESHOLD
     BL_FLOAT ComputeFftGain2(const WDL_TypedBuf<BL_FLOAT> &avgIn,
+                             const WDL_TypedBuf<BL_FLOAT> &avgSc);
+#endif
+    
+    // Ponderate diff by the volume
+    BL_FLOAT ComputeFftGain3(const WDL_TypedBuf<BL_FLOAT> &avgIn,
                              const WDL_TypedBuf<BL_FLOAT> &avgSc);
     
     static void BoundScCurve(WDL_TypedBuf<BL_FLOAT> *curve,
@@ -120,7 +132,10 @@ protected:
     
     
     //
+#if USE_LEGACY_SILENCE_THRESHOLD
     BL_FLOAT mThreshold;
+#endif
+    
     BL_FLOAT mPrecision;
     BL_FLOAT mDryWet;
     
