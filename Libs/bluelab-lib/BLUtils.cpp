@@ -9759,6 +9759,8 @@ BLUtils::SmoothDataWin(WDL_TypedBuf<FLOAT_TYPE> *result,
     int winSize = win.GetSize();
     FLOAT_TYPE *winData = win.Get();
     FLOAT_TYPE *dataData = data.Get();
+
+    int halfWinSize = winSize/2;
     
     for (int i = 0; i < resultSize; i++)
     {
@@ -9766,7 +9768,9 @@ BLUtils::SmoothDataWin(WDL_TypedBuf<FLOAT_TYPE> *result,
         FLOAT_TYPE sumCoeff = 0.0;
         for (int j = 0; j < winSize; j++)
         {
-            int idx = i + j - winSize/2;
+            //int idx = i + j - winSize/2;
+            int idx = i + j - halfWinSize;
+            
             if ((idx < 0) || (idx > resultSize - 1))
                 continue;
             
@@ -9786,11 +9790,11 @@ BLUtils::SmoothDataWin(WDL_TypedBuf<FLOAT_TYPE> *result,
     }
 }
 template void BLUtils::SmoothDataWin(WDL_TypedBuf<float> *result,
-                          const WDL_TypedBuf<float> &data,
-                          const WDL_TypedBuf<float> &win);
+                                     const WDL_TypedBuf<float> &data,
+                                     const WDL_TypedBuf<float> &win);
 template void BLUtils::SmoothDataWin(WDL_TypedBuf<double> *result,
-                          const WDL_TypedBuf<double> &data,
-                          const WDL_TypedBuf<double> &win);
+                                     const WDL_TypedBuf<double> &data,
+                                     const WDL_TypedBuf<double> &win);
 
 template <typename FLOAT_TYPE>
 void

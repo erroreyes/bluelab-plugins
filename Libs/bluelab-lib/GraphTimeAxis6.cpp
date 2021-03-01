@@ -414,12 +414,14 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
     if (step > BL_EPS)
         tm = ((int)(tm/step))*step;
 
+    BL_FLOAT timeDurationInv = 1.0/timeDuration;
     for (int i = 0; i < MAX_NUM_LABELS; i++)
     {
         // Parameter
         BL_FLOAT t = 0.0;
         if (timeDuration > BL_EPS)
-            t = (tm - startTime)/timeDuration;
+            //t = (tm - startTime)/timeDuration;
+            t = (tm - startTime)*timeDurationInv;
         
         sprintf(mHAxisData[i][0], "%g", t);
         
@@ -454,11 +456,13 @@ GraphTimeAxis6::Update(BL_FLOAT currentTime)
             // New formatting3: manage minutes and hours, formating like hh:mm:ss.ms
             if (hours != 0)
             {
-                sprintf(mHAxisData[i][1], "%d:%02d:%d.%d", hours, minutes, seconds, millis/100);
+                sprintf(mHAxisData[i][1], "%d:%02d:%d.%d",
+                        hours, minutes, seconds, millis/100);
             }
             else if (minutes != 0)
             {
-                sprintf(mHAxisData[i][1], "%d:%02d.%d", minutes, seconds, millis/100);
+                sprintf(mHAxisData[i][1], "%d:%02d.%d",
+                        minutes, seconds, millis/100);
             }
             else if (seconds != 0)
             {

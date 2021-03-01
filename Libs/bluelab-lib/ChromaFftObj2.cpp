@@ -351,16 +351,29 @@ ChromaFftObj2::MagnsToChromaLineFreqs(const WDL_TypedBuf<BL_FLOAT> &magns,
     
     chromaLine->Resize(magns.GetSize());
     BLUtils::FillAllZero(chromaLine);
+
+    BL_FLOAT c0FreqInv = 1.0/c0Freq;
+    BL_FLOAT inv12 = 1.0/12.0;
+    
+    int magnsSize = magns.GetSize();
+    BL_FLOAT *magnsData = magns.Get();
+    BL_FLOAT *realFreqsData = realFreqs.Get();
+
+    int chromaLineSize = chromaLine->GetSize();
     
     // Do not take 0Hz!
-    for (int i = 1; i < magns.GetSize(); i++)
+    //for (int i = 1; i < magns.GetSize(); i++)
+    for (int i = 1; i < magnsSize; i++)
     {
-        BL_FLOAT magnVal = magns.Get()[i];
-        
-        BL_FLOAT freq = realFreqs.Get()[i];
+        //BL_FLOAT magnVal = magns.Get()[i];
+        //BL_FLOAT freq = realFreqs.Get()[i];
+        BL_FLOAT magnVal = magnsData[i];
+        BL_FLOAT freq = realFreqsData[i];
         
         // See: https://pages.mtu.edu/~suits/NoteFreqCalcs.html
-        BL_FLOAT fRatio = freq / c0Freq;
+        //BL_FLOAT fRatio = freq / c0Freq;
+        BL_FLOAT fRatio = freq*c0FreqInv;
+        
         BL_FLOAT tone = std::log(fRatio)*logToneMultInv;
         
         // Shift (strange ?)
@@ -368,18 +381,22 @@ ChromaFftObj2::MagnsToChromaLineFreqs(const WDL_TypedBuf<BL_FLOAT> &magns,
         
         tone = fmod(tone, 12.0);
         
-        BL_FLOAT toneNorm = tone/12.0;
+        //BL_FLOAT toneNorm = tone/12.0;
+        BL_FLOAT toneNorm = tone*inv12;
         
-        BL_FLOAT binNumF = toneNorm*chromaLine->GetSize();
+        //BL_FLOAT binNumF = toneNorm*chromaLine->GetSize();
+        BL_FLOAT binNumF = toneNorm*chromaLineSize;
         
         int binNum = bl_round(binNumF);
         
-        if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
+        //if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
+        if ((binNum >= 0) && (binNum < chromaLineSize))
             chromaLine->Get()[binNum] += magnVal;
 
         if (maskLine != NULL)
         {
-            if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
+            //if ((binNum >= 0) && (binNum < chromaLine->GetSize()))
+            if ((binNum >= 0) && (binNum < chromaLineSize))
                 maskLine->AddValue(binNum, i);
         }
     }

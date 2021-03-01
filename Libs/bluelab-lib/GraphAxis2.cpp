@@ -142,26 +142,42 @@ GraphAxis2::SetMinMaxValues(BL_GUI_FLOAT minVal, BL_GUI_FLOAT maxVal)
 void
 GraphAxis2::SetData(char *data[][2], int numData)
 {
-    mValues.clear();
+    //mValues.clear();
+    mValues.resize(numData);
+
+    GraphAxisData aData;
+    //char *cData[2];
+    string text;
+
+    BL_FLOAT rangeInv = 1.0/(mMaxVal - mMinVal);
     
     // Copy data
     for (int i = 0; i < numData; i++)
     {
-        char *cData[2] = { data[i][0], data[i][1] };
+        //char *cData[2] = { data[i][0], data[i][1] };
+
+        //cData[0] = data[i][0];
+        //cData[1] = data[i][1];
         
-        BL_GUI_FLOAT val = atof(cData[0]);
-        BL_GUI_FLOAT t = (val - mMinVal)/(mMaxVal - mMinVal);
+        //BL_GUI_FLOAT val = atof(cData[0]);
+        BL_GUI_FLOAT val = atof(data[i][0]);
+        //BL_GUI_FLOAT t = (val - mMinVal)/(mMaxVal - mMinVal);
+        BL_GUI_FLOAT t = (val - mMinVal)*rangeInv;
         
         t = mScale->ApplyScale(mScaleType, t, mMinVal, mMaxVal);
         
-        string text(cData[1]);
+        //string text(cData[1]);
+        
+        //text = cData[1];
+        text = data[i][1];
         
         // Error here, if we add an Y axis, we must not use mMinXdB
-        GraphAxisData aData;
+        //GraphAxisData aData;
         aData.mT = t;
         aData.mText = text;
         
-        mValues.push_back(aData);
+        //mValues.push_back(aData);
+        mValues[i] = aData;
     }
     
     NotifyGraph();

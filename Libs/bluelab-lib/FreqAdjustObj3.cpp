@@ -26,8 +26,11 @@
 
 // Just for testing
 // Set to 0 at the origin
+// Need to be unit-tested
+// Does't seem to really optimize
 #define USE_SMB_MAPTOPI 0
 
+#define M_PI_INV 0.318309886183791
 
 FreqAdjustObj3::FreqAdjustObj3(int bufferSize, int overlapping, int oversampling,
                                BL_FLOAT sampleRate)
@@ -132,6 +135,8 @@ FreqAdjustObj3::ComputeRealFrequencies(const WDL_TypedBuf<BL_FLOAT> &ioPhases,
     //BL_FLOAT osamp = ((BL_FLOAT)mBufferSize)/(mBufferSize - mBufferSize/mOverlapping);
     
     BL_FLOAT expct = 2.0*M_PI/osamp;
+    BL_FLOAT expctInv = 1.0/expct;
+    
     BL_FLOAT freqPerBin = mSampleRate/(BL_FLOAT)mBufferSize;
     
 #if DEBUG_ADJUST
@@ -190,7 +195,8 @@ FreqAdjustObj3::ComputeRealFrequencies(const WDL_TypedBuf<BL_FLOAT> &ioPhases,
 #endif
         
         /* get deviation from bin frequency from the +/- Pi interval */
-        tmp /= expct;
+        //tmp /= expct;
+        tmp *= expctInv;
         
 #if DEBUG_ADJUST
         step4.Add(tmp);
@@ -331,9 +337,11 @@ FreqAdjustObj3::ComputeInitialSumPhases()
 
 BL_FLOAT
 FreqAdjustObj3::SMB_MapToPi(BL_FLOAT val)
-{
+{ 
     /* map delta phase into +/- Pi interval */
-    long qpd = val/M_PI;
+    //long qpd = val/M_PI;
+    long qpd = val*M_PI_INV;
+    
     if (qpd >= 0)
         qpd += qpd&1;
     else
@@ -344,6 +352,7 @@ FreqAdjustObj3::SMB_MapToPi(BL_FLOAT val)
     return val;
 }
 
+#if 0 // Origin
 // With this one, we will prefer +PI to -PI is we have the choice
 // (to avoid negative frequencies)
 BL_FLOAT
@@ -358,6 +367,24 @@ FreqAdjustObj3::MapToPi(BL_FLOAT val)
     
     return val;
 }
+#endif
+
+#if 1 // Optim
+// With this one, we will prefer +PI to -PI is we have the choice
+// (to avoid negative frequencies)
+BL_FLOAT
+FreqAdjustObj3::MapToPi(BL_FLOAT val)
+{
+    /* Map delta phase into +/- Pi interval */
+    val =  fmod(val, M_TWO_PI);
+    if (val <= -M_PI)
+        val += M_TWO_PI;
+    if (val > M_PI)
+        val -= M_TWO_PI;
+    
+    return val;
+}
+#endif
 
 // Between 0 and 2 PI
 // With that, we don't have negative frequencies anymore !
