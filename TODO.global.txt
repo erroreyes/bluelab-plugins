@@ -300,6 +300,8 @@ TODO(?): set FastMath(fast) for all the plugins that doesn't output sound
 - TODO(all): every spectrograms: use filter bank for log scale frequencies (faster)
 - TODO(all): use FilterBank instead of MelScale (no stairs effect)
 - TODO(all): check that we use the latest TimeAxis and FreqAxis
+SmoothCurveDb => additional arg: sampleRate
+
 ------- Design:
 GUI kits
 https://uimother.com/collections/gui-kits
@@ -354,4 +356,3 @@ WIP: continue fixing/ updating plugins
 
 TODO: FftProcessObj16, avoid .Get() and .GetSize() everywhere
 
-GetPlugIOBuffer -> manage if fail (return)

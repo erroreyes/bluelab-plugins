@@ -55,6 +55,9 @@ GraphAxis2::GraphAxis2()
     mBounds[1] = 1.0;
 
     mScale = new Scale();
+
+    // align by default
+    mAlignToScreenPixels = true;
 }
 
 GraphAxis2::~GraphAxis2()
@@ -190,6 +193,12 @@ GraphAxis2::SetBounds(BL_FLOAT bounds[2])
     mBounds[1] = bounds[1];
     
     NotifyGraph();
+}
+
+void
+GraphAxis2::SetAlignToScreenPixels(bool flag)
+{
+    mAlignToScreenPixels = flag;
 }
 
 void

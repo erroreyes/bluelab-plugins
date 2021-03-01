@@ -156,14 +156,28 @@ GUIHelper12::GUIHelper12(Style style)
         
         // Graph
         mGraphAxisColor = IColor(255, 48, 48, 48);
+        
         //mGraphAxisColor = IColor(255, 21, 21, 117); // Dark blue
         // Choose maximum brightness color for labels,
         // to see them well over clear spectrograms
         mGraphAxisOverlayColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
-        mGraphAxisLineWidth = 2.0; //1.0;
-        mGraphAxisLineWidthBold = 3.0; //2.0;
+        
+        //mGraphAxisLineWidth = 2.0; //1.0;
+        //mGraphAxisLineWidthBold = 3.0; //2.0;
+
+        // Since axis lines are now aligned to pixels,
+        // can choose thiner line width
+        // (every line will be displayed the same correctly anyway)
+        // Grow a bit the size, to be sure it will be 1 pixel at the minimum
+        //
+        // Choose 0.25 more. Otherwise the lines will be too dark,
+        // with more clear dots at the intersections.
+        //
+        // With 0.5 more, it is too fat...
+        mGraphAxisLineWidth = 1.25; //1.5; //1.0;
+        mGraphAxisLineWidthBold = 2.25; //2.5; //2.0;
         
         mGraphCurveDescriptionColor = IColor(255, 170, 170, 170);
         mGraphCurveColorBlue = IColor(255, 64, 64, 255);
@@ -264,8 +278,21 @@ GUIHelper12::GUIHelper12(Style style)
         mGraphAxisOverlayColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelColor = IColor(255, 255, 255, 255);
         mGraphAxisLabelOverlayColor = IColor(255, 48, 48, 48);
-        mGraphAxisLineWidth = 2.0; //1.0;
-        mGraphAxisLineWidthBold = 3.0; //2.0;
+
+        //mGraphAxisLineWidth = 2.0; //1.0;
+        //mGraphAxisLineWidthBold = 3.0; //2.0;
+
+        // Since axis lines are now aligned to pixels,
+        // can choose thiner line width
+        // (every line will be displayed the same correctly anyway)
+        // Grow a bit the size, to be sure it will be 1 pixel at the minimum
+        //
+        // Choose 0.25 more. Otherwise the lines will be too dark,
+        // with more clear dots at the intersections.
+        //
+        // With 0.5 more, it is too fat...
+        mGraphAxisLineWidth = 1.25; //1.5; //1.0;
+        mGraphAxisLineWidthBold = 2.25; //2.5; //2.0;
         
         mGraphCurveDescriptionColor = IColor(255, 170, 170, 170);
         mGraphCurveColorBlue = IColor(255, 64, 64, 255);

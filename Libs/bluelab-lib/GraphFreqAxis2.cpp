@@ -30,6 +30,28 @@ const BL_FLOAT freqsFull[NUM_AXIS_DATA_FULL] =
     10000.0, 20000.0, 40000.0, 80000.0, 176400.0
 };
 
+// Use very close lines (to see well log scale), and add just some labels
+// From 0Hz to sampleRate/2 Hz
+#define NUM_AXIS_DATA_FULL2 39 //48
+const char *labelsFull2[NUM_AXIS_DATA_FULL2] =
+{
+    //"", "", "", "", "", "", "", "", "",
+    "", "", "", "", "", "", "", "", "",
+    "100Hz", "", "", "", "500Hz", "", "", "", "",
+    "1KHz", "2KHz", "", "", "5KHz", "", "", "", "",
+    "10KHz", "20KHz", "", "40KHz", "", "", "", "80KHz", "",
+    "100Khz", "200KHz", ""
+};
+const BL_FLOAT freqsFull2[NUM_AXIS_DATA_FULL2] =
+{
+    //1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
+    10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0,
+    100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0,
+    1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0, 7000.0, 8000.0, 9000.0,
+    10000.0, 20000.0, 30000.0, 40000.0, 50000.0, 60000.0, 70000.0, 80000.0, 90000.0,
+    100000.0, 200000.0, 300000.0
+};
+
 // Log scale
 //
 
@@ -301,8 +323,9 @@ GraphFreqAxis2::Update()
         // Avoid a shift
         minHzValue = 0.0;
 
-        UpdateAxis(NUM_AXIS_DATA_FULL,
-                   freqsFull, labelsFull,
+        //UpdateAxis(NUM_AXIS_DATA_FULL, freqsFull, labelsFull,
+        //minHzValue, maxHzValue);
+        UpdateAxis(NUM_AXIS_DATA_FULL2, freqsFull2, labelsFull2,
                    minHzValue, maxHzValue);
     }
     else if ((mScale == Scale::LOG) ||

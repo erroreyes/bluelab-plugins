@@ -100,6 +100,9 @@
 
 #define OPTIM_CONVERT_XY 1
 
+// Aligne axis lines to integer pixels
+#define ALIGN_AXES_LINES_TO_PIX 1
+
 GraphControl12::GraphControl12(Plugin *pPlug, IGraphics *graphics,
                                IRECT pR, int paramIdx,
                               const char *fontPath)
@@ -890,10 +893,15 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     y0f = height - y0f;
                     y1f = height - y1f;
 #endif
-                    
+
                     // Draw a vertical line
                     nvgBeginPath(mVg);
 
+#if ALIGN_AXES_LINES_TO_PIX
+                    if (axis->mAlignToScreenPixels)
+                        x = (int)x;
+#endif
+                    
                     nvgMoveTo(mVg, x, y0f);
                     nvgLineTo(mVg, x, y1f);
     
@@ -924,7 +932,10 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                         nvgLineTo(mVg, x + OVERLAY_OFFSET, y1f);
                         nvgStroke(mVg);
                         
-                        nvgStrokeColor(mVg, nvgRGBA(axisColor[0], axisColor[1], axisColor[2], axisColor[3]));
+                        nvgStrokeColor(mVg, nvgRGBA(axisColor[0],
+                                                    axisColor[1],
+                                                    axisColor[2],
+                                                    axisColor[3]));
                     }
                 }
                 else
@@ -958,14 +969,16 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                         DrawText(x + textOffset + OVERLAY_OFFSET,
                                  textOffset + axis->mOffsetY*height + OVERLAY_OFFSET,
                                  FONT_SIZE, text,
-                                 axis->mLabelOverlayColor, NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
+                                 axis->mLabelOverlayColor,
+                                 NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                                  axis->mFontSizeCoeff);
                     }
                     
                     // First text: aligne left
                     DrawText(x + textOffset,
                              textOffset + axis->mOffsetY*height, FONT_SIZE,
-                             text, axis->mLabelColor, NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
+                             text, axis->mLabelColor,
+                             NVG_ALIGN_LEFT, NVG_ALIGN_BOTTOM,
                              axis->mFontSizeCoeff);
                 }
         
@@ -977,7 +990,8 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                         DrawText(x - textOffset + OVERLAY_OFFSET,
                                  textOffset + axis->mOffsetY*height + OVERLAY_OFFSET,
                                  FONT_SIZE, text,
-                                 axis->mLabelOverlayColor, NVG_ALIGN_RIGHT, NVG_ALIGN_BOTTOM,
+                                 axis->mLabelOverlayColor,
+                                 NVG_ALIGN_RIGHT, NVG_ALIGN_BOTTOM,
                                  axis->mFontSizeCoeff);
                     }
                     
@@ -1020,6 +1034,11 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
                     // (so this looks more accurate in Chroma for example)
                     if (axis->mLinesOverlay)
                         y -= OVERLAY_OFFSET*0.5;
+
+#if ALIGN_AXES_LINES_TO_PIX
+                    if (axis->mAlignToScreenPixels)
+                        y = (int)y;
+#endif
                     
                     BL_GUI_FLOAT yf = y;
                     // NOTE: set from 0 to GRAPH_CONTROL_FLIP_Y for SpectralDiff
@@ -1027,6 +1046,7 @@ GraphControl12::DrawAxis(GraphAxis2 *axis, bool horizontal, bool lineLabelFlag)
 #if GRAPH_CONTROL_FLIP_Y // 0 ??
                     yf = height - yf;
 #endif
+                    
                     // Draw a horizontal line
                     nvgBeginPath(mVg);
                     

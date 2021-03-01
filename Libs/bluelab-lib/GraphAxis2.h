@@ -54,6 +54,7 @@ public:
     // Screen bounds [0, 1] by default
     void SetBounds(BL_FLOAT bounds[2]);
 
+    void SetAlignToScreenPixels(bool flag);
     
 protected:
     friend class GraphControl12;
@@ -112,6 +113,8 @@ protected:
     GraphControl12 *mGraph;
 
     Scale *mScale;
+
+    bool mAlignToScreenPixels;
 };
 
 #endif
