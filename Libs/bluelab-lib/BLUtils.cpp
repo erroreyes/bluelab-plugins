@@ -2183,7 +2183,7 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
 #endif
 
 // iPlug2
-void
+bool
 BLUtils::GetPlugIOBuffers(Plugin *plug,
                           sample **inputs, sample **outputs, int nFrames,
                           vector<WDL_TypedBuf<BL_FLOAT> > *inp,
@@ -2240,6 +2240,11 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
             numOut++;
     }
 
+    if ((numIn == 0) &&
+        (numScIn == 0) &&
+        (numOut == 0))
+        return false;
+    
     // Resize the buffers if necessary
     inp->resize(numIn);
     scInp->resize(numScIn);
@@ -2295,6 +2300,8 @@ BLUtils::GetPlugIOBuffers(Plugin *plug,
 #endif
         }
     }
+
+    return true;
 }
 
 // #bl-iplug2: ok

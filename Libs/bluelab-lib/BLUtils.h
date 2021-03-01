@@ -273,7 +273,7 @@ public:
     static void GetPlugIOBuffers(Plugin *plug, double **inputs, double **outputs,
                                  double *inp[2], double *scIn[2], double *outp[2]);
     
-    static void GetPlugIOBuffers(Plugin *plug,
+    static bool GetPlugIOBuffers(Plugin *plug,
                                  double **inputs, double **outputs, int nFrames,
                                  vector<WDL_TypedBuf<BL_FLOAT> > *inp,
                                  vector<WDL_TypedBuf<BL_FLOAT> > *scIn,
