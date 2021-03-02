@@ -1216,6 +1216,42 @@ template float BLUtils::NormalizedYTodB(float y, float mindB, float maxdB);
 template double BLUtils::NormalizedYTodB(double y, double mindB, double maxdB);
 
 template <typename FLOAT_TYPE>
+void
+BLUtils::NormalizedYTodB(const WDL_TypedBuf<FLOAT_TYPE> &yBuf,
+                         FLOAT_TYPE mindB, FLOAT_TYPE maxdB,
+                         WDL_TypedBuf<FLOAT_TYPE> *resBuf)
+{
+    resBuf->Resize(yBuf.GetSize());
+
+    FLOAT_TYPE rangeInv = 1.0/(maxdB - mindB);
+
+    int bufSize = yBuf.GetSize();
+    FLOAT_TYPE *yBufData = yBuf.Get();
+    FLOAT_TYPE *resBufData = resBuf->Get();
+    
+    for (int i = 0; i < bufSize; i++)
+    {
+        FLOAT_TYPE y = yBufData[i];
+        
+        if (std::fabs(y) < BL_EPS)
+            y = mindB;
+        else
+            y = BLUtils::AmpToDB(y);
+    
+        //y = (y - mindB)/(maxdB - mindB);
+        y = (y - mindB)*rangeInv;
+
+        resBufData[i] = y;
+    }
+}
+template void BLUtils::NormalizedYTodB(const WDL_TypedBuf<float> &yBuf,
+                                       float mindB, float maxdB,
+                                       WDL_TypedBuf<float> *resBuf);
+template void BLUtils::NormalizedYTodB(const WDL_TypedBuf<double> &yBuf,
+                                       double mindB, double maxdB,
+                                       WDL_TypedBuf<double> *resBuf);
+
+template <typename FLOAT_TYPE>
 FLOAT_TYPE
 BLUtils::NormalizedYTodB2(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB)
 {

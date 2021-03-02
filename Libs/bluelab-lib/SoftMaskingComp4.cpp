@@ -130,23 +130,35 @@ SoftMaskingComp4::ProcessCentered(WDL_TypedBuf<WDL_FFT_COMPLEX> *ioSum,
 
     newHistoLine.mSum = *ioSum;
 
-    // masked0 = sum*mask
-    newHistoLine.mMasked0Square = *ioSum;
-    BLUtils::MultValues(&newHistoLine.mMasked0Square, mask);
+    // Optim: compute square history only if enabled
+    // Otherwise, fill with zeros
+    if (mProcessingEnabled)
+    {
+        // masked0 = sum*mask
+        newHistoLine.mMasked0Square = *ioSum;
+        BLUtils::MultValues(&newHistoLine.mMasked0Square, mask);
     
-
-    // maskd1 = sum - masked0
-    newHistoLine.mMasked1Square = *ioSum;
-    BLUtils::SubstractValues(&newHistoLine.mMasked1Square,
-                             newHistoLine.mMasked0Square);
+        // maskd1 = sum - masked0
+        newHistoLine.mMasked1Square = *ioSum;
+        BLUtils::SubstractValues(&newHistoLine.mMasked1Square,
+                                 newHistoLine.mMasked0Square);
     
-    // See: https://hal.inria.fr/hal-01881425/document
-    // |x|^2
-    // NOTE: square abs => complex conjugate
-    
-    // Compute squares (using complex conjugate)
-    BLUtils::ComputeSquareConjugate(&newHistoLine.mMasked0Square);
-    BLUtils::ComputeSquareConjugate(&newHistoLine.mMasked1Square);
+        // See: https://hal.inria.fr/hal-01881425/document
+        // |x|^2
+        // NOTE: square abs => complex conjugate
+        
+        // Compute squares (using complex conjugate)
+        BLUtils::ComputeSquareConjugate(&newHistoLine.mMasked0Square);
+        BLUtils::ComputeSquareConjugate(&newHistoLine.mMasked1Square);
+    }
+    else // Not enabled, fill history with zeros
+    {
+        newHistoLine.mMasked0Square.Resize(ioSum->GetSize());
+        BLUtils::FillAllZero(&newHistoLine.mMasked0Square);
+        
+        newHistoLine.mMasked1Square.Resize(ioSum->GetSize());
+        BLUtils::FillAllZero(&newHistoLine.mMasked1Square);
+    }
     
     // Manage the history
     if (mHistory.empty())

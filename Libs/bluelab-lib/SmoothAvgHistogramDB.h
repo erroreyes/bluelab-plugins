@@ -53,6 +53,10 @@ protected:
     
     BL_FLOAT mMindB;
     BL_FLOAT mMaxdB;
+
+private:
+    // Tmp buffers
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf0;
 };
 
 #endif

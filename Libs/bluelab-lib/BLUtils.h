@@ -175,7 +175,12 @@ public:
     
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedYTodB(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);
-    
+
+    template <typename FLOAT_TYPE>
+    static void NormalizedYTodB(const WDL_TypedBuf<FLOAT_TYPE> &yBuf,
+                                FLOAT_TYPE mindB, FLOAT_TYPE maxdB,
+                                WDL_TypedBuf<FLOAT_TYPE> *resBuf);
+        
     // Variant for vertical graph axis
     template <typename FLOAT_TYPE>
     static FLOAT_TYPE NormalizedYTodB2(FLOAT_TYPE y, FLOAT_TYPE mindB, FLOAT_TYPE maxdB);

@@ -40,6 +40,7 @@ SmoothAvgHistogramDB::AddValue(int index, BL_FLOAT val)
     mData.Get()[index] = newVal;
 }
 
+#if 0 // Origin version
 void
 SmoothAvgHistogramDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
 {
@@ -53,6 +54,31 @@ SmoothAvgHistogramDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
         AddValue(i, val);
     }
 }
+#endif
+
+#if 1 // Optimized version
+void
+SmoothAvgHistogramDB::AddValues(const WDL_TypedBuf<BL_FLOAT> &values)
+{
+    if (values.GetSize() != mData.GetSize())
+        return;
+
+    WDL_TypedBuf<BL_FLOAT> &normY = mTmpBuf0;
+    normY.Resize(values.GetSize());
+
+    BLUtils::NormalizedYTodB(values, mMindB, mMaxdB, &normY);
+                 
+    for (int i = 0; i < values.GetSize(); i++)
+    {
+        BL_FLOAT valDB = normY.Get()[i];
+    
+        BL_FLOAT newVal =
+        (1.0 - mSmoothCoeff) * valDB + mSmoothCoeff*mData.Get()[i];
+    
+        mData.Get()[i] = newVal;
+    }
+}
+#endif
 
 int
 SmoothAvgHistogramDB::GetNumValues()
