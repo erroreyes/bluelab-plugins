@@ -217,6 +217,7 @@ private:
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf21;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf22;
     WDL_TypedBuf<WDL_FFT_COMPLEX> mTmpBuf23;
+    WDL_TypedBuf<BL_FLOAT> mTmpBuf24;
 };
 
 #endif /* defined(__BL_Denoiser__DenoiserObj__) */

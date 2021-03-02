@@ -130,6 +130,10 @@ public:
     static void AmpToDB(WDL_TypedBuf<FLOAT_TYPE> *dBBuf,
                         const WDL_TypedBuf<FLOAT_TYPE> &ampBuf,
                         FLOAT_TYPE eps, FLOAT_TYPE minDB);
+
+    template <typename FLOAT_TYPE>
+    static void AmpToDB(FLOAT_TYPE *dBBuf, const FLOAT_TYPE *ampBuf, int bufSize,
+                        FLOAT_TYPE eps, FLOAT_TYPE minDB);
     
     // Version without check
     template <typename FLOAT_TYPE>

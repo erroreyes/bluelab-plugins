@@ -4623,8 +4623,8 @@ template double BLUtils::AmpToDB(double sampleVal, double eps, double minDB);
 template <typename FLOAT_TYPE>
 void
 BLUtils::AmpToDB(WDL_TypedBuf<FLOAT_TYPE> *dBBuf,
-               const WDL_TypedBuf<FLOAT_TYPE> &ampBuf,
-               FLOAT_TYPE eps, FLOAT_TYPE minDB)
+                 const WDL_TypedBuf<FLOAT_TYPE> &ampBuf,
+                 FLOAT_TYPE eps, FLOAT_TYPE minDB)
 {
     dBBuf->Resize(ampBuf.GetSize());
     
@@ -4646,6 +4646,24 @@ template void BLUtils::AmpToDB(WDL_TypedBuf<float> *dBBuf,
 template void BLUtils::AmpToDB(WDL_TypedBuf<double> *dBBuf,
                     const WDL_TypedBuf<double> &ampBuf,
                     double eps, double minDB);
+
+template <typename FLOAT_TYPE>
+void
+BLUtils::AmpToDB(FLOAT_TYPE *dBBuf, const FLOAT_TYPE *ampBuf, int bufSize,
+                 FLOAT_TYPE eps, FLOAT_TYPE minDB)
+{
+    for (int i = 0; i < bufSize; i++)
+    {
+        FLOAT_TYPE amp = ampBuf[i];
+        FLOAT_TYPE dbAmp = AmpToDB(amp, eps, minDB);
+        
+        dBBuf[i] = dbAmp;
+    }
+}
+template void BLUtils::AmpToDB(float *dBBuf, const float *ampBuf, int bufSize,
+                               float eps, float minDB);
+template void BLUtils::AmpToDB(double *dBBuf, const double *ampBuf, int bufSize,
+                               double eps, double minDB);
 
 template <typename FLOAT_TYPE>
 void
