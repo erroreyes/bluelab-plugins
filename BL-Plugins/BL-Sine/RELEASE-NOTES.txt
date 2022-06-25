@@ -1,0 +1,115 @@
+v5.0.0
+- initial version
+- FIX: on Protools, when not playing, a part of the sine wave was still playing, with clicks (so when not playing, output silence instead of bypass)
+
+
+v5.0.2
+IMPROV: made more accurate than 1Hz (e.g 0.1Hz) => sometimes users can need it
+
+NOTE: typo in the manual, not corrected for release 5.0.2
+TODO: include the 1.2 manual in the next version…
+
+v5.0.3
+- animated logo
+- included fixed manual
+
+v5.0.4
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- IMPROV: changed accuracy from 0.1Hz to 0.01Hz
+- FIX: graphic bugs when editing frequency value with the keyboard (text value too long)
+=> textfield2.png (larger, PARAM_EDIT_W: 60 => 90)
+- Also fixes refresh bugs on left and right of the freq value when moving from 0 to 20000 several times.
+- FIX: since freq precision at 0.01Hz, if the frequency value is greater than 9999, we can't edit the last digit of the value (increased DEFAULT_TEXT_ENTRY_LEN)
+=> Update Feb2020
+
+v5.0.5
+- IMPROV: new option “PASS THRU”
+- IMPROV: fixed the clicks when turning the freq knob (by adjusting the phase when frequency changes)
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles and executes well!
+
+v6.1.0
+- IMPROV: port to linux
+- TEST: tested memory: ok! no need to optimize.
+- IMPROV: added monitor button
+- OPTIM: some small optimizations
+=> no CPU % improve
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+- FIX: when setting to 22050Hz, the text under the knob was cut a bit
+
+v6.2.4
+- FIX: fixed windows compilation
+- IMPROV: improved a lot discontinuities when turning freq knob
+Now use KnobSmoother instead of simple ParamSmoother2 (USE_KNOB_SMOOTHER)
+
+v6.2.5
+- IMPROV: porting to Logic/Mac M1
+- IMPROV: made it work on Mac M1 + Rosetta!
+Tested knob smoothness and automation smoothness: ok!
+- FIX: on Mac M1 + arm64, the knobs turned very slowly
+=> applied github iPlug2 fix/Issue #686
+- TEST: tested in Mono: ok (no crash, and it is working)
+- REFACT: refactored IPlugAU mutex fixes
+- FIX: fixed Logic plug GUI freeze when opening/closing the plugin
+Steps: Insert a second plugin, move Sine up => freeze
+Sine tried to re-open, bug the GUI is small and empty
+This also makes this sometimes when switching projects.
+- TEST: tried to play monitor sound on Logic => looks impossible
+  - tried SetTailSize(SetTailSize(0xfffffff/*f*/)
+  - tried to implement "Generator" AU type (in this case, we need to set 0 inputs in config file
+  And the plugin is sorted in the "Instrument" Logic menu, and can only be inserted on an
+  instrument track. (and finally, there is still a problem)
+=> gave up (we need to get samples from the track, for "thru" BL-Sine option
+=> so it will be necessary to have a clip or something on the track to play sine...
+
+
+Current problem: GUI freeze when opening the plugin in Logic outside of XCode
+Other problem (is there an issue?): this not often play when there is no clip in the track
+
+Open Mono => no sound. Open Stereo: freeze GUI
+
+- PROBLEM: need clip on the track to generate sound
+
+- BUG: sometimes no sound (must re-open the project)
+Project: mono, no clip on the track
+=> todo: re-check in reelase! (perf problem?)
+
+- BUG(not repo?): some crashes with Logic when openinig/closing the plugin
+IGraphics::SetScreenScale(), width is 0 and crash
+
+- LIMITATION: "MON" option is not operational on Logic
+- LIMITATION: must play transport to have sound
+(but no need to put a clip on the track, it is sufficient to start transport)
+
+
+- PROBLEM: when track empty, Sine doesn't play
+  - need samples on the track, so ProcessBlock() is called
+  - or put a Logic Test Oscillator just before
+(try to declare it as "instrument"?)
+=> for now in config.h, set PLUG_TYPE to "instrument" (and was necessary to enable midi in)
+=> ProcessBlock() is now called (but we still don't have output sound)
+TODO: enable "instrument" for all the plugins that have a "monitor" option ?
+(test before if just enabling track "input" works...)
+
+paramsmoother: 14ms => 140ms
+iPlug2: need fix infinite loop keydown
+
+- IDEA: poll knob control in ProcessBlock(), to have continuous freq change
+(for the moment, due to the mutex, it seems that we can't have param change
+during process block). Test on big block size such as 512.
+

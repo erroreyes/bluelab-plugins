@@ -1,0 +1,344 @@
+30/10/2017 - v1.0
+Initial version
+
+31/10/2017 - v1.1
+Bug correction: when pitching guitar strokes, the strokes were “diffuse” on left and right
+of the theorical position of the strokes. => it sounded less percussive (???)
+
+
+04/11/2017 - v1.2 
+Added radio buttons for quality
+
+11/11/2017 - v1.3 
+- added an “offline” quality option
+
+v3.0
+- new interface
+
+v3.1
+- port to FftProcessObj::NON_CYCLIC_FFT_PROCESSING
+- starting to implement smooth transitions (WIP)
+
+v3.2
+- porting to FftProcessObj6 (FREQ_RES)
+
+v3.3
+- reporting fft (and other) improvements from zarlino
+
+v3.4
+- improved FILL_HOLES and integrated it 
+
+v3.5
+- code clean
+- test with freq_res
+
+v3.6
+- OLA windowing improvement (narrow windows, fixing window coeffs): FftProcessObj7
+
+v3.7
+- port to fft8
+
+v3.7.1
+- fixed a bug: when quality param changed, we lost the pitch parameter
+- fixed USE_SMOOTH_FFT_OBJ (but not used)
+- implemented a shortcut for optimised smooth
+
+
+v3.8
+- port to fftprocessobj10
+
+v3.9
+- port to freqAdjustObj3
+
+v3.9.1
+- profiling
+- fifty
+- half fft
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+- fftprocessobj+11: fixed no sound when overlapping==1, added varaibleHanning flag
+
+v4.0
+- changed the algorithm (to have a better spectrogram)
+
+v4.1
+- expo with smb + transients
+
+v4.2
+- big code clean after many experimentations
+- big code refactoring (1/2)
+
+v4.3
+- bug fix: reset & quality4
+- pitch shift + transients should be ok !
+
+v4.4
+- FftProcessObj14 (multichannels) !!
+- FIX (crash) changed WDL_TypedBuf<WDL_TypedBuf<double> > to vector<WDL_TypedBuf<double> >
+- FIX: Reset FreqAdjustObj when pitch changes (avoids strange phase patterns in stereo)
+- FIX: added macro FreqAdjustObj::USE_REINIT_PHASES (to totally fix the problem above)
+
+- Fixed stereo breaking after pitch shift was applied
+- Fixed KeepSynthesisEnergy => true !! (Fixed in Fft14)
+- Fixed right stereo channel that vibrated a little (BUG)
+- Implemented more accurate phase correction (not working well)
+
+v5.0
+- fixed several crashes in mono
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+- advanced double-click management (timer) + fixed alt + mouse for radio etc.
+- units in half tones (ht) and cents
+- updated the manual
+
+v5.0.3
+- Fft15
+- animated logo
+- fixed latency
+- Fixed auval crash (in FFt15) => should impact all the fft plugins
+- FIX: transient boost (needed to be adjusted after Shaper separation s/p fix)
+- FIX: fixed transient boost with sample rate 88200 (see Shaper)
+- Port to Fft16 + variable buffer size
+- FIX: fixed latency (FftProcessObj16::ComputeLatency())
+- FIX: fixed bad sound in mono (since modifs to transient boost)
+- IMPROV: finally, disabled StereoPhasesProcess which had defects
+(that only improved with fake stereo i.e a duplicated mono channel)
+
+v5.0.4
+- recompile with FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v5.0.5
+- recompile: benefit from DENOISER_OPTIM, TransientShaper/PostTransient
+perf gain: 10% (from 46% to 36%)
+- FIX: fixed crash due to the new PostTransientFftObj3 (FIX_CRASH_PITCH_SHIFT)
+- TEST: test if sound change since DENOISER_OPTIM: no change! ok!
+- TEST: tests with Logic in mono: ok!
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: changes done (it does not compile yet)
+- NOTE: now it compiles (not tested yet)
+- FIX: fixed last problems => now it executes well
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: optimized memory: 313MB -> 80MB
+- OPTIM: optimized memory with trans boost activated: 867MB -> 80MB
+
+v6.2.0
+- IMPROV: test implementation of WDLPitchShifter
+- IMPROV: also tested implementation of WDLPitchShifter2
+(seems to work a bit better, but still L/Rdelay problem)
+- IMPROV: apply quality to WDL pitch shift
+- IMPROV: integrating WDL pitch shift a bit better
+- NOTE: WDL pitch shifter is not good
+=> when set to +12 octaves, the sound is bad (even when trying to change quality)
+(was tested a real single channel, was tested WDL pitch shift 2
+- IMPROV: tried to updample, wdl pitch shift, then downsample
+=> improves just a little, but global quality stays bad
+- TEST: tried with raw github smb pitch shift code from the blog
+- REFACT: Put all the origin algo in a separate PitchShifterBLSmb object
+(so each algo is in now in a different object, more clear and useful for comarisions)
+
+v6.3.0
+- WIP: algorithm "Phase Vocoder Done Right"
+and improvements from "Pitch-shifting algorithm design and applications in music"
+(THEO ROYER)
+- IMPROV: created a skeleton for "Phase Vocoder Done Right" algo
+- IMPROV: implemented basic Prusa (not yet working)
+- TEST: Pursa algo: tested heaps an containers: ok!
+- OPTIM: optimized stl operations for Pursa
+Before, it was so so slow, impossible to debug.
+Now it is slow but it is playing
+- FIX: fixed mistake in Pursa phase formula
+- FIX: clarified and fixed mistakes in Pursa formula (phases history) 
+- IMPROV: adapted Pursa algorithm for pitch shifting
+- FIX: added phase unwrapping to Pursa, as it is required!
+(and fixed phases unwrapping algo)
+- FIX: fixed some unwrapping phase problem (for Pursa)
+=> sounds a bit better, but it is still very drafty
+- REFACT: some code clean in Pursa algo
+- IMPROV: reset correctly the pitch shifting when Reset()
+- IMPROV: implemented time phase unwrapping as explained in paper
+- FIX: fixed princarg() and imporoved the simple algo
+- TEST: tests to make work the simple (interesting result now)
+- TEST: made some testes with Pursa
+=> it seems that for pitching with phase vocoder, it is necessary
+to "stretch the grains somewhere", this looks complicated...
+- TEST: implemented and tested Ocean (smb+) pitch shifting
+=> it keeps the transients, but have much harmonic distortion
+- TEST: PhaseVocoder Juce: added files
+- TEST: created "shell" for real PhaseVododer
+- IMPROV: compiled "shell" for real PhaseVododer
+- IMPROV: coded PitchShifterPV + adapted PhaseVocoder-DSP from juce
+(note: this does not compile yet)
+- IMPROV: not it compiles!
+- FIX: fixed missing sympbols while executing
+- FIX: fixed some problems of conversion from Juce
+- FIX: fixed a problems of conversion from Juce
+- REFACT: cleaned code a of PhaseVocoder little
+- IMPROV: got the first good result with PhaseVocoder!
+(by not rotatinf before and after fft)
+- IMPROV: implemented correctly reset() for PhaseVocoder
+=> so when all gets messy, we can just stop/restart playback to reset
+- IMPROV: forced mono processing, for debugging
+- IMPROV: ported PeakShifter from Juce
+(not working...)
+- TEST: tested an idea: use simple Purna, modiying only the phases and not the magns, modify slightly the pitch (+0.5ht), and chain several such PitchShift plugins
+To try to increase the pich progressively, to try to avoid PV resampling and try to avoid artifacts.
+=> in theory, this could work, but it makes a chorus effect (maybe later try with "PV done right"). And this would need 12 to 24 successive ffts. 
+- IMPROV: finally implemented BlueLab own phase vocoder!
+Implemented in PitchShifterPrusa:
+FftProcessObj16::SetOutTimeStretchFactor to manage out hop size,
+and PitchShiftPrusaFftObj::ProcessSamplesPost to resample output
+=> this looks to give results as good as BLSmbPitchShift!
+- IMPROV: fixed time strech shift missing in fft obj 16
+- BUG: time strecth fft obj 16: ensure to have output = 512 (and not 511)
+(by rounding output shift)
+- REFACT: refactored PitchShift Pursa
+- REFACT: put PhaseVocoder-DSP and smbPitchShift.cpp in the right place
+- FIX: fixed Prusa => it looks to fully work well now!
+PV done right: everything looks ok!
+Pure frequencies rumble a little
+- TEST: tested full Prusa with quality 3
+=> pure frequencies rumble less
+=> some buffers missing (clicks)
+- REFACT: cleaned Prusa class
+- FIX: fixed Purna PV clicks
+Steps: sine wave, pitch shift +6ht, clicks after a while
+- IMPROV: Prusa PV: managed the gain change when time stretching output 
+- IMPROV: fixed freq factor for Prusa
+There was mistakes in the Theo Royer report, compared to original Prusa
+Fixes very low gain with +12ht on sine wave
+Better freq and transient sound with +12ht on music
+Better freq (less freq rumble) with +6ht on music
+This reduces a lot the peak of sound at startup (sine +6ht) 
+- FIX: when +12ht, the sound was bad with ol=1, and the volume was low with ol=32
+(no problem with simple algo)
+=> now the volume is ok with ol=32
+(was fixed by previous improv)
+- FIX: at startup, (e.g with sine +6ht) there was a kind of peak of sound
+(no problem with simple algo)
+=> fixed startup conditions
+=> this fixed volume peak at startup for sine +6ht, and also fixes waveform
+scale (it was a bit lower than perfect before)
+=> this also fixes first transient position on music example
+- NOTE: can not use the other strategies from Prusa for dP(t) and dP(f)
+(forward and centerd), because we don't look foward for the moment
+- OPTIM: optimized Tuple size
+=> this doesn't seem to optimize 
+- TEST: tested memory: nothing to do easily...
+There is memory allo and dealloc in Prusa algo when adding to the heap
+but it looks hard to avoid
+- NOTE: orig before optim: 20% - Prusa bypassed: 15/16%
+- OPTIM: optimizing Prusa - optim 1 20% -> 19%
+- OPTIM: optimizing Prusa - optim 2 19% -> 19%
+- OPTIM: optimizing Prusa - optim 3 19% -> 18/20%
+- REFACT: separated different versions of phase propagation methods
+- OPTIM: replaced heaps by optimized custom data structures 
+(tested that we got exactly the same result as with real heaps: ok)
+- TEST: benched this new big optimization (debug, q=1)
+before: 28/32% after: 21/26%
+- OPTIM: try to optimize with vector iterator
+- NOTE: sort() takes much resource (and we sort 3 times now)
+- OPTIM: casted mIsValid to unsigned char (and other)
+15/18% -> 14/17%
+- TEST: removed all sort() (3x) -> same perfs...
+- TEST: no phase propagation at all: average 15% (orig: 17%)
+- OPTIM: memory optim of Prusa
+-> optimizes perfs a little (~15/16%)
+- TEST: tested that results have not changed: ok!
+- OPTIM: more optimization (14/17%)
+- TEST: removed GhostViewer from the test project
+=> PitchShift alone takes ~10% CPU only (at quality 1)
+- TEST: tested that results have not changed: ok!
+- IMPROV: added "method" option + dry wet / out gain
+(this does not compile yet)
+- FIX: fixes so now ti compiles
+- NOTE: method, dry/wet and wout gain are working!
+- TEST: perfs: prusa mono: 18% smb stereo: 16%
+- TEST: tested simple algo: this doesn't rumble (or just a few)
+(freqs quality, smb > simple > prusa)
+- NOTE:  - setting bs 2048->4096 fixes Prusa rumble
+  	 (without altering transients too much)
+	 - setting buffer size > 4096 destroys the Prusa transients
+	 - increasing overlap destroys Prusa transients
+- IMPROV: parametrizable buffer size for Prusa
+- NOTE: for extreme pitch values, smb is better
+- IMPROV: renamed "SMOOTH" method to "harmonic"
+- FIX: Prusa, buffer quality 1 (4096) , dry/wet 50%
+=> there is a shift between dry and wet when chaging quality
+=> same thing whan when changing method
+- FIX: trans boost knob was always grayed
+- TEST: tested Prusa with drums => drums are better with bs=2048
+- IMPROV: grayed out quality when not in harmo mode (and renamed "harmo quality") 
+- IMPROV: setup Prusa quality 0:2048 / 1:4096 (and keep overlapping to 4)
+- IMPROV: improved the GUI: harmo/mix/transient
+=> so now the gui is clear
+- TEST: Tested Prusa + stereo: sounds very well!
+(quickly tested on ThumbPiano + pseudo stereo)
+- NOTE: with Prusa, there seems not to have clicks when changing pitch anymore)
+- NOTE: The sound volume seems almost constant, whatever the algorithm used
+
+v6.4.0
+- IMPROV: integration of the new design
+- FIX: gray out harmo quality when not in harmo mode
+- FIX: apply quality only for smb pitch shifter
+- IMPROV: added tooltips
+- FIX: trans boost knob value was not grayed out
+- FIX: automate "method" parameter => no sound
+- FIX: "harmonic" mode, automate "factor" => bad sound
+- IMPROV: at 88200Hz: Prusa, result harmo were vibrating
+=> now, compute Prusa buffer size depending on sample rate
+
+v6.4.1
+- IMPROV: port to windows
+
+v6.4.2
+- FIX: windows fixes
+
+v6.4.3
+- IMPROV: mac compilation
+- FIX: fixed a crash at 48KHz, when changing the mode from smb to prusa
+Detected on linux/Renoise-V3.3.2
+Steps: Insert the plugin, increase the pitch, switch to the second method
+=> crash, or else sound mutes
+
+v6.4.4
+- FIX: fixed windows compilation
+- FIX: removed unused parameter that appeared in host UI
+
+- TODO: maybe use new object PhasesEstimPrusa
+
+- PROBLEM: set all to default, dry/wet to 50% => sound is lower than bypass
+=> sound is lower after a while (some phases drift ?)
+
+- TODO: re-test smb stereo phases correction (with a stereo sound file)
+
+- TODO(later): add the 2 improvements of Theo Royer for Prusa
+(drums transient, and high freqs leakage)
+- TODO: write to Theo Royer to tell you for the 2 "mistakes" ?
+(minus sign, and 1/beta)
+
+- NOTE: Prusa: transients are less defined when increasing overlap!
+
+- TODO(no need!): re-add PitchShiftFftObj / PARAM_SMOOTH_OVERLAP !
+- TODO(no need!): re-enabled FIX_BAD_SOUND_MONO for Prusa.
+
+- NOTES: for the manual
+- "transient mode": "mode 1" => bs=2048, "mode 2" => bs=4096
+- "transient" mode gives better transients
+- for extreme pitches, "transient" mode and "harmonic" mode give almost
+the same transient quality
+- for extreme pitches > 1, "harmonic" mode gives better frequencies
+("transient" mode makes vibrating frequencies)
+- for medium pitch, "transient" + "mode 2" gives better freq quality
+than "mode 1" (and same transients)
+- for extreme pitch < 1, "transient" + "mode 2" make a kind of slap back delay
+on transients (don't have the problem with "mode 1".
+- "new state of the art method that keep the transients, (for moderate pitch factor)"

@@ -1,0 +1,3386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\OnsetDetect.cpp" />
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\IGraphics.cpp">
+      <Filter>IGraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Platforms\IGraphicsWin.cpp">
+      <Filter>IGraphics\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Controls\IControls.cpp">
+      <Filter>IGraphics\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\IControl.cpp">
+      <Filter>IGraphics\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\IPlugAPIBase.cpp">
+      <Filter>IPlug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\IPlugParameter.cpp">
+      <Filter>IPlug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\IPlugPluginBase.cpp">
+      <Filter>IPlug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\IPlugProcessor.cpp">
+      <Filter>IPlug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\IPlugTimer.cpp">
+      <Filter>IPlug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Controls\ITextEntryControl.cpp">
+      <Filter>IGraphics\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Controls\IPopupMenuControl.cpp">
+      <Filter>IGraphics\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstaudioeffect.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstbus.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstcomponent.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstcomponentbase.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstinitiids.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstparameters.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\common\pluginview.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\common\memorystream.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\main\dllmain.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\baseiids.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fbuffer.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fdebug.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fdynlib.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fobject.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fstreamer.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fstring.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\timer.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\updatehandler.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\thread\source\flock.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\thread\source\fcondition.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\base\thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\pluginterfaces\base\conststringtable.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\plugininterfaces\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\pluginterfaces\base\coreiids.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\plugininterfaces\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\pluginterfaces\base\funknown.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\plugininterfaces\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\pluginterfaces\base\ustring.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\plugininterfaces\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\main\pluginfactory.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\IPlugPaths.cpp">
+      <Filter>IPlug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3.cpp">
+      <Filter>IPlug\VST3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3_ProcessorBase.cpp">
+      <Filter>IPlug\VST3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\common\commoniids.cpp">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsAGG.cpp">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsCairo.cpp">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsLice.cpp">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsNanoVG.cpp">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsSkia.cpp">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\IGraphics\IGraphicsEditorDelegate.cpp">
+      <Filter>IGraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\AirProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\AirProcess2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\AnticlickObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\AudioFile.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\AvgHistogram.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\AWeighting.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Axis3D.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Axis3DFactory.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Axis3DFactory2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BatFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BatFftObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BatFftObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BatFftObj4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BatFftObj5.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BlaTimer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLCircleGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLCorrelationComputer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLDebug.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLFireworks.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLLissajousGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLProfiler.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLReverb.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLReverbIR.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLReverbSndF.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLReverbViewer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLSpectrogram.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLSpectrogram2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLSpectrogram3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLUpmixGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLUtils.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLVectorscope.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLVectorscopeProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLVumeterControl.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BLVumeterNeedleControl.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BufProcessObjSmooth.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\BufProcessObjSmooth2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ChromaFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ChunkHelper.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CMA2Smoother.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CMAParamSmooth.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CMAParamSmooth2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CMASmoother.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ColorMap.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ColorMap2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ColorMap3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ColorMap4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ColorMapFactory.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CrossoverSplitter2Bands.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CrossoverSplitter3Bands.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CrossoverSplitter5Bands.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DbgSpectrogram.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DebugDataDumper.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DebugGraph.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DelayLinePhaseShift.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DelayLinePhaseShift2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DelayObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DelayObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DelayObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DelayObj4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DemoModeManager.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DenoiserObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DenoiserPostTransientObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DiracGenerator.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DitherMaker.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DNNModelDarknetMc.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DualDelayLine.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETCustomControl.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETCustomDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETFftObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETHistogram.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETHistogram2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETSeparator.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETSeparator2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\DUETSeparator3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\EarlyReflect.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\EarlyReflections.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\EarlyReflections2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FastRTConvolver3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolver.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolver2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolver3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolver4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolver5.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolver6.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FftProcessObj16.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FifoDecimator.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FifoDecimator2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterButterworthLPF.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterButterworthLPFNX.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterFftLowPass.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterFreqResp.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterIIRLow12dB.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterIIRLow12dBNX.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterLR2Crossover.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterLR4Crossover.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterRBJ1X.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterRBJ2X.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterRBJ2X2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterRBJFeed.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterRBJNX.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterRBJNXEx.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterSincConvoBandPass.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterSincConvoLPF.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterTransparentRBJ2X.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterTransparentRBJ2X2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FilterTransparentRBJNX.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FixedBufferObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FreqAdjustObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FreqAdjustObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\FreqAdjustObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GetTimeOfDay.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GhostViewerFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GhostViewerFftObjSubSonic.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphControl11.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphCurve4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphFader2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphFader3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GtiInpaint.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\GUIHelper11.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\HistoMaskLine.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\HistoMaskLine2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Hrtf.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\IBitmapControlAnim.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\IHelpButtonControl.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ImageDisplay.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ImageDisplayColor.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ImageInpaint.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ImageInpaint2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ImageSmootherKernel.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\InfraProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\InfraProcess2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\InfrasonicViewerFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\InfrasonicViewerFftObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\InfraSynthProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\InstantCompressor.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\IsophoteInpaint.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\JReverb.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\KalmanParamSmooth.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\KemarHrtf.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\LinesRender.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\LinesRender2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\LUFSMeter.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\MelScale.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\MiniView.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\MinMaxAvgHistogram.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\MinMaxAvgHistogramDB.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\MultiViewer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\my-bzero.c">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\OnsetDetector.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\OnsetDetectProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Oversampler.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Oversampler2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Oversampler3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Oversampler4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Oversampler5.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\OversampProcessObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\OversampProcessObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\OversampProcessObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\OversampProcessObj4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PanoFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PanogramCustomControl.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PanogramCustomDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PanogramFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PanogramGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PanogramPlayFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PanoGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ParamSmoother.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialsDiffEstimate.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialsToFreq.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialsToFreq2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialsToFreq3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialsToFreq4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialsToFreqCepstrum.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialTracker.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialTracker2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialTracker3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialTracker4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialTWMEstimate.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PartialTWMEstimate2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PbFft.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PeakDetector2D.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PeakDetector2D2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PhaseCorrectObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PhasesDiff.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PhasesUnwrapper.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PitchShiftFftObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PolarViz.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PostTransientFftObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PPMFile.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\PseudoStereoObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\QuadTree.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RayCaster2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RCKdTree.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RCKdTreeVisitor.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RCQuadTree.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RCQuadTreeVisitor.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceDumpFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceDumpFftObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceMaskPredictorComp5.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceMaskPredictorComp6.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceMaskStack.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceMaskStack2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceProcessFftObjComp2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceProcessFftObjComp3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceProcessor.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\RebalanceTestMultiObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Resampler.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Resampler2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\ResampProcessObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SamplesDelayer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SamplesPyramid.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SamplesPyramid2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SamplesToSpectrogram.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SASFrame.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SASFrame2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SASViewerProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SASViewerRender.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SecureRestarter.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SGSmooth.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SimpleCompressor.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SimpleSpectrogramFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SineSynth.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SineSynth2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SineSynthSimple.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SmoothAvgHistogram.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SmoothAvgHistogramDB.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Smoother.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcess4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerChroma.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerFreq.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerMagn.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerMidSide.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerPan.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerPhasesFreq.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerPhasesTime.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerChroma.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerDiff.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerDiffFlat.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerFreq.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerLissajous.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerLissajousEXP.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerScope.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerScopeFlat.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerChroma.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerFreq.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerMagn.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerPhasesFreq.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerPhasesTime.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SMVVolRender3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftFft.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftMasking.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftMasking2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftMaskingComp.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftMaskingComp2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftMaskingComp3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftMaskingN.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SoftMaskingNComp.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SourceComputer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem2D.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SourcePos.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SparseVolRender.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectroEditFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectroEditFftObj2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectroEditFftObj2EXPE.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectrogramDisplay.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectrogramDisplayScroll.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectrogramDisplayScroll2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectrogramFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectrogramFftObjEXPE.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectrogramView.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Spectrum.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\SpectrumViewFftObj.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoDeReverbProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoPhasesProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoVizVolRender.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoVizVolRender2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoWidenProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoWidthGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoWidthGraphDrawer2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoWidthGraphDrawer3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoWidthProcess2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoWidthProcess3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\StereoWidthProcessDisp.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\TestFilter.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\TestSimd.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\TimeAxis3D.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\TransientLib4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\TransientShaperFftObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\UpTime.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTBrillance.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTCircleGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipper.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipper2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipper3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipper4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer2.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTCorrelationProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTDepthProcess3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTDepthProcess4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTDepthReverbTest.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTEarlyReflect.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTFireworks.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTLissajousGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTMultiBandDisplay.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTPolarLevel.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTPseudoStereoObj3.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTStereoWidener.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTUpmixGraphDrawer.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTVectorscope4.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTVectorscope5.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTVumeter.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTVumeterProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster5.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster6.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster7.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster8.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster9.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Watermark.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\WavesProcess.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\WavesRender.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\WavetableSynth.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\bluelab-lib\Window.cpp">
+      <Filter>bluelab-lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\activations.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\activation_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\avgpool_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\batchnorm_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\blas.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\bl_utils.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\box.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\boxmuller.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\col2im.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\connected_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\convolutional_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\convolutional_layer2.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\cost_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\crnn_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\crop_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\cuda.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\data.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\deconvolutional_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\deconvolutional_layer2.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\demo.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\detection_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\dk_utils.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\dropout_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\gemm-blas.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\gemm.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\gru_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\im2col.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\image.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\image_opencv.cpp">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\input_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\instancenorm_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\iseg_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\kernel_initializers.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\l2norm_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\list.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\local_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\logistic_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\lstm_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\matrix.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\maxpool_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\metrics_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\network.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\normalization_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\option_list.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\parser.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\region_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\reorg_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\reorg_layer2.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\rnn_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\route_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\shortcut_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\softmax_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\split_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\tree.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\upsample_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\darknet\src\yolo_layer.c">
+      <Filter>darknet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_apf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_hpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_lpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_shelving_high.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_shelving_low.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_apf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_apf2.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_bpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_bsf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_bpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_bsf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_hpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_lpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_hpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_linkwitz_riley_hpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_linkwitz_riley_lpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_lpf.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_parametric_cq_boost.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_parametric_cq_cut.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\DSP-Cpp-filters\src\so_parametric_ncq.cpp">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\fmem\src\alloc.c">
+      <Filter>fmem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\fmem\src\fmem-winapi-tmpfile.c">
+      <Filter>fmem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\freeverb\revmodel.cpp">
+      <Filter>freeverb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\KalmanFilter\src\SimpleKalmanFilter.cpp">
+      <Filter>KalmanFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\libdct\fast-dct-lee.c">
+      <Filter>libdct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\libdct\naive-dct.c">
+      <Filter>libdct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\libebur128\ebur128\ebur128.c">
+      <Filter>libebur128</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\libsamplerate\src\samplerate.c">
+      <Filter>libsamplerate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\libsamplerate\src\src_linear.c">
+      <Filter>libsamplerate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\libsamplerate\src\src_sinc.c">
+      <Filter>libsamplerate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\libsamplerate\src\src_zoh.c">
+      <Filter>libsamplerate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\r8brain\pffft.cpp">
+      <Filter>r8brain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\r8brain\r8bbase.cpp">
+      <Filter>r8brain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\sndfilter\src\biquad.c">
+      <Filter>sndfilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\sndfilter\src\compressor.c">
+      <Filter>sndfilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\sndfilter\src\mem.c">
+      <Filter>sndfilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\sndfilter\src\reverb.c">
+      <Filter>sndfilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\sndfilter\src\snd.c">
+      <Filter>sndfilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Libs\sndfilter\src\wav.c">
+      <Filter>sndfilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\WDL\besselfilter.cpp">
+      <Filter>WDL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\WDL\fft.c">
+      <Filter>WDL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\iPlug2\WDL\resample.cpp">
+      <Filter>WDL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\OnsetDetect.h" />
+    <ClInclude Include="..\resources\resource.h">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphics.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsConstants.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsLiveEdit.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsPathBase.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsPopupMenu.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsStructs.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsPrivate.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsUtilities.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphics_include_in_plug_hdr.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphics_include_in_plug_src.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphics_select.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsAGG.h">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsAGG_src.h">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsCairo.h">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsLice.h">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsLice_src.h">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsNanoVG.h">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Platforms\IGraphicsLinux.h">
+      <Filter>IGraphics\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Platforms\IGraphicsMac.h">
+      <Filter>IGraphics\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Platforms\IGraphicsMac_view.h">
+      <Filter>IGraphics\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Platforms\IGraphicsWeb.h">
+      <Filter>IGraphics\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Platforms\IGraphicsWin.h">
+      <Filter>IGraphics\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Controls\IControls.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Controls\IVDropDownListControl.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Controls\IVKeyboardControl.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Controls\IVMeterControl.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Controls\IVScopeControl.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IControl.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugAPIBase.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugConstants.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugEditorDelegate.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugLogger.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugMidi.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugPlatform.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugParameter.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugProcessor.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugStructs.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugTimer.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugUtilities.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlug_include_in_plug_hdr.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlug_include_in_plug_src.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Controls\ITextEntryControl.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Controls\IPopupMenuControl.h">
+      <Filter>IGraphics\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstaudioeffect.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstbus.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstcomponent.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstcomponentbase.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\vst\vstparameters.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\source\vst</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\common\pluginview.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\public.sdk\source\common\memorystream.h">
+      <Filter>IPlug\VST3\VST3_SDK\public.sdk\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\classfactoryhelpers.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fbuffer.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fcleanup.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fcommandline.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fdebug.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fdynlib.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fobject.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fstdmethods.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fstreamer.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\fstring.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\hexbinary.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\timer.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\base\source\updatehandler.h">
+      <Filter>IPlug\VST3\VST3_SDK\base\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\pluginterfaces\base\ustring.h">
+      <Filter>IPlug\VST3\VST3_SDK\plugininterfaces\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\pluginterfaces\base\conststringtable.h">
+      <Filter>IPlug\VST3\VST3_SDK\plugininterfaces\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\Dependencies\IPlug\VST3_SDK\pluginterfaces\base\funknown.h">
+      <Filter>IPlug\VST3\VST3_SDK\plugininterfaces\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugPaths.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3.h">
+      <Filter>IPlug\VST3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3_Common.h">
+      <Filter>IPlug\VST3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3_ControllerBase.h">
+      <Filter>IPlug\VST3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3_Parameter.h">
+      <Filter>IPlug\VST3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3_ProcessorBase.h">
+      <Filter>IPlug\VST3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\VST3\IPlugVST3_View.h">
+      <Filter>IPlug\VST3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\Drawing\IGraphicsSkia.h">
+      <Filter>IGraphics\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\IGraphicsEditorDelegate.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IPlug\IPlugPluginBase.h">
+      <Filter>IPlug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\IGraphics\ISender.h">
+      <Filter>IGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\AirProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\AirProcess2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\AnticlickObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\AudioFile.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\AvgHistogram.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\AWeighting.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Axis3D.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Axis3DFactory.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Axis3DFactory2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BatFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BatFftObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BatFftObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BatFftObj4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BatFftObj5.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BlaTimer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLCircleGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLCorrelationComputer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLDebug.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLFireworks.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLLissajousGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLProfiler.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLReverb.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLReverbIR.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLReverbSndF.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLReverbViewer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLSpectrogram.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLSpectrogram2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLSpectrogram3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLTypes.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLUpmixGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLUtils.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLVectorscope.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLVectorscopeProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLVumeterControl.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BLVumeterNeedleControl.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BufProcessObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BufProcessObjSmooth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\BufProcessObjSmooth2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ChromaFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CMA2Smoother.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CMAParamSmooth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CMAParamSmooth2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CMASmoother.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ColorMap.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ColorMap2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ColorMap3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ColorMap4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ColorMapFactory.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CParamSmooth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CrossoverSplitter2Bands.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CrossoverSplitter3Bands.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CrossoverSplitter5Bands.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\CrossoverSplitterNBands4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DbgSpectrogram.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DebugDataDumper.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DebugGraph.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DelayLinePhaseShift.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DelayLinePhaseShift2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DelayObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DelayObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DelayObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DelayObj4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DemoModeManager.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DenoiserObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DenoiserPostTransientObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Denoiser_defs.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DiracGenerator.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DitherMaker.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DNNModel.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DNNModelDarknetMc.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DNNModelMc.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DualDelayLine.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETCustomControl.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETCustomDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETFftObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETHistogram.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETHistogram2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETPlugInterface.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETSeparator.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETSeparator2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\DUETSeparator3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\EarlyReflect.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\EarlyReflections.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\EarlyReflections2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FastRTConvolver3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolver.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolver2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolver3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolver4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolver5.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolver6.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftConvolverSmooth4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FftProcessObj16.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FifoDecimator.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FifoDecimator2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FillTriangle.hpp">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterButterworthLPF.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterButterworthLPFNX.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterFFTLowPass.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterFreqResp.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterIIRLow12dB.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterIIRLow12dBNX.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterLR2Crossover.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterLR4Crossover.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterRBJ.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterRBJ1X.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterRBJ2X.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterRBJ2X2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterRBJFeed.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterRBJNX.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterRBJNXEx.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterSincConvoBandPass.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterSincConvoLPF.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterTransparentRBJ2X.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterTransparentRBJ2X2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FilterTransparentRBJNX.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FixedBufferObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FreqAdjustObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FreqAdjustObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\FreqAdjustObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GetTimeOfDay.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GhostViewerFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GhostViewerFftObjSubSonic.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphControl11.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphCurve4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphFader2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphFader3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GraphTimeAxis4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GtiInpaint.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\GUIHelper11.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\HistoMaskLine.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\HistoMaskLine2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Hrtf.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\IBitmapControlAnim.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\IHelpButtonControl.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ImageDisplay.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ImageDisplayColor.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ImageInpaint.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ImageInpaint2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ImageSmootherKernel.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\InfraProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\InfraProcess2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\InfrasonicViewerFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\InfrasonicViewerFftObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\InfraSynthProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\InstantCompressor.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\IsophoteInpaint.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\JReverb.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\KalmanParamSmooth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\KemarHrtf.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\LinesRender.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\LinesRender2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\LUFSMeter.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\MelScale.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\MiniView.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\MinMaxAvgHistogram.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\MinMaxAvgHistogramDB.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\MultiViewer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\my-bzero.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\OnsetDetector.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\OnsetDetectProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Oversampler.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Oversampler2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Oversampler3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Oversampler4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Oversampler5.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\OversampProcessObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\OversampProcessObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\OversampProcessObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\OversampProcessObj4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanoFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanogramCustomControl.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanogramCustomDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanogramFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanogramGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanogramPlayFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanogramPlugInterface.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PanoGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ParamSmoother.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialsDiffEstimate.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialsToFreq.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialsToFreq2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialsToFreq3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialsToFreq4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialsToFreqCepstrum.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialTracker.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialTracker2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialTracker3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialTracker4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialTWMEstimate.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PartialTWMEstimate2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PbFft.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PeakDetector2D.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PeakDetector2D2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PhaseCorrectObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PhasesDiff.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PhasesUnwrapper.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PitchShiftFftObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PolarViz.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\portable_endian.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PostTransientFftObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PPMFile.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\PseudoStereoObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\QuadTree.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RayCaster2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RCKdTree.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RCKdTreeVisitor.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RCQuadTree.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RCQuadTreeVisitor.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceDumpFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceDumpFftObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceMaskPredictorComp5.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceMaskPredictorComp6.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceMaskStack.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceMaskStack2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceProcessFftObjComp2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceProcessFftObjComp3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceProcessor.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\RebalanceTestMultiObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Rebalance_defs.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Resampler.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Resampler2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ResampProcessObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SamplesDelayer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SamplesProcessObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SamplesPyramid.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SamplesPyramid2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SamplesToSpectrogram.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SASFrame.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SASFrame2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SASViewerPluginInterface.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SASViewerProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SASViewerRender.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\ScopedNoDenormals2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SecureRestarter.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SGSmooth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SimpleCompressor.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SimpleSpectrogramFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SineSynth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SineSynth2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SineSynthSimple.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SinLUT.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SinLUT2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SmoothAvgHistogram.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SmoothAvgHistogramDB.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Smoother.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcess4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerChroma.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerFreq.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerMagn.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerMidSide.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerPan.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerPhasesFreq.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessColComputerPhasesTime.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerChroma.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerDiff.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerDiffFlat.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerFreq.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerLissajous.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerLissajousEXP.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerScope.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessXComputerScopeFlat.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerChroma.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerFreq.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerMagn.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerPhasesFreq.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVProcessYComputerPhasesTime.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SMVVolRender3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftFft.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftMasking.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftMasking2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftMaskingComp.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftMaskingComp2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftMaskingComp3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftMaskingN.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoftMaskingNComp.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SoundMetaViewerPluginInterface.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SourceComputer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem2D.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SourceLocalisationSystem3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SourcePos.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SparseVolRender.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectroEditFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectroEditFftObj2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectroEditFftObj2EXPE.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectrogramDisplay.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectrogramDisplayScroll.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectrogramDisplayScroll2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectrogramFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectrogramFftObjEXPE.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectrogramView.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Spectrum.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\SpectrumViewFftObj.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoDeReverbProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoPhasesProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoVizVolRender.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoVizVolRender2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoWidenProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoWidthGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoWidthGraphDrawer2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoWidthGraphDrawer3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoWidthProcess2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoWidthProcess3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StereoWidthProcessDisp.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\StlInsertSorted.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\TestFilter.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\TestSimd.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\TimeAxis3D.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\TransientLib4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\TransientShaperFftObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\UnstableRemoveIf.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\UpTime.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTBrillance.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTCircleGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipper.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipper2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipper3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipper4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTClipperDisplay4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer2.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTCorrelationComputer4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTCorrelationProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTDepthProcess3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTDepthProcess4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTDepthReverbTest.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTEarlyReflect.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTFireworks.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTLissajousGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTMultiBandDisplay.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTPluginInterface.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTPolarLevel.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTPseudoStereoObj3.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTStereoWidener.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTUpmixGraphDrawer.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTVectorscope4.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTVectorscope5.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTVumeter.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTVumeterProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster5.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster6.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster7.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster8.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\USTWidthAdjuster9.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Watermark.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\WavesPluginInterface.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\WavesProcess.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\WavesRender.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\WavetableSynth.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\bluelab-lib\Window.h">
+      <Filter>bluelab-lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\CrossoverFilter\CFxRbjFilter.h">
+      <Filter>CrossoverFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\CrossoverFilter\LinkwitzRileyTwo.h">
+      <Filter>CrossoverFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\include\darknet.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\activations.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\activation_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\avgpool_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\batchnorm_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\blas.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\bl_defs.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\box.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\boxmuller.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\classifier.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\col2im.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\connected_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\convolutional_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\convolutional_layer2.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\cost_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\crnn_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\crop_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\cuda.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\data.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\deconvolutional_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\deconvolutional_layer2.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\demo.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\detection_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\dk_stb_image.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\dk_stb_image_write.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\dk_utils.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\dropout_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\gemm.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\gru_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\im2col.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\image.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\input_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\instancenorm_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\iseg_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\kernel_initializers.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\l2norm_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\list.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\local_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\logistic_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\lstm_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\matrix.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\maxpool_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\metrics_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\network.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\normalization_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\option_list.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\parser.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\region_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\reorg_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\reorg_layer2.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\rnn_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\route_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\shortcut_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\softmax_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\split_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\tree.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\upsample_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\darknet\src\yolo_layer.h">
+      <Filter>darknet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\Decimator\Decimator.h">
+      <Filter>Decimator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\filter_common.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\filter_includes.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_apf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_hpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_lpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_shelving_high.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\fo_shelving_low.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_apf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_apf2.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_bpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_bsf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_bpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_bsf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_hpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_butterworth_lpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_hpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_linkwitz_riley_hpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_linkwitz_riley_lpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_lpf.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_parametric_cq_boost.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_parametric_cq_cut.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\DSP-Cpp-filters\src\so_parametric_ncq.h">
+      <Filter>DSP-Cpp-filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\fmem\src\alloc.h">
+      <Filter>fmem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\fmem\include\fmem.h">
+      <Filter>fmem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\freeverb\allpass.hpp">
+      <Filter>freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\freeverb\comb.hpp">
+      <Filter>freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\freeverb\denormals.h">
+      <Filter>freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\freeverb\revmodel.hpp">
+      <Filter>freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\freeverb\tuning.h">
+      <Filter>freeverb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\KalmanFilter\src\SimpleKalmanFilter.h">
+      <Filter>KalmanFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libdct\fast-dct-lee.h">
+      <Filter>libdct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libdct\libdct_defs.h">
+      <Filter>libdct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libdct\naive-dct.h">
+      <Filter>libdct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libebur128\ebur128\ebur128.h">
+      <Filter>libebur128</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libsamplerate\src\common.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libsamplerate\src\config.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libsamplerate\src\fastest_coeffs.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libsamplerate\src\float_cast.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libsamplerate\src\high_qual_coeffs.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libsamplerate\src\mid_qual_coeffs.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\libsamplerate\src\samplerate.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPBlockConvolver.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPFIRFilter.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPFracInterpolator.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPHBDownsampler.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPHBUpsampler.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPProcessor.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPRealFFT.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPResampler.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\CDSPSincFilterGen.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\fft4g.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\pffft.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\r8bbase.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\r8bconf.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\r8brain\r8butil.h">
+      <Filter>r8brain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RandomSequence\randomsequence.h">
+      <Filter>RandomSequence</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\ConvolutionManager.h">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\TimeDistributedFFTConvolver.h">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\TimeDistributedFFTConvolver.hpp">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\UniformPartitionConvolver.h">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\UniformPartitionConvolver.hpp">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\util\fft.hpp">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\util\SincFilter.hpp">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\RTConvolve\Source\util\util.h">
+      <Filter>RTConvolve</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\sndfilter\src\biquad.h">
+      <Filter>sndfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\sndfilter\src\compressor.h">
+      <Filter>sndfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\sndfilter\src\mem.h">
+      <Filter>sndfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\sndfilter\src\reverb.h">
+      <Filter>sndfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\sndfilter\src\snd.h">
+      <Filter>sndfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\sndfilter\src\sndfilter-types.h">
+      <Filter>sndfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Libs\sndfilter\src\wav.h">
+      <Filter>sndfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\WDL\besselfilter.h">
+      <Filter>WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\WDL\fft.h">
+      <Filter>WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\iPlug2\WDL\resample.h">
+      <Filter>WDL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{74cd52f2-b3b1-45bf-b24a-5e60e66b70de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IGraphics">
+      <UniqueIdentifier>{30a371c3-625a-4283-948b-afc6665bd15e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IGraphics\Drawing">
+      <UniqueIdentifier>{0468a615-fe74-4ab5-8e07-f68a4a4d2c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IGraphics\Platform">
+      <UniqueIdentifier>{70240a88-f166-4127-a108-4162d68a58a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IGraphics\Controls">
+      <UniqueIdentifier>{dc3b907e-91a1-483f-a535-c11681237069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug">
+      <UniqueIdentifier>{40c50427-6a81-4d1f-a6f2-9712d345f626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3">
+      <UniqueIdentifier>{5674951e-0cfd-4a71-98fb-050914b34427}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{0ce889c3-9b8a-47b9-a9b5-7592348bc27f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK">
+      <UniqueIdentifier>{8457d487-cc95-4187-8e99-6facd217dbb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\public.sdk">
+      <UniqueIdentifier>{83eddda9-c0ea-4a0b-8284-96f69457fe1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\public.sdk\source">
+      <UniqueIdentifier>{39d846c5-987a-47dd-91cf-2f2597941322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\public.sdk\source\vst">
+      <UniqueIdentifier>{74bb45ba-50e1-46de-9c6b-36982331323d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\public.sdk\common">
+      <UniqueIdentifier>{4b025091-9604-4830-a801-2e1c91f1b530}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\public.sdk\main">
+      <UniqueIdentifier>{484d9499-9db1-417e-ba3c-35923fadb8a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\base">
+      <UniqueIdentifier>{b64fe767-cc95-4b70-843d-749bfc5959e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\base\source">
+      <UniqueIdentifier>{871d9f00-37c1-41ca-bf40-c6a6a7bc1ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\base\thread">
+      <UniqueIdentifier>{a1c931f7-ef7d-4782-b829-bd5e4a923d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\plugininterfaces">
+      <UniqueIdentifier>{b3729aae-833f-4cac-a6a3-5ed2f3f4b108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IPlug\VST3\VST3_SDK\plugininterfaces\base">
+      <UniqueIdentifier>{5f06b03e-5093-46c0-9513-efb4e494c857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bluelab-lib">
+      <UniqueIdentifier>{815c646e-2378-4e30-bf74-ac2c5445fffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CrossoverFilter">
+      <UniqueIdentifier>{99e88a46-5c56-4a35-a412-7e9f828da8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="darknet">
+      <UniqueIdentifier>{e352a3a4-015a-4a55-900e-2e26a3057ff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decimator">
+      <UniqueIdentifier>{7d14c138-93d5-47c2-8178-7ed53ba9563c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP-Cpp-filters">
+      <UniqueIdentifier>{00eb7be4-d75c-46eb-aacd-d32a4690ff7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fmem">
+      <UniqueIdentifier>{04eeffa8-73be-49a3-b4ca-e165337e4aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="freeverb">
+      <UniqueIdentifier>{eb0a5ac1-3da6-450d-827a-d94b6ad70e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KalmanFilter">
+      <UniqueIdentifier>{6aae8d99-f1d3-482d-9c01-a44e356fa353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libdct">
+      <UniqueIdentifier>{d29d97cb-0e4d-4da3-a38a-3fc8aed04c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libebur128">
+      <UniqueIdentifier>{d692c427-4ba1-4eaf-ae43-f78bb1306dae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libsamplerate">
+      <UniqueIdentifier>{968cd1b3-de83-471d-a773-179a27da3d6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="r8brain">
+      <UniqueIdentifier>{05dd3b74-c082-44d2-9a02-3cee685c15d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RandomSequence">
+      <UniqueIdentifier>{9300294f-f75c-4c68-8c04-49f982e7c0fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTConvolve">
+      <UniqueIdentifier>{214b0072-0a70-429f-978c-a8e85a1779c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sndfilter">
+      <UniqueIdentifier>{310d6a85-118d-404a-8fe1-2128ec39c0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WDL">
+      <UniqueIdentifier>{fc42f6b0-6dd1-4e9b-a1b3-5e6a99c2ede4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\resources\main.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\config\BL-OnsetDetect-ios.xcconfig">
+      <Filter>config</Filter>
+    </None>
+    <None Include="..\config\BL-OnsetDetect-web.mk">
+      <Filter>config</Filter>
+    </None>
+    <None Include="..\config\BL-OnsetDetect-win.props">
+      <Filter>config</Filter>
+    </None>
+    <None Include="..\config\BL-OnsetDetect-mac.xcconfig">
+      <Filter>config</Filter>
+    </None>
+    <None Include="..\..\..\Libs\libsamplerate\src\check_asm.sh">
+      <Filter>libsamplerate</Filter>
+    </None>
+    <None Include="..\..\..\Libs\libsamplerate\src\config.h.in">
+      <Filter>libsamplerate</Filter>
+    </None>
+    <None Include="..\..\..\Libs\libsamplerate\src\Makefile.am">
+      <Filter>libsamplerate</Filter>
+    </None>
+    <None Include="..\..\..\Libs\libsamplerate\src\Makefile.in">
+      <Filter>libsamplerate</Filter>
+    </None>
+    <None Include="..\..\..\Libs\libsamplerate\src\Version_script.in">
+      <Filter>libsamplerate</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\Libs\bluelab-lib\RELEASE-NOTES.txt">
+      <Filter>bluelab-lib</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

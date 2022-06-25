@@ -1,0 +1,367 @@
+v5.0.0
+- from SASViewer-v5.1.0 
+- FIX: fixed latency value
+
+v5.1.0
+- using PartialTracker2
+- GlueTwinPartials() for noise envelope => good
+- FIX: fixed inaccurate noise envelope (that made appear some peaces of partials in case0)
+- that also fixes “ “bell” has a partial at 2KHz“
+- threshold partials by prominence (better)
+- implemented frequency prediction (gives almost the same results)
+
+- FIX: fixed Utils smooth function 
+- IMPL: implemented detection on smooth magns
+
+- TESTS: many tests for extracting noise => much garbage code…
+
+v5.2.0
+- IMPROV: improved partial detection (shape of the partials) 
+=> now extracts good noise (except some rare artifacts)
+
+v5.3.0
+- use PartialTracker3 => very good extraction (use prominence)
+- threshold by “height” instead of prominence => very good results !
+- FIX: avoid -inf amp values when magna are 0
+- TEST: tests for thresholding to avoid musical noise (fail)
+
+v5.3.1
+- REFACT: bug code  clean
+- TEST: threshold isles (for musical noise) => deactivated
+
+- IMPROV: animated logo (+ fix IsDirty() )
+
+v5.3.2
+- TESTS (noise, random etc.)
+- IMPROV: change the text of mix knob to red for extreme values
+
+v5.3.3
+- REFACT: code clean
+- Reorganized well the interface
+- set default threshold to -100dB
+
+v5.3.4
+- FIX: with the Air Reaper project, there was a click (buffer under run with buffer 447)
+- Fft15: fixed clicks (buffers overrun / underrun))
+- Fft15: fixed Reset() (some data was remaining in the buffers)
+- Fft15: fixed latency (deeding on bufSizeor overlap, the render wav was shifted)
+- Fixed crash auval (in Fft15)
+- Fix latency even for block size > buffer size (change in FftProcessObj15)
+- REFACT: FftProcessObj16 (but without variable buffer size)
+- Use variable buffer size
+- FIX: Fix in FftProcessObj16: latency problem fix
+- FIX: Compute latency better => seems ok now
+
+- FIX: freeze when recanting VST3 (block size was 0, making infinite loop when computing 
+latency dynamically
+- FIX: crash when rescanning (VST3::SetLatency() with null ptr)
+- FIX: reset correctly the PartialTracker3 when reset 
+(was not done, and made crash due to inconsistency with pref stored values)
+- FIX: changed VST category from “analyzer” to “Filter”
+
+v5.3.5
+- recompile with FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v6.0.0
+- port to iPlug2
+- IMPROV: added SoftMaskingComp
+- IMPROV: use soft masking ProcessCentered(), to avoid a shift in time of the mask
+- FIX: fixed latency due to SoftMaskingComp (use a hack)
+- TEST: checked, there was a kind of saturation/clicks (that was due to too high volume)
+
+v6.0.1
+- IMPROV: empty graph
+- IMPROV: freq and amp axes (some hacks for the moment for bounds values)
+- IMPROV: the graph displays curves
+- OPTIM: avoid division in loop in BLUtils::MelToFreqsNorm()
+- OPTIM: disable soft masking for noise/air part of the signal
+(keep it only for harmo) (DISABLE_NOISE_SOFT_MASKING)
+=> we gain 4% CPU
+- IMPROV: added Scale class, with different types of scale (dB, log10…)
+- FIX: fixed synchro of freq axis with freq curve (fixed cleanly!)
+- FIX: Fixed am axis: ok! (we had to set the labels linearly, and the data with db scale)
+- IMPROV: add Scale coeff, for spreading more frequencies range
+- REFACT: Scale a single ApplyScale(), with a parameter to choose the right method.
+- FIX: fixed the scales of the 3 curves
+- FIX: fixed the axes lines that were not displayed
+- TEST: tested with different project sample rates => ok!
+- IMPROV: set graph axis line width in GUIHelper
+- REFACT: GUIHelper: get the axes colors directly in the correct format
+- IMPROV: put the curve colors in GUIHelper styles
+- IMPROV: apply param shape to curves alpha (so display is more constistent when changing the mix parameter).
+- REFACT: SoftMaskingComp3: renamed correctly the arguments, so it is better understandable
+- IMPROV: use PartialTracker4 (instad of 3) => no significant change.
+- IMPROV: passed to Scale::LOG_FACTOR2 (after GhostViewer changes) => better
+- TEST: increased the overlapping, for quality (does not improve a lot improve a lot)
+- REFACT: some code clean and refactoring
+- INFO: recompiled
+- FIX: passed thread sanitizer, and fixed all the threads problems (took fixes from Ghost)
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+PROBLEM: when only harmo, the soutput signal is not exactly the same as the harmo curves
+TODO: more optimization ?
+TODO: remove sum curve?
+TODO: solo buttons
+TODO: fill the holes? => test by multiplying noise envelope with noise
+TODO: at zero, the plugin is not totally transparent = make it transparent
+BUG: some flickerings of fill curve sometimes
+TODO: some code clean
+BUG: use a single sine at 100Hz => the noise envelope extends over all the spectrum
+(this is due to AirProcess2::DEBUG_DONT_FILL_NOISE_ENV / FillMisingValues)
+(filling missing values interpolate to the end, and it is in dB scale)
+
+TODO: make a better partial tracker (all in Mel)
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: optimized a bit memory to avoid many alloc/dealloc
+=> 10s: 6Gb -> 4Gb
+- IMPROV: passed from PartialTracker4 to PartialTracker5
+- FIX: there was no sound output in Air => fixed WDL_TypedFastQueue
+- FIX: fixed the port to PartialTracker5
+- NOTE: with PartialTracker5, this is really slower
+- IMPROV: improved memory more
+=> total memory optim: for 10s: 6GB -> 1GB  - current perfs: 26%CPU debug (12% release)
+- NOTE: vectors of partials still allocate/dealloc some memory, but it is difficult to avoid.
+- IMPROV: continued optimizing memory in PartialTracker5
+(vectors of partial and bl_queue)
+=> 10s: before: 1GB, after: 500Mb
+- OPTIM: more memory optimizations (610Mb -> 313Mb)
+- NOTE: after Denoiser memory optimization, it now takes 139MB
+- OPTIM: optimizes memory in Scale (it now takes only 63MB)
+- NOTE: now memory optimization seems optimal
+- OPTIM: optimized AWeighting (for partial tracker)
+- OPTIM: created FastMath, to use fastapprox library on demand
+In release: 14/15% -> 10/11%
+- OPTIM: tried to optimize soft masking comp 3 (reversed loops)
+In release: 10/11% -> 9/11%
+- TEST: tested that MelScale::Cratefilters() was just called at init: ok!
+- TEST: test all float (+ prev optims) => 9%
+- TEST: cmake / -ffast-math => doesn't really seem to improve
+- TEST: tested SmoothAvgHistogramDB without DB conversion: 12GB -> 10GB !!!
+- OPTIM: avoid redundent db conversions in SmoothCurveDB/GraphCurve5/SmoothAvgHistogramDB. We converted to db when set to histogram, converted back when get from histogram,
+then convert again to db when set to curve
+12G instructions -> 10G instructions
+- OPTIM: more optims in GraphCurve5 (10G inst, ratio: 1,25)
+- OPTIM: optimized Scale, to process in block, and optimized GraphCurve5 (SetValues5)
+10.4 G instr -> 9 G instr
+- OPTIM: tried to fix some L1 cache defaults in AirProcess2 (fixed 0.3%)
+- OPTIM: tried to fix some L1 cache defaults in SoftMaskingComp3 (not sure it fixed)
+- NOTE: new perfs: Reaper + vst2: 10%CPU - App: 9/10%
+- NOTE: Reaper alone: 3/4%
+- NOTE: soft mask off: Reaper + vst2: 9%CPU - App: 9%
+- TEST: test without soft masking: perf 9.1G instr -> 8.5 instr
+- IMPROV: created SoftMaskingComp4 (and AirProcess3) => optim and code more clear
+=> 9.1G instr -> 8.5G instr!
+- TEST: restested heaptrack: ok!
+- FIX: when the project loaded with mix=-100, the curve alpha was not correct
+until we move the "mix" control.
+- TEST: without soft masking, air noise and output curve behave exactly as expected according to the mix parameter! And the sound behaves exactly as expected / mix parameter.
+- FIX: with soft masking, when turning mix to -100, there remained noise
+- IMPROV: use harmo mask for soft masking (instead of noise mask)
+- FIX: fixed output peak at bin 0 when harmo only
+(this was due to noise result not at 0 for bin #0)
+(SOFT_MASKING_FIX_BIN0)
+- IMPROV: put the output curve over all the other curves => result more beautiful
+- NOTE: for very small values, prev hard mask for soft mask can have big values
+(because it is a ratio)
+- NOTE: for the moment, mix 100% (soft mask, sine + noise)
+=> hole in output with mix 100%, peak at 0 when mix -100%
+- TEST: tested perfs curves scale X MEL_FILTER: 8.9 G instr => 8.7 G instr
+- IMPROV: use filter bank for all x scales (curves)
+=> make decimation at the same time as x scaling
+=> optimize and displayed better looking curve results
+(no flat top for the low frequencies sine peaks)
+8.7G instr -> 7.8G instr (ratio: 1,1 instr / cycle)
+- FIX: fixed valgrind error in SoftMaskingComp4
+- IMPROV: tried to center the 100Hz freq almost in the middle of the graph
+(Scale::LOG_CENTER_FREQ)
+- FIX: removed the stairs effect in FilterBank, due to tool small filter triangles
+for low frequencies
+- OPTIM: optimized the FilterBank initialization (by inverting 2 loops)
+(before, we made many many loops for nothing)
+- IMPROV: In PartialTracker5, use FilterBank instead of Mel (to avoid stairs effect)
+- NOTE: for the moment the frequency scale is still a hack, to have 1000Hz roughly in the middle, we must set the value to 100
+- REFACT: debug code clean
+- FIX: some axis lines were not displayed (too thin)
+- TEST: tested perfs after prev modifications: 8.3 G instr (perfs decreased a little)
+- IMPROV: added a checkbox for soft mask
+=> because with soft masks, the curves does not match at 100%
+=> and we take a little more perfs
+- TEST: tested latency with soft masks: ok!
+- IMPROV: improved the sound when masking without soft mask
+Previously, took denorm magns, that gave a lower sound, with strange vibrations,
+and a kind of phasing effect.
+Now, mask the input data => the sound is really better
+- TEST: compared simple masking and soft masking
+=> the sound is a lot more clear (in small details) with soft masking.
+- TEST: tested plugin transparency (w/ and wo/ soft mask), with headphones
+=> the plugin sounds transparent!
+- NOTE: perfs are a bit lower than before FilterBank
+This is certainly because filters are a bit wider now
+(that was to remove staris effect)
+- OPTIM: FilterBank: avoid processing a margin around bounds
+(this is not necessary anymore since anti-staris fix)
+=> 8.3 G instr -> 7.5G instr
+
+v6.1.1
+- IMPROV: created ParamSmoother2 (+ test) and use it in Air
+- REFACT: MUTEX';', auto-indented all plugin code, missing "double" -> BL_FLOAT
+- FIX: removed a dirty hack for latency computation with soft mask comp 4
+- IMPROV: implemented LockFree mechanism for curves
+- TEST: valgrind tested for data race: ok!
+- TEST: tested for data race when changing params and closing/opening the GUI: ok!
+- NOTE: maybe data race in SetLatency() (during plug creating, it is in iPlug2)
+
+v6.1.2
+- IMPROV: recompilation and incremented version
+- IMPROV: added freq splitter and wet gain
+- FIX: setup correctly knob scale for cut freq
+- FIX: fixed missing update of out curve in case cut filter was disabled  
+- TEST: tested perfs before and after cut freq/wet gain
+origin: 17/19% -> new: 18/21% (+1/2%)
+- FIX: fixed freq split signal processing
+- NOTE: done high pass filter + wet gain => gives good results!
+- FIX: fixed min freq (20Hz), set it to default
+- FIX: when smart resynth was on, input delay value was not updated (latency)
+- IMPROV: wet gain: from 0 to +12 only to avoid confusion
+=> So this avoids confusion! To decrease the air, there is now a single possibility:
+decrease the "mix" (and not also the prev possibility: decrease wet gain)
+- IMPROV: renamed HPF freq to "wet freq"
+So this is more clear: "wet freq" / "wet gain"
+- IMPROV: renamed "mix" knob to "harmo/air"
+=> so this is more clear, considering the names of the curves
+- TEST: re-checked memory after prev improvements
+- TEST: perfs: debug: 18/21% release: 12%/13%
+- OPTIM: optimized splitter
+prev: 12/13% new: 11/(12)%
+- NOTE: passed perf: ok!
+- TEST: tested param smoother on cut freq => failed
+(this still crackles, and param smoother is not adapted to band splitter)
+- IMPROV: updated from band splitter 3 to band splitter 4
+(this seems to optimize a little)
+- IMPROV: mem optim of crossover splitter 4
+- TEST: checked well with headphones, mono, stereo, voice: ok!
+- IMPROV: set back "wet gain" from -12 to 12 (and not from 0 to 12): better!
+=> can be useful to "decrease" the air, e.g when split freq is around
+1500HZ, and harmo/air if around 70%
+=> for decreasing air without having to modify all the other parameters
+- NOTES:
+Intel HD 3000 - MAX_TEXTURE_SIZE: 8192
+Big knob: 72pix
+=> 113 frames (this should fit...)
+Intel HD (basic): 4096/8192
+https://feedback.wildfiregames.com/report/opengl/device/Intel(R)%20HD%20Graphics
+If knob 64 pix => 64 x 64 = 4096
+Actual num frames: 180
+- TEST: knob with only 64 frames is not beautiful
+(turning is not smooth, when using shift + turn to fine tune)
+- IMPROV: use svg for knobs (so not texture size problem anymore)
+(expe, draft)
+- TEST: tested lazy gui refresh: ok!
+
+v6.2.0
+- IMPROV: integration of the new design
+- FIX: many fixes to adjust exactly to the designed svg.
+- IMPROV: changed and styled graph separator color
+- IMPROV: added tooltips
+- IMPROV: improved the 2 curves color ("air" theme :) )
+- TEST: tested new FakeCyan => now the colors are good
+- FIX: fixed curve time smoothness that varied with block size
+(with block size 32, this was really jerky)
+- FIX: when starting just after reset, the curves dropped from top
+(instead of raising from bottom)
+=> fixed default value for SmoothAvgHistogramDB (there was a mistake)
+- TEST: many tests to keep curve smoothness depending on block size and sample rate
+=> with SmoothCurveDB::OPTIM_LOCK_FREE, we almost have constant smoothness anyway
+- FIX: with small block size, the curve smoothness took a lot of resources
+=> fixed by SmoothCurveDB::OPTIM_LOCK_FREE
+- TEST: checkek the SmoothAVGHistograpDB is only called from SmoothCurveSB: ok!
+- IMPROV: re-added USE_SPLIT_FREQ_SMOOTHER to smooth Wet Freq
+(it crackled and made clicks)
+- FIX: fixed USE_SPLIT_FREQ_SMOOTHER so it smoothes correctly
+(reduced the standard smooth time, to take blockSize into account)
+=> not it is very dampy, it clicks only if we turn it very very fast quickly
+- IMPROV: improved more Wet Freq smoother (+ fix)
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+- IMPROV: improved and fixed win installer
+
+v6.2.3
+- IMPROV: mac compilation
+- IMPROV: removed the kGraph parameter
+It was not used, and appeared as an empty parameter in host native plug GUI
+
+v6.2.4
+- FIX: fixed windows compilation
+
+- NOTE: must take care of SmoothCurveDB curve "reset", and ClearValues
+for other plugins (for new optim lock free)
+
+- TODO: detect when all the curves at a 0, and then stop refreshing the graph
+(for the moment the graph refreshes continuously)
+
+- PROBLEM: the freq knob crackles a bit (and it seems not possible to fix it easily)
+- TODO: try curve num points 512 -> 256 (with new filter bank, this could fit)
+- TODO: check denorm AWeighting after optimizations (is it still ok?)
+- PROBLEM(?): sine + noise: when mix for noise only, and very low freqs,
+the noise increase in low frequencies, as if the low freq sine was added
+=> is it because partial tracker does not detect very low freq partials?
+
+OPTIMS ideas:
+- try 256 points for curves (instead of 512)
+- try moving average on soft masking comp (or pre-cumpute complex squares)
+- try to limit partial tracker frequencies and detected partials
+
+- NOTE: FastMath::USE_FASTER => makes a bug (detects one partial at low freq)
+- TODO: maybe add copyright if necessary for fastapprox
+
+
+cppcheck on all plugs:
+- NOTES(cppcheck fixes): PitchShiftPrusa, EarlyRelfexion, PseudoStereoObj
+RebalanceMaskPredictorComp5: FORCE_SAMPLE_RATE macro error
+SamplestoMagnPhases: cppcheck error (out of bounds index)
+
+- DONE: re-tested the following fetures after having passed cppcheck
+
+- Chroma: re-test play/monitor/stop + spectro + time axis: ok
+- GhostViewer: re-test play/monitor/stop + spectro + time axis: ok
+- InfrasonicViewer: re-test play/monitor/stop + spectro + time axis: ok
+- Rebalance: re-test play/monitor/stop + spectro + time axis: ok
+- Rebalance: re-test sound: ok
+- Air: re-check sound and Reset(): ok
+- StereoWidth: re-check vectorscope displays: ok
+- StereoWidth: re-test pseudo-stereo: ok
+- Denoiser: re-check sound and Reset(): ok
+- PitchShift: re-test post transient: ok
+- PitchShift: re-test freq adjust obj (startup): ok
+- PitchShift: re-test Prusa (mistake fixed): ok
+- PitchShift: smb, re-test stereo phases correction: later
+- Spatializer: re-test hrtf (bounds): ok
+- Spatializer: re-test xy pad: ok
+- re-test filters sound (crossover etc): partially done
+- re-test convolver: ok 
+- Ghost: re-test Ghost commands: ok
+- Ghost: re-test selection: ok
+- Ghost: re-test quickly samples pyramid: ok
+- Ghost: re-test edition, quickly: ok
+- Ghost: re-test spectrogram display: ok
+- Ghost: re-test SpectrogramView: ok
+- re-test graph axes/graph curves: ok
+- re-test graph time axis: ok
+- Infra: re-test sound: ok (quickly)
+- Panogram: re-test freeze/play (when selecting everything): ok
+- SAS: re-test resynthesis + pitch estimate!!: later
+- SoundMetaViewer: re-test the different modes: later
+- SoundMetaViewer: re-test time axis 3D: later
+- smooth curve db: re-test reset: ok
+- SpectralDiff: test when no side chain: ok
+- Wav3s: re-test lines render: ok
+- re-test Wav3s, display from sound: ok
+- Wav3s: re-test mouse wheel -> zoom: ok
+- Shaper: re-test sound (transient lib): ok

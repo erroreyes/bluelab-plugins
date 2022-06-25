@@ -1,0 +1,65 @@
+v5.0.0
+- initial version
+- 3 knobs
+- basic processing with “floating” number of bits
+
+v5.1.0
+- added waveform graph
+- added graph separator
+- changed the category: PT: “Harmonic”, VST: “Distortion”
+- FIX: only the left half of the graph was filled when host buffer size was 1024
+
+v5.1.1
+- port to pugl
+
+5.1.2
+- animated logo
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.1.3
+- recompile: benefit from FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: this doesn’t compile yet
+- FIX: now it compiles and executes well
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: optimized memory (37MB -> 24MB)
+
+v6.1.1
+- IMPROV: use new lock mechanism (LockFree)
+- REFACT: code clean, and refact
+- TEST: tested memory consumption: everything is ok!
+- TEST: tested optimization: everything is ok!
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- NOTE: do not change the curve color, it is good as white (very light blue)
+- IMPROV: same curve display whatever the block size
+(otherwise with bs e.g 32, the curve would contain very few data)
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation
+
+- NOTE: strangely, on "nk-bells", it sounds like the processed sound is mixed with the input sound (but this is just an impression, this is normal)
+
+- PROBLEM: strangely, volume increases when bit depth decrease
+and there is no sound if bit depth is < 2 (is it normal ?)
+
+- TODO: test thread data race
+
+- TODO: put LoFi free!!

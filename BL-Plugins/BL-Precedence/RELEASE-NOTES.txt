@@ -1,0 +1,68 @@
+11/03/2019
+Initial version, from SampleDelay
+
+v5.0.0
+- initial version
+
+v5.0.1
+- refract, to try to avoid clicks
+- identification of clicks: long silent noises
+
+v5.0.2
+- IMPROV: avoid clicks (that works !)
+- IMPROV: avoid buffer underrun (works)
+
+v5.0.3
+- big code clean
+- fixed click when restarting with delay after reset
+
+v5.0.4
+- REFACT: use DelayObj (reduce code and complexity)
+- FIX: when playing zero zones, the delayed sound stopped with clicks 
+=> disables AllZero() test
+
+v5.0.5
+- animated logo
+- FIX: fixed bypass mono->stereo (for plugs with 0 latency). Fixed in IPlugBase
+
+v5.0.6
+- better delay line (to avoid rumble)
+=> DelayObj4, very good, and makes a good Doppler effect when moving the knob rapidly
+
+v5.0.7
+- recompile with FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles
+- FIX: now it executes and displays well
+
+v6.1.0
+- IMPROV: port to linux
+- TEST: tested memory: ok!, no need optim
+- IMPROV: added debug code for gui refresh
+
+v6.2.0
+- IMPROV: integration of the new design
+- TEST: tried editable value text => aborted, too compplicated!
+- NOTE: the two text values are not editable... 
+- IMPROV: added tooltips
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation
+
+- BUG (not repro?): the sample rate of the host seems not transmitted to the plugin
+(tested with Reaper, 22050Hz and 88200Hz, it stays at 44100Hz.
+=> on Linux this looks ok
+
+- TODO: put it a 10$ instead of 5$

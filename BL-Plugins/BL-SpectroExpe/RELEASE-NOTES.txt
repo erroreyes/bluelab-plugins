@@ -1,0 +1,20 @@
+v6.0.0
+- from GhostViewer v6.0.2
+- IMPROV: GhostViewerFftObj => SpectroExpeFftObj
+- IMPROV: turned SpectroExpeFftObj from ProcessObj to MultichannelObj
+- IMPROV: created the “mode” radio buttons
+- IMPROV: implemented panogram mode
+- TEST: tested that the panogram mode gave the same result as the panogram plugin: ok!
+- IMPROV: made tests with freq panogram (good) and freq chroma (not interesting)
+- IMPROV: added spectrogram_width (simple stereo widening computation) => very good
+- IMPROV: added DUET magns and phases
+- IMPROV: changed some scales to Db, to get better images
+- TEST: tested a hack in ComputeStereoWidth() (take only .re), but it is not useful, it just resturns the standard spectrogram.
+- TEST: found the best possible result
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+
+v6.1.1
+- IMPROV: port to windows

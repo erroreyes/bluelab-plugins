@@ -1,0 +1,257 @@
+v5.0.0
+- from Ghost-X 5.8.9
+
+v5.0.1
+- FIX: fixed gui size that was not well restored after reopening the project
+- IMPROV: took 5 good colormaps
+- use freq adjust obj => very more accurate and good for pure tunes
+- knob for sharpness
+
+v5.0.2
+- reorganized all the guy
+- Added GUI graph separator
+- Code clean
+- Added “speed” coeff for making possible to use OVERSAMPLING=1
+- SpectrogramDisplay optim: avoid rendering twice (and computing pixels twice)
+
+v5.0.3
+- smooth scroll
+- OPTIM: avoid recomputing the colormap at each display
+- FIX: play data, stop, change colormap
+=> there is sometimes a small jumps of the data to the left
+- FIX: play data, stop, change colormap range or contrast
+=> there is sometimes a small jumps of the data to the left
+- FIX: Adjusted to the sample rate to avoid scrolling 2 times faster when 
+we went from 44100 to 88200
+
+v5.0.4 (?)
+- FIX: fixed slide to the right when spacebar kepts pressed +
+scroll at startup with 88200
+- FIX: fixed jumps in the scrolling when restarting the playback
+- FIX: fixed black line of 1 pixel on the right
+
+v5.0.5
+- use WDL-Resampler, for sample rates >= 88200 (which made bad graphics)
+- FIX: with sample rate 88200Hz, the performances dropped down progressively while playing
+- IMPROV: Animated logo
+- FIX: fixed “brightness” label which flickered each time the playback was restarted
+
+v5.0.6
+- Fft15
+- FIX Logic: that was not scrolling (due to IsPlaying() called from the render thread
+- changed IBitmapControlAnim to IBitmapControlAnim2 (refresh only when necessary)
+- Fixes text control flickering on Logic
+- Fixed value text fields that were not editable
+- FIX: Reaper, Mac: instantiate 2 plugins, change the size of the first > we loose the display of the second
+- FIX: fixed memory leak when used only one input (Fft15)
+- FIX: double click on gui resize button => inconsistent hilight + graph disappeared
+- FIX: Alt + click on guy resize button => graph disappeared
+- FIX: suppress “Application” from the installer
+
+- FIX: on Reason (VST, Mac), fixed the GUI that was not resized correctly
+- FIX: Cubase 10 max Sierra: black window then crash when trying to resize
+- FIX: Ableton 10 and FLStudio 20, Sierra, VST format: Chroma and Waves for example crashed randomly. Fixed in IGraphics NIKO_FIX_RESIZE_VST_CRASH
+
+- FIX(win): Fixed graph text that was not displayed on Windows
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+- FIX: Ableton 10, Windows 7, resize GUI: reset parameter problem that made freeze
+- FIX: StudioOne4, Windows7, VST format: resize GUI from medium to small 
+=> the content didn’t scale well
+(extended the Ableton fix to all VST windows hosts)
+- FIX: Cubase Windows VST: resize problem after previous fix
+=> special case, Cubase Win VST needs that we resize the parent windows
+
+v5.0.7
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: FIX_HIDE_PLUG_MEM_LEAK
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- IMPROV: added lines display, in front of each tune
+- IMPROV: fixed accuracy, in order to have accurate display if we want to use Chroma as tuner (FIX_ACCURACY)
+- OPTIM: skip iffy computation (OPTIM_SKIP_IFFT)
+- GHOST_OPTIM_GL
+- TEST: tested for tuning GTR => it is accurate enough to tune a guitar correctly !
+(set sharpness to minimum)
+
+v6.0.0
+- IMPROV: port to iPlug2
+- IMPROV: “display lines” => “show lines”
+- IMPROV: ‘show lines” => “lines
+- IMPROV: added gui resize portrait
+- IMPROV: added scroll speed
+- IMPROV: added time axis
+- IMPROV: added minitor button 
+- IMPROV: improved graph axis lines 
+- FIX: when size if slower than x4, test with A 440 => we find both Ab and A#, bit not A
+=> this was due to freq obj that was not updated at each step
+- OPTIM: avoid to compute everything for nothing when speed is fast
+- REFACT: MagnsToCromaLine => MagnsToChromaLine
+- TEST: tested well that the result is exact (pure notes exactly on the lines) => ok!
+- IMPROV: full float version (not tested perfs, the result detection is ok)
+- REFACT: some small code clean
+- FIX: fixed vertical axes (lines and label, that were not displayd anymore)
+- IMPROV: made more accurate overlay lines (checked with the Sine plugins => the lines exactly match the notes and the frequencies)
+- IMPROV: adapted init and mutexes from Ghost
+- FIX: fix for thread sanitizer: gray out monito button when playing, but in OnIdle()!
+=> thread sanitizer test ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to Linux
+- NOTE: compiled Linux app => everything seems to work, directly (gui resize etc.)
+- IMPROV: IPlug - Linux - append .vst2 at the end of the VST2 directory name
+- FIX: Linux - resize GUI => all the controls shows with default values
+(but the parameters values are still ok in the plugin
+- FIX: Linux: lines colors were not well displayed
+- REFACT: indentation and suppressed duplicate code
+- FIX: fixed the time axis that stayed static when monitoring with the app version
+- FIX: with App, chroma axis was stacked all at the bottom
+=> this was due to "locale" set to french, and then atof() used ',' for separator
+- NOTE: scrolling chromagram and time axis now works in standalone
+(but chromagram only displays noise for the moment, not chroma features, is it due to audio preferences ?)
+- TEST: tested on Bitwig Studio / Linux => all seems to work well!
+- IMPROV: Chroma + Ghost: use bl_queue in BLSpectrogram4
+(note: on Chroma, this avoid mem alloc, but it remains much mem to fix)
+- REFACT: refact and code clean bl_queue, BLSpectrogram4, ChromaFftObj4
+- OPTIM: avoid too much memory in FftProcessObj16 (use WDL_TypedFastQueue)
+- OPTIM: avoid too much memory in FftProcessObj16: use tmp buffers
+- IMPROV: use GraphiTimeAxis6 instead of 5
+- OPTIM: avoid allocating/deallocating to much memory in GraphTimeAxis6
+- OPTIM: avoid allocating/deallocating in many places
+=> prev: 10s -> 580Mb, new: 180Mb
+- IMPROV: All plugs - Linux: take fps into account! (was near 160fps by default!)
+=> 25fps, 10s: prev: 180Mb new: 106Mb
+- OPTIM: optimized memory at the maximum
+- OPTIM: passed perf and optimized a little: 10.7G instr-> 10.2G instr
+- FIX: fixed uninitialized value
+- IMPROV: importer spectro scroll/time axis improv from GhostViewer
+- NOTE: now Chroma scrolling is very smooth too!
+- REFACT: big code clean
+- FIX: for stereo, do stereo->mono to see the two channels
+- IMPROV: adapted lock free mechanism from GhostViewer
+- FIX: monitor, bypass the plugin => it still scrolled
+- FIX: monitor, bypass => black margin the the right
+- TEST: tested that the gui refresh improvements from Ghost work: ok!
+- IMPROV: avoid refreshing continuously the monitor button 
+- IMPROV: added drop down menu for colormap
+- IMPROV: improved style of drop down menu
+- IMPROV: do not use text clipping for drop down menu
+(fixes fat text, and display bugs in the menu)
+- TEST: tested the the menu style is well: ok!
+- IMPROV: apply styles correctly, on drop down menu
+
+v6.2.0
+- IMPROV: integration of the new design
+- FIX: after gui resize, the time axis labels were shifted
+- FIX: play, stop, change scroll speed, resize => time axis shifted
+- IMPROV: added tooltips
+- FIX: while playing , close UI, re-open UI => effect of bufferred scrolling
+- FIX: the chromagram was not filled if the GUI was hidden
+Steps: play just a little, close the gui, wait while still playing, open the gui
+=> only a part of the chromagram was filled, exactly like when we closed the gui
+- FIX: fixed black border and buffered scrolling better
+- FIX: crash: "corrupted double-linked list"
+=> passed valgrind for mem: no problem
+=> passed valgrind for thread => problem with spectro display whe setting speed!
+We set spectro display scroll in processBlock, and spectro display set speed makes
+some operation on data array
+- IMPROV: LF "command" for spectro scroll to avoid crash
+(for setspeed, but also for set "flag")
+=> this should fix the prev crash speed
+- BUG: play, stop, close/open gui => time axis has shifted
+(no problem if mon instead of play, no problem is resize gui)
+- REFACT: refactored some problematic code (compared to GhostViewer)
+- FIX: when automatizing colormap, image flasheed and jitterd
+- TEST: tested that changing colormap still works: ok!
+- REFACT: passed cppcheck on all plugins, and fixed warnings
+(1 real issue in InfraSynth)
+- TEST: checked that we don't start a frame while a previous is currently drawing
+- FIX: when showing fps, fps grown to more than 1000 is mouse out
+- NOTE: linux, to scroll without tearing, set vblank to auto instead of off(default)
+in file: /home/niko/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
+- NOTE: in Bitwig studio, the Chroma scrolling is very smooth
+(whatever the speed). The UI rendering is limited to 25fps however
+In Reaper, the UI scrolling is hacked
+- NOTE: in Reaper and Bitwig, the plugin UI seems limited to 25fps
+- NOTE: in bitwig, the scrolling is shearing (tearing) (with xfce vblank off)
+=> with xfce vblank set to auto, it is not shearing at all anymore
+=> there is no bug with not smooth scrolling, this ir due to Reaper!
+- FIX: fixed SpectrogramDisplayScroll4, that residplayed continuously
+- IMPROV: linux: adjust the timer delay to stick to target fps 
+(won't be visible for plugins on Reaper which limits to 25 fps,
+but will be visible in Ghost, where we can reach target 60fps)
+TEST: - re-tested Ghost at 60fps (or more) => it is now at 60fps!
+- FIX: activate monitor, automatize it => time axis frozen
+- FIX: at 88200Hz, smooth scrolling jumped regularly (resynch)
+(whereas the time axis scrolled well)
+- FIX: monitor + play, resize gui => time axis scroll a lot
+(fixe from GhostViewer)
+
+v6.2.1
+- IMPROV: win: compilation on Windows (VST Win32)
+- IMPROV: win: disabled FBO on windows (made crash)
+- IMPROV: win: disabled vsynch (this doesn't fix crash but it is good)
+- FIX: win: fixed a memory corruption problem
+(that made crash when closing window)
+- IMPROV: win: re-enabled FBO, finally this doesn't seem to make crash!
+- IMPROV: compiled for win/vst3
+- FIX: win/VST3: fixed manual file path (for button)
+- IMPROV: compilation for app and aax
+- FIX: win/app: fixed compilation IPlugApp_dialog/(VS19 bug)
+- IMPROV: disabled aax code signing for the moment
+- TEST: made installer with makedist-win.bat
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+- NOTE: now it compiles on Mac/VST2 (and looks to execute well)
+- IMPROV: now Chroma compiles for all formats (VST3, AAX etc.)
+- FIX: improved and fixes build system
+- FIX: Waveform11/linux: the vertical axis (with note nams) was garbage
+This was because atof() returned always 0 due to no setlocale, and numbers with
+a dot like "0.5".
+
+v6.2.4
+- FIX: fixed windows compilation
+- FIX: Ableton11(win): inser plug, save and reload project => crash
+=> this was due to resize gui button that was null
+- FIX: Ableton11(win): load project with Chroma, play, suppress plug => crashed
+- FIX: host UI, change scroll speed => not applied
+- FIX: Ableton11/Win10: set gui size to big from host UI, set it back to 0 => freeze
+=> now disable timer when resizing GUI, seems to fix
+- FIX: sometimes it still freezed => tried to fix
+- FIX: Ableton11/Win10/VST2: froze when resize GUI from host UI
+(better fix than previous one, fix is now implemented only in iPlug2)
+
+- BUG(not repro): host UI, change "lines", plug UI => lines not displayed
+(in release only)
+=> not repro after recompilation
+
+IDEA: add a feature to increase or decrease the chroma part of a sound
+(use chroma inverse transform to return to fft, and use weiner masking)
+(will need to switch to BLType double, and to output sound)
+=> add a checkbox to activate the feature, and just a knob
+
+
+
+- NOTE: profiling was done in debug -> redo it in release!
+- NOTE: maybe must re-check memory management
+(there seems to be possibilities of improvements)
+
+- PROBLEM: for notes between B and C (near the edges), the smoothing could be improved
+(it is cut, then smoother less better)
+=> would need to duplicate some data e.g at top and bottom of view, compute smooth,
+then cut the duplicated data at the end
+
+- IDEA: if frequency retrieval from PartialToFreq6 is really good, add the display
+to current Chord in Chroma, and also generate midi for each note
+=> to be able to record midi, and then to generate a music score!
+
+- PROBLEM(?): when speed is at the maximum, it seems like there a late of ~ 1 second when changing the sharpness for example. (something too much buffered?)
+
+- BUG(?): spectrogram scrolling has some small jumps sometimes (is it a regression due to optimizations?)
+- TODO: check very well for scrolling smoothness
+(dump pos data depending on time, and trace the curve, to see if discontinuities)
+- NOTE: when trying to use a tuner, with lines, there is a small offset (1 pixel)
+=> is it fixable ?

@@ -1,0 +1,41 @@
+v5.0.0
+- IMPL: from Air-v5.3.5
+- IMPL: created the plugin
+- IMPROV: creating the mix button and mix between reverb and dry signal
+- IMPROV: reverb increase with the mix button
+- IMPROV: set exactly the same parameters as DUET
+- TEST: it makes exactly the same effect as DUET
+- TEST: histogram, DEFAULT_VALUE_ONE => bad!
+- TEST: PROGRESSIVE_HISTORY (not tested deeply, finally de-activated)
+- TEST: when the sound starts, the beginning of the sound goes to the reverb part
+Project: BlueLab-StereoDeReverb-TestReaper-VST2-DeReverb.RPP
+=> not a bug ! The beginning of the sound is real reverb!
+- FIX: changed “plug channel io” in resource.h, to manage only stereo
+- TEST: passed auto tests => ok!
+There is sometimes isolated formants at the early beginning of the bounce. 
+But this is due to the Reaper autotest: we bounce while we are still playing (in loop)
+then reset is not called, and it draws some additional formants. This shouldn’t be a problem for normal use.
+- TEST: checked with other sample rates
+- TEST: tested with 2 sounds sources + reverb => ok !
+- DOC: written the manual
+
+v5.0.1
+- IMPROV: try to remove gating effect: SoftMaskComp3 + middle data
+(PROCESS_MASK_CENTERED)
+- IMPROV: StereoDeReverbProcess: SOFT_MASK_SIZE 8 => 16
+(otherwise, SoftMaskComp3 + middle data made more musical noise than before)
+- NOTE: conclusion: with this modifications, the gating effect is diminished a little,
+the voice sounds a bit closer to us, less “far in the middle of a room)
+And the masking has better quality, less feeling of musical noise.
+- TEST: used valgrind to check for memory corruption (play, and remove the plugin) => ok!
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles and executes well!
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: memory optimization (2GB -> 20MB)
+
+v6.1.1
+- IMPROV: port to windows

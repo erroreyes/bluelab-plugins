@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AudioComponents</key>
+	<array>
+		<dict>
+			<key>description</key>
+			<string>BL-PitchShift</string>
+			<key>factoryFunction</key>
+			<string>PitchShift_Factory</string>
+			<key>manufacturer</key>
+			<string>BlLa</string>
+			<key>name</key>
+			<string>BlueLab: BL-PitchShift</string>
+			<key>sandboxSafe</key>
+			<true/>
+			<key>subtype</key>
+			<string>mkjq</string>
+			<key>type</key>
+			<string>aufx</string>
+			<key>version</key>
+			<integer>394244</integer>
+		</dict>
+	</array>
+	<key>AudioUnit Version</key>
+	<string>0x00060404</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>BL-PitchShift</string>
+	<key>CFBundleGetInfoString</key>
+	<string>BL-PitchShift v6.4.4 Copyright 2021 BlueLab | Audio Plugins</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.BlueLab.audiounit.BL-PitchShift</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>BL-PitchShift</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>6.4.4</string>
+	<key>CFBundleSignature</key>
+	<string>mkjq</string>
+	<key>CFBundleVersion</key>
+	<string>6.4.4</string>
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.11.0</string>
+	<key>NSPrincipalClass</key>
+	<string>BL-PitchShift_View</string>
+</dict>
+</plist>

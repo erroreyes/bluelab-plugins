@@ -1,0 +1,80 @@
+v5.0.0: initial version, from Bat 5.0.8
+- REFACT: cleaned code from Bat
+- IMPROV: implemented soft and hard elbow threshold
+- IMPROV: added “mode” parameter for ImageDisplay
+- IMPROV: added “extract” checkbox
+- IMPROV: extract histogram max values
+- FIX: fixed Window::MakeHanningKernel(), the kernel was false
+=> Window::MakeHanningKernel2() No we have a good kernel !
+- IMPROV: fixed when changing threshold, colormap => update everything well!
+- IMPROV: implemented binary masks
+- IMPROV: added a second threshold, and checkboxes for debugging
+- IMPROV: implementation of PeakDetector2D (with “rubber algorithm”) WIP
+- FIX: fixed mask color when displaying for debug: there was an invisible color for some mask values
+- IMPROV: PeakDetector2D: avoid overlap of the detected peaks regions
+- IMPROV: finished peak detection! this works great, with filled contours for peaks locations.
+- IMPROV: PeakDetector2D: use fast incremental triangle fill instead of slow method
+- IMPROV: implemented picking: pick on mask zones to select sound 
+(picking cursor, cmd to cancel, alt to select background)
+- IMPROV: implemented Weiner soft masking SoftMasking and SoftMaskingComp
+(the implementation is a bit buggy)
+
+v5.0.1
+- IMPROV: fixed the formula of SoftMask and SoftMaskComp
+- REFACT: cleaned code of SoftMask and SoftMaskComp
+- IMPROV: added threshold width knob
+- IMPROV: when alt is pressed, and we are picking a mask (pick succeed),
+then select all masks at the same time to play the sound
+- IMPROV: added knob for soft mask size
+- IMPROV: fixed latency setup in resource.h
+- IMPROV: implemented FillHistogram2(): more close to the DUET paper
+(note: we keep samples out of bounds and put them in the border of the histogram)
+- IMPROV: “threshold all “ option => play all the masks
+- IMPROV: made masks with fade, so we fade progressively the regions
+
+v5.0.2
+- REFACT: code clean and refract
+
+v5.0.3
+- FIX/IMPROV: manage well masks/soft/alt key…
+- IMPROV: make as int instead of double, when possible.
+
+v5.0.4
+- REFACT: cleaned commented code
+- TEST: rechecked the sound of all options! (with headphones): ok!
+- TEST: “happy in the eveningS”, the “S” disappeared => necessary to dimish peak threshold
+- FIX: when nothing picked, the sound was mofidied => fixed!
+
+v5.0.5
+- IMPROV: now call Process() in the right thread after parameter changed 
+(to update the view when not playing)
+- IMPROV: when floor threshold is > 0, theshold globally and do not compute peaks
+- IMPROV: system of mask smoothing when using only threshold
+- IMPROV: added 2 knobs to manage the histogram zoom (alpha and delta)
+- IMPROV: added 1 knob for histogram size (32 etc.)
+- IMPROV: samples out of the histogram => take them well into account!
+- FIX: - Wiener mask complex: fixed ! square = a * complex_conjugare(a)
+=> the sound is better, and better than real wiener masks!
+- ÒPTIM: optimized SoftMasking and SoftMaskingComp
+=> 2% perf gain real, 7% perf gain for comp!
+- TEST: benched perfs for DeNoise => nothing really necessary to optimize
+=> the plug takes 15% CPU at the maximum, this is ok!
+- IMPROV: implemented Phase Artifact Correction
+=> works well for discarding bad peaks, but does not help for DeNoise and DeReverb
+- TEST: histogram, DEFAULT_VALUE_ONE => bad!
+- TEST: PROGRESSIVE_HISTORY (not tested deeply, finally de-activated)
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: ok, this launches and executes well
+- REFACT: code clean
+- IMPROV: imported init() and mutexes from Ghost
+- FIX: fixed crash when resizing (number of gui size was bad)
+- TEST: passed thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+
+v6.1.1
+- IMPROV: port to windows

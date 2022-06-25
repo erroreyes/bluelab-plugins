@@ -1,0 +1,11 @@
+wip: smooth time noise curve
+
+get a continuous curve (with reso=64)
+smooth noise curve change?
+spectral irregularity, from the other author
+
+next time, if speak about algo, talk to jamie
+
+
+tests => curve more complex? / optimize w/ marquardt ?
+compile win/mac for lwks

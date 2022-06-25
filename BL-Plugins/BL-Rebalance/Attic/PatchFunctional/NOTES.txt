@@ -1,0 +1,5 @@
+25/05/2020
+It was necessary to patch "functional", to be able to compile CompiledNN
+(with C++11 only, and not C++14)
+
+The patch is here: https://stackoverflow.com/questions/16713013/c-functional-stdbind-doesnt-compile-with-apple-clang

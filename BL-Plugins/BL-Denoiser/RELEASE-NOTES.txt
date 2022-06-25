@@ -1,0 +1,332 @@
+01/07/2017 - v1.0
+Initial version
+
+v3.0
+- redesign of the interface (3.0)
+- port to new fftprocessobj (6)
+
+v3.1
+- port to fft7
+
+v3.2
+- port to fft8
+
+v3.3
+- port to fft10
+- better management of the capture of the noise pattern
+- improved thresholding (dB), and threshold curve display
+- fftprocessobj11: disabled energy conservation (must do that for that plug)
+- made a version that works well !
+- retested musical denies
+
+v3.4
+- optimised musical denoise
+- better tweak the parameter for musical denies (db)
+- reorganised interface (small knobs)
+
+v3.5
+- compute only half of the fft
+
+- fixed bitmap for checkbox
+- GetIOBuffers
+
+- renamed “noise pattern” to “noise profile”
+- fixed a crash when playing as the noise profile was not yet defined
+- fixed noise curve (pref: was like the sig curve. now: is flat, is real removed noise)
+- “hide” extracted noise curve in learn mode
+ 
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+- renamed “THRS” to “THRS.”
+
+- fixed preset saving (curve) for VST2
+
+- fixed init that was done with quality_standard, but overlapping 8
+- fixed suppressed noise cuve not displayed on Reaper and Protools 
+=> it was (wrongly) taken from the time domain instead of frequency domain 
+(and was half the size…)
+ 
+
+- applied fix Utils::DecimateSamples
+
+v3.7
+- port to Fft14
+
+v3.8
+- small texts fopr small knobs
+- added trans boost knob
+- PostTransientFftObj2 (for trans boost): does not compute if softhard==0 (lazy eval)
+
+v3.9
+- “SMALL” text bigger (global for all plugins)
+- renamed “TRANS. BOOST” to “TR. BOOST”
+
+v5.0
+- fixed a crash in mono
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+- added a dummy curve, for scale of the vertical axis
+
+v5.0.2
+- recompile on Windows 7 (possibly with changes in NikoLib for FIX openGL windows 10)
+
+v5.0.3
+- port to pugl
+
+v5.0.4
+- FIX: for high framerates, the frequency axis label values was not correct
+e.g: 500Hz instead of 1KHz for 88200Hz
+- FIX: fixed axis label: “200KHz” => 200Hz
+- FIX: suppressed space between “50” and “Hz”, and between “0” and “dB”
+(for Hz, this made the value overlap when in 88400Hz project samplerate)
+
+v5.0.6
+- Fft15
+- animated logo
+- fixed latency 
+- fixed ignore ResidualDenoise() to keep constant latency
+- fixed first time render with ResidualDenoise() that made incorrect sound at beginning	
+- fixed phases (history) when using residual noise
+
+- added graph separator
+- graph without borders
+- shifted vertical offset, for readability
+- y offset for curve descriptions
+- FIX: transient boost (needed to be adjusted after Shaper separation s/p fix
+- FIX: fixed transient boost with sample rate 88200 (see Shaper)
+- FIX: crash (at least in Protools (on SdcP Mix2) was due to new latency management
+- FIX: fix no sound on Protools (on SdcP Mix2) : there was no sound output
+(modify test mEmptyChannel for dummy channels)
+- FIX (not sure there was a bug previously)
+	- Learn at 44100Hz (make a peak at 500Hz with BL-Sine
+	- Then switch to 88200 => the peak is no more at 500Hz
+- Disabled suppression of the first Hz label value at 88200Hz
+- FIX: fixed crash in Protools when changing latency during init (fixed IPlugAAX)
+- FIX: Flat curve at the end of the graph with high sample rates
+- FIX: fixed latency (FftProcessObj16::ComputeLatency())
+- FIX: fixed db curves decimation (which made bad db value when increasing freqs)
+- IMPROV: update more quickly the lear curve and the mimic curve (this was very slow)
+
+- FIX: fixed auval crash when launching Logic (auval tested uncommon 11025 samplerate)
+- FIX: fixed Protools bypass shift when using latency 3072
+(was due to a bug in NChanDelayLine)
+- FIX: latency was not well computed for oversampling > 4
+- FIX: on Logic (at least), we needed to play once before a new latency is applied
+- FIX: Cubase 10, mac Sierra, VST3 => freeze when changing quality (due to SetLatency())
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+- FIX: StudioOne4 - Win 7 - VST3 (and some other VST3): start and set res noise to max 
+=> we still heared the sound 
+
+v5.0.7
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+
+v5.0.8
+- recompile with new NikoLib
+- TEST: tried Utils/AVX (Simd) => does not improve perts
+- OPTIM: CMASmoother::DENOISER_OPTIM: pref gain 10% (94% => 84%)
+- OPTIM: DENOISER_OPTIM2: perf gain 3%
+- OPTIM: DENOISER_OPTIM1: 1%/2% perf gain (and not sure it doesn’t break the algorithm)
+- OPTIM: DENOISER_OPTIM3: 1/2% perf gain (an all other fft plugins)
+- OPTIM: DENOISER_OPTIM0: optimized more: ~1% perfs gain
+- OPTIM: DENOISER_OPTIM1: optimized a bit more: ~1% perf gain or less
+- OPTIM: DENOISER_OPTIM0: tests to optimize more (reduced resize) => no gain…
+- OPTIM: DENOISER_OPTIM4: avoid log and exp in DenoiserObj::Threshold 
+=> perfs gain: ~1%/2% (fast) , 4% (full)
+- OPTIM: DENOISER_OPTIM5: TransientShaperFftObj: do not copute anything if not activated
+perf gain: 7% (fast)
+- OPTIM: DENOISER_OPTIM6: avoid log for residual noise
+=> perf gain: ~2%/4%
+- OPTIM: Small additional optima DenoiserObj::NoiseFilter()
+=> perf gain 1%/2% (full)
+- OPTIM: DENOISER_OPTIM7: avoid computing ifft after transient detection for transient objects => perf gain: 6% (for fast, and also for full)
+- OPTIM: DENOISER_OPTIM8 (twin denoiser objects)
+=> perf gain 4% (for fast and also for full)
+- NOTE: result of all optim: full: 95%=>67%, fast: 50%=>35%
+- OPTIM: DENOISER_OPTIM9: in mono, compute only 1 channel (instead of 2 every time)
+=> this is not needed ! this was already the case, with empty channels
+- TEST: Test perfs, Logic, with real mono channel. last optimized version.
+Stereo/Mono. full: 67%/45% fast: 32%/28% (empty: 19%)
+- OPTIM: DENOISER_OPTIM10: use only 2 transient objs (instead of 4)
+=> perf gain: full: 16%, fast: 2%
+- NOTE: result of all optim: full: 95%=>51%, fast: 50%=>34%
+- NOTE: current code is drafty, need to check that all optims don’t change the sound
+
+v5.0.9
+- REFACT: activated only optima that don’t change the sound
+- REFACT: validated optima (and fixed if necessary)
+	- DENOISER_OPTIM0: Fixed and Validated! (CMASmoother)
+	- DENOISER_OPTIM1: Fails.
+	- DENOISER_OPTIM2: Validated!
+	- DENOISER_OPTIM3: Validated!
+	- DENOISER_OPTIM4: Validated!
+	- DENOISER_OPTIM5: Validated! (need to check trans boost knob)
+	- DENOISER_OPTIM6: Fails.
+	- DENOISER_OPTIM7: Validated!
+	- DENOISER_OPTIM8: Fixed and Validated! (twin objs)
+	- DENOISER_OPTIM9: canceled (useless)
+	- DENOISER_OPTIM10: Validated!
+- TEST: checked with the debugger that twin objects are called after objects: ok!
+- TEST: checked twin obj Reset(): ok!
+- TEST: re-checked failed optims (and do as much optim as possible on the original code)
+- TEST: seen if objects clear their buffers, then apply to the twin objects too: ok !
+(no need, they don’t clear their buffers)
+- TEST: perfs now: full: 53% fast: 36% (ok !)
+- TEST: re-done the tests before and after, with some re-injected noise: ok!
+(see fix just below)
+- FIX: a problem was fixed automatically after all these optimization
+Previously: when ratio was 0%, and trans boost was 0%, we didn’t get the same result as
+when bypassed (as we should). This fix enables this: ratio 0%, transBoost 0% => same as bypass => very good behavior !!
+
+v5.1.0
+- IMPROV: added TRANSIENT_FREQ_AMP_RATIO in Denoiser.cpp, to choose between “s” and “p”
+- TEST: tests with trans “p” only (we hear “p” more, but the sound looks a bit less 
+good since we don’t hear “s” very much)
+- NOTE: sound of denoise, then shaper is better than sound of denoise + trans boost
+- IMPROV/OPTIM: improved the transient sound + optimize (DENOISER_OPTIM11)
+The transientness is no computed from the denoised signal => so we avoid increasing 
+everything due to the background noise => this is almost similar to denoising, 
+then putting a Shaper plugin just after. perf gain: full: 6%, fast: 2%
+- TEST: checked for clicks when trans boost passes from 0 to > 0: Ok !
+- TEST: checked for memory leaks: ok!
+- TEST: re-cheched perts: 51% full / 32% fast 
+(needed to bench several times to have these perts, 
+sometimes bench gives worse performances)
+- TEST: made auto test: looks ok !
+(some slight modifications in noise component depending on buffer size, for freqs 88200Hz and 192000. This may be due to the resampling of the noise curve).
+- TEST: checked with a Precedence plugin before, and so checked if stereo is ok 
+(phases etc) => ok!
+- TEST: re-tested in real mono with Logic: ok!
+- TEST: tested with 88200Hz (learn, denoise): ok!
+- DOC: checked and improved the manual (transient boost to 0 => less CPU)
+- NOTES: Classes optimization and changes that can affect other plugins: TransientShaperFftObj3, PostTransientFftObj3, (FftProcessObj16), CMASmoother (and so CMA2Smoother)
+
+v5.1.1
+- IMPROV: auto res noise (nothing to adjust, better CPU performances, introduce a little gating effect, suppress less air of the original signal)
+(set to 1 by default)
+- FIX: fixed memory corruption when using residual denies (FIX_MEM_CORRUPT_KERNEL)
+=> before the fix this made different spectrogram results in debug and release
+(and that may be the cause of different results when doing auto tests)
+- FIX: fixed synchro with the noise signal when res noise was zero
+- FIX: the previous fix also fixes this bug: set noise only, set the threshold to the maximum => there is a delay effect on the voice (only when res noise is exactly at zero)
+(FIX_RES_NOISE_LATENCY_SYNCHRO)
+- FIX: threshold to zero, auto res on => no sound
+- FIX: the previous fix also fixes: the volume of the result is lower when auto res is set to 1
+- FIX: when auto + noise only, we hear a big % of the voice
+- IMPROV: renamed the option from “auto res noise” to “soft denoise”
+- TEST: tests latency in several configurations: ok
+- TEST: re-checked that transient boost works: ok!
+- IMPROV: try to remove the gating effect with soft masking
+(USE_AUTO_RES_NOISE_METHOD3), use new SoftMaskingComp3
+- FIX: fixed variance computation, in SoftMaskingComp3 (FIX_COMPUTE_VARIANCE)
+- FIX: fixed the res noise hanging kernel (it was wrong, bright in the corners)
+=> with that, the spectrogram has less holes when using res denoise (less holes in height)
+(FIX_RES_NOISE_KERNEL)
+- IMPROV: SoftMaskingComp3, USE_REAL_EXPECTATION => gives less spectrogram leakage
+(and then avoid more the “gating” effect”.
+- IMPROV: avoid adding latency of res noise and auto res noise, since those to options are exclusive (LATENCY_AUTO_RES_NOISE_OPTIM)
+- IMPROV: set up correctly latency compensation when using auto res noise (3584 samples)
+- FIX: fixed signal that was not transparent when ratio was 0 (the noise par was not ok)
+- FIX: when auto + noise only, it pumps and FIX when auto: the noise curve pumps
+Fixed by a hack: (AUTO_RES_NOISE_HACK)
+- NOTE: with new AUTO_RES_NOISE_HACK: set threshold to high value, and noise only
+=> the voice is duplicated
+(so deactivated the hack)
+
+v5.1.2
+- REFACT: big code clean (and extract classes to separate filed, DenoiserObj etc.)
+- TEST: compared perfs auto res / original noise res removal
+=> we gain 6-10% CPU (42%-46% => 36%) 
+- TEST: checked memory corruption with valgrind (many options) => ok!
+- TEST: retested ratio 0 => it is transparent!
+- FIX: for auto res noise: when removing the plugin, sometimes it crashed
+(tried to delete invalid pointer in ~DenoiseObj())
+- TEST: re-passed valgrind (many options + remove plugin) => all is ok!
+- DOC: updated the doc
+- TEST: tested auto res noise removal with high hiss example:
+BlueLabAudio-Denoiser-TestReaper-VST2-HighNoise
+=> this works well, except if the hiss is very very high
+- OPTIM: before, when auto res noise was off, we still computed the expectation. That consumed too many resources compared to the previous Denoiser version. Now, when auto is off, we compute only history, and skip the computation of the expectation (save around 10%CPU) (OPTIM_COMP_MASK_BYPASS)
+- TEST: done auto tests on Denoiser (compared with previous version, compared new version with and without auto res noise) => everything is ok!
+
+v6.0.0
+- IMPROV: port to iPlug2
+- IMPROV: aligning GUI better
+- FIX: when learning, it was necessary to turn the thrs knob once to view the curve
+- IMPROV: imported init() and mutexes from Ghost
+- TEST: passed thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+Perf gain: 45% -> 28%
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: optimized memory (2.8GB -> 700MB)
+- OPTIM: another memory optimization. WARNING: this can make a regression
+(modified mResult.Add())
+=> before, 10s: 700MB, after: 400MB
+- OPTIM: optimized memory: avoid copies in bl_queue
+=> 370MB -> 170MB
+- OPTIM: memory optim - use bl_queue in DenoiserObj
+170MB -> 83
+- OPTIM: avoid vec resize in Denoiser.cpp
+83MB -> 49MB
+- NOTE: now all the memory in Denoiser is fixed! (with all the options to default)
+- FIX: small fixes for compilation
+- TEST: test serialize / unserialize noise curve on Linux => that works!
+- IMPROV: freq scale: use scale with centered 1KHz
+- IMPROV: improved a lot freq axis (beautiful log lines !)
+- NOTE: with gamma 0.7, we don't see the axes lines
+- IMPROV: integrated soft masking 4 instead of soft masking 3
+- FIX: fixed res noise knob gray out (+ value)
+- OPTIM: passed perfs (5.3 G instr -> 5.1 G instr)
+- OPTIM: SoftMasking4: compute square conjugate in history only when enabled
+=> 5.1 G instr -> 4.9 G instr
+- OPTIM: optimized residual noise removal
+=> 11.2G instr -> 7.8G instr
+- FIX: fixed bad curve names "noise"/"noise profile" (they were swapped)
+- FIX: set noise thrs to max, on martinets => the sound didn't change
+=> this was because of a big memcpy error
+- REFACT: Denoiser obj: use new method for fill second fft half
+- NOTE: when threshold max -> we still have some sound on high freqs sometimes
+(Martinets example)
+=> This is totally normal! Some high freqs of the original sound can go after the noise profile.
+- FIX: fixed latency in all cases and checked very well latency
+(there was a bug, and also latency was not well implemented)
+- TEST: tested sound, res noise, auto res noise, transient etc.
+(with spectrograms) => all is ok!
+- IMPROV: added the LockFree mechanism
+- IMPROV: fixed a data race for GraphFreqAxis2/OnReset()
+- TEST: tested for data race (valgrind): ok!
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- IMPROV: changed 1 curve color (to make variety between all plugins curve colors)
+- IMPROV: applied curve smoothness improv from Air
+- IMPROV: made the noise profile less smooth
+(because otherwise, when changin threshold, it moves too damply/slowly)
+- FIX: smooth curve scale was not updated after sample rate changed
+Steps: play a sine at 500Hz with 44100Hz, switch to 88200Hz => curve show bad value
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation
+- IMPROV: set the 2 thresholds in % (instead of [0, 1]);
+- DOC: updated manual (screenshots, fixed a typo, fixed a newline)
+
+- BUG(?): support@ovh, salesventas-info@yahoo.com (Eugene)
+" I did quickly learn, I need have "Quality" set to "Fast 1" rather than "Best 4" when playing back audio after learn; or your audio will sound funny."
+Niko: is it when learn with quality > 1 ?
+

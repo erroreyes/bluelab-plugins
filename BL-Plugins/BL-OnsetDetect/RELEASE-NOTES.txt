@@ -1,0 +1,17 @@
+v5.0.0
+- from Air-5.3.5
+- detect the INOS ODF
+(do not detect peak picking for the moment)
+ 
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: this doesn’t compile yet
+- NOTE: now it compiles
+- NOTE: now it executes well
+
+v6.1.0
+- IMPROV: port to linux
+- NOTE: the plugin was not yet memory optimized
+
+v6.1.1
+- IMPROV: port to windows

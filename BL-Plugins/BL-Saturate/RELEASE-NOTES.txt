@@ -1,0 +1,61 @@
+12/11/2017 - v1.0
+Initial version
+
+v3.0
+- new interface
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+
+v5.0.3
+- animated logo
+
+v5.0.4
+- recompile with FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- IMPROV: filter nyquist frequency when oversampling (downlsampling) (FILTER_NYQUIST)
+- IMPROV: added a out gain knob (after a remark in KVR review)
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles
+- FIX: now it executes well
+
+v6.1.0
+- IMPROV: port to linux
+- TEST: tested memory: ok! no need to optimize
+
+v6.2.0
+- IMPROV: integrated a graph like in LoFi
+- IMPROV: put the graph curve in red
+- FIX: the graph was not refreshed
+=> made a fix for all the graphs with curves
+- TEST: checked that there is a graph separator: ok
+- TEST: tested refresh on demand => graph is refreshed every time, but this is normal
+=> when there is zero signal, we also process it,
+so this is normal that the curve gets updated 
+- TEST: re-tested lazy refresh GhostViewer: ok!
+
+v6.3.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- IMPROV: same curve display whatever the block size
+(otherwise with bs e.g 32, the curve would contain very few data)
+
+v6.3.1
+- IMPROV: port to windows
+
+v6.3.2
+- FIX: windows fixes
+
+v6.3.3
+- IMPROV: mac compilation
+
+v6.3.4
+- FIX: fixed windows compilation
+
+- NOTE: depending on the sr, the display changes a bit (not important)

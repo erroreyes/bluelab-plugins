@@ -1,0 +1,185 @@
+Global release notes, for all plugins, for global modifications
+
+2021/08/11
+
+- IMPROV: made a global RELEASE_NOTES.txt for all BL-Plugins in common
+(for global modifs)
+- IMPROV: incremenented all versions numbers
+- FIX: Help button rollover stays blue after having clicked on it
+Mac2 - Win10: all plugs:
+- NOTE: tested Mac1 Win7 andWin10:
+=> it seems that we don't need vcredist
+- IMPROV: improved and fixed Air installer
+- IMPROV: improved and fixed win installer (example of BL-Air)
+      - renamed BL-Air.dll -> BL-Air-vst2.dll
+      (more clear if we distribute the file without installer)
+      - renamed "User Guide" -> "Documentation" (start menu and installer)
+      - added the plugin name like in "BL-Air Documentation"
+      (because on Windows 10, in the start menu, all the plugins doc
+      was named the same "User Guide")
+      - modified deefault install dir {pf}/BL-Air -> {pf}/BlueLab/BL-Air
+      - also install licence.rtf in the dst directory
+      - make possible to install 32 bit versions on 64 bit systems
+      (there was not installed, even if checked, on 64 bit system)
+      (that can be used if the user installed a 32 bit host on a 64 bit system)
+      - fixed vst3 destination dir: 32 and 64 bit was installed in the same dir
+      - for vst2, set default to {pf}/VSTPlugins (removed "Steinberg)
+      See: https://helpcenter.steinberg.de/hc/fr/articles/115000177084-VST-plug-in-locations-on-Windows
+      And: https://help.ableton.com/hc/fr-fr/articles/209071729-Utilisation-de-plug-ins-VST-sous-Windows   
+- BUG(not a bug) installer: win32 (Mac2 - Win10)
+VST3: "can not create a file when that file already exists"
+This was when the original vst3 in place was build with bl build system,
+launched as administrator.
+Remove the vst3, install once, install a secondtime over = no problem
+=> this shouldn't be a problem for the users, only on bl build machine
+- IMPROV: applied the installer improvements from Air to all the plugins
+- FIX: win installer, VST3 and AAX
+VST3: "can not create a file when that file already exists"
+win32 (Mac2 - Win10)
+- FIX: fiedd win installers for vst3 and aax (directory tree was wrong)
+- FIX: fixed all win vst projects
+- FIX: Ghost installer, win32: fixed .exe
+- FIX: all plugins: win installer: icons for vst3 and aax
+- FIX: SampleDelay build failed
+- IMPROV: improved build system for linux
+- IMPROV: changed name of install-app.sh
+- IMPROV: improved installer image with the new logo
+- IMPROV: updated all the icns with new logo (from linux)
+- IMPROV: updated all the .ico with the new logo (from linux)
+- IMPROV: win: added license file to the zip
+- FIX: Linux: VST3, the graph was updated (but the sound was)
+This was because a wrong fir in iPlug2/vst3 (to fix a crash when closing/re-opening plug window)
+=> now it is correctly fixed, it doesn't crash, and displays well
+- IMPROV: fixed build scripts linux
+- FIX: linux: fixed bug when stripping binaries
+- TEST: tested vst3 preferences saving: ok!
+Tested with Impulses: everything ok when reload!
+- FIX: vst3:linux: OnParmamChange() was called twice each time
+(BL_FIX_VST3_PARAM_CHANGE)
+- FIX: fixed parameters name display (Bitwig Studio, linux)
+(BL_FIX_BITWIG_LINUX_PARAM_NAMES)
+Parameters names were like "%" or "dB" instead of parameters names
+(not such problem with vst3)
+- IMPROV: linux:vst2:bitwig studio: there was a "Param5" parameter
+(dummy parameter for the graph)
+And for Reaper, that was an empty parameter.
+=> just removed it, it looks ok.
+- FIX: fixed some typos in the prev fix (remove kGraph)
+- FIX: fixed OnReset() that was not called when transport restarted
+(Bitwig/vst2/linux)
+- FIX: gui resize rollover buttons, current button was not highlighted anymore
+- FIX: infinite loop when inserting VST3 (Renoise-V3.3.2/linux)
+- FIX: crash when closing VST3 GUI (Renoise-V3.3.2/linux)
+- FIX: crash when removing VST3 plugin (while gui opened) (Renoise-V3.3.2/linux)
+- TEST: for VST3 linux problems (bitwig refresh), checked in IPlugVST3
+// #ifndef OS_LINUX CreateTimer(); // #endif
+=> does not fix
+- FIX: The vst3 GUI did not refresh, needed to move mouse over to animate
+(Waveform11/linux/vst3) (BL_FIX_GUI_FREEZE)
+=> This also fixes the following:
+- FIX: All animated plugs: Bitwig3.3.1/vst3/linux: the gui stoped refreshing
+after a while if we didn't move the mouse
+- FIX: Waveform11/linux: fixed locale also for plugin
+e.g BL-Chroma: the vertical axis (with note nams) was garbage
+- FIX: - Waveform11/linux/vst3: freeze when resize GUI (vst3 only)
+- FIX: fixed the prev fix
+- FIX: Radium/linux/vst2: fixed GUI resize
+- NOTE: VST2 GUI resize fails with Radium/linux
+Test: try to ignore when no host resize is done => test
+- FIX: Audacity/linux: time axis was not scrolling, for Chroma e.g
+This is due to a current mistake in Audacity.
+=> Workaround in BLUtilsPlug::GetTransportTime()
+(and github issue made in Audacity project)
+- TEST: The time axis labels does not align the same way depending on scroll speed.
+(Audacity and Reaper linux)
+Steps: play, change scroll speed without stopping play
+=> the labels are not well aligned.
+=> In fact, this is normal: in the spectrogram, we have some data with one speed,
+mixed with some data with another speed => can not put the labels correctly because
+the spectro data is not homogeneous.
+=> To avoid this, restart playback after having changed speed.
+- FIX: Audacity/linux: activate samplePos workaround depending on Audacity version
+(because the fix is now merged in Audacity)
+- FIX: avoid crash when OpenGL version is too low (Win10/Ableton10/IntelHD3000)
+(OpenGL 1.1 was detected, instead of > 2)
+- TEST: checked if we can auto remove dead code in VC2019 => no...
+- NOTE: its seems ok to set the plugin id by hand, now that the form is down
+=> the final guid will also use the mfr id (concatenated)
+- FIX: now use iPlug2 text entrey instead of native ones, for text editting
+(was used only on linux previously, but on windowsthat was necessary too,
+because windowsnative text entry had problems, such as color and invisible caret)
+- TEST: tested param groups (e.g VST3 Reaper/Bitwig) => this doesn't currently work.
+- FIX: host UI, change gui size, plug UI => messy size
+- FIX: reaper (linux) host UI, select small gui => this didn't activate
+(it stayed to 0)
+- FIX: Ableton, host UI, change GUI resize (theorical fix, not yet tested)
+- TEST: re-checked all plugs parameters, when modified from host UI: ok!
+- IMPROV: reorganized parameters logically in all plugs (for native host UI)
+- NOTE: compile AAX on M1 chip: use new aax-sdk-2-4-0-beta,
+instead of AAX_SDK_2p2p2 (also tested AAX_SDK_2p3p2: fail)
+- NOTE: compiled libFLAC on M1 chip using cmake, and made a fat binary (3 archs)
+- IMPROV: Mac3 M1: set configurable "hardened runtime"
+- IMPROV: added "hungarian" to config files
+- IMPROV: Mac3: installer Package.app
+- IMPROV: recompiled and installed setfileicon
+- IMPROV: made a dummy alias in zshrc for python 3.7
+- IMPROV: update instally .py: modified the python exe path for M1
+- IMPROV: AAX sdk, Mac M1 => set build system to "New" + "Legacy"
+- FIX: Mac M1: there was a conflict / ios when building from command line (xcodebuild)
+=> set the terminal to be launched by Rosetta => this fixed
+- IMPROV: set certificated to Mac3 M1
+- IMPROV: Mac M1: removed bad release note copy to plugin build
+- IMPROV: Mac M1: added hungarian to sources (with group)
+- IMPROV: Mac M1: added missing sources (PartialTracker6 etc.)
+- NOTE: compiled everythiong on Mac M1
+- FIX: Win10/VST3: resize gui => all knobs and widgets were set to zero 
+(graphically only, iplug parameters stay good)
+- FIX: Win10/VST3: change gui size from host ui => not applied, and button not reset
+IPlug parameter was not modified (also on Linux VST3)
+Also the case for any parameter (OnParamChange() was not applied)
+- REFACT: GUIResizeParamChange(), adapted to fix VST3
+- FIX: VST3: gui resize from host UI => prev parameter was not reset
+- BUG: Reaper/Windows/VST3: automations were not applied to plugin
+(knob move, but effect is not applied)
+No problem with VST2 - Same problem on Linux/VST3
+(Fixed correctly the prev fix: BL_FIX_VST3_PARAM_CHANGE)
+- FIX: fixed a potential crash in popup menus
+(change from Host UI, then from plug IU => sometimescrash)
+- IMPROV: replaced the int parameters by enum parameters
+(so in the host UI, this is more explanatory)
+- IMPROV: updated all MacOS projects
+(files added since Morpho, updated when recompiling BL-Sine for support)
+- IMPROV: added all the project files to git for RebalanceStereo (+ Morpho)
+and checked project setting "Legacy/New"
+
+
+- BUG: Reaper/Linux/VST2: resize gui to portrait, then small,
+then portrait from host UI => the value doesn't turn from 0 to 1
+=> not repro on Reaper Windows VST2: this is a Reaper linux bug only
+
+
+- TODO: check aax format (directories should be Contents/Win32|x64)
+For the moment this is x86 and x86_64
+
+
+- BUG: Mac 1 - Win10
+       => Ableton 10, crash all plugins
+
+- BUG: Mac 1 - Win7 - Ghost-X App (also Mac 2 Win10)
+   Open Karma.flac, play => this crackles
+   we must lower the out gain knob to stop crackles
+   (same with Karma.wav)
+
+- NOTE: Mac 1 - Win7 - Rebalance
+   Windows warning "insufficient RAM, do you want to close th program ?"
+   (Reaper + Rebalance take 200MB, this should be ok...)
+
+- BUG: Mac1 - Win7 - Rebalance
+  Sometimess the spectrogram turns black, and never returns
+  (don't know how to reproduce...)
+
+- BUG: Mac 1 - Win10 (USB Key 64) - Rebalance
+  VST2 and VST3 crash just when inserting
+
+- PROBLEM: if there is not enough space on disk (e.g 1GB only remaining),
+the gui can become black. Tested on Mac1, Win10 USB Key. And also Rebalance crashes when initializing. => we must have 1 or 2x the size of the RAM free on disk.

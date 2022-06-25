@@ -1,0 +1,71 @@
+01/08/2017 - v1.0
+Initial version
+
+v2.0: interface 2.0
+
+v2.5: interface 2.5
+- Protools plugin size
+- etc.
+
+2.5.1
+- interface border
+
+2.5.2
+- try to fix crash (Currently not fixed !)
+
+v3.0
+- new interface
+- GUI: adjusted the position of the knob
+- samples: to 2048 (instead of 2047)
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+- fixed some resources not included for protools by xcode
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+
+v5.0.3
+- IMPROV: use DelayObj => avoids clicks when turning the knob
+- IMPROV: when changing the sample rate, the "ms" text field is now updated
+- FIX: when playing zero zones, the delayed sound stopped with clicks 
+=> disables AllZero() test
+
+v5.0.5
+- animated logo
+
+v5.0.6
+- better delay line (to avoid rumble)
+=> DelayObj4, very good, and makes a good Doppler effect when moving the knob rapidly
+
+v5.0.7
+- recompile with FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles
+- FIX: fixed crash
+- REFACT: code clean
+
+v6.1.0
+- IMPROV: port to linux
+- TEST: tested memory: ok! doesn t need optimization
+- FIX: fixed compilation
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation

@@ -1,0 +1,1589 @@
+v5.0
+- GuiHelper7: for file selector control
+- TrialMode4: for GuiHelper6
+- Added file selectors
+- moved the interface elements
+- Implemented AudioFile for reading and saving files
+- Implemented loading to the spectrogram (basic)
+- Implemented glsl shader colormap
+- FIX: avoid white image when there is no data
+- Test to display a big file
+- added resampling when loading (not well tested)
+
+- zoom with data refinement
+- FIX: log option now updates the view
+- smooth display using overlapping and lines history
+
+- adaptive overlapping depending on the zoom (for display)
+- selection: graphically implemented
+
+- started to implement play (graphically works but bugs)
+- movable selection rectangle
+- FIX: the sound of the file was output just after opening the file
+- FIX: the play bar ran, just after opening a file
+- FIX: fixed playing selection !
+
+- FIX: small x translation when zooming, each time in the same direction
+- Spectrogram : GL texture interpolation linear => better !
+
+- FIX: fixed a crash when we dragged the selection outside
+- FIX: strange code for y selection computation
+- FIX: select then zoom, then drag selection: selection size changed
+
+- FIX: play bar bug when zooming (display and play sound)
+- FIX: play bar was reset after zooming
+- FIX: update spectrogram texture only when necessary
+
+- Selection modification by dragging the borders: ok
+- Keep in background the full spectrogram, scaled, to agoid black margins when dezooming
+
+- Play from the bar: ok !
+- FIX: selection bar just after file opened
+- IMPROV: when playing, rewind the play bar when necessary (bar changed, new selection).
+- FIX: debugged more playbar/selection when zooming
+
+- TESTs for zoom to get full scale background
+- zoom on full data is working ! (Draft)
+- set translation bounds when the spectrogram is out of view
+
+- managed view “out of bounds” by filling with zeros
+
+- greatly improved the colormap view
+
+- FIX: fixed some crashed using Valgrind
+
+- FIX: play selection correctly in log scale
+
+- FIX: when translating while playing, the play position was shifted
+
+- IMPROV: pre-fill the display fft obj, to avoid black band on the left when translating right or zooming out
+
+- FIX: OpenGL problem: black borders around the FG spectrogram image
+Added NVG_NIKO_ANTIALIAS_SKIP_FRINGES to nanovg to fix
+
+- IMPROV: display the waveform
+- IMPROV: waveform scale knob
+- IMPROV: waveform / spectrogram display knob
+ 
+- IMPROV: implemented selective colormap (in nanovg) => color only the spectrogram !
+- FIX (automatic): when hiding the waveform, it was still visible but displayed in black
+- FIX: after zooming, the spectrogram turned black a little moment
+- REFACT: created SpectrogramDisplay, to move code from graph to indeêndant class
+- IMPROV: implemented mini view !
+
+- IMPROV: improved the mouse trakcpad precision (wheel)
+- IMPROV: decreased the zoom step for more precision
+
+- FIX: small jumps in waveform when translating or zooming
+- FIX: when zooming greatly the waveform, it was drawn over the mini view 
+=> implemented graph bounds for curves and axis (quick implementation)
+- IMPROV: implemented freq axis
+- IMPROV: waveform curve with background colour curve (to see it on every spectrogram)
+
+- IMPROV: waveform => light blue
+- IMPROV: adjust waveform scale after loading
+- IMPROV: 3 modes of selection (rect, horiz, vert)
+
+HACK: added NIKO_RETURN_KEY_HACK in swell, to catch the return key in IPlug
+
+IMPROV: "enter" => return to beginning (ouch !)
+FIX: select, click and set the bar, zoom: the selection was displayed again
+FIX: when zooming, the bar “selection” was incorrect
+FIX: selection disappeared when translating
+FIX: many bugs of synchro selection/bar + translate/zoom/select
+
+FIX: save correctly (with phases), and without latency  in the result !
+FIX: the previous fix corrects the sound quality when playing too !
+FIX: save (not as…) button saves without prompting a file selector)
+IMPROV: shifted waveform to compensate latency if Fft in the display
+
+v5.1
+=> Cut command implemented => TO TEST !
+=> CopyPaste command implemented
+- tests fixed for refresh data => crashes
+
+- Fixed the cut command (so it works)
+- Fixed the undo mechanism (so it works)
+- Fixed copy-paste (so it works)
+- Fixed copy-paste undo (so it works)
+
+- When pasted, set the selection to the paste rectangle
+- Improv: edition zone better aligned with selected zone
+- FIX: correct selection when copy-paste while zooming
+- FIX: fixed crash when cutting outside the data
+- FIX: fixed crash “copy, paste, undo, paste”
+
+- IMPROV: implemented MouseMod when KeyDown in WDL + Cmd-xcvz instead of only the letters
+- IMPROV: when undo, set selection to the the previous block selection
+- IMPROV: implemented the dragging of the pasted zone (not optimised)
+
+- FIX: when undo, the selection was in a bad state (when click to drag, it disappeared)
+
+- FIX: when pasting, the sound was played briefly
+- FIX: when cutting or pasting, there was vertical bands in the spectro => fix with fades
+- IMPROV: when editing, only the edited section of the waveform is re-generated
+
+- FIX: cut, undo or copy paste in place => the selection moved a little
+
+- IMPROV: implemented texture/spectrogram inpaint
+- IMPROV: inpaint engine: select inpaint horizontal or vertical
+- FIX: in paint: log scale problem of the border => kept only one mask pixel around  
+- IMPROV: colormaps improvement, can now choose good colormaps in the interface
+
+- FIX: when GUI size increased, the graph display was blurry (done: changed the fbo size)
+- FIX: select a rectangle, resize the gui to big, make a zoom => the rectangle was shifted
+- FIX: put the bar, resize GUI => The bar was shifted (put somewhere wrong)
+- FIX: when the data was modified, the mini view waveform was not
+- FIX: when changing plug size, miniview waveform was not updated in width
+- FIX: Fixed a waveform alignment when changing size
+- IMPROV: disabled drag paste (was too slow, and often crashed)
+- FIX: keyboard shortcuts worked only if the mouse pointer was over the graph
+- IMPROV: in the plug version (non-app), disabled the keyboard shortcuts !
+
+- IMPROV: ordered all the widgets !
+
+- IMPROV: improved the in paint algorithm for single direction 
+=> better vertical inpaint for hight frequencies for example
+
+- FIX: when dragging from near the play bar, the program believed it was the border of a selection
+- FIX: crashed when quitting the app
+- FIX: draw a rect, click outside and drag: that translated the rect instead of drawing a new one
+- FIX: select, cut, undo => when Xcode memory check enables, it crashes
+- FIX: uninitialised values and out of bounds at init
+- FIX: hack for vertical bars removal => process all buffers when loading (no step)
+
+FIX: waveform: the sample decimator was a little buggy => there were some flat zones at 0
+FIX: BUG: undo when nothing to undo => the data was displayed duplicated
+IMPROV: zoom on the cursor and not on the bar
+IMPROV: when putting the bar, selected until the end of the file (and not the end of the view)
+FIX: fixed selection rectangle jittering when zooming and de-zooming
+FIX: when zooming, the bar and the selection were slightly shifted (selection drift)
+FIX: paste was not pasted where it should be
+FIX: click to put the bar, play didn’t start. Needed to click a second time
+FIX: fixed a crash when pasting after the highest bound of the data
+IMPROV: pluging version: aquire / render, and scroll (very buggy for the moment)
+
+IMPROV: stop spectrogram scrolling when stop playing
+FIX: when changing GUI size in view mode, the spectrogram scroll stoped
+IMPROV: disable mouse on spectrogram when not in edit mode
+IMPROV: hide bar and selection when not in edit mode
+FIX: when going from acquire to edit, the spectrogram disappeared
+FIX: waveform display/hide when changing mode
+FIX: transform and miniview didn't reset when goind from edit to acquire
+FIX: synchro of everything when changing mode
+
+IMPROV: at starting, set bar pos at 0
+FIX: acquire, edit, press play => no bar
+FIX: plug version: edit mode, make a loop, press space => Reset() is called and selection is broken
+FIX: play in edit mode and both in the host: we eared a bit the sound of the host
+FIX: BUG: there remained some inner data when changing modes
+FIX: playbar was not well at the beginning
+IMPROV: debugged the 4 plug modes
+FIX: when acquiring, computing the wafeform is too slow => disabled !
+FIX: when choosing render, set zoom to 1 and center the view
+
+IMPORV: Rollover buttons (and colour change when checked)
+IMPROV: by default, check the "small gui" button
+FIX: buttons for file selector are buggy
+IMPROV: double-click on the mini view => reset mini view
+IMPROV: squares for GUI resize (instead of big buttons)
+IMPROV: improved the design of rollover buttons and icons
+
+REFACT: code clean, Icontrol, Guihelper, Ghost
+IMPROV: dble click / alt-click => reset param
+IMPROV: reorders mode radio options
+IMPROV: hide the file menu when in plugin mode
+IMPROV: plugin mode, placed correctly the mode radiobuttons in the interface (instead of file open)
+IMPROV: editable text fields for knobs
+IMPROV: better style to editbale text fields (width, colors font)
+NOT REPRO: BUG: plugin, choose edit mode, put the play bar in the middle, switch to render mode, play => the play doesn't start from the begining, but from the middle
+FIX: start, load, press space => the progressing play bar was not displayed
+FIX: app version: select, cut, click to set playbar somewhere else, play, undo, play =>
+the bar should not stick to the undone selection !
+FIX: rollover on "file open", the right part does not hilight
+FIX: translate, ctrl-z (without history) => the view bounds/zoom changeed
+FIX: aligned correctly plugMode radiobutton zone
+FIX: disabled play button when not in EDIT mode
+FIX: synchronised the state of the play button with the spacebar key
+
+IMPROV: double the texts and the selections with a black background (to see them well on white spectrogram)
+IMPROV: diagonal overlay for axis text => better visibility
+IMPROV: horizontal axis with adjusted time values depending on the zoom
+FIX: horizontal axis was not yet well placed when choosing medium or big GUI size 
+IMPROV: more clear axis label, to see them better
+FIX: vertical axis show/hide with the different plugin modes
+IMPROV: aligned widgets better
+
+IMPROV: re-added the Wasp colormap
+IMPROV: implemented files dragndrop (on Mac)
+IMPROV: implemented response to “open file” event => so reaper can use Ghost as external editor
+FIX: fixed validation in Logic (Meta type parameters)
+
+TEST: tested "bounce in place"
+FIX: Protools latency when commiting track (acquire + render)
+FIX: when saving stereo, the first channel was garbage 
+(suppr generateSavechannels + AudioFile save same /open format)
+TEST: tested fully Logic external editor: ok
+TEST: reaper external editor: ok
+
+FIX: Reaper, open external editor: ti tsu koi => sound only on left ear when playing in Ghost
+TEST: check latency logic (external app + bounce in place)
+FIX: Protools, capture: played the last line in loop (buzz)
+NOT-REPR: replace option now crashes (reaper, externel editor)
+NOT-REPR: save as -> button hilight: same bug as was for rollover (border not hilighted)
+
+OPTIM: do not recompute 2x the data when opening a file (FORCE_REFRESH_DATA)
+(that was done for fixing a spectrogram shift, but the bug disappeared)
+IMPROV: set back ADAPTIVE_OVERSAMPLING to 1 => better display when zooming
+IMPROV: set RECOMPUTE_DATA_DELAY = 500 (more reactive update !)
+TEST (failed): FULL_STEP_PROCESS=0 + make the sum of the skipped buffers (prop: sumFFT = sumSamples !)
+
+REFACT: clean code in SpectrogramView
+IMPROV: ADAPTIVE_OVERSAMPLING: tweak well the changes
+TEST: checked for quality / step
+TEST-PROFILE: FULL_STEP_PROCESS=0 load Bees&Birds: 2.2s=>1.6s !
+TEST: this may be the generation of the waveform that takes a lot of resources ! (no) : ok
+IMPROV: USE_AVG_LINES: 1 => 0 (less blurry)
+TEST: re-checked in view mode if it's ok
+
+OPTIM-MEM: (SpectrogramView): B&B => 406MB => 368MB
+FIX: avoid consuming a lot of memory when zooming at the maximum, 
+then de-zooming at the maximum
+FIX: fixed the problem of refresh when zooming directly at the maximum
+(before, we had to dezoom a little to have a good refresh)
+- FIX: memory fixes and loading speed fixes
+
+v5.7.3
+IMPROV: SpectroEdit which doesn’t compute the whole spectrogram at startup 
+(compute on the fly) => lots of new bugs !
+
+- FIX: Plays correctly, and plays selection correctly
+
+- FIX: cut correctly in the selection bounds (the spectrogram data is generate on the fly)
+
+- REFACT: big code clean
+
+- FIX: replace command now works again
+- FIX: play / play selection now works again
+- FIX: remove a play step of all the frequencies when looping, just at the end of the loop
+- REFACT: corrected many *overlapping and /oversampling, that was incorrect, and cancelled themselves (and made bugs)
+- REFACT: suppressed all the commented *// overlapping (tagged “MODIF 1 -> 3”)
+
+- FIX: re-made the copy-paste (almost) work
+- FIX: problem when cutting or replacing almost outside of the spectra data (the borders)
+- FIX: correctly managing bounds, for edit: FftObj with managing zero buffers when going out
+- FIX: could not copy paste on the borders
+- FIX: undo mechanism working again
+- FIX: edit: there was an horizontal shift when pasting, cutting...
+- FIX: when undo, the selection was not restored to previous selection
+- TEST: re-activate and test adaptive oversampling: ok
+- TEST: all the modes (view etc.): ok
+- TEST: re-tested on big file
+
+v7.5.8: port windows
+
+libsndfile: won't compile on Windows => advices by libsndfile to download the binaries for windows
+- file loading deactivated for the moment
+- FIX WINDOWS: the waveform was red => fixed by activating SWAP_COLOR macro for Windows in GraphControl
+- FIX WINDOWS: the spectrogram was not displayed
+	- changed the texture format when creating the texture (R_32F -> RGBA, FLOAT->UNSIGNED_CHAR)
+	- made a nvUpdateImage() after each image re-creation
+- TEST: tested all on windows (VST2): ok
+- FIX: loading/saving: ok, with libsndfile-MSVC
+- TEST: the app is working well 
+
+=> port windows seems good
+
+v5.7.9
+- IMPROV: edit mode, play, switch to view mode => the play gets now hidden
+(same for capture mode)
+- FIX: undo a small replace => this is not undone (that was due to 2 times replace)
+- IMPROV: "Range" -> "brightness"
+FIX: Mono file (e.g AcGuitar2): had to undo 2 times to really do the undo
+FIX: load mono, cut, undo, load stereo, cut, undo (that was not undone)
+FIX: when editing before the data start bound, the spectrogram shifted
+
+FIX: when sliding the view, then wait 1 second, the spectrogram shifted
+FIX: shift when editing, (sometimes) => seems fixed
+FIX: there was a shift between waveform and spectrogram (confucius short2, no zoom)
+=> slide with miniview: the shift increased
+IMPROV: alignes channel size to buffer size => this fixes the previous bugs
+
+v5.8.1
+IMPROV: Ghost-X / GhostLite: generated a different plug id (VST) 
+FIX: (definitely) sometimes slight shifts of the spectrogram when editing
+IMPROV: “Replace” -> “Inpaint”
+
+FIX: Release Build on Mac got stuck => changed lipo
+
+v5.8.2
+windows version for fix drag file and open external edit Reaper
+- FIX: fixed a big font problem => the font on Windows now looks like the one on Mac
+- IMPROV: implemented drag n drop files on Windows
+
+v5.8.3
+- FIX: fixed some memory leaks in GuiHelpers9
+- CHECK: checked for memory leaks (this looks ok)
+- CHECK: under Reaper, under Debugger, with xcode men tools (only) => 
+crashes after a while when reaper windows is under xcode windows
+- FIX: on Reaper, capture, switch to edit. When played, there was a latency of ~1s
+- IMPROV: re-enabled DRAG_PASTE_BUFFER (in release, on small zones, that is ok)
+
+TEST: tested with a real mouse and the wheel
+IMPROV: implementing alt+mousedrag for zooming (when we don’t have mouse wheel)
+CHECK: checked file size after AlignChannelsSize()
+FIX: re-checked and fixed latencies
+FIX(bug not reproductible): sometimes copy-paste didn’t paste
+
+IMPROV: managed memory better when loading big files
+FIX (bug not reproductible): when zooming and de-zooming extremely, the memory goes to 1GB, then decrease back to the normal value of 500MB (on long track)
+CHECK: profiled the memory, used in place transforms when possible to avoid memory peaks
+FIX(bug not reproductible): edition is very slow on big files
+
+NOTE (old): do we regenerate the whole spectrogram image after GenerateSaveChannels ?
+TEST: tested on a 40mn stereo files => it works ! (but a bit slow)
+
+- FIX: fixed a problem of makedist-mac.cmd => a comment was gripped in resource.h
+
+- IMPROV: on windows, implemented Reaper/external editor (pass the file name on cmd line)
+
+- IMPROV: reduced the size of the medium interface 
+(so it is just between the little one and the big one).
+
+- FIX: fixed installer (included app, changed readmes)
+- IMPROV: installer on Windows (embeded app)
+
+v5.8.4
+- FIX: Protools: capture on mono track, click edit => Protools crashed
+- FIX: Protools: when cut, DoCutCommand() was called 2 times, and the the plugin freezed
+- FIX: there was a shift of the stereo right channel after edition (gain) if at the beginning of the file (heard as phasing)
+- IMPROV: improved smoothness of the display (by setting up 200fps)
+- IMPROV: when moving the selection during playback, updated the playbar 
+in BOTH directions (“captured” it inside the moving selection)
+- TEST (failed): optimize waveform display => make 2 modes of decimations depending on the number of points
+- IMPROV: do not compute waveform if we display only the spectrogram, or if the scale is 0
+
+- FIX: select a rectangle, play it, double-click on miniview
+=> play button didn’t launch play anymore
+- FIX: after view reset, had to click one time to put the bar before beeing able to draw a selection (and play bar moved strangely)
+- FIX: cut (and other edits) while playing => the playbar hides (and playback is on all)
+- FIX: click on the interface size rollover button already selected: playback stopped
+- BUG(not reproductible): Gain with selection outside of the view => it freezes (Protools)
+- CHECK: checked stereo processing
+- IMPROV: avoid erasing the sound after selection in RENDER mode 
+(do as bypass when spectrogram playback is finished)
+FIX: in render mode, the edit buttons were still enabled
+
+- FIX(Windows): ctrl c, v, b, and return didn’t work
+- FIX(Windows): re-click on GUI size button stopped playback
+
+- BUG(not reproductible): Protools: white rectangle / mutex lock stuck
+render and commit track, choose "source track->delete", and make some undo
+=> when the plugin re-appears, it freezes (white rectangle)
+- BUG(not reproductible): in plugin mode, the current gui size button is not hilighted at startup
+(so we can re-click it, and it freezes the playback once)
+- TEST: tested all the formats on Mac and Windows: ok
+
+- MODIF: re-passed the fps to 25fps (just in case)
+- BUG(not reproductible): mandatory bar click before been able to select (after plug mode to EDIT ?)
+- IMPROV: made work in AudioSuite ! (+ updated the manual)
+
+- CHECK: tested Protools AudioSuite on Windows : ok
+- FIX(Windows): fixed GUI resize for Protools
+
+v5.8.5
+=> for building installers
+FIX: problem refresh Protools (installer version, Mac): after having zoomed, we must re-zoom slightly to refresh the spectrogram
+- BUILD: build windows and tests: ok
+
+RELEASE ON WEBSITE
+
+v5.8.6
+“BUG Logic Pro X 10.4.1 / Mac OS X Sierra” (user feedback)
+	- waveform not shown (certainly in view mode)
+	- “crash” when changing view size (certainly host overload (logic)
+
+- IMPROV: display the waveform in view mode
+- IMPROV: removed two mutexes for gui resize
+- FIX: capture, then change the gui size: the waveform and the miniview appeared
+- FIX: Protools, view mode, when stop playback, the waveform continued to scroll
+- FIX: view mode, then edit => the data was editable (not cleared before quitting view mode)
+
+v5.8.7
+- optimization of the waveform decimation (pyramid)
+	- implemented for file opening
+	- implemented for view mode
+	- re-activated waveform in capture mode and implemented pyramid
+	FIX: capture long region: after 20s, the waveform became messy
+	- updated the pyramid after edit of the spectrogram => waveform is now updated !
+- implemented 2 more colormaps
+
+Failed release 5.8.7 (AUval and other…)
+- there was a mix with the previous version which failed auval (5.8.6 + 5.8.7 mismatch)
+- the plugin name in the menu and on the track was not changed)
+=> solution: make clean all between build of Ghost and Ghost-X
+=> rebuilt installers (mac only) and put them online again (9 oct 2018, ~22H)
+- on the site, there are name “dmg_-1.zip”
+
+To make it work in Logic:
+- delete plugin
+- launch logic
+- install plug
+- relaunch logic
+
+v5.8.8
+- port to pugl
+- fixed a problem of display (colormap 4)
+- FIX(in 3 parts): select view, play, select acquire, play, select edit
+             	   then select view again => the spectrogram scrolled too fast
+		   (due to adaptive oversampling not at 4)
+- FIX: now manage “aiff” files (with 2 ‘f’) in addition to “aif” (with a single ‘f’)
+
+- NOTE: changed path to libsndfile in release
+
+- FIX: in Reaper: - insert two Ghost-X in two tracks
+		  - play the first track to display the spectrogram
+    		  - delete the second Ghost-X
+    		  => The first spectrogram is not displayed anymore (black)
+    		    (but the waveform is still displayed)
+
+- FIX: Reaper, buffer size 447: when in capture mode, the right part of 
+the waveform became glitchy
+
+- FIX: standalone, copy, then paste before the beginning of the sound => it crashed
+
+v5.8.9
+- FIX: Fixed bad freq axis values when high project sampling rate
+(computed correctly the frets and not “by hand” like before.
+
+v5.9.0
+- animated logo
+- Fft15
+- Fixed correctly latency problems (different shifts depending on the modes ?)
+- graph without borders (increased graph.png size)
+- FIX: the guy was not resized according to the saved gui size button when re-opening
+(from Waves)
+- FIX: Reaper, Mac: intantiate 2 Waves plugins, then change the size of the interface several times => we will loose the display on the second plugin (bug on Logic too)
+- FIX: double click on gui resize button => inconsistent hilight + graph disappeared
+- FIX: Alt + click on guy resize button => graph disappeared
+- FIX: Since FftProcessObj15, there was a vertical line on the left of the edited aread (even with void edition)
+- IMPROV/FIX: Avoid keeping a band of samples when cutting on the left or right with overlap
+- FIX: avoids waveform that looks right and sounds right in Ghost-X, but that clips 
+after exported and imported in another software
+(force clip the waveform when loading, editing, and capturing)
+(so the user can see if it clips directly in Ghost-X)
+- FIX: fixed waveform clipping in view mode, that changed the sound 
+(whereas we must only bypass)
+- Port to Fft16
+- FIX: added code for finding latency (FftProcesSObj16::ComputeLatency())
+- FIX: finally, removed the code for latency fix (this was bad / not useful)
+- TEST: tests on Protools (capture + real time play is impossible without delay)
+- DOC: updated the manual
+- FIX: Ableton 10 and FLStudio 20, Sierra, VST format: Chroma and Waves for example crashed randomly. Fixed in IGraphics NIKO_FIX_RESIZE_VST_CRASH
+
+- FIX(win): Fixed graph text that was not displayed on Windows
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.9.1
+Optimizations
+- ColorMap4, GHOST_OPTIM: avoid generating colormap continuously (-7%)
+- BLSpectrogram3, GHOST_OPTIM: optimized PhasesToStdVector() (-2%)
+- Try to optimize GL:
+	- GL view on mac for plugin window
+ 	- Many adjustments “GHOST_OPTIM_GL”
+	- the spectrogram is now rendered more efficiently (no more glReadPixels)
+	- BUG: this is no more possible to edit knob text values
+	- PROBLEM: the rendering of the knobs makes the overall slow
+ 
+v5.9.2
+- tests to fix GL (blinking buttons)
+
+v5.9.3
+- code refactor
+- render graph: ok!, render other gui: ok !
+- FIX: fixed big flickering (white bands) when resizing GUI
+- FIX: the editable text field did not appear anymore since NSOpenGLView
+- FIX: flickering title texts of radio buttons labels
+(FIX: FIX_TEXT_LABEL_RECT => compute correct rects)
+- FIX: avoid controls blinking during 1 second when moving them quickly
+(FIX_BLINKING_CONTROLS2)
+- FIX: standalone version: the GUI was blank
+- FIX: standalone, the level when played in standalone was lower compared to other apps 
+(tested compared to VLC, modified the macro: APP_MULT)
+- IMPROV: added a button for “huge” resolution (5k for example)
+(RETINA_RESIZE_FEATURE)
+- IMPROV: gray out the huge guy size button if resolution is too low
+- IMPROV: constant speed for spectrogram whatever the sample rate
+(CONSTANT_SPEED_FEATURE)
+- FIX: FftProcessObj16 / Ghost-X: FIX_FFT_SAMPLERATE
+- FIX: new fix for standalone version blank GUI
+same FIX: fixes blank plug guy when closing windows an reopening it
+(method: ResetGL())
+- FIX: fixed potential crash when quitting
+- FIX: Logic, crash when closing the plugin window (ResetGL())
+- FIX: Logic, hide plug windows then re-show it => the spectrogram area was blank
+
+v5.9.4
+- refactor GHOST_OPTIM_GL (mac)
+	- GHOST_OPTIM_GL defined only once in
+	resource.h
+	- checked that all is still working (GHOST_OPTIM_GL on and off)
+
+v5.9.4 / windows
+FIX: fixes fonts not initialized in graph for Ghost-X standalone
+(FIX_FONT_NVG_GRAPH_SA)
+TEST: test WIP for GHOST_OPTIM_GL windows
+	- flickering when moving window on windows 7 + VirtualBox
+	- nvgCurves are red instead of blue
+	- editable text field doesn’t work well for the moment
+
+v5.9.5
+- REFACT: set SetGhostOptimGLFlag without “static” (think of windows version)
+- FIX: make GHOST_OPTIM_GL it roughly work on windows (some bugs)
+- FIX: the waveform was red on Windows
+- FIX: the logo was not animated (not pulsing) (on Windows)
+- FIX: after zooming, the spectrogram was not recomputed) (on Windows)
+=> these two bugs were due to WM_TIMER never called, because WM_PAINT was always called instead (missing ValidateRect).
+- FIX: the previous fix fixes also freeze when editing knob values
+Edit a value, hit “enter” => the GUI was freezer
+- FIX: open in Reaper Windows, “window float selected FX” (or the contrary) => blank GUI
+- FIX: Ableton Windows: open => blank GUI
+- FIX: fixed Ableton 10 and Cubase 10 GHOST_OPTIM_GL Windows 7 !
+- NOTE: Mixcraft 8 has the same problem as Ableton 10 and Cubase 10 on Windows 10 (blank GUI). To fix, use the plugins in 32 bit format. 
+- FIX: avoid crash with Ghost (not X), and new retina size button
+- TEST: tested GHOST_OPTIM_GL on all platforms and hosts: OK !
+
+v5.9.6
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- IMPROV: implemented “export selection” (+ anti-click on the borders)
+- IMPROV: updated to SamplesPyramid2 (created for UST) (USE_SAMPLES_PYRAMID2)
+- FIX: view a bit, change GUI size: the miniview waveform sudently appears
+(FIX_VIEW_MODE_NO_MINIVIEW)
+- FIX: capture a piece of signal, change GUI size
+=> the main waveform is not updated (FIX_ACQUIRE_MODE_UPDATE_WAVEFORM)
+- FIX: capture a bit, change GUI size: the miniview waveform sudently appears
+(FIX_CAPTURE_MODE_NO_MINIVIEW)
+- IMPROV: implemented flac support (tested on Mac for the moment)
+- TEST: tested well latency capture/render => ok !
+- FIX: benefit of FIX_HAXIS_COLOR_SWAP
+- FIX: Fixed well vertical lines width horiz axis on windows, due to uninitalized vars
+(FIX_INIT_COLORS)
+
+v6.0.0
+- IMPROV: port to iPlug2
+- REFACT: put every classes in separate files
+- REFACT: use GhostPluginInterface
+- FIX: re-added out gain knob that was missing
+- FIX: restored the correct rollover button size (they were too large)
+- FIX: fixed size and alignment of rollover buttons text
+- IMPROV: rollover buttons, when !toggle mode: mouse down => it become white
+mouse up => it become grey again
+- REFACT: somme refacts in IRolloverButton (unused text->SetColor)
+- FIX: the spectrogram was not displayed  (needed to turn brightness/contrast colormap to see it). (maybe this will also optimize)
+- FIX: the last colormap button was a bit cut
+- FIX: the spctrogram was drawn over the miniview
+- FIX: crashed in “capture” mode
+- FIX: selection and bars were not displayed
+- FIX: selection, bar and play bar were displayed upside down
+- FIX: fixed “yLogScale”, not use the Scale class (more correct and clear)
+- FIX: fixed frequency axis (so same scale as spectrogram)
+- FIX: now can use the cut command, and it cuts at the right place (using class Scale)
+- NOTE: all the commands look fixed (including undo)
+- FIX: in edit mode, there was no sound when playing a selection (or full data with bar)
+=> used a hack somewhere for out of bounds…
+- FIX: now display the waveform again (in the main view)
+- IMPROV: use bevel for waveform curves => so the curve display doesn’t have strange peaks
+(e.g when the waveform zoom is very low, this avoids many ugly artifacts)
+- NOTE: SpectroEditFftObj2::SetDataSelection => disabled swap 
+- FIX: capture mode, waveform, SamplePyramid2 crashed
+- FIX: re-enabled USE_IDLE_CALLS, for OnGUIIdle()
+- IMPROV: applied the fix OnGUIIdle() from iPlug2 (BL_ON_GUI_IDLE)
+=> now the spectrogram is refined when zooming
+- FIX: the bottom line of the miniview was not displayed
+- FIX: at startup, the side lines of the miniview were too thin
+- FIX: post-draw the miniview, so it is displayed over the waveform
+- FIX: when dragging miniview rectangle, that made a selection
+(this was because mouse was detected in miniview, but in spectrogram at th same time)
+=> fixed the miniview bounds
+- FIX: the full background spectrogram was not displayed in background when zooming or shifting
+- FIX: fixed GUI resize (background image, position of controls on X)
+- FIX: fixed bugs when resizing view (in EDIT and RENDER modes) => black spectro
+=> fixed spectro texture regeration
+=> was necessary to save the spectrogram transforms)
+- FIX: view, capture + resize GUI => black
+- FIX: view, resize GUI => waveform disappears
+- FIX: render, gui resize => black spectro
+- FIX: resize gui => the play bar was reset
+- FIX: drawn selection got messy after resizing
+- REFACT: small code clean, and commented unused code
+- IMPROV: Init() in constructor, and removeed flags processblock::uiopened (and for all other plugins)
+- FIX: capture, edit, make reaper transport play: when resizing gui, we heared some sound briefly
+- NOTE (bug, not repro): some empty parts of the spectro were grey instead of black after resizing
+- FIX: the time axis was displayed over the miniview
+- REFACT: refactored axes x offset and y offset
+- IMPROV: fixed time axis (in all modes)
+- IMPROV: choose significant time axis labels 
+(and not fixed position, with not relevant values)
+- IMPROV: display the correct number of digits when seconds + ms (GraphTimeAxis6)
+(avoid displaying too many digits, while keeping enough precision to avoid duplicate values)
+- IMPROV: avoid a bit the popping of extreme label values
+- IMPROV: GraphTimeAxis6: fixed really well label generation and display, when zooming
+=> now the labels have good values, and are well spaced! 
+(improvemement compared to Ghost-v5.0)
+- TEST: checked GraphTimeAxis6 in GhostViewer
+- FIX: when plugin with a graph was resized, the graph background bitmap was not resize and the extents were displayed in dark grey. In Ghost, this means dark grey margins in the rightmost part of the graph, when resizing more.
+(FIX_RESIZE_GRAPH)
+- IMPROV: re-added “FIX_AUDIOSUITE” (put the code in GhostPluginInterface)
+- REFACT: code clean
+- REFACT: SA_API => APP_API
+- REFACT: ProcessBlock(), make more clear the different modes
+- IMPROV: integrated correctly the monitor option
+- IMPROV: gray out the monitor option when not used
+- REFACT: remove HideHAxis(), that was not used
+- REFACT: big code clean
+- IMPROV: gray out the unused buttons, depending on the modes (all edit controls)
+- FIX: reset correctly the view when passing from one mode to another
+- FIX: the play button had inconsistency (e.g, at loading it was toggled on)
+=> toggle off the play bettuon each time we change mode (this fixes all)
+- FIX: zoom with mouse pointer as zoom center (as it should be)
+- FIX: fixed compilation of App
+- FIX: re-added file open/save … controls
+- FIX: re-enabled file drag n drop for app, and keyboard shortcuts
+(changed the mechanism) (drafty code)
+- REFACT: big code clean after file drop and key catcher mechanisms
+- FIX: standalone: load one file, load a second file: the spectrogram background image was still the one of the first file
+- FIX: update correctly MiniView waveform after a GUI resize
+- REFACT: renames SpectrogramDsiplayScroll::Transform to “State”
+- FIX: keep the background spectrogram in the state, so after resizing, 
+we have correct background spectrogram
+- FIX: managed better the spectrogram / full data spectrogram update
+(managed better the if {}
+- REFACT: remove big code (that was for 1x1 pixels spectrogram)
+- FIX: when debug display only background, translate and zoom, then resize GUI
+=> the background spectro texture was totally messy
+(this was because the pextrogram data changed)
+=> now, keep the background spectrogram size provided at the beginning.
+(because data size changes after)
+- REFACT: SpectrogramDsiplay2 => renamed “full” to “bg” (spectrogram, image etc.)
+- FIX: app, open a file, open a scond file => the background spectrogram was not updated
+- NOTE: choose to not display data edit modifications in the background spectrogram
+- NOTE: re-enabled foreground spectrogram
+- REFACT: renamed “fullSpectorgram” to “bgSpectrogram” in Ghost
+- FIX: in plug mode, regenerate the background spectrogram each time when capturing
+- TEST: tested background spectrogram + foreground => all is ok!
+=> this seems better than iPlug1 version!! This is very good looking. Maybe a previous bug has been fixed.
+- IMPROV: passed XCode “thread sanitizer”, and fixed mutexes
+- FIX: app: open confucius (drag file), then open 440Hz (shorter) file 
+=> the miniview waveform was not updated
+- IMPROV: updated the play button when we start/stop the playback with space bar
+- FIX: when dezooming, and spetro refine, there was 2 vertical lines at the borders 
+=> modified the nanovg shader, so that when using colormap, border aa is ignored
+- FIX: at startup, with no data, sometimes the graph blinked
+- FIX: Avoid brief garbage display when app just starts (done for Ghost) (changed iPlug)
+- IMPROV: app: toggle off the play button after loading a new file
+- IMPROV: added nanovg optimizations from awtk
+=> optimizes standalone from 70% to 35/50% (very good) (@60fps)
+- FIX: when dezooming, there was small pixel borders around the image (again)
+=> added several new times in the shader: "if (useColormap > 0.5) strokeAlpha = 1.0;\n"
+- TEST: checked that NSVG_SHADER_FAST_FILLIMG and so on were called: ok!
+- IMPROV: disabled anti-aliasing in nvgCreateContext() => seems to slow up
+(at the least, the CPU dos not increaase without reason)
+- TEST: re-tested Ghost + buffer size 512 => it doesqn’t crackle anymore!!
+- TEST: tested to re-set plug fps to 25 (instead of 60fps)
+@60fps: 40/44%(moving) CPU => @25fps: 20/27%(moving)
+=> very interesting!
+- FIX: passed undefined behavior sanitizer (using old xcode and flag -fsanitize=undefined)
+- FIX: fixes after Panogram and PlaySelectionPluginInterface 
+(fixed infinite loop when zooming)
+
+v6.1.0
+- IMPROV: port to linux
+- FIX: Linux - Fixed refresh good res spectro after zooming
+- FIX: Linux - fixed file filters (for file open...)
+- FIX: Linux - fixed file open sound file (extensions)
+(BL_FILE_FILTER_PATCH)
+- FIX: at app startup, all the time axis labels were stacked on the left
+- FIX: sometimes the "huge" gui button appeared, and even on a small screen
+(this was because GetScreenResolution() was not yet implemented on Linux)
+- OPTIM: first step of memory optimization (just for the default app state)
+280Mb -> 68Mb
+- OPTIM: memory optimization, for the view mode (used FastQueue and tmp buffers)
+31GB -> 112MB 
+- FIX: fixed bugs after memory optimization
+- NOTE: allocate SamplesPyramid2 staged all at the beginning
+(otherwise it makes crashes when vector::resize(WDL_TypedFastQueue)
+(FIX_VEC_FAST_QUEUE_RESIZE)
+- FIX: passed valgrind and fixed a problem when resizing the gui while playing
+- TEST: passed valgrind+gdb => no problem!
+- TEST: checked in plugin mode, if the time axis behaves correctly after resizing the GUI (like the bugs in Panogram) => ok!
+- REFACT: some code clean
+- FIX: standalone: load file, zoom => crash
+- FIX: standalone, open "440.wav" => the waveform does not appear,
+we must zoom so the waveform appears
+- IMPROV: implemented dragndrop on Linux (using swell)
+- IMPROV: file open, save etc. => added to File menu
+- IMPROV: open manual with menu + "better" about section
+- FIX: when opening file browser, the menu didn't hide (it was over file browser)
+- IMPROV: removed file open etc. buttons from the UI
+(they are now in the File menu)
+- IMPROV: removed the "Export selection" menu entry for Ghost Lite
+- IMPROV: added keyboard shortcuts for File menu options
+- FIX: fixed Menu Debug -> selecting an option made crash (null menu)
+- FIX: now load font RobotoRegular, because it is the IGraphics default font
+(and it is used to display debug fps)
+- FIX: fixed _DEBUG flag, to have the debug menu only in Debug
+- FIX: do not add gui resize button label if label is empty
+- IMPROV: improved colormaps choice, and re-order the colormaps
+(replaced 2 colormaps by better ones)
+- IMPROV: implemented cut then paste
+(we already had copy then paste, but when we cut, we could not copy after)
+- IMPROV: zoom more on waveform & spectro!
+- FIX: fixed SpectrogramView::GetViewDataBounds2(), that can return reversed interval
+(FIX_BIG_ZOOM)
+- IMPROV: Improved TimeAxis6 to display very small millisecond tenth values
+(for big zoom)
+- FIX: Big zoom on the right part of the waveform
+=> after a given zoom level, the waveform stops zooming
+(SamplePyramid2::FIX_BIG_ZOOM)
+- FIX: disabled DRAG_PASTE_BUFFER, that could make crash (pthread mutex)
+when dragging a just pasted selection
+(assertion fail in debug, mutex is not recursive)
+- TEST: tested read and write slices without transformation => the signal is the same!
+(except some very small variations at coeff = signal*2.5e-5)
+- IMPROV: implemented SpectroEditFftObj3 (more clear)
+- FIX: playing the spectro didn't work anymore
+- FIX: fixed WriteSpectroDataSlice()
+=> now, it is transparent if we don't replace in fft obj (if just bypass)
+- FIX: fixed latency in ReadSpectroDataSlice()
+=> now, when reading magns, and writing them, it is transparent
+- NOTE: (bypass command), now ReadSpectroDataSlice() then Write() is transparent
+- REFACT: big code clean
+- REFACT: put spectrogram/samples convert in a separate class GhostSamplesToSpectro
+- IMPROV(other): generate tags without Attic
+- TEST: tested Reaper menus: when opened they are not bounded to the Reaper window,
+they are floating (as it is with Ghost menus)
+- NOTE: old idea: shift + drag on the miniview, when zommed a lots
+=> could drag slowly
+=> no need, we can already drag slowly by ctrl+drag on spectrogram
+- FIX: GhostSamplesToSpectro(): now everything is well aligned!
+- REFACT: refactored GhostSamplesToSpectro
+- REFACT: cleaned debug code in GhostSamplesToSpectro()
+- TEST: tested the fix: cut/undo => sine and spectro artifacts: ok!
+=> there are no more artifacts at all, the signal is perfect
+- FIX: fixed crash with SamplesPyramid2 and big files (~ > 2MB)
+- FIX: fixed had waveform clipping that made problems e.g in copy-paste
+- FIX: copy, paste, undo => there remained some small sounds around
+=> this was due to waveform clipping during editing
+- IMPROV: copy, paste undo, cut => implemented good fades!
+- IMPROV: use sigmoid for fades (BLUtils::Fade2 and BLUtils::Fade2Double)
+=> the continuity is far better with sigmoids!
+- NOTE: for undo, no fade, we must past the signal as it was saved
+- FIX: managed accurately when editing with out of bounds selection
+- FIX: manage well when fading with out of bounds selection
+- NOTE: when we cut noise (only high freqs), the waveform increases
+=> this looks strange, but this is normal
+- NOTE: when we cut-paste noise, the waveform increases
+(except if we take all the frequencies in selection)
+
+
+v6.1.1
+- REFACT: moved almost all from GhostSamplesToSpectro to SamplesToMagnsPhases
+- REFACT: duplicated some objects, and some code clean
+- REFACT: removed some unused code, and indentation
+- REFACT: removed some unused code
+- FIX: fixes to make new SpectrogramView2 work
+=> it is starting to work
+- IMPROV: re-added adaptive overlapping when zooming
+- TEST: tested that the number of spectrogram lines increases when
+increasing oversampling: ok!
+e.g 8x, 100 lines and just after 16x, 200 lines
+- FIX: fixed crash in debug due to relock a locked mutex
+- IMPROV: created SamplesPyramid3, to debug (it seems not aligned)
+- FIX: SamplesPyramid3: ask for the whole file size => we got haf the samples
+
+- BUG: select a part, zoom => the selection is toggles off
+- BUG: many crashed (due to assertions) when zooming, dragging, hitting "enter"
+- TODO: make waveform and spectrogram exactly aligned, when ZOOMING and SCROLLING
+- TODO: decrease oversampling until 1 if necessary, to avoid the number of computations (we must not have more magns than pixels in the screen!) (Try with a very long file)
+- BUG: export selection => the sound plays a little while exporting)
+(try with white noise)
+- FIX: fixed last pyramid samples that was not managed when building pyramid
+(for odd input buffer) (BLUtils::FIX_ODD_DECIMATE)
+- NOTE: tested DecimateSamples(), used for SamplesPyramid3,
+with a series of 10 impulses
+- FIX: DecimateSamples(): avoid double impulse peaks (FIX_SAMPLES_REUSE)
+- FIX: DecimateSamples(): ensure that we keep the first sample value
+(FIX_FIRST_SAMPLE)
+- IMPROV: DecimateSamples() for odd buffer size, adjusted the decimation factor and the size of the result buffer (FIX_ODD_DECIMATE) (not sure it is useful)
+- IMPROV: created DecimateSamples3(), to fix last value
+=> works very well (and fixes last value
+- FIX: fixed missing last sample (sometimes) when getting SamplesPyramid3 values
+(tested with example 10 impulses => ok)
+- NOTE: commited this version before code clean
+(remains: buf pop when big zoom, and todo spectro align on waveform)
+- REFACT: big code clean (Ghost, SamplesPyramids2, BLUtils::DecimateSamples3
+- FIX: select, cut => crash! (with sound played very loud)
+=> there were missing mutexes betweek KeyPress() and ProcessBlock()
+- FIX: re-enabled FIX_BIG_ZOOM (witouth, big zoom was really messy)
+- IMPROV: use a new separate fft obj (DispGen) dedicated to generating
+slices of spectrogram
+- REFACT: removed an unused big function
+- FIX: select, zoom => the selection disappeared
+(that was because of a minus (+ 1) removed from SpectrogramView2) 
+- FIX: with impulses 10, the last impulse sometimes blinks when translating
+=> solved it by a hack in samples pyramid3 (add 1 to size)
+- REFACT: refactored SpectrogramView2
+(suppressed the word "spectrogram" from many method,
+- IMPROV: added accessor for mZoomAdjustFactor (not yet finished)
+- NOTE: the accurate zoom / translate is working very well (e.g on 10 impulses)
+The current version is a very drafty version.
+
+v6.1.2
+- NOTE: all the accurate spectrogram zoom is working very well
+- REFACT: cleaned much drafty code
+- REFACT: removed debugging code
+- FIX: load a file, translate, re-open the file => the transformations were messy
+- FIX: load a file, translate, re-open the file
+=> the background was not generated the second time
+- REFACT: removed experimental code
+- IMPROV: use OPTIM_SKIP_IFFT2 for display gen obj
+- FIX: the last sample was not displayed in the miniview
+=> now use DecimateSamples3() instead, and that fixes
+- IMPROV: improved inpaint SimpleInpaint (good but phase issues)
+- TEST: implemented SimpleInpaintComp to try to fix phases issues
+(but that doesn't work)
+- IMPROV: WIP improve inpaint
+- IMPROV: inpaint: created class SimpleInpaintPolar
+Still WIP, but will certainly manage the phases continuity very well
+For the moment, process phases only horizontally.
+Take the left phase drivative, and deduce the phase progression from it
+Works very well for a pure sine wave.
+Problem; if not pure sine wave, the continuity on the right is not perfect.
+- IMPROV: created SimpleInpaintPolar (code cleaned)
+- IMPROV: created SimpleInpaintPolar2
+- IMPROV: managed well the phases for horizontal, left to right
+- IMPROV: managed well the phases for horizontal, right to left
+- IMPROV: combined horizontal phases for L->R and R->L (biggest magn)
+- NOTE: this works very well for horizontal!
+- TEST: use a pure sine, cut a hole, fill it with inpaint horiz: ok!
+- TEST: use a pure sine, cut a hole, fill it half with inpaint horiz: ok!
+(works when filling left or right part of the hole, thanks to combined horiz inpaint)
+- IMPROV: did the same thing for vertical => this works very well!
+- TEST: for vertical tests, do the same with a pure impulse
+- IMPROV: implemented inpaint "both"
+(simple average of "horiz" and "vert") 
+- REFACT: cleaned SimpleInpaintPolar3 (from 2) and removed old inpaint classes
+- REFACT: big refact: split BLUtils in several classes
+- REFACT: applied BLUtils split to all plugins
+- FIX: open a big file (1 song) => the spectrogram was not displayed
+=> re-implemeted totally and cleanly the "step" used for big files,
+to avoid recomputing too much data
+- TEST: checked for big files, that the number of lines is 1024 every time
+as given by SPECTRO_VIEW_MAX_NUM_COLS: ok!
+- TEST: big file, zoom a lot => tested that the oversampling jumps to 32: ok!
+- REFACT: FftProcessObj16: suppressed comments and #if 0
+- FIX: big file, when zooming a lot, => everything became slow
+(this was due to large memory copy from queue to vec in SamplesPyramid3)
+- IMPROV: waveform was not very visible with purple colormap
+=> put overlay black instead of gray, and increase line width
+- FIX: open a big file, zoom on waveform => jittering/pops  when zooming
+(there was some small jittering in the waveform peaks, max peaks appear and pop).
+This was because SamplesPyramid3 max level was too low
+(it was necessary to decimate 50000 samples at the end each time)
+=> adjusted better SAMPLES_PYRAMID_MAX_LEVEL
+=> with this the performances are better for low zoom (very fast!)
+- TEST: tested BLUtilsDecim::DecimateSamples4() for SamplesPyramid3 => not so good 
+- TEST: tested to open a file of 1h45mn => crash
+- FIX: zoom to maximum then translate a little => "translate step" of ~5 pixels
+=> that makes jitter the translation a bit (the result has a size of 160 samples)
+=> solution: upsample the result to 2048 if to small, and adjust is accurately to float selection.
+=> now it translates very smoothly, even with maximum zoom
+- TEST: tested for memory leaks => no major memory leak!
+- IMPROV: SamplsPyramid3: removed mTmpBuf from SetValues to save memory
+=> result: 1 song: before 800mB, after: 500Mb
+- IMPROV: use float in SamplesPyramid3 to save memory (SP_FLOAT)
+=> now on 1 song, the pyramid take 110MB instead of 210MB
+=> full: 422 instead of 500MB
+- TEST: tested memory => everything looks fine
+  	- open 1 song (midnight, file size 50MB, 2 channels, 16bit)
+	=> it takes 400Mb at the end
+  	- internally, it takes 100MB by channel (25*8/2), this is normal
+	- samples pyramid takes 100Mb (with float type internally)
+	- Ghost just opened takes 64MB
+	- sum: 100*2 + 100 + 64 = 364MB (it looks logical)
+	=> in theory, with 2GB RAM, we could open files of 250MB / 20mn
+- FIX: only the left channel was displayed on the spectrogram
+Now display mono sum instead of only the left channel
+- IMPROV: fixed memory consumption with mono spectrograms
+- FIX: the waveform in the SamplesPyramid3 displayed only the left channel
+- FIX: fixed correctly out of bounds samples when saving
+       - STEPS: load white noise, cut 4x, to keep only 1 square, then save
+       => when reloading, there are many clicks (sound and spectro)
+       => to fix, downscaled a bit the data before saving if necessary
+       (also disabled CLIP_WAVEFORM)
+- FIX: fixed out of bounds samples when exporting selection
+- FIX: for export selection, use SampleToMagnsPhase (fixes messy exported data)
+=> now export selection is very accurate (it was messy on the right before)
+- FIX: load white noise, select square, export selection
+       => the sound played briefly
+       => added mutexes, it seems to fix...
+- FIX: go to the border, zoom a lot, translate (ctrl-drag)
+    => the waveform stricks on the left
+    => this was because we didn't managed zero pad when upsampling
+    (and it was necessary to pad zeros with floating values to fix jittering)
+- FIX: translate a lot, out of bounds => the line waveform disapeared
+- IMPROV: write the current file name in the window title bar
+- IMPROV: display a star near modified file name (and refact)
+- IMPROV: cut, copy, paste, undo... inpaint ...=> set them also in the Edit menu
+- IMPROV: added "Transport" menu (PlayStop, space, reset enter)
+- IMPROV: removed "Rewind" to "Rewind to Start"
+- IMPROV: re-ordered cut copy etc. in plug GUI (like the menu order)
+- FIX: "ctrl+," did not open preferences on Linux
+=> workaround: totally removed the Preferences shortcut!
+- FIX: open a submenu, don't chooose anything, move the mouse to do something else
+=> the submenu stayd open indefinitely
+=> implemented WM_MOUSELEAVE in swell, and use it to close submenus
+- IMPROV: added "File->Reload From Disk" menu option 
+- IMPROV: made text areas to display in real time cursor position in hz and time,
+and selection width and height as well.
+- IMPROV: ghost meter: click on text box -> change mode
+- IMPROV: ghost meter: choose between Hz and bin
+- REFACT: ghost meter: some few code clean
+- FIX: when starting, the selection textbox pos x shows a negative value
+(whereas the time axis shows positive values, [0, 1])
+=> made several fixes and adjustments
+- FIX: when resizing GUI, the ghost meters values had bad position
+
+v6.2.0
+- WIP: tabs implementation
+- NOTE draft code (not compiled)
+- NOTE: now it compiles
+- FIX: fixed crashes at startup
+- REFACT: mCurrentFileChannels -> mSamples
+- FIX: some fixes => now tabs basically work!
+- TEST: passed cppcheck, to detect dead code in Ghost.cpp and GhostTrack.cpp
+- REFACT: passed cppcheck, and commented dead code
+- FIX: now the control values (colormap, wave scale etc.) are restored to the plug when changing track
+- FIX: load 1 track, keep it to blue, load a second track, set it to fire
+switch to first track, resize gui => the colormap switched from blue to fire
+- FIX: load 1 track, keep it to blue, load a second track, set it to fire
+resize gui, switch to 1st track => it is turned to fire
+- FIX: the window title was not update when changing track
+- FIX: open a track, play, open a second track => the play button stayed on
+=> now, we can play a track, choose another track without playing, and return to the first track => it is still playing, as expected
+- FIX: One command history for each track
+=> so we undo only what we see on the current track
+- FIX: copy from one track, paste to another -> problem
+(the selection for paste was bad)
+- REFACT: refactored hack for copy paste between tracks (no it is correct)
+- FIX: copy, paste to another track, undo => now it is ok!
+- TEST: copy, paste position just after (read/write): ok!
+- FIX: GhostMeter: track 1, select, track 2: paste => track meter shows bad sel values
+(fixed by previous fixes)
+- TEST: tested cut then paste to another track: ok!
+- FIX: copy: the play bar went at the beginning
+(it should stay at the beginning of the selection instead)
+- FIX: cut sine => clicks
+(fade was not applied anymore since GhostTrack)
+- TEST: check again adaptive oversampling (with tracks): ok!
+- NOTE: now tracks are working well, and also copy paste between tracks!
+- FIX: load a file, export selection to another file, swith to another tab, then return to current tab => the title bar shows the name of the exported file
+(instead of the original file)
+- FIX: reload from disk a modified file => the '*' didn't disappear
+- IMPROV: option to link tabs transformations (special dev option)
+
+v6.2.1
+- FIX: link track toggle button missing GUI resize offset
+- REFACT: big code refact! (Ghost and GhostTrack)
+- IMPROV: for plugin: only 1 track!
+- IMPROV: implemented app preferences saving and loading (draft code)
+- IMPROV: implemented save and restore GUI preferences
+(when quitting and restarting the app)
+- IMPROV: added menu "Reset Preferences"
+(and renamed "Preferences..." to "Audio Settings..."
+- BUG: re-loaded preferences are not applied to all tracks
+- BUG: quit app when track 1 is selected
+=> when reloaded, we should select track 0 instead
+- TEST: gui size in parameters must be saved and reloaded: ok!
+- FIX: reload preferences: the play button state was saved and restored
+- FIX: resize GUI -> the selection was lost
+- FIX: save prefs with "fire", load, track 1, set "blue", switch to track 0
+=> at next open, the colormap was "blue"
+- FIX: spect wave ratio preferences problem
+- BUG: resize GUI while playing -> playing stops (must click and play)
+=> fixed automatically!
+- FIX: set selection type local to track (avoid bugs)
+- FIX: (fixed by prev) track0, select, track1, change selection type
+=> selection type is global in plug, but different in the different tracks
+- FIX: (fixed by prev) select and play, change select direction, resize GUI => selection disappeared
+- FIX: the selection type is now be linked with track link too
+- FIX: several fixes for selection with linked tracks
+- FIX: at the beginning, the time axis was displayed only on the first track
+- FIX: selection was linked even when not checking link param box
+- FIX: copy from a mono track, paste to a stereo track, undo -> bug
+=> the undo is buggy
+(tested with example mono "sine" and stereo "10 impulses"
+- TEST: test paste outside file area => can we undo then?: yes! : ok!
+- TEST: copy, paste, undo, paste (and also between tracks): ok!
+- TEST: tested very well reset preferences (on different tracks etc.)
+(not tested very well, but it looks ok!)
+- IMPROV: remember the last opened and saved dir location
+(only in the current session for the moment)
+
+v6.2.2
+- WIP: test and fix plug mode
+- FIX: hide the button "linkTracks" in plug mode
+- IMPROV: for display plug spectro, use mono input, and only one SpectrogramFftObj2
+- FIX: view mode, the spectrogram scrolled too quickly
+(fixed automatically by the previous improv)
+- NOTE: disp ffy obj is used to display scrolling spectrogram
+- IMPROV: skip ifft for display obj (OPTIM_SKIP_IFFT)
+- BUG(not a bug): plug, at startup, the current gui size button is not hilighted
+(not a bug, after save prefs and restart, there is no problem anymore)
+- TEST: bypass / capture + render => no shift, latency is ok!
+- FIX: fixed stereo render in view mode + latency in view mode
+- FIX: fixes latency in capture mode
+- FIX: capture, then render stereo file => output only the left channel
+- NOTE: checked latency with capture then render => ok
+- TODO: check latency and stereo render with all other modes: ok!
+- FIX: capture, then edit => the waveform showed only the left channel
+- FIX: fixed stereo for samples pyramid at several points
+- FIX(fixed by prev changes): cut a slice, undo => there remains artifacts
+- FIX: render, we could render only one time
+(next time we restarted transport, render didn't play)
+-> this was due to mSamplesPos, not reset in Reset(oversampling), with #if 0
+- BUG(not repro): capture, edit => the sound plays when switching to edit mode
+- FIX: capture, edit => play in edit mode had very big latency
+If we did an edit action (like copy), the latency got fixed
+-> that was because fft edit obj was not reset, and kepts a big buffer in the queue
+- FIX: fixed aligment of waveform on spectrogram in view mode
+- TEST: tried to fix aligment of waveform for capture mode => no way
+- REFACT: big code clean in GhostTrack
+- REFACT: GhostTrack: commented/rewrote obscure code for mono
+- REFACT: remove old commented code (commented just before)
+- FIX: capture mode: the waveform was not exactly aligned to spectrogram
+- FIX: capture, edit (and do zoom), view => view mode problems
+- NOTE: plug version is working well now
+- REFACT: some code clean after plug fixes
+- NOTE: switched back to app
+- FIX: App: "Reload from disk" => the miniview rectangle did not reset
+- IMPROV: app version, added "File -> Close", to close a file in a given tab
+- IMPROV: app made install script for Linux (to set icon in the menu)
+- NOTE: BL-Ghost.png is in resources/img/, not directly in resources/
+(seemed not possible easily to put it directly in resources/)
+- FIX: vst2: fixes for recompilation (after GhostViewer modifications)
+- FIX: vst2: fixed time axis labels alignements depending on the mode
+- NOTE: tested app: ok!
+- IMPROV: re-enabled old lock mechanism (on demand)
+=> Ghost plugin/app would need too much refactor to integrate the new mechanism,
+don't have 2 weeks to do it, more importan things to do!
+- TEST: tested quickly vst2 and app: ok!
+- REFACT: for prompt for file, moved the code in BLUtilsFile
+- IMPROV: when exporting selection, take the last save path, and update it
+- TEST: re-checked open file, save as etc. after refactor: ok!
+- IMPROV: added file association (mime) in the installer script
+- IMPROV: implemented app startup args on Linux 
+=> so we can do "right click on wav file -> open with Ghost"
+- TEST: tried to "right click -> open in Ghost" for flac files (failed)
+- BUG: load a wave file, save it to flac => format fails
+(internally, the file is still wave)
+=> this was because we used load format for saving
+=> now, check, if file extension is different, then reset the load format for saving
+- FIX: load, play. while playing, reload from file => the playing stoped
+(but the play button stayed activated)
+=> set play button to off when reloading a file
+- TEST: checked what happens if we miss the file extension when saving: ok!
+
+v6.2.3
+- BUG: the application consumes 5/6% CPU in release, even if we do nothing,
+even if it is on another workspace (display not visible)
+- OPTIM: app: avoid processing void signal when not playing
+(FftProcessObj processed event when not playing)
+=> perfs en debug: 12% -> 9%
+- TEST: commented ITextControl::Draw(): 6/7% CPU
+- TEST: set to 25fps: 7% CPU
+- TEST: hacks for not refreshing everything each time => 9% -> 2% 
+- IMPROV: iPlug: on Linux, now draw only th dirty controls
+- IMPROV: Now draw only the controls that have changed
+=> far better perfs when nothing is done
+=> remains some bugs
+- FIX: draw square selection: nothing is drawn, we must mouse wheel so it redraws
+- FIX: change tab: the prev tab selection is still there
+- TEST: disable FBO ?
+- TEST: prefs when using FBO, debug, resting: 3% (without FBO: 2/3%)
+- NOTE: when FBO disabled, there are graphics bugs when zoomning graph
+(graph goes over the knobs)
+- NOTE: on Linux, now refresh gui and graph only when necessary: ok!
+- NOTE: anim logo consumes some resources when the plugin doesn nothing
+=> at the end, it will be a good idea not to have animated logo
+- NOTE: anim logo doesn not increase the rectangle to redraw
+(no bounding rectangle problem)
+- FIX: when mouse wheel wherever on the gui, rollover buttons
+where redisplayed many times
+- FIX: rollover buttons refreshed if we mouse wheels wherever in the gui
+(and when mouse click also)
+- IMPROV: button to scale low frequencies, to make a "zoom" effect on low freqs
+But without changing the fft size
+=> this looks promizing!
+=> there remains some bugs/things to do, see below
+- FIX: when selection low freq zoom, if we had a selection, it was not updated
+- FIX: edition in low freq zoom mode edits bad region (/selection)
+- IMPROV: passed valgrind for memory and fixed problems
+- IMPROV: also update the whole background image when spectro y scale changes
+(for low freq zoom)
+- FIX: play => the fg spectrogram got black
+This was because the size didn't change, but the memory was set to 0.
+- IMPROV: with App, do not re-compute spectrogram when not needed
+- TEST: tested that colormap, range and contrast still work well (for bg): ok!
+- IMPROV: update the background spectro after edition: ok!
+So thz bg spectro is exactly in synch with the fg spectro and the real sound
+(UPDATE_BG_AFTER_EDIT)
+Surprisingly, the seems to not take too much resource, even with a whole
+song loaded in Ghost App
+- OPTIM: resizing GUI got slower than before
+=> this was due to SetLowFreqZoom() which recomputed scale even when the scale
+did not change
+=> optimized it by applying scale only if it different
+- IMPROV: for LOW_ZOOM scale, now use mel then gamma
+Found a good gamma coefficient (LOW_ZOOM_GAMMA), with fixed value for the moment
+=> far better than double-mel
+- IMPROV: fixed Schlick sigmoid (it was the pow() version...)
+- IMPROV: apply sigmoid on wdl typed buf, for optimization
+- IMPROV: fine tuned Scale LOW_ZOOM, with sigmoid
+- FIX: fix in Scale::LOW_ZOOM (with gamma), so reverse scale is more coherent
+- TEST: tested new SChlick sigmoid and sigma: ok!
+- FIX: selection was not well scaled when scaling from normal to low-zoom
+Steps: select, click several times to LF Zoom to enable and disable
+=> selection "drifts"
+- NOTE: sigmoid is using only in Ghost (for low freq zoom and for fade)
+- PROBLEM: in app mode, when playing a small selection,
+the selection is not accurate at all (in time)
+(Steps: load a sine, zoom, cut a thin slice, play near the cut slice => not accurate)
+=> this is not solvable, this happens when zoom is high,
+and the imprecision is near 20ms. Whn playing, we loop through fft/magns,
+so we can't have more accuracy easily like this
+The play bar goes a bit over selection.
+- TEST: recompiled app in release, and tested perfs in "rest" mode
+before display optimization: 5%, now: 1/2%
+- TEST: tested well the new bg spectrogram stuff in plugins mode: ok!
+(close GUI, re-open...)
+- FIX: plug, view mode, monitor on: the time axis dodn't scroll
+- IMPROV: fixed all the unecessary graph refresh, in all plug modes
+=> now performances are very better when not playing
+- REFACT: renamed GhostMeter -> SpectroMeter
+
+v6.2.4
+- IMPROV: implemented Tabs bar (first version, GUI only)
+- IMPROV: tabs mechanisme working (first version)
+- FIX: ui close / re-open -> tabs were not restored
+- FIX: load a file, zoom on graph => the tab filenames got fat
+- TEST: tested lazy refresh: ok
+- IMPROV: show a dialong when the max files open limit is reached
+(also tested with file OnDrop())
+- IMPROV: implemented delay for tooltips
+- FIX: close tooltip correctly after mouse moved to another control
+- FIX: tooltips: refres well everything when tooltip disappears
+- FIX: Open a tab, resize gui, tab bar disappeared
+=> we had to move the mouse to make the tab bar appear again
+- FIX: definitely fixed tab bar fat text
+=> tabs bar and graph controls were intersecting
+- IMPROV: custom style for tooltips
+- FIX: passed valgrind and fixed a memory corruption problem
+- FIX: compilation fixes for plugin version
+- NOTES: re-tested plugin version => all looks good
+- FIX: zoom on spectro, doesn't work with VIEW mode
+=> and it is better to not provide this feature (that is not in GhostViewer)
+=> so in view mode, grayed out zoom checkbox, and disabled it
+- IMPROV: use text clipping for tabs only (using a flag in IText)
+
+v6.3.0
+- IMPROV: integration of the new design (basic: Ghost-X/App, bo gui resize)
+- IMPROV: implemented IRadioButtonsControlCustom
+(radio buttons with different icons, plus rollover)
+- IMPROV: tweaked colors of tabs bar
+- IMPROV: tweaked colors of SpectroMeter
+- IMPROV: fixed SpectroMeter where the text touched the border on the right
+- IMPROV: added SpectroMeter borders
+- IMPROV: removed ghost meters from the border
+- IMPROV: managed GUI resize
+- IMPROV: changed color of text in drop down menus
+- TEST: tested Lite App version: ok!
+- IMPROV: Lite version: gray out controls instead of hiding them (better!) 
+- TEST: tested plug version: ok!
+- FIX: fixed GUI for radiobuttons mode
+- REFACT: apply out gain refact
+- IMPROV: apply out gain even in Render mode
+- FIX: mouse wheel on graph => lazy gui refresh refresheed all the controls
+- FIX: mouse wheel on background => all IRadioButtonsControlCustom buttons refreshed
+- FIX: mouse wheel: tab bar refresheed
+- TEST: re-rested Ghost plugin version: ok!
+(time axis, basic functioning...)
+- TEST: test GUI freeze linux with 2 Ghost plugins => it freezes!
+(open and close each of the Ghost plugins, after a while the GUI freezes)
+- FIX: sometimes crashed at startup (GhostTestFreeze.rpp)
+1 gain, 1 Ghost => crashed at startup)
+- REFACT: took better care of null pointers
+- FIX: fixed GUI freeze with plug version
+=> The one GhostTrack::Graph was deleted with no GL context bound 
+- TEST: checked Ghost app, that graph is well deleted when closing a tab: ok!
+- TEST: passed valgrind for mem for App (open/close babs): ok!
+- TEST: tested horiz and vert separators => no looking so good...
+- FIX: open tabs, then File->Close => tab empty was still there
+- IMPROV: SpectroMeter text brighter
+- IMPROV: drop down menu dark blue (prev: black)
+- IMPROV: right color for rollover
+- IMPROV: added tooltips
+- FIX: app: bug with tooltips (for gui resize and tabs): they were out of view
+=> fixed just by recompilation
+- IMPROV: when scrolling, if cursor is over the graph, spectro meter now updates
+It updates as it should be even if we don't move the cursor
+(in View and Acquire mode)
+- FIX: app: toggle LF zoom on. close app. re-open app on a file
+=> LF zoom was not applied
+- FIX: grown up the tabs bar after gui resize to bigger
+- FIX: plug: start in view mode => LF ZOOM was not grayed out
+- IMPROV: app: fixed fps value during rendering => now sticks better to 60fps
+- IMPROV: when double-click, now also reset zoom
+- IMPROV: when hitting "ret" key, reset view only if mouse is over graph
+This fixes: when editing a knob value and hitting "enter", the view was reset
+- DOC: fixed the manual after pref improvements
+- FIX: load file, resize gui bigger => time spectro meter gave false values
+- FIX: zoom, resize gui => mini view display bounds got reset
+=> now, use a miniview state, to keep state when gui resize
+- FIX: when reset with enter key, we must wait to have spectro updated
+(whereas waveform is updated instantly)
+- FIX: tabs bar when empty was not expanded with big gui
+- IMPROV: spectro meter, Hz: jitters when values change, due to entiere values
+(e.g 423.3 / 423) => now display "423.0" instead of "423" 
+- FIX: audio settings: labels were cut
+- IMPROV: menu: transport / rewind to start changed to "reset view"
+- TEST: re-tested when audio setting are not set => popup opens: ok
+- TEST: tested fully app and plug: ok!
+- FIX: View Mode : activate monitor, automatize it => time axis jitters
+- FIX: view/capture mode, set block size to 32 => the waveform had bugs
+- PROBLEM: view mode, bs=32 => perfs are low
+bs=512:10% => bs=32:30%
+- OPTIM: view mode, avoid too much useless computation when small block size
+UpdateWaveform() and FileChannelQueueToVec()
+- FIX: app: load a file, play a region, change the buffer size => crash
+- FIX: app: set block size to 32 => strange sound
+=> these problems fixes was because a part of the block size in IPlugAPP_host
+was fixed to APP_SIGNAL_VECTOR_SIZE (and another part was variable, depending
+on Audio Preferences buffer size)
+- TEST: passed valgrind on App: everything ok!
+- FIX: app: select, play, change block size: the selection bacame full selection
+- TEST: re-tested plug version for regression after prev fix: ok!
+- FIX: when increasing a lot wave scale, it was drawn over the miniview
+- TEST: check the spectro meter with "smp" units: ok!
+- FIX: app: open file, re-load from disk the same file name but shortened
+=> problem of silent sound at the end, and play speed incorrect,
+and spectro not refreshed)
+- FIX: plug, view mode: at 88200Hz, spectro and time axis were not is synch
+- FIX: plug (mode != view), change the sample rate => this changes the pitch
+=> now reset all the data and the view when sample rate changes
+- FIX: plug view mode, play, change sample rate, play => no waveform anymore
+- TEST: tested that spectro meter in samples is good at 88200Hz: ok!
+- TEST: tested that spectro meter in bins is good at 88200Hz: ok!
+- FIX: app: audio settings, sample rate 88200Hz was missing
+=> added it in RTAudio and also 176400 and 192000
+- FIX: couldn't open file if app sample rate was >= 88200Hz
+- FIX: app: load a file, change the sample rate => audio was pitched
+=> now, resample all the opened tabs whne changing the sample rate
+- FIX: load at 44100Hz, resample to 192000 => the half of the waveform has disappeared
+(must "reload from disk" to fix)
+- DOC: added something in the manual to tell that the file is resampled to
+app sample rate, and if we change sample rate while a file is opened,
+it will be resampled
+- FIX: when setting waveform scale to 0, it totally disappeared
+=> so keep a very tiny scale, so there stays a blue line, not nothing
+- TEST: tested save and export selection at 88200Hz => ok!
+- IMPROV: manage drag n drop of several files at the same time
+- FIX: when restarting the playback, we eared shortly a piece of the prev played sound
+Steps: sine wave on the right part, blanck on the left part, play from left part
+=> we ear a bit of since just when playback restarts
+- IMPROV: selection type was associated with tracks (very boring to use)
+- IMPROV: more consistent selection type 
+If we previously made a rectangular sel, do not grow it if switch to horizontal.
+If we selected in horizontal mode, do not change select bounds when zooming
+- FIX: select reactangle, set sel type to horiz, switch tab => no refresh
+This was fixed by previous improvement
+- IMPROV: implemented simple "inpaint->paste" possibility
+(it is simple copy, inpaint, paste)
+
+v6.3.1
+- IMPROV: port to windows
+- FIX: win:app: this was the default menu instead of the Ghost menu
+=> updated the right .rc
+- FIX: win:app: choosing a menu option made the app freeze
+- IMPROV: win: implemented BlueLab.ini file for choosingfps, on windows
+- FIX: win: fixed vcproj (compilation using scripts failed)
+- FIX: win:app: the Edit menu was not shown
+This was because somewhere else in the code, there was a
+"hide debug menu" feature, that removed the second entry in the
+manu bar
+=> so now, define the debug menu as the second option, and define it
+even if we are in release mode (it will be removed automatically later)
+
+v6.3.2
+- FIX: windows fixes
+- BUG(not a bug): Mac2 - Win10: Ghost App
+       - missing preferences popup at first launch
+       => this is normal, the popup appears only if the current device is not found
+- IMPROV: Click on .wav file, "open with Ghost" => now opens file!
+(Mac2 - Win10: Ghost App)
+- BUG(not a bug): on windows, th popup "check your sound preferences" does not open at 1st launch (this is normal if the sound card settings are ok by default)
+
+v6.3.3
+- IMPROV: mac compilation
+- IMPROV: added legend and "+"/"x" to ghost meters
+- DOC: updated the manual (with meters legend)
+- IMPROV: linux: customized the build script (for app)
+- IMPROV: install-ghost-app: release mode
+- IMPROV: small fixes of build script
+- IMPROV: moved instal-app.sh to "installer" dir
+- FIX: linux:app: ".WAV" (capital), does not show in linux explorer Zenity
+- FIX: at first launch, LF Zoom was incorrect for selection
+Steps: with LF zoom previously checked, open Ghost app, open a file, select in high freqs, cut => the cut part was wrong
+- FIX: "ctrl + s" on modified file => the start (*) did not disappear
+- FIX: "menu->file->save" on modified file => the start (*) did not disappear
+- FIX: app: when editting a selection, the volume of the rest of the sound increased  
+(e.g lower gain, or inpaint on NK-Bells)
+- IMPROV: linux: fine tuned sound file open (Zenity)
+Now manage well upper case extensions when loading but also when saving
+- FIX: plug: capture, (let the tooltip appear over capture), switch to edit mode
+=> the edit buttons stay grayed out until we move the mouse (sometimes)
+- FIX: Bitwig/linux/vst2, render mode: played only once
+Reset was not called when playback restarted.
+- NOTE: notes after IRolloverButtonControl : FIX_HILIGHT_REOPEN
+- FIX: Bitwig/vst3/linux: "BL Ghost-X" -> "BL-Ghost-X" in menus
+- BUG: selection reapeared when LF Zoom
+Steps: capture, edit, make a selection, lfzoom, view mode => selection stays
+- FIX: fixed app crash, when drag'n drop or "open with Ghost"
+Steps: open Ghost, drag a file on it => crash
+- SUPPORT: Sent mac build to Marc (m@ansolas.de)
+
+v6.3.4
+- FIX: fixed huge memory alloc/free when exporting selection
+This took 300GB (!) allocated+freed when exporting 30s selection
+=> this is also now faster to export long selection
+(there is still the memory that doesn't diminish back after exporting)
+- FIX: fixed valgrind warning
+- PROBLEM: export a selection of ~1mn => memory leak of ~400MB (with "Task Manager")
+  - passed valgrind: nothing detected
+  - with heaptrack: "Consumed" tab shows not problem
+  (memory returns to normal after having saved selection)
+=> in fact, it seems there is no problem!
+
+v6.3.5
+- FIX: fixed windows compilation 
+- FIX: added manual pdf that was missing from git
+- FIX: removed the "X" in the manual file name (for windows)
+- FIX: SpectroMeter display: workaround for meaured text different on windows
+- TEST: checked app startup args => all working well
+- FIX: removed and unused parameter (it appeared in host UI, without name)
+- FIX: ctrl-click on spectro meter didn't reset parameter well
+(same for alt-click)
+- IMPROV: disabled params with no name in plug mode (was only for app)
+- IMPROV: changed param name "EditReplace" -> "EditInpaint"
+- FIX: Ghost: select rect, host UI, change "edit" parameter => crashed
+=> now, we can edit from host UI without problem
+- FIX: Ghost: Reaper, hide "UI", change low freq zoom, show UI => refresh proble
+- FIX: Mac M1 compilation: the App was not build with "All_BL"
+- FIX: added Application to Mac installer
+- FIX: Mac M1 App compilation: fixed project "provisioning profile"
+- FIX: Mac M1: App: setup the menu correctly
+(there was no "File" menu, and other problems)
+- FIX: the menau actions were not applied
+- FIX: Mac M1: App: fixed prefs/config launch for MacOS >= Catalina
+- FIX: Mac M1: App: prev commit was wrong (#ifndef WIN32) + adapt to Mac 
+- FIX: Mac M1: App: fixed possible crash when quitting
+- FIX: Mac M1: App: audio was not initialized on Mac 2020
+(this was because on Mac 2020, microphone has only 1 channel, and we requested 2 input channels)
+=> set input channels to 1 in config.h, we don't care, we don't use it
+- FIX: since last parameter reset fix, there was an infinite loop
+- FIX: view mode, spectrogram is reset when GUI resize or gui close/open
+- FIX: plug, edit mode, play, make some manips + change LFzoom from host ui => crash
+- IMPROV: changed the parameter name: "range" -> "brightness"
+- FIX: VST3 only/Win10: play, change mode => playStop pram stays at 1 in host UI
+- TEST: tested export selection of 1mn => this takes memory but this is ok!
+- TEST: tested tabs bar pos after Morpho fix: ok!
+=> there was no bug because tabs bar y is 0 in Ghost
+
+- TODO: use GhostTrack2 from Morpho
+  	- write: mTrack->SetCursorListener(Ghost Plugin);
+	- suppress DEV_SPECIAL_VERSION (it won't work anymore with GhostTrack2)
+	
+- BUG: Mac M1: App: spectro meter: the "---" are too short on the leftf
+
+- PROBLEM: Mac M1: App: set many "guard malloc"/"undefined behavior options, launch in debug
+=> crash when opening file (does not crash in release)
+
+- IDEA: Ghost App: make a special case export selection, but vertical,
+to save memory on long files
+
+- PROBLEM: open long file, resize GUI => it take ~1 second
+=> since some commits, it seems that too many things are recomputed when resizing
+(not sure)
+
+- BUG(not repro): Ableton11/Win10: open/close plug and project => crash
+
+- PROBLEM: app: open a file of 5mn, select 1 or 2 minutes, try to export selection 
+=> crash (memory increase a lot, then crash when out of memory)
+=> this consumes too much memory in this case!
+
+
+- PROBLEM(?): memory leak when resampling? (chaging audio setting sample rate)
+
+- TODO(?): Ghost: SELECT DIR => SELECT TYPE (not sure)
+
+- PROBLEM: the play head is not exactly on the matching spectrogram region
+(play without selection e.g) => the sound and the image are not 100% synchro
+
+- NOTE: not sure we respect Nyquist theorem when downsampling audio file...
+
+- NOTE: vertical inpaint works less than horizontal inpaint (it is not so smooth)
+
+- BUG: (linux only ?) when tooltips appears on tabs bar, text becomes fat
+(seems hard to fix)
+
+- BUG: plug, capture, then edit, play a selection, change buffer size
+=> we now play the full sound, not only the selection
+
+- MANUAL: put examples with spectrograms (and on website too)
+Tested on flowmano
+=> can remove clicks very efficiently
+(and clicks that are limited inside a band of frequencies)
+Select only the click region, inpaint hozirontally
+=> can also remove pops very efficiently
+(pops are very low frequency transients e.g under 100Hz)
+Just select the pop region, and inpaint horizontally)
+
+- TUTORIAL: "how to remove clicks and pops in Reaper with Ghost-X"
+- external editor, apply Ghost-X on clip (copy), search for precise location of clicks (play a square selection), inpaint horiz. Pops: use LF ZOOM, inpaint (or just decrease the gain for pops that are at the beginning or the end of the clip)
+
+- TODO: check ghost meters with very long file (samples/smp may be over the rectangle)
+
+- TODO: take care of the mutexes when deleting a tab / GhostTrack
+- TODO(?): tabs: rollover on text
+- BUG: tabs rollover: if we quit from downside, sometimes rollover bug
+
+- TODO: Alt + drag for zooming is not possible on Linux
+(on Linux this moves the window)
+=> Need to define another shortcut on linux for zooming using drag
+
+- TODO: zoom on spectro => not on Ghost-X, only on Ghost lite version!
+
+- TODO: for gui design, do not forget the "monitor" button, that is currently
+a bit hidden by other controls.
+
+- TODO(later): use PhasesUnwrapper::ComputeUwPhasesDiffTime for better inpaint
+phases extrapolation? (like in PitchShift Prusa)
+
+- TODO: test thread race with valgrind (vst2 and app)
+
+- WEBSITE: for website, say "sample-accurate edition"
+
+- NOTE: play selection is not accurate in time when high zoom.
+The play bar goes a bit over selection (this is not solvable, see above)
+
+- TODO: check very well if it remains bug (already tested)
+
+- TODO: pass valgrind (plug and app)
+
+- IDEA: set latency to 0 in edit mode?
+
+- PROBLEM: very light change between bypass and capture (very subtle waveform change)
+test: 2 sine stereo
+
+- PROBLEM: capture, switch to edit mode => the last samples are not faded 
+( makes a sort of click)
+
+- TODO: check sample rates very well (app and plug)
+
+- IDEA: save the last open and saved sound file path in preferences
+- TODO: decide if we provide several tracks for Ghost Lite (and how may)
+- BUG: track link => sometimes we miss the synchro (after several manipulations)
+
+- TODO: stop play when change track?
+- IDEA: info text boxes: also display the dB picked
+
+- TODO: add "save image" (png or jpeg) => will be used for auto tests
+
+- TODO: find a solution for Ghost open (very) long file (buffer from disk)
+
+TODO: check memory with the tool, when zooming and dezooming with large file
+(to be sure we don't copy the whole file buffer each time)
+
+- TODO (refact): remove all the bluelab-lib files not used:
+       - move them to Attic/History
+       - remove them from cmake
+       
+- IDEA: Website: insist on inpaint (only in Ghost-X)
+Show 2 examples ("horiz" and "vert"), on thumb piano (they are very good)
+
+- IDEA: is it 1 class for editing + zoom, and 1 class for plugin + scrolling ?
+=> in this case, rename the classes with better names
+
+- IDEA: optim if necessary: after edition, do not recompute the whole spectrogram
+data, but compute it between the selection bounds (in time)
+- IDEA: make a knob, to setup low zoom sigmo alpha, for progressive low zoom
+
+INPAINT===
+- IDEA: for the moment, inpaint "both" is simply a blending between "horiz" and "vert"
+=> maybe improve it (linear interpolation, or other)
+
+- TODO: "smart copy": make an inpaint, and copy only "full - inpaint"
+=> then when pasted, we won't add the background, only the interesting element
+- TODO: "smart paste": copy, then paste by adding the element to the current data,
+not replacing it
+- BETTER idea: investigate "inpaint", then "paste"
+(to paste what was cut with inpaint) (but we will still need "inpaint-copy")
+- IDEA: Inpaint: Take the idea of signal extrapolation using velvet noise?
+https://www.researchgate.net/publication/330002817_Efficient_Signal_Extrapolation_by_Granulation_and_Convolution_with_Velvet_Noise
+===
+
+- TODO: make it work in Audacity (without latency, without crash)
+- TODO: maybe improve a bit the menu: close when click somewhere else
+(instead of close when mouse leave)
+
+- TODO: needs a big code clean after mem optimization (tmp buffer and FastQueue)
+
+- PROBLEM: with buffer size 512, it crackles when playing
+=> tested with bounce => no crackle
+=> so it is a problem of performances / mutex
+
+- TODO: maybe save the waveform (and spectrogram?) to FBO, to avoid displaying it each time. For the moment, the waveform is displayed each time while playing, because
+the graph is set dirty by the play head.
+- IDEA: for the waveform, when there are many many samples, draw only a filled shape, with the countour of the waveform (do not draw each line inside).
+
+- BUG: there is a memory leak just when displaying the static plugin ???
+- BUG: standalone: the sound crackles when playing
+(it is due to performances) 
+(almost fixed if set buffer size to 1024 instead of 512)
+
+- PROBLEM: app: when saving, selection or full => must make fades at the ends
+- BUG: app, cut sine => makes some “clicks around” ?
+
+- TODO: display points on the zoomed waveform
+=> do it later, maybe (for the current big zoom, this would make too many points)
+
+- TODO: check well that the graph is centered to zero
+
+- BUG: Capture mode: the spectrogram starts to appear when it is full (not progressively)
+- TODO: by default, set the bar at the middle (for zooming) ???
+- TODO (later): when zooming at maximum, interpolate samples using smooth interpolation (like Hermite), and display samples as points. And enable the possibility to zoom more at maximum zoom.
+- TODO: test on Mac2, retina display, to see if the 4th button works
+- TODO: check memory leaks (when resing GUI etc)
+
+- BUG: xubuntu - can't "right click + open with Ghost" on flac files
+(there is the option, but ghost doesn't open)
+=> nothing to do on my side, maybe this could be a system option
+
+======
+Users feedback
+======
+- Mike Perry: "Not quite clear regarding the dial box section in upper right corner of it's screen." => ok!
+
+- Mike Perry: "To make a spectral selection, export it for editing, then import it back into Ghost (into a separate tab), then, after monitoring both the existing material and the separate import tab material simultaneously while making adjustments in real time, export the 'mix' to WAV or MP3."
+- Mike Perry: "The variable 'drop off slope' that reaper's spectral editor offers, is truly awesome, allowing a determined degree of blending in the processed spectral selection with the rest of the material , making the 'intrusion' into the spectrum much more transparent."

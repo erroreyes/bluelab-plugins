@@ -1,0 +1,389 @@
+v5.2.2
+- fork from StereoWidth
+
+v5.3.0
+- OPTIM: optim x2.5 by not re-passing all the points to the volume renderer each time
+- REFACT: code refactor and clean (set the correct methods in SparseVolRender)
+- FIX: take care of display order for blending (avoids a “hollow” effect”)
+- IMPROV: limit the rotation angles of the camera, to avoid extreme pos and seeing slices
+- IMPROV: implemented nvgQuad() in nanovg (textured quad)
+
+- IMPROV: implemented volume rendering with slices
+- FIX: take into account the point normalized size for slice volume rendering
+- OPTIM: optimized point rendering with nvgQuad instead of nvgRect (optima x3) !
+- added a balance for resynthesis (to take the L or R side of the point to balance)
+
+- TEST: colormap brightness contrast buttons
+- TEST: added other debug controls (point size and alpha coeffs)
+
+- IMPROV: made a "spectrogram" mode: that works !
+- FIX: removed a hack, that avoided displaying spectrogram correctly
+(incorrect automatic magnitudes depending on index !)
+- IMPROV: set the maximum quality parameter to 1024*1024, in order to make possible to keep all the points
+
+v5.3.1
+- Decimate() : decimate in 3D (not optimized, decimate everything each time)
+- modifications of sum of points in voxel
+
+v5.3.2
+- implementation of quad tree (not well debugged)
+- quad tree hack for ray casting style (CELL_RENDERING)
+
+v5.3.3
+- implementation of raycasting
+- optimization of ray casting (x4 !)
+
+v5.3.4
+- mouse selection: move selection, select border, managed selection states…
+- mouse selection: hi light voxels under selection (accurately !)
+- select orthogonally to the view
+- highlight the selected voxels
+
+- modified point project to be similar to OpenGL (in order to use UnProject())
+(very drafty code)
+
+v5.3.5
+- code clean
+- keep fft results, in order to replay
+- selection of "center slice" to play during host playback
+
+v5.3.6
+- code clean
+- play the selected voxels when transport is playing
+- left / right separation (light)
+
+v5.3.7
+- port to pugl
+
+- optimization: nvgQuad instead of strokes => optim x2
+
+v5.3.8
+- implemented cmd key press and released (on Mac only)
+- IMPL: cmd pressed => align view (with anim), release => retrieve the pref view
+- IMPL: implemented probe as a cube + managed selection on each face
+- FIX: fixed initial selection (disable the full cube before first selection)
+- FIX: when cmd pressed, and selection displayed, the selected voxels were still gray
+- IMPL: SORT_POINTS_METHOD3 => use alpha for better volume rendering
+- IMPL: mouse click outside selection without drag => reset volume selection
+- IMPL: when changing mode, everything is recomputed in place
+- IMPL: checkbox angular mode => change from angular to flat polar
+- IMPL: implemented stereo width change
+
+- FIX: fixed colormap saturation (input values was badly scaled)
+- IMPL: threshold of the data
+- IMPL: button to clip voxels outside selection
+- FIX: fixed transport playing of selection (frequencies and time ok, missing left/right)
+
+v5.4.0
+- animated logo
+- Fft15
+
+v5.4.1
+- FIX: recompile: benefit from FIX_CUBASE_STARTUP_CRASH
+- FIX: code fixes for recompile
+- IMPROV: FFTProcessObj15 => FFTProcessObj16
+- IMPROV: GHOST_OPTIM_GL (+ modif for png color)
+
+- FIX: recompile, added ImageDisplay.cpp
+- FIX: The blue colormap was brown in SoundMetaViewer (bad color inversion) (FIX_STEREO_VIZ)
+
+RENAMED: SoundMetaViewer-v5.0.0
+v5.0.0
+- IMPROV: hide unused knobs
+- IMPROV: changed some class names after plugin name change
+
+v5.0.1
+- IMPROV: implemented separated algorithms for X, Y, and Color => almost ok now !
+- IMPROV: added scroll direction (to be able to make front to back)
+- FIX: fixed pan direction for X flat modes
+- FIX: chromagram/amp/amp => the red lines are not well visible
+=> fixed the blending + added a good transparency knob
+- IMPROV: SMVProcessXComputerFreq: frequency log scale
+- IMPROV: SMVProcessYComputerFreq: log scale factor
+- IMPROV: SMVProcessColComputerFreq: log scale factor (seems better)
+- IMPROV: round points coordinates in the grid instead of trunk (ROUND_POINT_COORDS)
+(not sure it changes anything)
+- IMPROV: tested blend without sorting: BlendWBOIT() => visual result is not so good 
+- TESTS: tested SIMD for ray caster and matrix multiplication (RayCaster, tried to use SSE2 instructions, changed Xcode config, linked to newer version of libgsl) 
+=> the perts are not better, even a bit worse… don’t know why…
+- TEST: tested OPTIM_PRE_SORT (to sort at point insertion, not at each render
+=> this doesn’t work with the current idea…
+- IMPROV: use a texture to render grid cells (instead of many quads), and other optima
+=> pref: 90%, new 70% ! (improves a lot, and possible to display high quality now)
+
+v5.0.2
+- IMPROV: separated time scroll speed from time quality
+- IMPROV: implemented correctly time quality
+- IMPROV: linked xy quality and time quality
+- IMPROV: force max time quality (otherwise we have black pixels somewhere, the gfx result
+is not so good) (FORCE_MAX_QUALITY_T)
+- IMPROV: setup min speed to avoid holes between slices
+- IMPROV: increased the shape of the quality parameter (to be more linear in the effect)
+- TEST: tested optim unstable_remove_if() when reducing farthest/ray: dos not optimize…
+- IMPROV: decoupled time speed and time accuracy (then made a global quality + automatic point size)
+
+- FIX: couldn’t play "selection only" only when "clip" is checked (FIX_PLAY_SELECTION)
+- IMPROV: can now play thgresholded data only (FIX_PLAY_THRESHOLDED)
+- FIX: when translating selection over the time axis, the payback showed that the selection is reversed  (follow a sound spot, the effect is opposite. fear a sound spot: the sound follows it) (FIX_PLAY_SELECTION_REVERSED)
+
+v5.0.3
+- TEST: tested that FIX_PLAY_SELECTION and FIX_PLAY_THRESHOLDED don’t decrease the perts: ok !
+- FIX: at startup, when playing, the computed center slice num varied 
+(so the sound was played kind of "slow") (FIX_SLOW_PLAY_AT_STARTUP)
+- IMPROV: increased the plugin width to 950
+- IMPROV: freeze an play button: play when frozen and play selection => works very well!
+- FIX: fixed vectoscope polar + freq for Y (now y is vex length for vectorscope): ok !
+- FIX: some chroma were negative !
+- FIX: fixed well color scale for Freq and Chroma (log scale or not, offset or not)
+- IMPROV: implemented threshold center + threshold amount
+=> so we can select a region, and slide this regions with threshold center
+
+- IMPROV: implemented PhasesUnwrapper, and plug modes to manage phases
+- IMPROV: trick for time unwrapped phases: TAKE_MIDDLE_VALUE and NORMALIZE_TIME_PER_BIN
+(warning: the phase display may be shifted in time)
+- IMPROV: better phases time normalization => good display !
+- IMPROV: improved the computation of freq phases unwrap
+(now take the theorical value for each freq, and compute the diff, + adjustments)
+- IMPROV: set alpha smaller for low weights 
+(so when we decrease alpha, we will still see well the high weights) 
+(BLEND_LESS_HIGH_WEIGHTS)
+
+- IMPROV: added “SWEET” colormap
+- OPTIM: optimized Utils::FindNextPhase() => 10% perf gain !
+
+v5.0.4
+- OPTIM: factorized color coeffs in RayCaster (almost no gain)
+(now, unselected is more transparent, not only darker)
+- IMPROV: shortcuts to move the volume directly in 3D (ctrl,alt or both)
+- IMPROV: now when selecting, unselect zones become more transparent
+(that was a bug, but it is in fact a cool feature!) (changed SELECT_GRAY_COLOR_COEFF)
+- FIX: Sometimes it crashed when selecting in 2D (FIX_SELECT_CRASH)
+- IMPROV: implemented Lissajous for X (it is a bit limited, no scale possible, but ok)
+- IMPROV: implemented LissajousEXPE (WIP) + flag for psyche effects (TOTAL_PSYCHE_EXPE)
+- TEST: tested SMVProcessXComputerLissajousEXP by regenerating the samples from fft
+- FIX: now pass unwrapped phases apart, because unwrapped phases were problematic for Lissajous fft (maybe unwrapped phase shave a problem ?)
+
+- TEST: made tests with SMVProcessXComputerLissajousEXP 
+(can’t get better, the current version has the best behavior possible)
+- TEST: re-tested SSE2 with many points => no gain…
+- OPTIM: StereoWidenProcess::StereoWiden: optimized version, optimized for complex
+samples, making all the computation in complex (and simpler calculations)
+- FIX: fixed stereo widen that was not applied to output sound: optimized 3% (30% -> 27%)
+(FIX_STEREO_WIDTH_NO_SOUND_EFFECT)
+- FIX: in play mode, stereo width was not well applied (FIX_STEREO_WIDTH_PLAY_MODE)
+- IMPROV: Stereo width algorithm is no optimal and up to date !
+- FIX: the samples buffer was not affected by stero width (so Lissajous for example)
+(FIX_SAMPLES_STEREO_WIDTH)
+
+v5.0.5
+- IMPROV: implemented zoom !
+- FIX: fixed Cmd key release outside of the view (USE_KEY_CATCHER)
+The Cmd release was not detected outside of the view => this made incoherent states
+- FIX: Fixed selection strange incorrect state: 
+draw a selection, release Cmd, click somewhere = the selection disappears
+Then make a new selection => the previous selection reappears (FIX_SELECTION_MESS)
+=> now to disable selection, we must have Cmd pressed
+- IMPROV: implemented axis (full axes system), very good !
+- IMPROV: draw axes in order, to manage occlusion with the voxels
+- FIX: fixed special cases of axes draw orders (and code refactor)
+- IMPROV: New alpha blending (very good !) Add alpha value to the rendered pixels.
+This way, we can see partially axes through the raycast texture.
+And we also have a better blending, when setting more transparent, the high density zones stay more visible (ALPHA_BLEND_RAYCASTED_TEXTURE)
+- IMPROV: display empty Y axis for Lissajous and LissajousEXP
+- IMPROV: reversed some directions for moving selection volume, depending if
+we use drag x or drag y, more logical (“SMVVolRender3::OnMouseDrag::useX”)
+
+- TEST: implemented RCQuadTree rendering (not so bad, but some problems)
+- OPTIM: pre-multiplied 255 in RayCaster::RenderTexture() (maybe gain ~1%)
+- REFACT: double Point.mSize is now double Point.mSize[2]
+- TEST: implemented KdTree (with 2 different split methods) 
+(to try to suppress black gaps)
+- TEST: implemented dilation for grid algorithm, to try to suppress the black gaps
+- IMPROV: improved blending! Avoid that the pixels from ray with only one points are too dark, and still enable to see axes behind semi-transparent pixels. (this was because after blend depth sorting computation, we now blend the texture over the axes and black background - this is an additional blending) (FIX_BLEND_DEPTH_BG_ALPHA)
+- TEST: QuadTree or KDTree seem to consume more resources than grid
+- IMPROV: Decrease the quality when zooming in! => now possible to avoid black gaps automatically! (ADAPTIVE_QUALITY_ZOOM)
+- IMPROV: Automatically adapt quality T when speed is changed (ADAPTIVE_QUALITY_T)
+- FIX: adaptive quality was not well set at startup
+
+- FIX: /since fixes of stereo width sound, the sound didn't match the time selection
+(move the time selection => sound was not played from the correct time) (FIX_SELECTION_PLAY)
+- IMPROV: hidden knob “quality t”, changed knob name “speed t” to “speed”
+- IMPROV: adde auto quality check box + gray out quality knob if necessary
+- TEST: tested that the number of slices is now constant when changing the speed
+=> ok ! (about 103 slices)
+- IMPROV: hide render algo parameters and knobs (DEBUG_SHOW_ALGO_RENDER_CONTROLS)
+- IMPROV: reduces some radiobuttons heights 
+=> so then all the radio buttons are stacked slightly
+- IMPROV: made labels on time axis (label with host transport pos) (TimeAxis3D)
+- OPTIM: RayCaster, floats inside of double (RC_FLOAT): 100% => 85% CPU ! (-15%)
+- FIX: with Glm SIMD (newer version), there was angles problems
+=> now fixed, converted to radians when required
+- OPTIM/TEST: Tested SIMD: AVX, SSE4.2, SSE3 => SSE4.2 optimize a little (~2%)
+NOTE: this seems to be the newest version of vlm that optimizes, not SSE
+NOTE2: not sure the newer version of vlm optimizes…
+
+- OPTIM: do not use RayCaster point ids anymore (not very useful)
+=> optimize by 10% (86% -> 76%) (USE_POINT_IDS)
+- FIX: Avoid gimbal lock when angle1 is 90.0 (since RC_FLOAT is float) (GIMBAL_LOCK_EPS)
+- FIX: press several times the Cmd key => the step animation freezed to target pos
+Other step to reproduce: press Cmd, release it during animation
+=> we stay at the end animation step
+VERY GOOD: now the animation can be canceled if the Cmd key is release just after pressing
+(FIX_STEP_ANIM_FREEZE)
+- OPTIM: for RayCaster::Point, use unsigned char RGBA[4] (instead of 4 variables)
+So we can copy colors in one time by casting to int
+=> maybe optimizes by 1%…
+- IMPROV: added the “wasp” colormap
+- FIX: when changing colormap, current range and contrast was not applied to the new colormap (it was necessary to turn slightly on of the two knobs to apply).
+- REFACT: big code clean RayCaster -> RayCaster2
+- OPTIM: optimized pixels copy on the texture (using int cast): optim 2% (77% -> 75%)
+- OPTIM: pre-multiply coeffs in RayCaster::DoRayCastGrid() optima maybe by 1%, not sure
+- IMPROV: set default quality to 50% (a bit better than auto for starting view)
+- OPTIM: RayCaster2::RenderTexture: avoid converting color to float and converting back 
+to unsigned chars
+- IMPROV: added ImageDisplayColor::MODE_NEAREST
+- OPTIM: Decrease the render texture resolution if the cell size is bigger than 1 pixel
+=> Optim of 6% (76% -> 70%) (OPTIM_ADAPTIVE_TEXTURE_SIZE)
+- OPTIM: Pre-compute pixels (i, j) as soon as possible (avoid computing it as float, then re-convert to int after. When used with Point fields unions, we gain 1/2% (70% -> 68%)
+(OPTIM_ADAPTIVE_TEXTURE_SIZE2
+- TEST: recompiles with no-rtti and no-exception => no perf gain
+- TEST: tested with -O3 (intend of -Os) => same perfs…
+
+- TEST: tested a better DiscardFarthestRayPoints() => DiscardFarthestRayPointsAdaptive
+We gain 3/4%. But it has been detected that by discarding (even with the old method),
+there were rendering artifacts when transparence is low
+- OPTIM: avoid std::reverse(), by sorting directly in the reverse order (gain 1/2% perts)
+- OPTIM: set sort compare function inline => gained ~1%
+- TEST: tested qsort() instead of std::sort() => perf are worse for qsort()
+- TEST: checked that points out of the grid are discarded: ok!
+- IMPROV: implemented BlendDepthSortingFTB(): front to back rendering
+	- early ray termination 
+	- discard too small alpha
+	- compute clomp only on not discarded points
+=> this fixes a rendering problem of the previous method (BlendDepthSorting): when looking volume from the bottom, and decreasing transparency, there were black region appearing
+=> this optimizes: 3% perf gain (68% -> 65%)
+- REFACT: Axis3DFactory -> Axis3DFactory2: removed “static” (very dangerous for plugs)
+- IMPROV: implemented a ColormMapFactory, and added new colormaps to the plugin
+- IMPROV: fixed the Dawn colormap (made a copy)
+- IMPROV: created colormap Rainbow linear. when exported it makes a regular “jet” image(but this doesn’t match well with the other colormaps parameters).
+- OPTIM: Compute point color from colormap at the beginning, when the points are added to the object. And use a system of lazy evaluation to avoid computing the point color several times. Also managed flags for RayCaster Points, instead of several bools. perf gain: 2% (PRECOMPUTE_POINT_COLOR)
+- IMPROV: re-activated THRESHOLD_OPTIM2 which was disabled for PRECOMPUTE_POINT_COLOR
+
+- TEST: sort all the points globally, before inserting into the grid
+=> perts are very bad
+- OPTIM: pre-sort points (to avoid sorting over rays) => WIP
+
+v5.0.6
+- REFACT: refactored RayCaster: DBG_DrawSlicesZ… and ComputeMostAlignedSlice… 
+- IMPROV: fixed jittering with OPTIM_PRE_SORT, when low quality (and few slices)
+jittering during scrolling, and jittering without scrolling, when rotating the view
+- IMPROV: continuing and debugged OPTIM_PRE_SORT. 
+ComputeMostAlignedSliceIdxDicho() => no real perf gain
+- IMPROV: now, sort points when adding a slice, and sometimes sort points during the
+display if the view changed enough (and re-sort is required). Use view signs for that.
+- OPTIM: OPTIM_PRE_SORT final: perfs gain 5% (65% -> 60%)
+- TESTS/OPTIM: optima pre sort with distance to camera
+- TESTS/OPTIM: optima pre sort with sorting on both direction (with middle coords) - WIP
+
+v5.0.7
+- TEST: tried to combine the 2 conditions (x and y), to make a single sort
+- OPTIM: OPTIM_PRE_SORT_MIDDLE_DICHO (dichotomic search of the middle slice coord) 4% gain
+- OPTIM: pre-multiply alpha to color perf gain: 3%/4%
+(PRECOMPUTE_POINT_PREMULT_ALPHA)
+
+v5.0.8
+- REFACT: some (quite big) code clean
+
+v5.0.9
+- OPTIM: use pointers of Points in many vectors (so we don’t update alpha or colormap
+at each render sometimes, and we sort() quicker)
+=> it is slower (certainly because the Point struct increased at more than 32 bytes)
+
+v5.1.0
+- IMPROV: separated 3d points and projected points to 2 different structures
+- NOTE: big big code refract…
+- OPTIM: we get the best performances if we compute the data for the incoming slice in the sound thread. perts: 58% instead of 62% (PROCESS_IN_SOUND_THREAD) 
+- NOTE: the current code is very drafty
+
+v5.1.1
+- IMPROV: turned back to no point pointers. perfs 53/60% (prev: 58%)
+- NOTE: not using pointers may be better! (memory proximity / memory cache)
+- IMPROV: re-activated structures alignment: perfs 55% now 
+
+v5.1.2
+- FIX: fixed all the parameters that did not apply when not playing (since optima)
+- FIX(old): play to fill the view, move => the alpha is not recomputed.
+Do the same thing, change alpha => every alpha is recomputed each time we move the view
+=> fixed with the big refactor and fixes for optimization (Point2D etc.)
+
+v5.1.3
+- REFACT: big code clean
+- FIX: the selection did not affect frequencies (only time)
+- FIX: simple presort: whole missing line when moving, since Point2D: fixed !
+- IMPROV: Integrated all the colormaps from BLSpectrogram3 to ColormapFactory
+- TEST: tested that ComputeMostAlignedSliceIdxDicho() really computes the slice of 
+min area (and not the one just before or just after): ok !
+- FIX: fixed gfx artifacts on the middle slice (tag middle slice points, then sort them in screen space) => very good ! (FIX_OPTIM_PRESORT_ARTIFACT)
+
+v5.1.4
+- REFACT: code clean
+- IMPROV: FftProcessObj16::OPTIM_SIMD
+- OPTIM: implemented SSE with libsimdpp for Utils (with a flag) + made some extra optimizations (perf gain: ~4%, not sure…)
+- FIX: set the quality to maximum => we saw the grid (squared black lines) 
+We saw a bit the grid lines (not very distinct, but that made a black checker over the render). This problem was also with auto quality + transparency < 50%
+=> set back the Point2D x and y as float instead of int
+
+- IMPROV: implemented color modes “pan” and “mid/side”
+- IMPROV: mute the sound of thresholded points (MUTE_THRESHOLDED)
+- FIX: set mode (scope,amp,pan), threshold at 50%, play the sound
+=> the sound played was different, or even muted, depending on the view orientation.
+That was because points order was re-organized during pre-sort for rendering.
+(FIX_ORDER_SELECT_THRESHOLD)
+
+v5.1.5
+- IMPROV: added pan, in and out gains, and reorganized GUI
+- IMPROV: registered camera parameters as plug parameters 
+(for loading and saving them, and for automations)
+- FIX: inverted transparency knob effect (that was in fact “opacity”)
+- FIX: fixed camera orientation at startup, just when plug was instantiated
+- IMPROV: the stereo widen sound was not good. The volume was increased when increasing the width. And even after a first fix, the sound was not as good as standard stereo widen directly on samples. So reverted to stereo widen on samples (like in StereoWidth3 and Panogram). But with this, wan can’t change stereo width on freezer data anymore. (STEREO_WIDEN_SAMPLES)
+- FIX: problem, with reaper and automations, during play, the parameters were set continuously. that made lag a lot, because for example when setting the colormap, the operation is costly. So checked almost all parameters that their values really changed
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles
+- FIXE: now the gui is correctly displayed (except the play button and the 3D view)
+- FIX: fixes, re-enabled play button
+- FIX: passed address sanitizer and fixed some issues
+- FIX: fixed bad camera transformation (set back USE_NEWEST_GLM to 0 in RayCaster2)
+(FIX_CAMERA_IPLUG2)
+- FIX: reversed voxel final image that was upside down since iPlug2 (FIX_FLIP_IMAGE_IPLUG2)
+- TEST: tested what optimization we gain after using the Chinese optim NanoVg
+before: 54%, after: 46% => we gain around 10% (20% of 50%)
+- FIX: ModeY was not set well at startup
+- FIX: fixed selection + align to the axes when pressing 'x' (instead of prev Cmd)
+- TEST: tested all the features => it now seems ok for iPlug2
+
+v6.1.0
+- IMPROV: port to linux
+
+v6.1.1
+- IMPROV: port to windows
+
+- TODO: add a "DUET" mode
+=> this should make nice looking generalized cylinders network 
+- TODO: later, make a real product
+  	- possibility to open a whole file and to navigate inside the file
+	- high res projections on each of the 3 axes + 2d edit on projection
+ 	  (to have high res spectrogram, high res panogram etc)
+	- make an optimized 3d rendering (with shaders, not flat nanovg)
+	- implement "magic wand", to select portions of data in 3d
+	- implement other editing tools?
+	=> ultimate sound editor!
+	
+- TODO: re-test the different modes
+(note: previously passed cppcheck and made changed)
+- TODO: re-check time axis 3D after cpp check changes
+
+- BUG: since iPlug2: we cant remove the selection by clicking outside
+

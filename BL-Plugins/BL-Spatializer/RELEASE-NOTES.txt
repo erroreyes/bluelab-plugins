@@ -1,0 +1,236 @@
+01/07/2017 - v1.0
+Initial version
+
+v1.1
+- improved parameters smoothing
+- azimuth and elevation knobs react faster
+
+v2.0
+- interface 2.0
+
+v2.5.1
+- interface borders
+
+v3.0
+- new engine: the engine was totally reimplemented
+(more strictly close to Kemar authors recommendations
+
+v3.1
+- started to implemente real width, based on phase difference computed
+from the distance, the angles, and a "model" of the head
+Not fully fonctionnal, buggy
+
+v3.2
+- uses new FftConvolver, more efficient and fixing aliasing
+- implemented width, with efficient audible result 
+(physically correct computation de-phasing due to source position and distance, 
+but overstated effect of de-phasing to have better results)
+
+v3.3
+- correction of the crackles when changing the impulse response
+-> smoother application of the movement of the knobs (but some latency)
+
+v3.4
+- use FftConvolverSmooth3 (instead of FftConvolverSmooth2)
+- BUG fix: on Protools, with mono track, there was only left output
+- BUG: fixed big crackles when nFrames was 512 (Reaper)
+
+v3.5
+- new interface
+- improved the sensivity of the two head knobs
+- head zone (WIP)
+
+v3.6
+- restructuring interface with head zone
+
+v3.7
+- improved the “graph” display
+
+v3.8
+- interpolation between the responses
+
+v3.8.5
+- smooth transitions (with the buf smoother)
+- “faster and smoother parameters changes”
+- gain from -12 to 12dB
+
+v3.8.7: test with the diffuse data set (sounds worse)
+
+v3.8.6
+- hack to optimize convolver smoothing => 2x more reactive !
+- fix on crackles when moving too fast the knobs, with maximum source width
+(now the width is less audible but makes no crackles when changing azimuth)
+
+v3.9
+- profile
+- fft11
+- half fft
+
+- GLContext2 => GLContext (new)
+- GUI: heads dark blue
+- FftConvolver6: set pad factor option as argument
+- FftConvolver6: set normalise response fft as option
+
+- stereToMono of the input
+
+- fix graphic bug: buggy thin clear line around the heads
+- fixed Reset() that was not called on restart (on Protools)
+- fixed reset of param smoothers that were missing and bad
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+- changed plug unique id (for compat, for customers who bought the version 2)
+(and reverted it, to avoid loosing automations when changing version…)
+
+v4.0
+- changed the image of the heads (and adapted the dot knobs + reversed the direction of azimuth)
+
+v5.0
+- fixed a crash in mono
+
+v5.0.1
+- BUG FIX: after reset, azimuth was reversed in the smoother
+
+v5.0.2
+- double-click: reset knob value + edit knob text value
+
+v5.0.3
+- FIX: FftConvolver6: fixed crackles when host buffer was small (447)
+
+v5.0.4
+- FIX: param smoother not updating when the sound is is playing zeros
+=> improved source move when the sound contains silences
+- FIX (after pref fix): choose left ear, play before a silent zone, 
+cross the silent zone ane leave without touching the knob: 
+when the sound restarts, the impulse response was false
+- tried to fix => that made clicks on Reaper with nFrames==447
+=> Finally, suppressed the IsAllZero() test
+
+v5.0.5
+- animated logo
+- fixed crash in Logic when changing Azimuth automation by hand (utf8 coding of “°”)
+- FIX: fixed latency changes with buffer size (e.g with host buffer size 447 v.s 1024)
+- IMPROV: resample the impulse responses depending on the project sample rate
+- FIX: (due to prev changes): avoid crackles with width=100%, sr=88200, turn azimuth knob when playing
+- FIX: change Azimuth to -100, play, Alt + click Azimuth knob
+=> the sound was not updated to 0 degrees until we re-touch the Azimuth knob
+- FIX: width=100%, block size exactly 1024, sr=44100 => this crackled (FftConvolver)
+- TEST: FftProcessObj15 + convolution (+ fix bract badly closed)
+- Manage well latency when block size > buffer size (change in FftConvolver6)
+- improved smooth crackles problem when moving the knob quickly
+(Modified BufProcessObjSmooth2, FADE_START and FADE_END)
+- FIX: when playing after a reset, the first move of the kbon makes a click
+(hack to fix in BufProcessObjSmooth2)
+
+v5.0.6 (forgot to note it)
+
+v5.0.7
+- FIX: fixed clicks with block size 64, when moving azimuth very fast
+(use FixedBufferObj)
+- IMPROV: do not smooth azimuth and elevation anymore 
+(no need anymore because we have the smooth convolved)
+=> so the parameter will be more reactive
+(make very small additional rumbles at 192KHz)
+
+v5.0.8
+- REFACT: big code clean (in ProcessDoubleReplacing and more)
+- FIX: when playing a short loop in Reaper, and moving azimuth quickly 
+(by hand, not by automation), there was clicks and buffers residual signal.
+Only appeared when playing the project by hand (not when bouncing) 
+=> Solution: FORCE_IMPULSE_UPDATE2: update BufProcessObjSmooth2 every time
+
+- FIX: Reason, click when starting playback
+=> modified FftConvolver6, to avoid making fft of data which is all zero
+=> modified FixedBufferObj, ResizeOutput did not initialize the buffers to 0
+FIX: Crashes Studio One 4, Sierra, AU (but not VST)
+=> was due to the degree symbol
+- FIX: Logic 10.4 and Protools 2018 (Sierra): when stop playing, there is a remaining 
+sound (a sort of noisy ghost of the previously played sound)
+
+v5.0.9
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- FIX: fixed regression Spatializer5.0.8 => Spatialize 5.0.9 (clicks)
+(Utils::Fade(), FIX_REGRESSION_SPATIALIZER)
+
+Next version: will benefit from RT_CONVOLVE_USE_WDL_FFT after recompilation
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: it doesn't compile yet...
+- NOTE: now it compiles
+- FIX: fixed some GUI problems
+- FIX: fixed the sound (now it is ok)
+
+v6.1.0
+- IMPROV: port to linux
+- FIX: fixed crash at startup (hrtf was not copied in target "resources")
+- REFACT: renamed LoadMac() to LoadMacLinux()
+- OPTIM: optimized memory (1GB -> 150MB)
+
+v6.2.0
+- FIX: fixes for recompilation
+- REFACT: renamed gain -> out gain
+- REFACT: used BLUtilsPlug::ApplyGain
+- IMPROV: big -> small knobs + moved the knobs 
+- IMPROV: bacis XYPad working!
+- IMPROV: X/Y pad: ensured the handle will never goe outside the track
+- IMPROV: X/Y pad: manage the border (stroke width) of the track
+=> so now, the handle stays exactly in bounds and is not drawn over track border
+- IMPROV: X/Y pad: ctrl + click => reset
+- IMPROV: X/Y pad: when clicking on the circle, do not make it jump!
+when clicking outside circle: make it jump
+- IMPROV: XY/Pad: reversed y direction compared to head elevation
+(using a flag, it will depend on the plugins)
+=> now, elevation gets higher when xypad y get higher
+- IMPROV: X/Y pad: manage shift key for fine manipulation
+- TEST: passed valgrind: ok!
+- TEST: checked mem consumption: ok!
+- TEST: checked lazy gui refresh: ok!
+- TEST: tested perfs: 7%, this is ok
+(if need to optimize, use FastRTConvolver instead of standard convolver)
+- IMPROV: implemented spatializer handle (vector)
+- IMPROV: more fat spatializer handle
+- TEST: check well smoothing azimuth/elev after ParamSmoother2: ok!
+
+v6.3.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- FIX: automate elevation (trim/read), move elevation => XY pad X did not reset
+=> this was because automation/apply value to control managed only the 1st param
+
+v6.3.1
+- IMPROV: port to windows
+- FIX: win: now correctly load hrtf
+(load it even if we have no GUI, and adapted resources to iPlug2)
+- REFACT: removed iGraphics unused param for hrtf load
+- FIX: win: fixed the mechanism of config.h header
+- TEST: tested win VST3 x64: ok!
+- FIX: fixed win vst2 x32, with GUI: ok!
+There was a problem of manual resources
+- IMPROV: added security in case of the manual was not found
+(just in case, would avoid problems of freezing plug GUI)
+- FIX: removed MANUAL_FN from all main.rc files
+=> otherwise with 32 bit compilation, it says "file not found"
+=> and also wrote: "MANUAL_FN PDF MANUAL_FULLPATH_FN" in rc
+
+v6.3.2
+- FIX: windows fixes
+
+v6.3.3
+- IMPROV: mac compilation
+
+v6.3.4
+- FIX: fixed windows compilation
+- FIX: Ableton11/win: XY pad was buggy (only 1 direction) (only in release)
+- FIX: drag and drop xypad => crash (only in release)
+=> this was because of td::initializer_list() syntax on windows
+
+- TODO(?): X/Y pad: legend
+
+- TODO: check if we still need all the smoothers with new (WDL) rt convolver
+(smooting adds a bad lag)
+
+

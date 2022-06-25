@@ -1,0 +1,379 @@
+13/10/2021
+Initial version
+
+v6.0.0
+- initial version
+- IMPROV: added resources images
+- IMPROV: added images to config file and to cmake list
+- IMPROV: fixed graphs background images
+- IMPROV: compilation fix for first "empty" version
+- IMPROV: cleaned some old code from Gain12 (copied from it for Morpho)
+- IMPROV: fixed background image
+- IMPROV: defined parameters and elements layout coords (empty for now)
+- FIX: fixed background (spectrogram knobs aligment
+- IMPROV: filled all the elements coordinates
+- IMPROV: created tooltips and other
+- IMPROV: wrote the code for creating controls (not compiled yet)
+- FIX: fixed compilation
+- FIX: some more fixes and improvements (synth mode)
+- FIX: fixed elements accurate position
+- IMPROV: use radio buttons for plug mode (sources/synth)
+- FIX: fixed spacing of plug mode images
+- IMPROV: basic panel switch functioning
+- IMPROV: improved panel switching => now it is ok, and perfs also
+Take into account all the controls, not only the main ones.
+Avoid processing when rollover on the 2 panel buttons
+- REFACT: big code clean
+- TEST: checked that OnUIClose() is well called juste before destroying the plugin
+(for Panel memory release): ok!
+- IMPROV: defined all parameters
+- IMPROV: adjusted menus size and pos
+- IMPROV: refreshed all parameters when changing pannel, so the controls gets updated
+- IMPROV: fixed "toggle" or not, for buttons
+- FIX: XY pad when arriving on the panel, the circle was always at the bottom
+- IMPROV: gray out controls when necessary
+- FIX: fixed wrong and confused options in menus + adjusted menu size and pos 
+- IMPROV: added tabs management
+- FIX: fixed ITabsBarControl "reversed" bounds during creation
+- IMPROV: created basic shell classes for sources management
+- IMPROV: additional basic shell classes
+- IMPROV: glue between tabs and sources
+- IMPROV: live source name => updates in in tabs
+- IMPROV: added SoSource params
+- IMPROV: full getter/setters for SoSource
+- FIX: when changing tabs, parameters changeed, but controls didn't move
+- IMPROV: switch tab => all the So buttons now update well
+- IMPROV: improved GUI "new source"/"open file" => "live source"/"file source"
+- IMPROV: XYPadControlExt / handles: starting to work!
+- FIX: knobs are now updated when handle0 is dragged
+- FIX: control-click now resets handle0 in xy pad
+- FIX: when moving knobs, handle0 is now updated!
+- IMPROV: added code on Sy side
+- FIX: XYPad: there were 2 circles even when we had no sources
+- FIX: fixed refresh problem XYPad
+- IMPROV: manage parameters of SySources
+- IMPROV: create SySource when creating SoSource
+- IMPROV: remove correctly SySource when tab is closed
+- FIX: new handles did not appear when creating a new tab
+- FIX: fixed crashes when changing mode if we had some sources created
+- IMPROV: 3 state handles (normal, hilight, grayedout)
+- IMPROV: manage better handle hilighting (using sources)
+- IMPROV: change tab will hilight other handle
+- IMPROV: hilight other handle when changing tab (if not already)
+- IMPROV: gray out handle when source muted
+- FIX: when source mute, then change source, GUI gray out did not toggle off
+- IMPROV: source0 (mix): now managed like another source (parameters etc.)
+- FIX: mix source: now grays out unused knobs/controls
+- FIX: create a new tab, switch to synth => controls were grayed like if mix type
+- IMPROV: avoid unchecking "master" toggle button
+- FIX: "master" option was not transmitted between tabs
+- IMPROV: disable "master" when enabling "master" to another source
+- NOTE: master checkbox now well synchronized!
+- IMPROV: check master flag on the first real source created
+- IMPROV: transmit the master flag when source destroyed
+- IMPROV: gray out the whole source section when there is not source
+- IMPROV: handle for Mix source -> different image! (mic style icon)
+- FIX: small jumps when handling sources (not "mix" source)
+=> this was because now handle0 has a size different from the other handles
+- IMPROV: reverse display order => so the "mix" handle is under sources
+(and also reversed picking order, to stay consistent)
+- IMPROV: label on Sy side, display icon and source name
+- IMPROV: basic open file => tab name, source name
+- FIX: font was nor the same in tabs and in icon label
+- FIX: icon label: now use short file name
+- FIX: tabs did not refresh after open file
+- FIX: handles was not here after open file
+- FIX: create a source, go to Sy, mute it, drag it => synth type menu re-enabled
+- NOTE: Now basic buttons GUI reacts well. Now needs to add spectro and waterfall
+
+v6.0.1
+- REFACT: source "Generic" -> source "Impl"
+- REFACT: refactored the whole So source side
+- REFACT: refactored the whole Sy source side
+- NOTE: now all is well refactored
+- IMPROV: created new classes: GhostTrack2, and associated custom drawer and control
+- FIX: now it compiles with GhostTrack2
+- REFACT: removed dependencies between GhostTrack2 and Ghost plugin
+- IMPROV: created a GhostTrack2 
+- REFACT: create GhostTrack2 better
+- IMPROV: GhostTrack2 integrated! (it compiles, now need to test)
+- IMPROV: now we see the spectrograms!
+- IMPROV: changed the spectrogram colormap
+- FIX: spectrogram was enlarged in height
+- FIX: when zooming, the view was not refined
+- FIX: spectrogram did not disappear when changing view
+- FIX: create spectro, change pannel an return => graph state was very messy
+- FIX: fixed SoSources that were never deleted
+(now can create several sources, suppress some => this works!)
+- IMPROV: now transmit brightness, contrast etc. to spectro
+- FIX: spectro zoom center was not good when mouse over
+- IMPROV: now draw border around spectro graph
+- IMPROV: even draw graph borders when there is no graph
+For this, draw the graph background bitmap, whis has white borders
+- FIX: fixed valgrind unitialized values
+- FIX: fixed crash when quitting
+- FIX: fixed crash when suppressing a SoLive source
+(GhostTrack fix: FIX_REMOVE_CONTROL_MORPHO)
+- FIX: when zooming, the view refinement was bad (and also live problems)
+- FIX: fixed a crash when quitting
+- FIX: when changing panel, SoSource whole graph were not re-created
+- FIX: open so file source, spectrogram disappeared if close/reopen UI
+- FIX: so live source, spectrogram disappeared if close/reopen UI
+=> fixed a big bug: colormap data was reset is close/open ui
+- FIX: fixed crash when closing/reopening UI
+The problem was that the custom drawer and so on were not deleted before closing
+the UI, but just at the moment of re-opening, when we had no OpenGL context anymore
+- FIX: open 2 live sources, play the first, close/openUI => spectro was black
+(need to select the other tab, then the current one, to retrive the spectro)
+=> that was because all So graphs were disabled after controls re-creation
+- FIX: play button is now well associated with sources/params
+- IMPROV: manage the So sound well (mute when not playing etc.)
+
+v6.0.2
+- IMPROV: created all the waterfall and rt SAS classes (does not compile yet)
+- IMPROV: now it compiles
+- FIX: now it starts to show waterfall
+- FIX: waterfall problem when changing panel
+- FIX: crash when quitting
+- FIX: when playing a spectrogram, the result sound was the live one
+- FIX: the spectro selection dir was not taken into account
+- IMPROV: linked waterfall angles to plugin params
+- IMPROV: waterfall angles now global to all sources 
+(when changing one source waterfall, all angles of the other sources are updated)
+- FIX: now waterfall angles are well re-applied when re-starting the host
+- REFACT: suppress unused (and very dirty code), for waterfall angles
+- IMPROV: set good default waterfall angles (not aligned)
+- FIX: when changing panel, the waterfall data was reset (flat grid)
+- FIX: fixed detection parameters
+- IMPROV: fixed waterfall grid density (take max density, like in SASViewer)
+- FIX: fixed color coeff that was not initialized (and other coeffs)
+=> the color looked buggy)
+- FIX: fixed a crash when playing (waterfall thread error)
+- IMPROV: tracking lines: choosen better color theme (blue/green)
+And also better color for detection points
+- IMPROV: set default freq threshold to 25% (instead of 50%)
+- FIX: sometimes interaction froze forever, after opening tooltip
+e.g with ICaptionControl associated with drop down menu
+=> this was because many tooltips were created undefinitely, resulting on slow down
+and interaction freeze. (a new tooltip could have been created whereas we already had
+a tooltip opened)
+- IMPROV: in waterfall view, also display "input"
+- IMPROV: in waterfall view, also display harmonic (like noise)
+(and sort well: input, detection, tracking, harmonic, noise, color, warping)
+- IMPROV: set bevel for LinesRender2
+=> more beautiful, will avoid some artifacts
+- IMPROV: found a good lines render scale for displaying mangns and related
+- IMPROV: color waterfall had a strange scale
+- TEST: waterfall harmonic should have bigger peaks
+Tested the real data view => this looks drafty, not good.
+- IMPROV: added on waterfall view the 3 sub window for pitch etc (need to compile)
+- FIX: fixed compilation (for CurveView s)
+- FIX: CurveViews: now borders and titles are well displayed
+- FIX: now the amplitude CurveView is working!
+- IMPROV: made a dark transparent background for CurveView s
+- IMPROV: pitch and partials CurveView s start to display something
+- IMPROV: pitch CurveView is now working
+- FIX: partials curve view is now ok
+- NOTE: all curve views are finished!
+- TEST: compiled in release => seems fast
+- REFACT: moved IIconlabeControl from Morpho to bluelab-lib
+- IMPROV: choose curve view num data to have same speed than in waterfall view
+- IMPROV: slow down the waterfall and curve views scrolling: very good!
+=> it is far more readable
+=> it takes 10% less resources (in release)
+- FIX: so file source: spectrogram play bar does not show at startup
+(when selection is full, must click once on the spectrogram to make it appear)
+- IMPROV: pitch curve view: make the curve "jump" correctly when required
+(AVOID_TRACING_PITCH_JUMPS)
+- FIX: there was some original sound that is output (stereo channels)
+- IMPROV: manage source type "bypass" option
+- IMPROV: apply the source gain knob on So side
+(effect on CurveViewAmp, and on output volume)
+- IMPROV: trigger the play button with the space bar
+- REFACT: refactored so angle listener call chain transmission
+=> transmit listener top down instead of transmitting the message bottom up
+=> now avoids making all the chain classes inheric from view 3d listener
+- REFACT: removed all PartialTracker8 and QIFFT references from MorphoWaterfallView
+- TEST: tried the idea for pitch detection (chromagram, but on harmonics only)
+=> this doesn't seem to change the result drastically... (tested on edge trimer sound)
+- NOTE: So section is finished!
+
+v6.0.3
+- REFACT: renamed MorphoRTPipeline MorphoSoPipeline
+- REFACT: extracted MorphoWaterfallGUI from MorphoSoPipeline
+- REFACT: remove indirections to MorphoWaterfallGUI in MorphoSoPipeline
+=> now this is very well separated (sound processing/GUI)
+- REFACT: renamed "input" waterfall mode to "amp"
+(so it will be used for result output too)
+- IMPROV: add Sy graph background by default when no source
+- REFACT: removed old commented code
+- REFACT: SoSource and SySource inherit from WaterfallSource
+=> so SySources will manage Waterfall view automatically!
+- IMPROV: manage Sy sources view (and some other params)
+- IMPROV: created ViewTitle class
+- IMPROV: integrated correctly ViewTitle: ok!
+(it changes in Sy mode, when turning knobs!)
+- FIX: Sy view mode also changed when toggling solo off
+- IMPROV: created MorphoSyPipeline (+ some glue)
+- IMPROV: created MorphoSASMixer (empty for now)
+- IMPROV: continued on Sy section
+- IMPROV: IXYPadControl: now possible to retrive handles positions
+- IMPROV: transmit handle positions to SySources
+- REFACT: better implementation of handle coords and pad ratio
+- IMPROV: implemented almost all the Sy part! (need to test)
+- FIX: fixed crashes
+- FIX: fixed more crashes
+- FIX: passed valgrind and fixed mistake
+- FIX: fixed a crash due to partials linkedId
+(must re-sort after having mixed sources, because frames can be not consecutive etc.)
+- FIX: Sy panel: sometimes the view displays "tracking"
+- REFACT: removed old commented code
+- FIX: select sy mix source => amp display was very buggy
+(this was because we got XYPad values in %)
+- FIX: fixed pitch units
+- FIX: fixed params factors scale (pitch etc)
+- IMPROV: implemented correctly SAS factor (frame -> synth)
+- FIX: mix sas params were not applied to sound
+- FIX: mix waterfall view didn't change when chainging mix params
+- FIX: sas params were not applied to waterfall view
+- FIX: out gain was not applied anymore
+- FIX: noise envelope was flat in sy source waterfall view
+(and also in sy mix view)
+- FIX: noise mix is now noise/harmo mix (when at 100%, we have no harmo)
+- IMPROV: when turning the noise scale > 0, apply a noise scale of 2
+=> so we can increase the noise more than the origin
+- FIX: fixed SetSkipFft() that prevented call to ProcessFftBuffer()
+- FIX: several fixes => not sy can output sound!
+- FIX: mix waterfall scrolled 2x faster than source waterfall
+- FIX: made work ping pong
+- FIX: toggle reverse: play position jumped
+- FIX: pitch didn't work on sy file sources
+- IMPROV: now time stretch works
+- IMPROV: merge partials (2 raw sources) for mixing => starts to have sound
+- FIX: mix 2 raw sources: fixed partials continuity (sounded bad)
+- IMPROV: manage the "loop" flag better
+- FIX: gain of the first soure to 0 => both sources were silent
+NOTE: this fix may affect the mix of the noise part
+- IMPROV: keep sy file source handle grayed if "apply" has not been done
+- FIX: fixed valgrind "uninitialized value"
+- FIX: fixed another valgrind "uninitialized value"
+- FIX: pitch curve went 1 pixel before and 1 pixel after in width
+- FIX: the first curve pitch segment was wrong
+- FIX: pitch sometimes went outside the curve view
+- IMPROV: use synth mode "source" instead of raw
+=> so we can now apply color and warping!
+- IMPROV: transmit synth mode (SAS or "source") from so so synthesis
+(quick solution for the moment, to be improved)
+- FIX: when color was at the minimum, the sound stoped (and the host muted)
+- FIX: now the noise envelope outputs some sound!
+- IMPROV: grayed out sy "synth type"/all partials etc. if source is "monophonic" 
+- IMPROV: grayed out apply button for live sources
+- IMPROV: gray out file source apply button until threshold changes
+- IMPROV: grayed out "reverse" and "ping pong" for live sources
+- REFACT: refactored the gray out system which was confusing
+- REFACT: removed commented code + more refact
+- FIX: sy live source, mute, unmute => "loop" got enabled
+- IMPROV: some improvements for mixing several sources
+Fixed source distance value, handle param change, and distance factor apply to frames
+
+v6.0.4
+- IMPROV: adjusted the SAS synth scale, so the SAS level is not too high
+(SYNTH_AMP_COEFF_RESYNTH)
+- IMPROV: adjusted the mixing of the sounds (forgotten to previously commit)
+- TESTS: tested pitch jumps with a simple sine (hardly cut in some region)
+=> Monophonic source -> this makes big sound artifacts (pitch shift)
+=> Complex source => some artifacts, but not too hard
+- FIX: color effect was inverted
+- FIX: finished previous fix
+- FIX: color envelope behaved really wierdly with some params
+- IMPROV: manage "complex" sources better => starting to be good
+Seems good for factor + addition, to mix frame correctly
+- IMPROV: when selecting e.g "color" for a source, pass all the sources in same mode
+- FIX: pitch was not applied source by source (only mix)
+- FIX: amp not applied source by source (only mix)
+- FIX: color was not applied source by source (only mix)
+- IMPROV: source color etc. mute and solo: more or less ok
+(set INTERPOLATE_PITCH to 0)
+- REFACT: code clean after prev commit
+- REFACT: replaced "SAS" by "Morpho" everywhere
+- FIX: now when mix source is muted -> no sound
+
+- TODO: audio clicks
+- TODO: checkbox for pitch
+- TODO: implement midi
+
+- TODO(?): optimize a lot
+- BUG: sources distances, something wierd
+(y reversed? / weird with 3 sources
+
+- TODO(?): gray out solo mute for mix source
+=> see what is the use of mix color etc. solo/mute
+(different effect than other sources?)
+(disable them or not?)
+
+- PROBLEM: audio click when loop restarts 
+
+- TODO(maybe): avoid many duplicate in mixer 
+
+- TODO: Midi messages / virtual keyboard
+ 
+- BUG: source is solo by default
+
+- PROBLEM: distance, when mic is far above all sources
+
+- IDEA :) add a delay? :)
+
+- TODO: check linkedIds for SASPArtials (they are not linked?)
+- BUG: computation of weights/distances seem false
+- PROBLEM: SAS synth interpolation of frequency seem wrong
+- BUG: volume of SAS synth is very high compared to "source" synth
+- TODO: disable possibility of master flag for live sources
+(gray out controls etc.)
+- TODO: manage solo/mute
+- TODO: manage solor/mute for color, warping etc.
+- TODO: manage selection in SyFileSource
+
+
+- BUG(?): when outputing the noise envelop only, it sounds like phase issues
+- BUG: when in SAS resynth mode, the sound is very high (particularly on transients)
+
+- BUG: if set Reaper block size different from 512, sy play is stretched
+(e.g set it to 32 => it plays very quickly)
+
+- NOTE: SASFrame7::AddFrames, skipped add raw partials and add norm partials
+
+- TODO: SASFrame7::AddFrame: must add raw partials
+(and adapt the ids and linked ids accordingly
+
+- BUG: pitch source to 2, mix to -2 => we don't get result pitch at 0
+- TODO(later): improve noise scale effect
+Turn noise to 100% on source, and on -100% on mix => sould be 0 (it is > 0)
+Turn noise to 100 on source, and on 100% on mix => shoud be 200% (it is 100%)
+
+- TODO: SySources, amp => should process the sample result and get back the fft
+=> "output magns" => output result waterfall
+- TODO: must manage click on knobs, to change mode
+
+- BUG: startup, select sy mix source => we are in noise mode instead of amp
+=> this is because in knobs params change, we process the noise knob at the and
+=> will fix it later! (need click on knobs, to trigger mode, not param change)
+
+- TODO: limit memory in SASFrame::Mult / Add / Mix? and MorphoSASMixer
+
+- TODO(?): add a "strip" method to SASFrame7 (to remove debug data)
+- TODO: add a "out gain" knob also for so panel
+
+- TODO: for partials curve view: use a different method: keep only partials as data,
+do not fill everything with zeros
+(and so would be able to dr aw the envelope curve correctly)
+- PROBLEM: tracking lines and detection points: not sticking exactly to line tops
+
+- TODO: at the end, put all the classes from Morpho to bluelab-lib
+(once the october release will be finished)
+GhostTrack2 etc.
+GhostTrack2: use it on Ghost, it should be the same as GhostTrack,
+but better refactored
+- TODO: at the end, generate AAX wrap id
+
+// Multi pitch detection for guitar
+https://github.com/luciamarock/Polyphonic-Pitch-Detector-for-guitars?fbclid=IwAR294RHlh5jvM1P8bYLSzyJU1dm7N_11r0XRXMT577ZH_h6MVGifq48CykY

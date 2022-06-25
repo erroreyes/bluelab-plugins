@@ -1,0 +1,32 @@
+v5.0.0
+- initial version, from GhostViewer-v5.0.4
+
+v5.0.1
+- cleaned code
+- added precision parameter
+- debug
+
+v5.0.2
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+
+- recompiled to benefit from BLTypes
+- fixed a crash due to BLTypes / templates
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now ti compiles and executes well
+- IMPROV: removes curve description (there was only 1 description...)
+- FIX: fixed freeze button reset when restarting playback
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: memory optimization (gained ~ 40MB)
+
+v6.1.1
+- IMPROV: port to windows
+
+- TODO: add monitor button
+- TODO: maybe change the scale, so 500Hz will be almost in the middle(See other brands of plugins)
+(and also change for other plugins that have frequency scale on X)

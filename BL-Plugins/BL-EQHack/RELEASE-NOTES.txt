@@ -1,0 +1,213 @@
+10/09/2017 - v1.0
+Initial version
+
+10/09/2017
+-> moved to svnano
+-> moved from sdk10.5 to sdk 10.7
+
+v1.0 : support nanovg: ok !
+
+v2.0: interface 2.0
+v2.1: use radio buttons and 3 modes (no more hack checkbox)
+v2.2: 
+- added the apply_inverse mode
+- sidechain in Protools (partial)
+v2.3
+full side chain for all formats
+
+v2.3.1:
+- interface border
+- circle
+
+2.5.1
+- same as 2.3.1 (compat with versions of other plugins)
+- circle modifications
+
+11/11/2017 - v2.6
+- Drastically improved the performances (GL graph optimisation)
+
+v3.0
+- new interface
+
+v3.1
+- improved interface: graph shadows and radio buttons glow
+
+v3.2
+- port to new FftProcessObj6
+
+v3.3
+- port to fft7
+
+v3.4
+- port to fft8
+
+v3.5
+- profile
+- fft11
+- half fft
+
+v3.6
+- debug
+- some code clean
+- added reset button
+- improved the match coefficient for guess curve (color from red to green)
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+- fix save preset (curve) for VST2
+
+v3.7.1
+- fixed crash (protools, stereo, mono side chain)
+- fixed learn curve that was not smoothed correctly 
+(the smooth code was commented)
+
+v5.0.1
+- FIX in Fft14 for stereo side chain (may not affect this plugin)
+
+v5.0.2
+- double-click: reset knob value + edit knob text value (in fact, there are no knobs…)
+
+v5.0.3
+- port to pugl
+- FIX crash Logic (Mavericks): 
+=> sidechain IPlugBase::UpdateConnections(): second input was null
+- FIX: Logic, High Sierra: crashed at startup when start playing
+
+v5.0.4
+- FIX: for high framerates, the frequency axis label values was not correct
+e.g: 500Hz instead of 1KHz for 88200Hz
+- FIX: fixed axis label: “200KHz” => 200Hz
+- FIX: space “50 Hz”, supper first freq labels when project sample rate increases
+
+v5.0.5
+- FIX: when set on a track (different than noise, a real track), there is latency
+We can hear it if we keep the two tracks unmated (side chain and current track)
+- FIX: crashed auval when rescanned: freq axis compute got -1 index when samplerate 22050
+
+v5.0.6
+- Fft15
+- animated logo
+- graph without borders
+- graph separator
+- y offset for curve descriptions
+- added a dummy vertical axis (more beautiful, displays a grid on the graph)
+- Fixed flickering of radio button label (mode, learn)
+- FIX: side chain was not working on Orion (Windows) (fixed in IPlugVST2)
+- IMPROV: increased the AllZero threshold, to avoid a little that the curve goes out
+when silence + hiss
+- FIX: fixed bypass, that was not done if allZero 
+(that made repeat the last buffer when stopping the transport)
+- FIX: tweaked well the allZero threshold (-80dB)
+=> Protools stereo, when silence + hiss: the instant curve stops jumping (just a very few)
+- port to FftProcessObj16
+- IMPROV: high res curves (log / decimate)
+- FIX: when changing the sample rate,  the learn curve was not scaled to 
+the new horizontal axis
+- IMPROV: display instant curve also in guess mode (this could help setting the EQ)
+- FIX: crash StudioOne VST3 side chain (ANDI_FIX)
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.0.7
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+
+v5.0.8
+- recompile: benefit from DENOISER_OPTIM on CMA2Smoother
+=> no noticable perf gain
+- FIX: Valgrind Fix, “AU. Conditional jump depend on uninit”
+IplugStructs.h (NIKO_VALGRIND_FIX)
+- FIX: IplugAU.h (NIKO_VALGRIND_FIX)
+- FIX: removed GLContext3 and pugl => that made a warning in the Xcode debug console “class puglwindow is implemented in both … which one to use.”
+- FIX: when using a bad side chain config on Logic, the two curves contained only undefined values. But when displaying them with nanovg, some nanovg calls were done (save state, restore state, strokeEnd, with 0 stroke). That made the momry grow indefinitely on Logic, and consumes a lot of CPU. Now, check before if a curve as at least some defined values, and otherwise, don’t call nanovg at all. And this will benefit for other plugins too! (FIX_UNDEFINED_CURVES)
+- FIX: (was not really a problem). Take correctly into account if input is null, but side chain is defined (this is the case on Reaper with AU format (TRY_FIX_SIDE_CHAIN_AU)
+- IMPROV: upgraded to BL_FLOAT=float (does not really optimize…)
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: ported code (not compiled yet)
+- NOTE: now it compiles!
+- REFACT: added missing code
+- FIX: now it launches without crashing
+- IMPROV: improved the curves smoothness
+- IMPROV: display a db axis, with labels
+- FIX: guess curve description was green
+- FIX: centerd the curves by default
+- REFACT: some refacts on serialize/unserialize
+- IMPROV: improved GraphAmpAxis() to display every 10dB
+- IMPROV: imported init() and mutexes from Ghost
+- TEST: passed thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+- TEST: tested memory quickly (this looks ok, but the sidechain is not connected...)
+- FIX: fixes for compilation
+- NOTE: the curves seemed not smoothed enough
+=> that was because we used 2 different noise generators
+- FIX: fixed: switch learn -> guess: the learn curve disappeared
+- OPTIM: added skip ifft optim
+- REFACT: big refact, use EQHackObj2 (and removed many unused stuff)
+- FIX: big refact. Fixes line that was not exaclty at zero when no diff
+- FIX: fixed new curves eq capture -> code is more simple, and it works well
+- FIX: fixed many bugs after big refactor
+- FIX: the curve color was not computed well (everytime green)
+- IMPROV: added a “monitor” option
+- IMPROV: fixed buffers to optimize memory
+- TEST: passed heaptrack => this seems ok
+- REFACT: big code clean
+- FIX: while monitoring: learn, guess, learn => the curve stayed flat
+- IMPROV: passed GRAPH_CURVE_NUM_VALUES to 512, and fixed the new bug due to 512,
+"guess"/"courbe en creux
+- FIX: CMASmoothed curve was not accurate at all for low frequencies
+=> suppress useless CMASmooth, and increased the curve smoothness
+- TEST: passed perf -> all is optimized correctly! (the plugin takes 2% CPU)
+- IMPROV: imported LockFree mechanism
+For this plug, use poor man method. Because we also get curves values from curve
+to plug. So we can't just push curves values and display them.
+Instead, update curves in OnIdle();
+- TEST: passed valgrind helgrind => no data race!
+
+v6.2.0
+- IMPROV: integration of the new design
+- FIX: EQHack, guess => curve jittered
+- IMPROV: added tooltips
+- IMPROV: use fill curve for learn curve
+(to match other plugins)
+- IMPROV: applied curve smoothness improv from Air
+(use smoothness reocmputation, because we are using LegacyLock)
+- FIX: remove plug, re-insert plug => no learn curve (and crashes)
+- FIX: enable monitor, enable monitor automation (don't play)
+=> monitor button toggles off
+(fixed by prev fixes on othe plugins)
+- PROBLEM: with buffer size=32, it take 34%CPU (with 512, it takes 10%)
+- OPTIM: set back UPDATE_CURVES_ON_IDLE=1 now bs=32 => 18% and bs=512 => 8%
+- FIX: smooth curve scale was not updated after sample rate changed
+Steps: play a sine at 500Hz with 44100Hz, switch to 88200Hz => curve show bad value
+- FIX: guess mode: change sample rate => the learn curve disappeared
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation
+
+- TODO: for "mode" param, use enum param
+(so host UI will display "Fast/Best" instead of numbers)
+
+- PROBLEM(not important): in Guess mode, when sidechain track has no sound, the curves
+go up instead of down
+
+- TODO: Learn and Guess: make buttons (toggle off one when the other is toggled on
+Reset: also make a button that reset and toggles off just after
+(so we keep prev Learn or Guess button on)
+
+

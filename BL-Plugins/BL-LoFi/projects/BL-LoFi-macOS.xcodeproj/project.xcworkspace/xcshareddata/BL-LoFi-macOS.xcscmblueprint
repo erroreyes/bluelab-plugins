@@ -1,0 +1,156 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "4328BED05706880DBEE9C819756CD24A4B01EC07+++C3B6D41",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "920871E291B88136FD241BF8292C3181B7046EDA+++174E31F" : 9223372036854775807,
+    "11B94510860470908E89574702597330C32284A3+++C57FFD1" : 9223372036854775807,
+    "D6DF976AA6D14491C2314E8D1201C07F43E39CD1+++E0C7B3A" : 9223372036854775807,
+    "FD281AD048D68359FBE6C33B43084AE5A9038002+++AC91E78" : 9223372036854775807,
+    "8A833F92C11E0796132630B8F243971D4A4457F0+++3C5017D" : 9223372036854775807,
+    "171E40946CD64A32610152F063681CB3070CB21C+++D208297" : 9223372036854775807,
+    "9A323165C2503465941CE52EE3B3F8E3ADC1B997+++18B6DAF" : 9223372036854775807,
+    "C8B7B8C0C4D18522C4E0220A9DFAF7312913F18E+++0E75290" : 9223372036854775807,
+    "2661D2EE5A3A7E2C3D478776F112556662DF8327+++32C98B9" : 9223372036854775807,
+    "0E5EEE12F6D4793DBDDAF941CBDCC95198E42344+++0C5EFDC" : 9223372036854775807,
+    "DEB20A30819EDC4A868A49BED36266C4EBC68A44+++3E67A37" : 9223372036854775807,
+    "11B94510860470908E89574702597330C32284A3+++6B913A3" : 9223372036854775807,
+    "4328BED05706880DBEE9C819756CD24A4B01EC07+++C3B6D41" : 9223372036854775807,
+    "73B71BC17C4EBB140B95BB2DC34F63C8626DB3F3+++2E687D9" : 9223372036854775807,
+    "2454150EA69DC304A53A8948874B70C5A4AA2BDF+++0750179" : 9223372036854775807,
+    "99D5CCC5A852DD8070C11AFDAFA955853F06F5C2+++2A01D83" : 9223372036854775807,
+    "38A2885F9DAD13BAC560E80C68E5F20FBE8A6C4A+++EE998E0" : 9223372036854775807,
+    "638A67D03B65316AEB6FA1C9AE7FC6E7D2A44D28+++E003CEB" : 9223372036854775807,
+    "4BB7F394BB5AB390DEBB9A1B3B1251155C11EFB3+++B208651" : 9223372036854775807,
+    "6048AB9C4081DB70D0A1DD5B4153E4E53BC13DD8+++9B96928" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "751E9CC1-9360-4AF1-B314-ED3E14DFEC5D",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "920871E291B88136FD241BF8292C3181B7046EDA+++174E31F" : "iPlug2\/Dependencies\/IPlug\/VST3_SDK\/pluginterfaces\/",
+    "11B94510860470908E89574702597330C32284A3+++C57FFD1" : "iPlug2\/",
+    "D6DF976AA6D14491C2314E8D1201C07F43E39CD1+++E0C7B3A" : "Libs\/glm\/",
+    "FD281AD048D68359FBE6C33B43084AE5A9038002+++AC91E78" : "Libs\/RTConvolve\/",
+    "8A833F92C11E0796132630B8F243971D4A4457F0+++3C5017D" : "iPlug2\/Dependencies\/IPlug\/WAM_SDK\/",
+    "171E40946CD64A32610152F063681CB3070CB21C+++D208297" : "Libs\/fmem\/",
+    "9A323165C2503465941CE52EE3B3F8E3ADC1B997+++18B6DAF" : "Libs\/libebur128\/",
+    "C8B7B8C0C4D18522C4E0220A9DFAF7312913F18E+++0E75290" : "BL-Plugins\/",
+    "2661D2EE5A3A7E2C3D478776F112556662DF8327+++32C98B9" : "iPlug2\/Dependencies\/IPlug\/WAM_AWP\/",
+    "0E5EEE12F6D4793DBDDAF941CBDCC95198E42344+++0C5EFDC" : "iPlug2\/Dependencies\/IPlug\/VST3_SDK\/base\/",
+    "DEB20A30819EDC4A868A49BED36266C4EBC68A44+++3E67A37" : "Libs\/sndfilter\/",
+    "11B94510860470908E89574702597330C32284A3+++6B913A3" : "iPlug2\/",
+    "4328BED05706880DBEE9C819756CD24A4B01EC07+++C3B6D41" : "",
+    "73B71BC17C4EBB140B95BB2DC34F63C8626DB3F3+++2E687D9" : "Libs\/darknet\/",
+    "2454150EA69DC304A53A8948874B70C5A4AA2BDF+++0750179" : "iPlug2\/Dependencies\/IPlug\/VST3_SDK\/",
+    "99D5CCC5A852DD8070C11AFDAFA955853F06F5C2+++2A01D83" : "Libs\/DSP-Cpp-filters\/",
+    "38A2885F9DAD13BAC560E80C68E5F20FBE8A6C4A+++EE998E0" : "Libs\/libmfcc\/",
+    "638A67D03B65316AEB6FA1C9AE7FC6E7D2A44D28+++E003CEB" : "Libs\/RandomSequence\/",
+    "4BB7F394BB5AB390DEBB9A1B3B1251155C11EFB3+++B208651" : "iPlug2\/Dependencies\/IPlug\/VST3_SDK\/doc\/",
+    "6048AB9C4081DB70D0A1DD5B4153E4E53BC13DD8+++9B96928" : "iPlug2\/Dependencies\/IPlug\/VST3_SDK\/public.sdk\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "BL-LoFi-macOS",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "BL-LoFi\/projects\/BL-LoFi-macOS.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/steinbergmedia\/vst3_base",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0E5EEE12F6D4793DBDDAF941CBDCC95198E42344+++0C5EFDC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh.cluster026.hosting.ovh.net:bluelab.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "11B94510860470908E89574702597330C32284A3+++6B913A3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/iPlug2\/iPlug2.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "11B94510860470908E89574702597330C32284A3+++C57FFD1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Snaipe\/fmem.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "171E40946CD64A32610152F063681CB3070CB21C+++D208297"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/steinbergmedia\/vst3sdk.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2454150EA69DC304A53A8948874B70C5A4AA2BDF+++0750179"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/iplug2\/audioworklet-polyfill",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2661D2EE5A3A7E2C3D478776F112556662DF8327+++32C98B9"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jsawruk\/libmfcc.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "38A2885F9DAD13BAC560E80C68E5F20FBE8A6C4A+++EE998E0"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh.cluster026.hosting.ovh.net:bluelab.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4328BED05706880DBEE9C819756CD24A4B01EC07+++C3B6D41"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/steinbergmedia\/vst3_doc",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4BB7F394BB5AB390DEBB9A1B3B1251155C11EFB3+++B208651"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/steinbergmedia\/vst3_public_sdk",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6048AB9C4081DB70D0A1DD5B4153E4E53BC13DD8+++9B96928"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/preshing\/RandomSequence.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "638A67D03B65316AEB6FA1C9AE7FC6E7D2A44D28+++E003CEB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/pjreddie\/darknet.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "73B71BC17C4EBB140B95BB2DC34F63C8626DB3F3+++2E687D9"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/iplug2\/api.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8A833F92C11E0796132630B8F243971D4A4457F0+++3C5017D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/steinbergmedia\/vst3_pluginterfaces",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "920871E291B88136FD241BF8292C3181B7046EDA+++174E31F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/daleonov\/DSP-Cpp-filters.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "99D5CCC5A852DD8070C11AFDAFA955853F06F5C2+++2A01D83"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jiixyj\/libebur128.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9A323165C2503465941CE52EE3B3F8E3ADC1B997+++18B6DAF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh.cluster026.hosting.ovh.net:bluelab.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C8B7B8C0C4D18522C4E0220A9DFAF7312913F18E+++0E75290"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/g-truc\/glm.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D6DF976AA6D14491C2314E8D1201C07F43E39CD1+++E0C7B3A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/velipso\/sndfilter.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DEB20A30819EDC4A868A49BED36266C4EBC68A44+++3E67A37"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/grahman\/RTConvolve.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "FD281AD048D68359FBE6C33B43084AE5A9038002+++AC91E78"
+    }
+  ]
+}

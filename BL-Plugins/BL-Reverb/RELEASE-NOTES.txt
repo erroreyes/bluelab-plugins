@@ -1,0 +1,19 @@
+17/01/2020 - v5.0.0
+Initial version
+Done to check UST reverb used for Depth
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles
+- FIX: fixed crashes and refresh bugs
+- NOTE: not it runs well
+- FIX: sometimes it crashed at startup
+- FIX: fixed another crash
+
+v6.1.0
+- IMPROV: port to linux
+
+v6.1.1
+- IMPROV: port to windows
+
+- TODO: check memory (not yet checked)

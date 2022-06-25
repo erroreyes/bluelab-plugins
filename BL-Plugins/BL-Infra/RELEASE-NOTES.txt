@@ -1,0 +1,158 @@
+v5.0.0
+- initial version, from Air-v5.3.4
+
+v5.0.1
+- GUI: added controls
+- FIX: fixed high frequencies that appeared when generating sub octave partial
+- IMPROV: improved the phantom effect, so it is well hearable now !
+ 
+v5.0.2
+- added mono out switch
+- FIX: fixed small artifact in the sub octave frequency
+(avoid filtering zeros in the buffer, that is only filled 1/4)
+
+v5.0.3
+- OPTIM: when mono out, compute a single channel in input (optim gain: 40%)
+- IMPROV: Mix parameters with ramps to avoid clicks when changing values quickly
+(doesn’t work very well for sub octave knob)
+- IMPROV: "sub oct." => made gradual knob
+
+v5.0.4
+- Optimizations: 
+	TAG: OPTIM PROF Infra
+
+	- avoid copying long data buffers (do in place if possible)
+	- do not compute useless ifft
+	- set max partial tracker detection freq to 500Hz
+	- avoid fmod in sin out (SineSynth)
+	- graphics: avoid redrawing everything at each frame (new accessory, “mStrict”)
+=> the CPU consumption is now half than before (8% for process) (was ~18% CPU)
+
+- Other optimization:
+	- avoid computing phases that we don’t need, to avoid atan2()
+	- optimize some Utils functions loop
+=> 7% for process
+- Other optimization:
+	big optimization of all Utils (GetSize() and Get() removed from loops)
+=> 6% for process
+
+v5.0.5
+- fixed a bug amplitude computation in PartialTracker (=> PartialTracker4)
+=> amplitude computation was not accurate (a bit false, sometimes under the real value)
+“FIX_COMPUTE_PARTIAL_AMP”
+- added sub freq boost factor, to increase the volume of the sub freq by more than 1
+“SUB_FREQ_BOOST”
+- Fixed crackles of the submit knob
+- totally fixed remaining light crackles on the plant mix knob
+
+v5.0.6
+- extend the range to 500Hz
+
+v5.0.7
+- FIX: Avoid trial text bleed when GUI is refreshed => compute correctly the text rectangle (FIX_TRIAL_TEXT_BLEED)
+- FIX: Infra: avoid computing wrong max frequency (500Hz), when using higher sample rates
+(FIX_INFRA_SAMPLERATE)
+
+v5.0.8
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- IMPROV: added the “adaptive” option to avoid rumble sound
+- IMPROV: gray out the PHANT FREQ parameter when adaptive is checked
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles
+- FIX: fixed compilation with Cairo
+- FIX: fixed out gain default value
+- REFACT: ProcessObj: removed fifo decimators (unused), and fixed ProcessObj::Reset()
+- REFACT: ProcessObj: finished removing fifo decimators
+- FIX: the fft was badly computed, because FFtProcessObj16::Init() was not called
+- TEST: now it processes correctly
+- IMPROV: PartialTracker4 -> PartialTracker5 (will benefit from accurate Mel detection)
+- TEST: this works with PartialTracker5!
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: memory optimization (500Mb -> 50MB)
+
+v6.2.0
+- FIX: fixed sub order knbo value (it started at 2)
+- IMPROV: added graph, curves and axes
+- IMPROV: added sum curve
+- IMPROV: got oscillators fft data
+- IMPROV: get the oscillators curve accurately defined (not "blurry")
+It was not possible quicly compute fft and magns from the samples in InfraProcess2.
+Instead it has been necessary to create a new FftProcessObj16 and to pass the
+result to it, to get the fft data well defined.
+- IMPROV: put the blue curve in front of the purple one
+(more logical)
+- FIX: the sub octave was not generated anymore
+- REFACT: cleaned code in InfraProcess2
+- FIX: when sub was to zero, there was even a small low freq signal
+=> now, make the difference in samples, not in fft
+=> this improves a little
+- FIX: remaining curve freqs when everything to 0: fixed!
+=> Totally fixed. It was necessary to delay the input signal by "2 steps",
+to get exactly the same time for input and output when making the difference of curves
+- OPTIM: do not compute Fft for first input buf obj
+- NOTE: Apply gain to out curve? => no!
+=> this would make the visualization too complicated
+(and it is not done in Air)
+- FIX: when all freqs were at zero, the output was a bit greater than the input
+(automatically fixed by previous fixes)
+- NOTE: we are already using the latest PartialTracker (PartialTracker5)
+- IMPROV: created SineSynth3 from SineSynth2
+- REFACT: big code clean in SineSynth3
+- NOTE: don't use WDL / iPlug2 fast sine oscillator for SineSynth3
+=> because frequenciy changes at every steps, between two miletone partials
+=> IPlug2 Oscillator (FastSinOscillator) needs static frequency, to stay optimized
+- OPTIM: optimized memory => ok!
+- OPTIM: optimized memory a little
+- IMPROV: added a bass focus option
+So the generated sub anf partials can be forced to mono!
+- TEST: checked well with headphones, and real project with melody => that kills :) !
+
+v6.3.0
+- IMPROV: integration of the new design
+- FIX: purple curve was not displayed
+- FIX: number curtom radio buttons, rollover didn't cancel on mouse out
+- IMPROV: added tooltips
+- IMPROV: applied curve smoothness improv from Air
+- FIX: remove plugin, inset plugin => crash
+- FIX: when automated mono out => no sound output
+- FIX: when automated bass focus => no sound output
+- NOTE: block size 32 = 1300fps
+- OPTIM: for bs=32: lazy eval for data from fft obj to curves
+27% CPU -> 20% CPU (with blocks size 32)
+- TEST: tested for regression after mPartialTracker->SetComputeAccurateFreqs(true)
+=> the sound is now better. With sine waves, this avoids a wobble that we had previously, and the sound is more coherent.
+- TEST: test for another regression: looks ok...
+InfraProcess2::IncreaseInitialFreq, for new denorm partial index
+- TEST: re-tested with DjShadow track => it rocks!
+- NOTE: it takes about 2x more resources at 88200Hz (but it should be ok)
+
+v6.3.1
+- IMPROV: port to windows
+
+v6.3.2
+- FIX: windows fixes
+
+v6.3.3
+- IMPROV: mac compilation
+- FIX: fixed a tooltip message
+
+v6.3.4
+- FIX: fixed windows compilation
+- FIX: Ableton11/win10: gui refresh problem
+=> button numbers were missing from resources
+- FIX: host UI, set mono out on, switch to plugin UI => very bad sound
+(the waveform was really un-centered)
+=> this was because of a bad state done by ApplyParam(), whn bass focus and mono out
+- FIX: fixed a suspicious conditional
+
+- BUG(not for now): the sub mix knob crackles
+- BUG(not for now): when using only sub octave, additional partials are generated in high freqs (3 partials, ~ -80dB)
+
+- TODO: test thread safety
+- TODO: pass thread sanitizer and undefined sanitizer
+- TODO: say in the manual that with "bass focus" enabled, we consume less resources

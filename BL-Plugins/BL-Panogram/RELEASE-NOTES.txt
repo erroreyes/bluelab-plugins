@@ -1,0 +1,249 @@
+v5.0.6: initial version, from Chroma 5.0.6
+
+v5.0.7
+- renamed Pano -> Panogram
+- first functioning: play spectrogram inside selection
+
+v5.0.8
+- big code clean (selection and play code was copied from Ghost)
+
+v5.0.9
+- use only one FftProcessObj instead of one for display, and one for replay
+(so later we could transmit masks between PanogramFftObjs
+
+v5.1.0
+- REFACT: code clean (deleted the second FftProcessObj16)
+
+v5.1.1
+- IMPROV: play selection only in RECORD mode
+- FIX: many fixes on synchronization of play bar, selection, freeze on/off
+- IMPROV: limited play bar to selection box
+- OPTIM: optimized HistMaskLine
+- OPTIM: adaptations for GHOST_OPTIM_GL
+- FIX: fix crash when selection is down half outside
+- FIX: fix crash when selection is left half outside
+- FIX: the play bar / bar scrolled slowly when on the right, and fast when on the left
+- FIX: the play from the bar was not from the bar but always at the same start
+(FIX_BAR_PLAY_BAR_SPEED)
+
+v5.1.2
+- FIX: re-activated USE_RESAMPLER (because the display is bad with sample rate > 44100)
+- FIX: fixed bad display with high sample rates (and this, without resampling signal) 
+(no USE_RESAMPLER, but FIX_BAD_DISPLAY_HIGH_SAMPLERATES !)
+USE_RESAMPLER was bad for Panogram, because in Panogram, we need to play the sound
+- IMPROV: align better the play bar / graph display, and the sound that is currently played (FIX_SHIFT_LINE_COUNT)
+- IMPROV: avoid having the playbar playing at startup if we saved with freeze + play
+(disable play even when check freeze on)
+- FIX: with no selection, freeze on, freeze off, play 
+=> the sound was played in the middle instead of on the right of the graph// IMPROV: play, - IMPROV: stop, play => the playbar now restarts at the beginning of the 
+selection of the bar
+- FIX: on Reaper, with Panogram, when clicking on "windows float selected FX", 
+the colormap looked red (until we choose another colormap)
+=> after ResetGL(), the colormap was not renewed
+
+v5.1.3
+-FIX: avoid selection outside the view (this made a silence, the time the play bar runned outside the view). => reduce the selection if it is outside the view (FIX_CLIP_SELECTION)
+- FIX: just after having freezed, when clicking on the view, the spectrogram shifted lightly on the left (FIX_SPECTRO_SHIFT_CLICK)
+- FIX: New method to align better the sound with selection and play bar (SHIFT_X_SELECTION)
+- FIX: When left and right magns were 0, the indices are pushed at the extreme left
+(FIX_EPS_MAGNS)
+- FIX: play, freeze, wait a little, try to play a selection => no sound
+This was because the data continues to arrive to the FftObj, and fills with zeros
+This appended with in Reaper with TestSynchor project, where there are silences
+(FIX_FREEZE_FFT_OBJ)
+- FIX: With Reaper and SyncroTest (sine), Use a project freezed by default
+=> de-freeze, play host, stop host, freeze, then try to play the panogram => no sound
+The histo lines queue was not filled at the beginning (FIX_NO_SOUND_FIRST_DE_FREEZE) 
+
+v5.1.4
+- IMPROV: added stereo widen features (width, pan, mono to stereo)
+- IMPROV: gray out stereo widen controls when freezes
+
+v5.1.5
+- IMPROV: added “GREEN” colormap
+- IMPROV: moved the widgets and changed the GUI size
+- FIX: fixed crackles with StereoWidth and Pan (added smoothers)
+- IMPROV: set plugin io with 2 channels output
+- FIX: with mono sound in input (with Logic), there was no sound as output
+- TEST: rescan AU: ok
+- TEST: sound transparency: OK
+- IMPROV: avoid latency for nothing when we have no selection and we are just playing
+- FIX: fixed latency compensation (due to mono to stereo), for any samplerate
+- TEST: checked perfs: 24% CPU with full options (would be hard to optimize)
+- FIX: when changed the sample rate after using previous SR, the state was wrong
+(many masks were accumulated, all was out of synchro)
+- FIX: clear the spectrogram if we change sample rate, and we already have data
+(more coherent, avoids displaying the spectrogram while having cleared the audio data already)
+- TEST: tests perts with small buffer sizes: with 64, the perfs are still acceptable
+with 32, the CPU % doubles. => OK !
+- TEST: test latency (with RX6 show channels separately): ok !
+- FIX: on Windows, “L” and “R” letters were not displayed
+- FIX: click freeze => the width button grays out, then change guy size 
+=> the width button ungrays (same with pan and mono to stereo buttons)
+- FIX: crash Cubase 10 Mac, crash at startup (null buffers) FIX_CUBASE_STARTUP_CRASH
+- FIX: crash Cubase 10 VST3 only, when checking mono to stereo
+(that was due to latency set from guy thread, not supported by VST3) 
+(SET_LATENCY_IN_GUI_THREAD)
+
+NEW:
+- FIX: fixed two uninitiliaze values (NEW 20191006)
+- FIX: on Mac VST2 (Cubase), window close seemed to be closed directly from another thread 
+(FIX_MAC_CLOSE_BAD_THREAD)
+- FIX: gray out knob text values when knob was grayed out
+(the text is not becoming gray, but it is not editable anymore)
+- FIX: fixes radiobuttons and checkbox refresh problem (the problem seemed to be before GHOST_OPTIM_GL) (FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH)
+- TEST: use display link on max: USE_DISPLAY_LINK
+(more smooth, but not finished, crashes and freeze sometimes, due to threads)
+- FIX: when resizing GUI to the maximum, the logo was drawn 2 times, with a pixel shift
+(it looked more thick). That may have been due to the previous background not well cleared
+=> resized the background png to the maximum GUI size
+- FIX: removed FIX_MAC_CLOSE_BAD_THREAD wihch made a bug
+- FIX: really free the memory when the plugin is removed (FIX_GRAPHICS_COCOA_DEALLOC)
+
+- BUG: Cubase 10, Sierra: random crash of Cubase when just opening the plugin
+To reproduce, create and remove the plugin many times
+=> the bug seems to have disappeared now
+
+- FIX: Ableton, Mac, VST2 only: resize many times
+=> it dead locks with the GraphControl10::DrawGL() mutex
+(FIX_RESIZE_ABLETON_VST) => aborted
+
+- FIX: (try 2) Ableton, Mac, VST2 only: resize many times
+=> it dead locks with the GraphControl10::DrawGL() mutex
+(FIX_RESIZE_GUI_ABLETON_DEADLOCK)
+
+- FIX: If the plugin was hidden, and the host playing, mSpectroMagns and mSpectroPhases
+ continued to grow, without being ever flushed (big memory leak)
+(FIX_HIDE_PLUG_MEM_LEAK)
+
+v5.1.6
+- recompile with FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- FIX:in resource.h “#define FONT_ID 118 / #define KNOB_ATUNE_ID 118”
+- IMPROV: updated mono2stereo from Lauridsen to PseudoStereoObj2 (no delay, no coloration)
+- FIX: After a loop in the DAW, the left and right channels were sot synchronized anymore. PseudoStereoObj2 (FIX_LATENCY_RIGHT_CHANNEL)
+- TEST: checked latency for mono2stereo for several buffer size and 88200Hz
+- TEST: checked VST3 and checked that latency doesn’t crash
+- DOC: update manual
+- OPTIM: STEREO_WIDEN_COMPLEX_OPTIM
+- TEST: tested latency on Protools (and others) with new mono2stero with RTConvolver
+- FIX: FLStudio, Mac, AU, launch Impulses, choose Apply, play => crash
+
+v5.1.7
+- NOTHING REALLY NEW: disabled isPlaying(), to be able to use it while monitoring
+
+Next version: will benefit from RT_CONVOLVE_USE_WDL_FFT after recompilation
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: WIP... (it doesnt compile yet)
+- NOTE: now it compiles (not tested yet)
+- IMPROV: adde dmonitor button
+- IMPROV: added time axis
+- NOTE: it is starting to work (with bugs)
+- FIX: fixed crash hen quitting (custom drawer)
+- FIX: selection was not displayed
+- FIX: L/R was not displayed
+- FIX: fixed time axis scroll (whatever the mode/monitor)
+- FIX: fixed monitor for spectrogram and time axis
+- FIX: monitor didn't play selection
+- FIX: freeze, play, defreeze, freeze => the play button stayed toggled
+- FIX: play, change GUI size while playing => the time axis scrolled very fast
+- FIX: play button did't have y offset
+- FIX: fixed correctly "play, stop, change GUI size
+=> the time axis had an offset of around 2s"
+- FIX: mon, then change gui size => the time axis stoped
+- FIX: fixed freeze/play button when gui resize
+- REFACT: removed duplicate code
+- FIX: freeze, select, play than GUI resize => selection and play were reset
+- REFACT: big code clean
+- FIX: fixed a crash when wuitting
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: memory optim: 217MB -> 80MB (for default mode)
+- OPTIM: memory optim for mono->stereo: 500MB -> 80MB 
+- FIX: (after memory optim) select when playing => phases were really messy
+- FIX: select, play, pause play => some sound continued indefinitely
+=> managed all well, monitor, freeze, play
+
+v6.1.1
+- FIX: fixed compilation (BLTransport, spectro scroll4)
+- FIX: fixed an uninitialized variable
+- IMPROV: improved the accuracy of spectrogram play (sound)
+(since spectro scroll 4?)
+=> now it is much accruate (not 100% perfect, but really good!)
+- BUG: play, click freeze while playing
+=> spectro scroll jitters a bit statically
+- IMPROV: disabled monitor when freeze is toggled on
+- FIX: monitor, then freeze => this still scrolled
+- FIX: activate mon, play, then check/uncheck freeze box => monitor button blinked
+- FIX: monitor, bypass the plugin => it still scrolled
+- REFACT: big code clean
+- IMPROV: vertical scrolling for spectro scroll 4
+- IMPROV: vertical orientation for graph drawer (center line)
+- IMPROV: vertical orientation for time axis and L/R labels
+- IMPROV: vertical orientation for selection (mouse move not yet done)
+- IMPROV: vertical orientation for mouse making selection
+- NOTE: vertical scrolling is now finished!
+- FIX: monitor, bypass => black margin the the right
+=> fixed by a hack
+- FIX: play, put the transport somewhere very far (while playing)
+=> the time axis scrolled very quickly, and weirdly
+- TEST: tested memory consumption: ok!
+- OPTIM: small perf optim (8/9% -> 7/9%)
+- IMPROV: recompiled in double (since we output sound)
+(it was compiled in float by default, by mistake)
+- IMPROV: adapted gui refresh only when necessary (from Ghost and GhostViewer)
+- FIX: draw selection => view was not refreshed
+- FIX: freeze, play => view not refreshed
+
+v6.2.0
+- IMPROV: integration of the new design
+- FIX: resize gui without playing => time axis drifted
+- IMPROV: down arrow icon more readable
+- IMPROV: added tooltips
+- FIX: while playing , close UI, re-open UI => effect of bufferred scrolling
+- FIX: fixed black border and buffered scrolling better
+- FIX: fixed gui resize button alignment
+- IMPROV: applied LF mechanism for spectro scroll (from Chroma, to avoid crash)
+- FIX: activate monitor, automatize it => time axis frozen
+- TEST: installed the latest Reaper version 6.32
+- IMPROV: avoid a data race
+- BUG: play, freeze, play button on, change block size => no sound
+       - and play bar speed changes
+       - the plugin behaves as pass thru
+       - if we breifly activate monitor, it works after that
+- FIX: fixed the previous bug
+=> that was because playIn size was not updated (and then num samples requested
+for FftProcessObj16 was not updated also)
+- FIX: at 88200Hz, smooth scrolling jumped regularly (resynch)
+- FIX: monitor + play, resize gui => time axis scroll a lot
+(fixe from GhostViewer)
+- FIX: play half at 88200Hz, freeze+play => sound when playing on empty region
+- FIX: there remained some playable sound data after changing sampling rate
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+- FIX: display was not centerd anymore, like if it was panned left a lot
+That was a deep problem. When filterbank scale was linear, the data was just copied, whereas we should have took care of number of filters too, in case of resizing the data
+=> modified Scale (filter bank)
+
+v6.2.4
+- FIX: fixed windows compilation
+- IMPROV: changed the parameter name: "range" -> "brightness"
+
+- PROBLEM: with sr>88200, sharpness smooth is not very good anymore
+
+- PROBLEM: when no selection (and freeze), the sound doesn't start just at the
+play bar, it starts a bit after.
+And if we make a selection, it is played after it passes through the selection
+(this is noticable)
+
+- TODO: UpdateSelection(): do we need all these flags? (see also in Ghost)

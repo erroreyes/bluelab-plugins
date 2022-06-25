@@ -1,0 +1,106 @@
+
+// IPLUG2_ROOT should point to the top level IPLUG2 folder
+// By default, that is three directories up from /Examples/BL-Rebalance/config
+// If you want to build your project "out of source", you can change IPLUG2_ROOT and the path to common-mac.xcconfig
+
+IPLUG2_ROOT = ../../../iPlug2
+
+#include "../../../iPlug2/common-mac.xcconfig"
+
+//------------------------------
+// Global build settings
+
+// the basename of the vst, vst3, app, component, aaxplugin
+BINARY_NAME = BL-Rebalance
+
+// ------------------------------
+// HEADER AND LIBRARY SEARCH PATHS
+BLUELABLIB_INC_PATH = $(IPLUG2_ROOT)/../Libs/bluelab-lib
+LIBSNDFILE_INC_PATH = $(IPLUG2_ROOT)/../Libs/libsndfile/src
+KALMAN_FILTER_INC_PATH = $(IPLUG2_ROOT)/../Libs/KalmanFilter/src
+LIBSNDFILTER_INC_PATH = $(IPLUG2_ROOT)/../Libs/sndfilter/src
+CROSSOVERFILTER_INC_PATH = $(IPLUG2_ROOT)/../Libs/CrossoverFilter
+DSPFILTERS_INC_PATH = $(IPLUG2_ROOT)/../Libs/DSP-Cpp-filters/src
+DARKNET_INC_PATH = $(IPLUG2_ROOT)/../Libs/darknet/include
+FMEM_INC_PATH = $(IPLUG2_ROOT)/../Libs/fmem/include
+RTCONVOLVE_INC_PATH = $(IPLUG2_ROOT)/../Libs/RTConvolve/Source
+GLM_INC_PATH = $(IPLUG2_ROOT)/../Libs/glm
+EBUR128_INC_PATH = $(IPLUG2_ROOT)/../Libs/libebur128/ebur128
+R8BRAIN_INC_PATH = $(IPLUG2_ROOT)/../Libs/r8brain
+DECIMATOR_INC_PATH = $(IPLUG2_ROOT)/../Libs/Decimator
+RANDOM_SEQUENCE_INC_PATH = $(IPLUG2_ROOT)/../Libs/RandomSequence
+LIBSAMLERATE_INC_PATH = $(IPLUG2_ROOT)/../Libs/libsamplerate/src
+LIBFREEVERB_INC_PATH = $(IPLUG2_ROOT)/../Libs/freeverb
+LIBOPENBLAS_INC_PATH = $(IPLUG2_ROOT)/../Libs/OpenBLAS
+LIBFLAC_INC_PATH = $(IPLUG2_ROOT)/../Libs/flac/include
+LIBMFCC_INC_PATH = $(IPLUG2_ROOT)/../Libs/libmfcc
+LIBDCT_INC_PATH = $(IPLUG2_ROOT)/../Libs/libdct
+FASTAPPROX_INC_PATH = $(IPLUG2_ROOT)/../Libs/fastapprox/src
+INI_PARSER_INC_PATH=$(IPLUG2_ROOT)/../Libs/ini_parser
+HUNGARIAN_INC_PATH=$(IPLUG2_ROOT)/../Libs/hungarian
+
+LIBOPENBLAS_LNK_FLAGS = $(IPLUG2_ROOT)/../Libs/OpenBLAS/libopenblas_dynamic-r0.3.9_mac_st.a
+LIBFLAC_LNK_FLAGS = $(IPLUG2_ROOT)/../Libs/flac/lib/mac/libFLAC.a
+
+// If compiled for Cairo
+CAIRO_LNK_FLAGS = $(IPLUG2_ROOT)/Dependencies/Build/mac/lib/libcairo.a $(IPLUG2_ROOT)/Dependencies/Build/mac/lib/libfreetype.a $(IPLUG2_ROOT)/Dependencies/Build/mac/lib/libpixman-1.a $(IPLUG2_ROOT)/Dependencies/Build/mac/lib/libpng.a $(IPLUG2_ROOT)/Dependencies/Build/mac/lib/libz.a
+
+//
+EXTRA_INC_PATHS = $(IGRAPHICS_INC_PATHS) $(BLUELABLIB_INC_PATH) $(LIBSNDFILE_INC_PATH) $(KALMAN_FILTER_INC_PATH) $(LIBSNDFILTER_INC_PATH) $(CROSSOVERFILTER_INC_PATH) $(DSPFILTERS_INC_PATH) $(DARKNET_INC_PATH) $(FMEM_INC_PATH) $(RTCONVOLVE_INC_PATH) $(GLM_INC_PATH) $(EBUR128_INC_PATH) $(R8BRAIN_INC_PATH) $(DECIMATOR_INC_PATH) $(RANDOM_SEQUENCE_INC_PATH) $(LIBSAMLERATE_INC_PATH) $(LIBFREEVERB_INC_PATH) $(LIBOPENBLAS_INC_PATH) $(LIBFLAC_INC_PATH) $(LIBMFCC_INC_PATH) $(LIBDCT_INC_PATH) $(FASTAPPROX_INC_PATH) $(INI_PARSER_INC_PATH) $(HUNGARIAN_INC_PATH)
+
+EXTRA_LIB_PATHS = $(IGRAPHICS_LIB_PATHS)
+EXTRA_LNK_FLAGS = $(LIBOPENBLAS_LNK_FLAGS) $(LIBFLAC_LNK_FLAGS) $(CAIRO_LNK_FLAGS)//$(IGRAPHICS_LNK_FLAGS)
+
+// EXTRA_APP_DEFS =
+// EXTRA_PLUGIN_DEFS =
+
+//------------------------------
+// PREPROCESSOR MACROS
+// #bluelab
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_NANOVG IGRAPHICS_METAL
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_NANOVG IGRAPHICS_GL2 TARGET_OS_OSX=1
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_NANOVG IGRAPHICS_GL3 TARGET_OS_OSX=1
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_LICE
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_AGG
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_CAIRO
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_SKIA IGRAPHICS_GL2
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance IGRAPHICS_CANVAS
+//IGRAPHICS_CVDISPLAYLINK //=1 OS_MAC=1 TARGET_OS_OSX=1 //IGRAPHICS_METAL // TARGET_OS_OSX=1
+EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance TARGET_OS_MAC PARAMS_MUTEX IGRAPHICS_NANOVG IGRAPHICS_GL2
+//EXTRA_ALL_DEFS = OBJC_PREFIX=vRebalance SWELL_APP_PREFIX=Swell_vRebalance TARGET_OS_MAC PARAMS_MUTEX IGRAPHICS_NANOVG IGRAPHICS_GL2
+
+
+//EXTRA_DEBUG_DEFS =
+//EXTRA_RELEASE_DEFS =
+//EXTRA_TRACER_DEFS =
+
+//------------------------------
+// RELEASE BUILD OPTIONS
+
+//Enable/Disable Profiling code
+PROFILE = NO //NO, YES - enable this if you want to use instruments to profile a plugin
+
+// Optimization level -
+// None: [-O0] Fast: [-O, -O1] Faster:[-O2] Fastest: [-O3] Fastest, smallest: Optimize for size. [-Os]
+RELEASE_OPTIMIZE = 3 //0,1,2,3,s
+
+//------------------------------
+// DEBUG BUILD OPTIONS
+DEBUG_OPTIMIZE = 0 //0,1,2,3,s
+
+//------------------------------
+// MISCELLANEOUS COMPILER OPTIONS
+
+//ARCHS = $(ARCHS_STANDARD_32_64_BIT)
+ARCHS = $(ARCHS_STANDARD_64_BIT)
+
+GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO
+
+// Flags to pass to compiler for all builds
+GCC_CFLAGS[arch=x86_64] = -Wno-write-strings -mfpmath=sse -msse -msse2 -msse3 //-mavx
+
+// Uncomment to enable relaxed IEEE compliance
+//GCC_FAST_MATH = YES
+
+// uncomment this to enable codesigning - necessary for AUv3 delivery
+CODE_SIGN_IDENTITY=//Mac Developer

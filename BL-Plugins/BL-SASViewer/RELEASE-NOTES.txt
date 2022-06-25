@@ -1,0 +1,814 @@
+v5.0.0
+- from Waves-v5.3.0
+- implementation of analysis (ok) and basic sythesis (buggy)
+
+v5.0.1
+- changes, to avoid log scaling of x for color and warping
+- almost done
+- bug with amp db norm scale (sound is bad)
+
+v5.0.2
+- FIX: buggy amp to db scale norm
+
+v5.0.3
+- code clean
+- SAS model implemented (needs tests and improvements)
+- implemented pitch shift
+- improved display of frequency and warping
+- implemented fundamental frequency detection (TWM estimation)
+
+v5.0.4
+- improved and debugged frequency estimation
+- frequency estimation optilization: EstimateOptim
+- tried to manage frequency jumps
+
+v5.0.5
+- code clean
+- FIX: when ids were swapped (but with correct frequencies), there was a big jump 
+in SAS frequency computation
+- IMP: improved discarding tracking association by amp
+- FIX: fixed a typo in the code of partials association (very important)
+- IMPR: detection and suppression of “barbs” in the detection
+- FIX: debugged frequency computation
+- OPTIM: optimized frequency computation
+- REFACT: some code refactoring
+- IMPROV: added flag for activating debug in LineRender2 (instead of duplicated macros)
+
+v5.1.0
+- IMPROV: managed samples partials synthesis without needing rectangular window 
+- REFACT: separated detection and filtering in PartialTracker
+- IMPROV: basic noise extraction
+- FIX: fixed partials with 0 frequency => SAS freq was 0 (was a regression)
+- IMPROV: improved noise extraction + harmo extraction (magns - noise)
+- FIX: fixed latency value
+
+5.2.0
+- using PartialTracker2 (=> tracking is better !)
+- added a frequency axis
+- improved noise envelope computation
+
+5.3.0
+- PartialsTracker3 (magns converted to DB and scaled to Mel)
+- FIX: fixed a mel to freq conversion
+-> tracking works well (prominence !)
+
+v5.3.1
+- FIX: fix AmpToDB for debugging (display points height)
+- IMPROV: improved debugging (display points)
+- REFACT: coded well DetectPartials() (without strange indices) => maybe fixed a bug
+
+- IMPROV: activated tracking Kalman prediction => this seems better !
+- IMPROV: Kalman lib: added initialization values 
+- IMPROV: changed max freq for assoc => seems better !
+
+- IMPROV: avoid freq jumps (take higher frequencies instead of low freqs)
+
+- REFACT: use SASFrame2 and a separate object for computing frequency
+- REFACT: PartialTWMEstimate2
+- REFACT: code clean in PartialsToFreq2
+
+- TEST: test cep strum to get the main frequency => fails
+
+- IMPROV: improved PartialTWMEstimate2 (fix of strange code) => works well
+- IMPROV: improved freq jumps in PartialTWMEstimate2 (on “oohoo”)
+
+v5.3.2
+- REFACT: code clean (PartialTWMEstimate2)
+- REFACT: separated the “diff” custom method and cleaned PartialsToFreq4
+- IMPROV: added a “harmonyc” checkbox, to detect voice but also bells
+- IMPROV: added a size parameter to GUI Toggle Buttons
+
+- FIX: fixed color alpha for LinesRender2 (inversion of alpha and blue components)
+- FIX: LinesRender2: fix the borders that moved when decreasing the density
+- IMPROV: clean better the view when changing mode (reset the view)
+- IMPROV: mode “Tracking”, with blue lines for the tracked partials
+
+- FIX: display in tracking mode, go to another mode, return to tracking mode and play
+=> one remaining blue lines, not aligned, were displayed
+
+- IMPROV: implemented ifft synthesis (without and with additional FreqAdjustObj)
+- TESTS: tested other synthesis methods (wavetables etc.)
+- TEST: wavetable + overlap => worse than iffy + freqobj
+- TEST: sas oscillators + overlapping => not so efficient, sound not so good
+
+- OPTIM: limited the number of partials for frequency computation
+- OPTIM: optimized creation of blue lines from partials history (CreateLines2): optima x3
+- OPTIM: optimized display of blue lines at low density
+- OPTIM: optima for straight horizontal lines: 
+=> draw a long segment instead of many little ones (gfx perf gain: 25%)
+
+- OPTIM: freq computations: optimized nearest freq find (30% perf gain)
+- OPTIM: freq computations: precompute some values used for error (15% perf gain)
+- OPTIM: increased precision from 10 to 20 => 30% gain (and good quality)
+
+- OPTIM: optimized FreqsToMelNorm() (very low gain)
+- OPTIM: disabled LinesRender2::UpdateSlicesZ() (unused) => optimizes a little
+- OPTIM: optimized MagnsToPoints() (loop and coeff)
+
+- OPTIM: ComputeSamplesSAS2(): avoid too many function calls + sin LUT: ~20%
+- OPTIM: when color is 0, do not compute the rest (optima: 30%)
+
+- IMPROV: ComputeSamplesSAS3(): avoid tiny clicks (not audible)
+
+- OPTIM: ComputeSamplesSAS5(): color and warping interp out of the loop (Gain 25%)
+
+- IMPROV: added NoiseMix knob
+- IMPROV: knob OutGain
+- IMPROV: added synth quality button
+
+- OPTIM: LinesRender2 optimized straight lines for z and grid too (was only on x)
+
+v5.3.3
+FIX: LinesRender2::ProjectAdditionalLines2: reversed the scroll direction of additional blue lines (it was reversed compared to magnitude lines)
+IMPROV: managed stereo input
+
+v5.3.5
+- animated logo
+- Fft15
+
+pre 5.3.6
+FIX_CUBASE_STARTUP_CRASH
+
+v6.0.0
+- IMPROV: port to iPlug2
+- FIX: fixed a crash (should be checked better…)
+
+v6.0.1
+- REFACT: duplicated classes, for working on new version
+=> PartialTracker5, SASViewerProcess2, SASViewerRender2, SASFrame3, PartialsToFreq5, PartialTWMEstimate3
+- REFACT: very big code clean on all SASViewer classes (removed commented code, unused code, debug code)
+
+v6.0.2
+- FIX: fixed camera fov change with the mouse (it was not reacting well)
+- IMPROV: now draw every line with a different color, for debugging
+- FIX: fixed the clear color in the graph
+- IMPROV: add possibility to have a debug background color (DEBUG_BACKGROUND_COLOR)
+- TEST: checked which speed we must use to have all data => speed max!
+- IMPROV: made some adjustments to be able to see more debug data (slices and tracking lines)
+- TEST: took care of the step, it is 1! (must set the speed to maximum)
+- REFACT: some code clean
+- IMPROV: added use of the Scale class in SASViewerProcess2 (more clean code)
+- REFACT: code clean
+- FIX: Mel was applied 2 times on magns
+- TEST: convert db before mel (reverse) => to avoid stairs scaling => no change
+- FIX: fixed flat top partials that were not detected (after mel)
+- FIX: re-changed currentIndex = rightIndex (and ot rightIndex + 1)
+- IMPROV: now new partial tracking works almost as before, but working directly on Mel/dB normalized data (there remains to do noise envelope etc.)
+- REFACT: big code clean (PartialTracker5 without db etc.)
+- IMPROV: made a basic make varying amp and freq diff threshold also
+- NOTE: Quick mel and filter mel seem to get almost the same partials detection result 
+(but with filter mel, the spectrogram is less noisy in high frequencies)
+- IMPROV: added PreProcessTimeSmooth => better, set it to 0.5
+- IMPROV: adaptive max freq diff (GetFreqDiffCoeff()) => works very well for straight high frequencies.
+- TEST: tested A-Weighting curve: it is 0dB at 1000Hz! (ok!)
+- IMPROV: use A-Weighting to increase the volume of the high frequencies.
+=> better tracking!
+- IMPROV: for association, use the method AssociatePartialsPARSHL() (with fights/winner/loser)
+- IMPROV: for the result, use the the frequencies that have been filtered by kalman
+=> avoids many small zig-zags on lines (USE_KALMAN_FOR_RESULT)
+- NOTE: current version detect and track partials better. For the moment, code is drafty
+- REFACT: set the PreProcess steps to PartialTracker5 (instead of SASProcess2)
+- TEST: tested that we get the same result after the previous refact: ok!
+
+v6.0.3
+- REFACT: removed averything about sidechain
+- REFACT: renamed and removed some things
+- REFACT: removed all side chain features
+- REFACT: removed unused code in PartialTracker5 (many disabled moethods)
+- REFACT: renamed things better
+- NOTE: on “oohoo” example, some partials in the sound made some Y-shapes, and the tracking chooses one or the other branch of the Y.
+- REFACT: renamed full remaining sidechain code
+- REFACT: in SASFrame, use normalized values, not dB anymore
+- IMPROV: also display “harmo” and “noise” modes
+- IMPROV: when changing mode, now the data is not reset anymore
+- IMPROV: added time smooth for noise envelope
+- IMPROV: display correctly Amplitude
+- REFACT: improved “mode” argument
+- IMPROV: very basic frequency display (ESTIMATE_NAIVE)
+- REFACT: code clean
+- FIX: fixed PartialTracker5::DenormPartials()
+- IMPROV: interpolate SASFrame in DB => very better!
+- TEST: harmo display: not exactly zero between partials (there is some noise between partials) => partially fixed with DISPLAY_HARMO_SUBSTRACT=1
+- IMPROV: now output harmo and noise from SAS frame
+- NOTE: now the noise envelope looks very good compared to the previous one in Air 
+(not musical noise)
+- IMPROV: got more smooth SASFrame amplitude evolution (without holes)
+=> use COMPUTE_PEAKS_PARABOLA instead of COMPUTE_PEAKS_AVG
+- IMPROV: SASFrame3: far better naive implementation for getting freq.
+Use the frequency of the max amplitude partial (PartialTWMEstimate3::EstimateNaive)
+- IMPROV: choose between 3 modes for harmo output (using macros)
+(OUT_HARMO_SAS_FRAME, OUT_HARMO_EXTRACTED_ENV and OUT_HARMO_INPUT_PARTIALS)
+- IMPROV: interplate also phases for peaks (not working yet need mel on complex)
+- REFACT: removed ifdef DEBUG_MUTE_* + other refacts
+- REFACT: PArtialTracker5::DetectPartials(): smoothMagns -> magns
+- FIX: avoid a potential infinite loop in PartialTracker5::DetectPartials()
+- IMPROV: PreProcess complex data, so we have good phase interpolation
+- TEST: tested to process mel on re and im, not on magns and phase
+=> does not work, re and im are in [-1, 1], and then cancel when summed in mel filters)
+- IMPROV: use unwrapped phases before applying mel filter to phases 
+=> the result is different (it should be more correct)
+- TEST: preprocess time smooth on complex (TIME_SMOOTH_COMPLEX)
+=> bad, gives more noisy results
+- REFACT: for mel + unwrap phase, now use a simple #ifdef switch => code more clear
+- IMPROV: implemenented a method to finally get float bin for peak, with accuracy, and without error! (COMPUTE_PEAKS_HALF_PROMINENCE_AVG / ComputePeakIndexHalfProminenceAvg)
+- IMPROV: interpolated magns and phases without complex (use unwrapped phases)
+(the complex version ComputePeakMagnPhaseInterpComp, was very bad)
+- NOTE: with the tow previous improvments, the results are really better
+(no weird oscillation of the low frequencies, good amplitudes)
+- REFACT: very big code clean (removed all expe and unused code from PartialTracker5)
+- TEST: tested that we had unwrapped phases at the right place: ok
+- TEST: tested with SASFrame/Synth => better result than previously!
+- NOTE: WARPING_SMOOTH_COEFF=0 => WARPING_SMOOTH_COEFF=0.5
+- REFACT: ComputeSamplesSAS5 => ComputeSamplesSAS6 (more clean code, removed unused code)
+- FIX: BLUtils::ConsumeLeft() was optimized, but risky
+=> implemented it less risky (exactly the same behavior)
+- WIP: generate the SAS synthetized sound without artifacts
+	- we have frequencies that jump a little briefly, due to warping
+	- we may have amplitude interpolation problems
+	- we ave some small vertical lines, like small clicks
+	- tested witout warping, and without amp 
+		=> there are some problems even with only the pure frequencies
+- TEST: tested to generate directly a sine wave from ProcessBlock()
+=> we also have incorrect harmonics, at very low amplitude
+- FIX: recompiled the plugin with double instead of float
+=> we don’t have the strange harmonics on pure sine waves anymore!
+- NOTE: compiling to double solves the small jump (some hz) in SASFrame, when debug-outputing only the 3rd partial.
+- NOTE: compiling with double also solves many small jumps when outputing all the partials from a sas frame (neutral, without warp or color)
+- REFACT: use only SASViewerProcess2::ProcessSamplesPost() and no more ProcessSamplesWin()
+- IMPROV: manage amplitude exactly like in the SAS paper (better!) 
+(use ampDenoms)
+- IMPROV: interpolate color in dB, over frames => does not really change the result
+- IMPROV: interpolate color in dB, also over samples => changes! and it’s a bit better!
+- IMPROV: interpolate frequencies using Mel (changes just a little the result)
+- IMPROV: added frequency smooting (just for debugging)
+- NOTE: when frequency smooth factor is 0.9, this limits a lot vertical line artifacts
+- TEST: Retested Linesrender2 in Wav2s to check that it is not broken: ok!
+- FIX: adapted to new GUI resize mechanism (from GhostViewer)
+=> Fixes when we have two plugins, resize one => OpenGL error that makes display bugs
+- IMPROV: imported init() and mutex changed from Ghost
+- FIX: fix crashes with “imported init() and mutex changed from Ghost”
+- TEST: passed thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+- FIX: fix for compilation
+- FIX: activate correctly legacy lock for LinesRender2
+(this fixes display problem and huge memory leak)
+- FIX: partially fixed partials (additonal lines) display
+- FIX: for "tracking" display, synchronized the speed of partials and magns
+- FIX: fixed speed for all display modes
+- FIX: partial lines display color blinked
+- FIX: fixed crash when moving the view
+- IMPROV: duplicated SAS classes and incremented version
+- IMPROV: implemented freq detection using chroma feature (not it just compiles)
+- TEST: passed valgrind => no problem!
+- IMPROV: re-tested resynthesis (SAS) + better pitch estimate
+=> now compute pithch using chroma feature (very good pitch result)
+=> A bit hackish for PartialsToFreq6::FindBestOctave2
+- OPTIM: optimized memory
+- OPTIM: SASFrame4: interpolate linearly instead of rescaling at each sample
+INTERP_RESCALE=0. Optimizes very well. Perf gain: 26% => 17%
+Seems to not change the sound a lot (waveform changes a bit,
+higher partials change a bit)
+- OPTIM: improv a little INTERP_RESCALE
+- IMPROV: added A, F, C, W params control knobs
+- IMPROV: added a freq/harmo mix knob (instead of 2 checkboxes)
+- FIX: re-activated warping
+- FIX: color envelope was not well computed (e.g on project TestWarping)
+=> bypass the plug => the sound is totally different
+=> this is because it interpolated slowly from the last partial to the end
+=> solution: cut after the last partial
+- REFACT: improved the code of the previous fix
+- IMPROV: for warping, set warping to 1 for first partial
+- FIX: PartialTracker5::DenormPartials: also denorm indices
+- FIX: fixed the color envelope, that decreased slowly to the end
+- IMPROV: some fixes and improvements
+- FIX: the previous commmit seems to improve warping that makde jumps
+(it still makes some oscillations, but it is not audible)
+- TEST: checked warping using sine: it is not perfect, but better...
+- REFACT: big code clean in PartialsToFreq6 and SASFrame3
+- IMPROV: added checkbox to resynth odd/even partials only
+=> now, bowl seems to have a good color!
+- OPTIM: for processing in mono
+Previously, the SASViewer processed in stereo
+perf gain: 22% => 18%
+- IMPROV: smoothed warping more (improves bowl)
+- REFACT: cleaned comented debug code
+- IMPROV: when sound starts (bowl), harmonic part generated garbage (transient)
+=> now, detect onset, and if transient detected, do not generate samples, only noise
+=> this fixes garbage frequencies at beginning of sound with transient
+- IMPROV: fixed latency compensation value
+- IMPROV: created object PhasesEstimPrusa
+- TEST: tested Prusa for improving transients
+=> nothing changed in the dound
+- IMPROV: improved onset/transient detection management
+=> made a hack to synchronize onset detection with mAmplitude
+=> this now dimishes the transient spread, synthetized by sines
+=> this avoid garbage sine frequencies when transients
+=> the result is better!
+- TEST: tested that partials etc and mangs etc were not out of synch: ok!
+=> made a test project, and dumped many data
+=> there is a delay of 1 frame before we start getting filtered partials
+=> there is a delay of 1 frame before we got real frequencies (freq adjust obj)
+- NOTE: the "dbg param" knob i.e the tracking association distance,
+is oftern better to set to 2 (instead of default value of 1) 
+- IDEA: warping: adjust on chroma frequency, but also wraps the first partial
+- IMPROV: for warping, take chroma-compute freq as ref, and warp first partial
+=> this looks more logical, e.g is first partial is warped
+=> we should be confident with the chroma-computed freq!
+- IMPROV: improved accuracy of partial tracker 5 detected frequencies
+Best partial tracker freq: now have an accuracy < 1Hz (before, it was 8Hz or more)
+Changed mel scale to linear, use parabola
+Add a flag to be set with: SetComputeAccurateFreqs()
+Note: with this new method, the frequencies values are very stable
+(for pure sine waves, they almost don't change)
+Bowl example: this fixes some small frequencies brief jumps
+=> now the sound is very pure
+- FIX: fixed crashes due to ComputePeakIndexParabola() fails
+Rounded bounds for PartialTracker5::ComputeAccurateFreqs()
+=> this fixes most of the failures 
+Checked the input of PartialTracker5::ComputePeakIndexParabola(), to avoid crash
+(sometimes the input data is a bit weird by itself)
+- FIX: warping introduced a small pitch (e.g on project TestWarping)q
+=> that was because of the warping envelope indices
+=> now TestWarping works at 100%
+- IMPROV: Limit the maximum values that the detected warping can take
+(LIMIT_WARPING_MAX)
+=> that improves a bit for "oohoo", the frequent and brief jumps of the warping 
+- IMPROV: improved the warping algo, in case of may (random) partials
+=> this is now really better in case of many partials
+=> but still not pêrfect if we briefly loose the tracking
+- IMPROV: improved color factor effect (before it had no effect)
+Use a sigmoid, that now really changes the color
+("bowl" example really show the increase of the color,
+it add theorical high harmonics that sound rellay well, really natural)
+- NOTE: 1rst demo made to Jean-Michel (Synth Fest)!
+
+v6.1.1
+- IMPROV: port to windows
+- IMPROV: new partial tracking (from papers) WIP
+- REFACT: big code clean in PartialTracker6
+- REFACT: extracted Partial to individual class
+- REFACT: extracted filtering features to class PartialFilter
+- REFACT: some small code clean
+- REFACT: genericity for PeakDetector
+- IMPROV: implemented PeakDetectorBillauer
+- IMPROV: added a new mode to display detected peaks
+- FIX: fixed display of peak detection
+- FIX: Fixed noise bursts with Billauer peak detector
+This was because for single peak, the peak width was 1023.
+=> now, limit the peak width
+- FIX: partials frequency was not accurate anymore
+=> this was because linear filter bank modified a bit the data
+- IMPROV: improved billauer by adjuting better PEAKS_WIDTH_RATIO
+=> now billauer seems better than prev BL detector
+- IMPROV: display the data in MEL scale (again)
+=> since the tracking is now in linear scale, it was necessary
+to apply mel scale for displaying
+- IMPROV: implemented QIFFT (need to be tested)
+- IMPROV: use QIFFT class for real peak frequency
+- TEST: tested QIFFT frequencies: ok!
+- FIX: several fixes in QIFFT (and tested a lot)
+- IMPROV: use phases unwrapping for QIFFT => it looks better
+- IMPROV: had look at the appending A of the paper, and implemented it for QIFFT
+=> Now the results look good, thanks to tha ppendix A formulas
+- FIX: fixed the frequencies values, from binF QIFFT
+=> the values were not accurate at all
+- FIX: QIFFT: fixed a mistake from the article (in Appendix A)
+- TEST: tested the QIFFT two methods => now exactly the same result!
+- IMPROV: improved the display of QIFFT result
+=> now draw two segments, 1 for alpha0, and 1 for beta0 (red/blue)
+- TEST: added some debug dump for QIFFT
+
+v6.1.2
+- FIX: windows fixes
+- IMPROV: tested gaussian windows for QIFFT => this works!
+For the example of tremolo (volume change), we now have values for amplitude deltas
+(with hanning, we had also frequency deltas, that was wrong)
+- FIX: fixed crashes when using FREQ_RES > 1
+- IMPROV: QIFFT also works with Hann + zero paddings x2!
+- NOTE: gaussian seems to give a bit better results for QIFFT,
+and consumes not more CPU
+- NOTE: for resynth, zero pad x2 is good, Gaussian is strange
+- FIX: fixed ola gaussian windows
+- IMPROV: implemented gaussian confined
+- TEST: tested pure input resynth, with gaussian
+Tested with confined or not confined, and with ana gaussian then hanning resynth
+=> pure gaussian seems good (confined is a bit different)
+- FIX: made a kind of normalization for fft and gaussian windows
+- NOTE: now reconstructing the input is almost transparent
+(done by ignoring partials etc, just reconstructing from the fft)
+- IMPROV: do not noramlize ana gaussian win, normalize only synth win
+(and the result is still transparent)
+- REFACT: improved debug for bypassing processing
+- IMPROV: better tracking (thanks to confined ana gaussian window)
+=> now all the bugs for gaussian are fixed! 
+- IMPROV: use real LOG scale for QIFFT
+- IMPROV: decreased the coeff for displaying beta0
+(otherwise if coeff is too high, the decreasing steps become negative,
+and the beta0 blue lines are not displayed in the decreasing phase)
+- IMPROV: improved alpha0 management (+ tests)
+- IMPROV: QIFFT::FindPeak() now works!
+It has been necessary to set the TIME SMOOTH knob to 0 in the plugin. By default it was at 50%, and we smoothed magns, but not phases. This gave wrong results for QIFFT.
+Now the red and blue segments go to the right direction on tremolo and sine sweep.
+=> QIFFT::FindPeak2() does not work for the moment.
+- TEST: tried to fix QIFFT::FindPeak() (failed...)
+=> will use QIFFT::FindPeak(), which is correct!
+- FIX: fixes and improv on PeakDetectorBillauer
+       - When we start by a peak, now manage it correctly.
+       - Manage well peaks at bin 1 
+       - Fixed bad peaks sent to QIFFT (that was because of a db scale change on data
+       between PeakDetector and QIFFT)
+- IMPROV: adapted billauer peak detector delta to pure log y scale
+- FIX: billauer peak detector: fixed false positive for first peak
+- NOTE: now we stick on the first partial for debugging, and it is ok!
+- IMPROV: define empirical coefficients for delta0 and beta0 => this seems ok!
+- IMPROV: defined empirical coeffs for alpha0 and beta0: perfect!
+=> so now we can predict the next value transparently, the scale is good!
+- TEST: tested to predict amps and freq dumped values => it seems ok!
+- IMPROV: WIP PartialFilterAMFM
+- FIX: fixed the threshold knob param that was incorrect
+(for this, made the macro USE_BILLAUER_PEAK_DETECTOR public)
+- IMPROV: finished implementing PartialFilterAMFM (not working well yet)
+- IMPROV: improved code of PartialFilterAMFM (but no real result quality gain)
+- IMPROV: only half of detected points were displayed
+- IMPROV: synchronized detected points and partial lines to data lines
+- FIX: fixed LinesRender2, when startup scrolling ther was bad buffered data
+- REFACT: refactored Kalman, for zombies, and AM/FM, for zombies
+- IMPROV: display zombie points as pink dots
+- FIX: there was inf values due to log scale log(0) => inf
+- FIX: fixed scale problem for amp (considering alpha0)
+(amps were in normalized db, whereas alpha0 was in log scale)
+- FIX: fixed the number of zombies
+(test: if we define 5 zombies, we actually now get them!)
+- IMPROV: now can display every processing step using DISPLAY_EVERY_STEP
+(before, we skipped steps, which make data hard to understand)
+- IMPROV: improved freq res smoothness
+- IMPROV: adjusted better coeff for display alpha0
+- TEST: tested what's happening when 2 partials cross
+(constant sine + sine sweep)
+=> at crossing point, the constant sine amplitude is not detected anymore
+=> and the two amplitudes start to grow a little, before the crossing point
+- IMPROV: made a trick function to resolve partial crossing problems
+=> that works well!
+- OPTIM: small optim that doesn't work so well
+(MIN_PARTIAL_AGE)
+- FIX: fixed LF and LA computation (there was clockwise problems for area)
+- IMPROV: big improvement for partials jumping
+Rewritten AssociatePartialsAMFM(). In fact there were two cases for disconnecting
+existing links, and we managed only one!
+=> this fixes very well many cases of partials jumps! :)
+(drafty code for the moment)
+- REFACT: big code clean of partial tracking
+- IMPROV: re-enabled partial crossing fix, which is necessary
+- IMPROV: quick optimizations, to avoid freezing a very long time
+- IMPROV: quick fixd FixPartialsCrossing() to avoid bad results
+e.g "bowl", some partials were often swapped very wrongly
+=> added a maximum frequency for swapping, to be sure to swap near partials 
+- IMPROV: increased max zombie age to 5 => better
+With max zombie age=3, we sometime lost ids of straight sine during partial crossing
+(this was because of 2 almost superimposed peaks, during a too long time)
+- TEST: since Billauer + AM/FM, the results are really better!
+- OPTIM: optim display alpha0 and beta0 segments
+origin: 18/26% result: 16/21%
+- TEST: test perfs: origin: 16/23% - no display: 11%
+- IMPROV: implemented hungarian in PartialFilterAMFM
+- TEST: tested perfos of hungarian: hungarian: 30%CPU / amfm: 30%CPU
+(almost same perfs...)
+- TEST: hugarian quality looks less than AMFM
+- IMPROV: improved hungarian, to manage better MxN matrices
+- IMPROV: improved score like in Neri paper
+- TEST: implemented time smoothing in complex number => not good
+=> magns data is not well smoothed, and AM/FM parameters are bad
+- TEST: tested simple magns time smoothing and AM/FM parameters: good!
+(need to use reasonable smoothing factor, like max 0.2 or 0.4
+- NOTE: re-tried time smooting, and it is very good!
+=> give very well defined patials for bowl
+- NOTE: simple AM/FM method seems to give best result
+Hungarian-AM/FM is close to simple AM/FM
+Hungarian-Neri is worse (but there are parameters to tweak,
+and we didn't test them at all)
+- IMPROV: implemented big freq jumps checking, depending on beta0: very good!
+CheckBigJump()
+=> now the partial tracking is almost perfect (just one jump on "bowl")
+=> even on bells or "hedge trimmer", it is amlost perfect!
+(thanks to time smoothing too)
+- TEST: re-enabled synth from partials only (not SAS)
+(OUT_HARMO_INPUT_PARTIALS, prev: OUT_HARMO_SAS_FRAME)
+=> the sound is good, some defects
+- IMPROV: set default time smooth to 0.5 (instead of 0)
+- IMPROV: added a checkbox option for "resynth from raw partials"
+- IMPROV: Billauer peak detector: avoided many flat partials
+- TEST: tested another way to sum amp and alpha0 in db
+Converted to amp, mult, converted back to db
+=> this was exactly the same!
+- IMPROV: fixed alpha0 empirical coeff (EMPIR_ALPHA0_COEFF)
+=> this was really necessary, for amps
+- TEST: tried to remove AssociatePartialsAMFM::CheckBigJump()
+and find the real problem
+=> the problem seems to be that the peak threshold is too high,
+must detect more peaks
+- TEST: set MAX_ZOMBIE_AGE to 1 (prev: 5): may be better finally
+- TEST: setup all the parameters to have good result
+=> better to detect many peaks, then filter all => for high harmonics
+But this can take a lot of resoures.
+And have musical noise due to short high freq partials
+- OPTIM: optimized samples resynth (find prev id)
+- REFACT: cleaned BLUtilsMath::PolygonArea
+- REFACT: cleaned PartialFilterAMFM::ComputeLF()
+- OPTIM: filter partials AM/FM: trapezoid area instead of polygon
+(OPTIM_TRAPEZOID_AREA)
+=> the result waveform is a bit different, but it looks good too,
+even if we can have obtuse trapezoids
+- OPTIM: partial filter am/fm: optimized id find (when possible)
+(OPTIM_SAMPLES_SYNTH_SORTED_VEC)
+- IMPROV: partial filter AM/FM: set num iters to 10 ((origin: 5)
+=> sometimes more iters were necessary to solve correctly
+- TEST: tried to improve partial filter hungarian
+=> no way, it is always a bit worse than simple method
+(maybe big jump fix does not work well for hungarian)
+- TEST: tried to deactivate a-weighting => not better
+(USE_A_WEIGHTING)
+- TEST: checked the frequency scale used for LF => it is ok!
+(linear scale, as expected)
+- NOTE: time smooth generates some wrong AM/FM red lines (amp alpha0)
+=> but is is also very useful to remove noise! 
+- TEST: re-checked Billauer => looks correct
+- IMPROV: Billauer peak detector: add a "thres2" to limit num peaks
+(keep peaks with biggest prominence)
+- FIX: peak detector Billauer: fixed left and right bounds
+(there were badly shifted)
+- IMPROV: better small peaks suppression
+Now use real prominence algo from matlab => very good!
+- IMPROV: do no limit min freq when synth with "RAW_PARTIALS"
+- IMPROV: better detection of very low freq partials
+- IMPROV: implemented basic AssociatePartialsNeri()
+(without hungarian)
+- IMPROV: added a knob for Neri delta 
+- IMPROV: hacks and fixes for Neri score
+=> now this gives almost the same result as AM/FM
+- NOTE: when setting threshold to have all th partials => very good result!
+- IMPROV: default value for Billauer delta: 1%
+- IMPROV: added peak suppression for high harmonics instead of prominence 
+=> this way we fill some holes in low frequencies
+(prev prominence method is also good for global result, but lets holes in low freqs)
+- OPTIM: big optimization of partial tracking AMFM!a
+Do not use "find id" method, but keep indices instead
+Possiblity to look around an index, to avoid looking at the whole set each time
+=> the result sound is a bit different than "simple" version
+=> now it doesn't lock anymore when we have all the partials
+- TEST: display partials tracks smaller
+- OPTIM: SASFrame5::FindPrevPartialIdxSorted2
+- OPTIM: ChromagramObj (optimizes unused code...)
+- OPTIM: ChromagramObj
+- FIX: fixed compilation after prev commits
+- OPTIM: some small optimizations
+- OPTIM: SASFrame5: OPTIM_SAMPLES_SYNTH_SORTED_VEC3
+=> after these optims, we gained 10/20%
+- REFACT: moved debug partial from partial filter am/fm to Partial.h
+- FIX: improved SASFrame5, so that we don't have volume decrease
+- IMPROV: apply the SAS params to RAW partials
+=> very interesting results, especially for polyphonic sounds!
+- REFACT: code clean in SASFrame5
+- FIX: SAS warping: avoid some strange holes in the warp envelope
+(e.g when using warping test with 4 sines) 
+- FIX: SAS warping: fix strange test int the warping algorithm
+- FIX: with raw partials + SAS params, warping seemed not good
+=> fixed several problem of warping, including algorithm problems
+=> also implemented inverse warping
+- REFACT: refactored inverse warping (more clear)
+- REFACT: refactored inverse warping (suppressed unused partial age)
+- IMPROV: improved peak width adjutment (used for noise envelope)
+- IMPROV: improved debug dump partials
+- TEST: checked that now we have a good noise envelope: ok!
+=> peaks are cut well!
+=> noise is loud as expected
+- FIX: fixed a valgrind error: index out of bounds
+- IMPROV: warping envelope: Lagrange interpolation!
+- IMPROV: tested Lagrange for color emvelope (this not bad...)
+- IMPROV: improved debug partials dumping
+- TEST: checked that color envelope is not "bouble db": ok!
+- TEST: listened carefuly after Lagrange warping improvement: ok!
+- IMPROV: now hide every debug display when "SHOW TRACK3 is off
+- TEST: tested nearest neighbor for get color and warping
+- TEST: optimization tests (thres2=100%): current 27% can hope: 18%
+origin: 27% - no gui + quick:  18/21% - no gui + noquick 23/24%
+no display: 20/24% - no display + quick: 16/23%
+
+v6.1.3
+- REFACT: WIP refactoring SASFrameAna/SASFrameSynth
+- REFACT: created SASViewerProcess5
+- REFACT: created SASViewerRender5
+- REFACT: code clean in SASViewerProcess5
+- REFACT: compilations fixes
+- REFACT: use new classes in plugin class (+ clean)
+- REFACT: create SASFrameAna, SASFrameSynth, and SASFrame6
+- REFACT: cleaned SASFrame6
+- REFACT: cleaned more SASFrame6 and adapted some code (buggy for the moment)
+- REFACT: fixes after prev refact
+- REFACT: fixes after prev refact (now the 3 modes sound ok)
+- REFACT: created PartialsTracker7
+- FIX: now it compiles!
+- FIX: now it executes!
+- REFACT: use time smooth method in BLUtils when possible
+- REFACT: more clear code (denorm partials...)
+- FIX: color and other data were zero
+- FIX: color coeff and other coeffs were not applied
+- FIX: re-implemented correctly onset detection
+- IMPROV: refactored a bit onset detection (will need more work)
+- FIX: "resynth partials" mode: there was no sound
+- TEST: compared to prev versions: this is almost the same
+(some clicks)
+- NOTE: refactoring SASFrameAna/SASFrameSynth: done!
+- IMPROV: improved and tested onset detection
+=> this works as expected, but still needs improvements (disabled for now)
+
+v6.1.4
+- IMPROV: tried cancel warping in SASFrameAna (sound is now worse)
+- FIX: fixed a crash/valgrind problem
+=> warping could become negative due to LAgrange osscillations,
+leading to negative indices later
+- TEST: repassed valgrind: now this is ok!
+- NOTE: gave up optim NormalizePartials() for the moment (bad sound)
+- TEST: tested canceling warping before color (swap) => not better
+- TEST: checked that we can not suppress partial kalman filter
+- IMPROV: debug disable all display if "SHOW TRACK3" is disabled
+For debugging perfs. (DEBUG_DISABLE_DISPLAY)
+- TEST: checked perfs
+w/ display - raw: 19/21% - source: 21/22% - resynth: 21/24
+w/o display - raw: 12/14% - source: 14/16% - resynth: 14/16%
+source: 20% detection, 12% synthesis
+- OPTIM: manage more things with SASPartial => smaller in mem than Partial
+14/16% => 14=>15%
+- OPTIM: "source": avoid a division in a loop
+14/15% => 13/15%
+- OPTIM: optim + fix: warping factor seemed to be applied 2 times
+13/15% => 13/14%
+- OPTIM: optimized "raw" synth mode
+13/14% => 12/14%
+- TEST: tested with only SASViewer plugin (no spectro, no display) => 10%
+- FIX: fixed pitch detection that was now wrong
+And at the same time guaranteed that we got a good noise envelope
+- NOTE: orig perfs: 24/26%
+- OPTIM: optimized partial tracking (24/26% -> 24/25%)
+- OPTIM: optmized memory for DisplayTracking()
+(OPTIM_PARTIAL_TRACKING_MEMORY)
+- REFACT: created IdLinker class (generic Id link for partials and other)
+- REFACT: removed old code
+- REFACT: improved IdLinker class
+- OPTIM: optimized memory more for DisplayTracking()
+(OPTIM_PARTIAL_TRACKING_MEMORY2)
+- OPTIM: optimized DisplayTracking with IdLinker
+=> we gain a lot!
+- REFACT: refactored old code after optimization
+- OPTIM: optimized memory
+- REFACT: Debug flag in main class: DEBUG_PERFS
+- OPTIM: PartialFilterAMFM: HARD_OPTIM
+- OPTIM: SASViewerProcess5::HARD_OPTIM
+- OPTIM: use the "quad same color" optimization, for detection mode
+- FIX: fixed missing high freq partials (no assoc) when using NUM_STEPS_LOOKUP
+- TEST: the sound still looks good with HARD_OPTIM toogled on!
+- IMPROV: integrated HARD_OPTIM!
+- FIX: color was not applied with "source" mode
+- FIX: volume was too low in "resynth" mode (compared to "source" and "raw")
+
+- TODO: use enum parameters whenever possible (instead of int parameters)
+
+- TODO: generate partials in a "common method"
+
+
+deque<WDL_TypedBuf<BL_FLOAT> > mInputMagnsHistory; => use bl_queue
+// TODO: denorm partials, for "source" synthesis (keep only freqs and ids?)
+
+- OPTIM: use linerp, and take only warp0 and warp1 (piecewise linear)
+- NOTE: the first partial is not generated anymore (since big refact)
+- BUG: there are audio clicks, with the 3 methods
+- TODO: bench... (and checkbox "partials" => no debug display at all)
+- IDEA: try to use fast approx sine if need optimize
+
+- BUG: view is reset when resizing GUI
+
+- TODO: refact osc/raw modes: make a common code for synth, taking partials as input,
+and a separate "gen" code for "generating partials". for osc, generate all partials,
+for "raw", take an normalize the existing detected partials
+(would need only the frequency...)
+
+- TODO: optimize a lot (incremental processing at the maximum)
+  	- FixPartialCrossing(): is it still necessary? (it consumes a lot)
+	- GetPartial(t) ?
+	- pre-apply sigmoid for GetColor(), pre-apply warping factor for GetWarping()
+=> this will be possible to make a lot more incremental processing!
+(even on the already optimized "osc" code)
+
+
+
+- TODO: fine tune color envelope (last value shoud be zero!)
+And current right partial foot bound should be false...
+
+- IDEA: for missing traked partials at high freqs when thres is max
+=> try to increase the loop bounds
+(see: NUM_STEPS_LOOKUP)
+
+- NOTE: warping and inverse warping: we don't manage the full freqs range
+- NOTE: raw partials + SAS params not exactly the same sound as pure SAS
+
+- TODO: optimize more, to be able to handle all peaks easyly without threshold
+- NOTE: the display takes quite resources (Points/Additional Lines)
+- PROBLEM: AssociatePartialsAMFM::NUM_STEPS_LOOKUP==8 => we loose higest partials
+
+- NOTE: with bell (i.e polyphonic sound), the detected pitch seems to oscillate a lot
+=> that makes impossible to resynth something coeherent
+
+- NOTE: maybe the "delta" threshold can be set to 1% (or 0.1 ?) once and for all...
+- NOTE: There are still partial jumps. Must use CheckBigJump() to avoid them
+=> seems to still be a kind of problem with PartialFilterAMFM
+(impossible to find what...)
+And maybe adjut a bit better the coeff in CheckBigJump()
+
+
+- TODO first: re-check that scaling with linear still behaves as before
+(after Panogram fix)
+       - it should not modify the data at all (for good peak detection)
+       - does it resize the data now? (it didn't before 
+
+- IDEA: get the chroma pitch from the filtered partials, using their width
+(for "hedge trimmer" for example, to get a continuous SAS frequeny)
+
+- TODO: adapt SAS for polyphonic sound
+- TODO: try to optimize!
+- TODO: if there are too many partials, skip everything, to avoid freezing
+- PROBLEM(still): "vocal" example: on high frequencies, some partials jumps
+- TODO: improve "color" shape. Try to take it from non filtered/filtered partials
+(just to see), improve the global shape of the envelope
+(for the moment, color seems computed from unfiltered partials, which makes misses
+, which should be fixed using filtering and zombies)
+- TODO: billauer peak detector, maybe improve left and right indices estimation
+(for the moment it uses a fixed value: PEAKS_WIDTH_RATIO)
+
+
+- NEW FILES: SASViewerProcess4.cpp SASViewerProcess4.h PartialTracker6.cpp PartialTracker6.h SASFrame5.cpp SASFrame5.h PeakDetector.h PeakDetectorBL.h PeakDetectorBL.cpp PeakDetectorBillauer.h PeakDetectorBillauer.cpp SASViewerRender4.cpp SASViewerRender4.h, PartialFilter.cpp PartialFilter.h Partial.cpp Partial.h PartialsToFreq7.cpp PartialsToFreq7.h QIFFT.cpp QIFFT.cpp PartialFilterAMFM.h PartialFilterAMFM.cpp PartialFilterMarchand.cpp PartialFilterMarchand.h PartialFilter.h
+
+
+- TODO:
+    - refact code (SASFrame used Partials from PTracker5, SASFrame is used to detect things, difficult to use a new PartialTracker type easily)
+    - use partial tracking from chroma feature: track chroma features, find freq octaves and get partials from they amps => so we could get a color for multiphonic sounds!
+    (and be more robust!)
+    - maybe improve current partial tracking (see article "Fast Partial tracking (2018)"
+    - other idea:
+      	    - chromagram, normalize each row
+	      (not by amplitude, otherwise drum strikes would be very brights, as they are not chromatic at all)
+    	    - then threshold to keep only high chroma value (or find peak)
+	    - then sprad this values to frequencies (and octaves)
+	    => this should make "partials", for harmonic parts, very well defined
+	 
+- BUG: warping jumps if we briefly loose the tracking
+
+- BUG: frequency and amplitude have some jumps
+For freq, this may be due to octave selection => current method is naive and may fail
+
+- TODO: re-enable DETECT_TRANSIENTS_ONSET and find a method to setup the threshold
+(it was very good for "bowl")
+
+- IDEA: use IR convolution for noise to improve the transients?
+
+- TODO: warp envelopes with pitch change
+
+- NOTE: PartialsToFreq6::FindBestOctave2 fails for HedgeTrimmer
+=> maybe add a knob to choose the octave
+
+- TODO: InfraProcess2: check for regression
+InfraProcess2::IncreaseInitialFreq, for new denorm partial index)
+(PartialTracker5::DENORM_PARTIAL_INDICES)
+
+- IDEA: to get noise with good transients
+=> take the noise env in FFT, do IFFT to get an IR, and RT convolve in samples domain
+- IDEA: maybe interpolate color envelope with splines
+- TODO: SASFrame3::ComputeColorAux(): use real interpolation (freq -> color idx)
+And maybe use mel scale for freqs.
+- TODO: ad the end, avoid transformations and reverse-transformation between partial tracker/sasProcess and SASFrame. xy(), mel, db etc.
+- TOOD: re-check “synth by input partials” => there are still some small vibrations sometimes in the partials. Find why.
+- TODO: re-check square magns as input (and sqrt as output)
+- TODO: harmo env = input - smoothed noise envelope => is it more clean?
+- TODO: do we really need the threshold? (re-read the article on dsprelated.org, to see if they threshold). Maybe use sparsity (GTR onset sparsity), to detect what is partial and what is background noise).
+- TODO: fix latency
+
+- TODO: thrs (at the beginning) is a noise threshold. Rename it to “background noise threshold or similar). Try to use basic denoising: substract the noise at the early beginning (substract constant noise)
+
+- TODO: analyse well COLOR_CUT_MISSING_PARTIALS, and maybe add a parameter for it
+- PROBLEM: render fast or best (for harmo) does not render the same output volume
+- BUG: LinesRender2: LINES_TIME => jitters
+- TODO: smooth color knob (in SASFrame) + compute smooth noise envelope in SASFrame
+- TODO: find and remove clicks if any
+- TODO: optimize all that!
+- NOTE: for the moment, the frequency computation uses a naive implementation
+- IDEA: maybe add analyzed phases for re-synthesis (compute delta-phase, for each soure partial, and apply this delta linearly to the synthesisez sound.
+
+PARSHL(to improve BL):
+- SQUARE_MAGNS
+- FREQ_RES 4 (better results, but takes more resources)
+- use “Equal-loudness contour” (60Hz curve), instead of A-Weighting ?
+
+OTHER PLUGS:
+- GUIResize plugs, several plugs, resize one => they all get bad display then
+- TODO: if it works very well, add it to the PitchShift plugin

@@ -1,0 +1,84 @@
+v5.0.0: initial version, from Panogram 5.1.5
+- REFACT: cleaned code from panorama
+=> this version is a simple panogram
+
+v5.0.1
+- first tests: use atan2(l, r)
+
+v5.0.2
+- implementation of paper “Localization of multiple sound sources with two microphones” -
+Chen Liu (implementation of the basic principle)
+(preparing g a clean project version)
+
+v5.0.3
+- begin of implementation of paper
+- implemented correctly the paper basis (delay line replaced by fft phase shift)
+- cutoff at 6KHz
+- NOTE: no stencil implementation for the moment
+
+v5.0.4
+- tests for 2D (SourceLocalisationSystem2D => give up)
+- hack: for 2D, use 1 line on x and 1 line on y, then multiply
+=> we get a cool heat map !
+- implemented stencil (deactivated for the moment)
+- better detection: no more constant sound source at the center
+(ALGO_LIU disabled, new ALGO_NIKO enabled)
+
+v5.0.5
+- optimizations
+- Optimized phase shift : simply multi complex instead of many sin, cos and aran
+(OPTIM_PHASE_SHIFT_COMPLEX) => very big perf gain !
+- optimized: avoid allocating big data each time (OPTIM_DELAYED_SAMPLES)
+- optimized one allocation “in loop” (OPTIM_RESULT_DIFF)
+- optim: OPTIM_COINCIDENCE_PUSH
+- conclusion: OPTIM_PHASE_SHIFT_COMPLEX mades a lot of optimization, the others not sure..
+- tests with 2d modes: MODE_2D3
+
+v5.0.6
+- IMPROV: better 2d implementation
+- TESTS: tests to try to get good results in 2D => INTER_MIC_DISTANCE is very important !
+DEBUG_2D
+- FIX: fix/hack stencil mask to have exactly the good number of lines compared to 
+the coincidence mask (STENCIL_HACK)
+
+v5.0.7
+- IMPROV: fine tune stencil (dilation, precomputed masks…)
+
+v5.0.8
+- REFACT: code clean
+- TEST: tested mask orientation: ok !
+- TEST: implemented different methods for stencil
+- FIX: fixed TimeIntegrate(), which had no effect
+- TEST: test BuildMinMaxMap()
+- TEST: implemented MaskMinMax() => make larger bells
+- DEBUG: display the coincidence map in real time on the graph
+- TEST: tested with a mixed track => interesting results
+- DEBUG: display the localization curve in real time on the graph
+- TEST: Calmes works better with Sine MultiSources than Niko
+- TEST: Niko works better with WhiteNoise MultiSources than Calmes
+- IMPROV: implemented FreqIntegrateStencilCalmes2()
+=> now Calmes well implemented, works with multi sine and multi noise tests
+(for multi sine, we must move the freq knob for a good calculation)
+- TEST: at 30cm (mac, RealTime) => 1 or 2 samples of difference…
+- TEST: white noise, fake delay => max +/- 54 samples (good significant move: 20 samples)
+- NOTE: 1 sample = 7mm @44100Hz
+- IMPROV: implementation for 2 vertical Zoom H1 (left and right)
+=> coincident mics => manage amplitudes
+
+v6.0.0
+- IMPROV: port to iPlug2
+- FIX: fixes to make Bat work => ok!
+- REFACT: big code clean
+- IMPROV: replaced GraphCustomDrawer::AlwaysRefresh() by NeedRedraw()
+- IMPROV: adapted init and mutexes from Ghost
+- TEST: passed thread sanitizer => nothing to fix! all ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+
+v6.1.1
+- IMPROV: port to windows
+
+- IDEA: try to get the same visu as in the movie “The Seed” (electromagnetic field displayed in blue/grey). Use the panogram algorithm on X and on Y, and interpolate. Put the two zoom stereo recorders in cross (to get a “double-cross”). 
+

@@ -1,0 +1,76 @@
+subdivisions: Using default '1'
+policy: Using default 'constant'
+layer     filters    size              input                output
+    0 conv     16  3 x 3 / 1   256 x  32 x   4   ->   256 x  32 x  16  0.009 BFLOPs
+    1 max          2 x 2 / 2   256 x  32 x  16   ->   128 x  16 x  16
+    2 conv     32  3 x 3 / 1   128 x  16 x  16   ->   128 x  16 x  32  0.019 BFLOPs
+    3 max          2 x 2 / 2   128 x  16 x  32   ->    64 x   8 x  32
+    4 conv     16  1 x 1 / 1    64 x   8 x  32   ->    64 x   8 x  16  0.001 BFLOPs
+    5 conv    128  3 x 3 / 1    64 x   8 x  16   ->    64 x   8 x 128  0.019 BFLOPs
+    6 conv     16  1 x 1 / 1    64 x   8 x 128   ->    64 x   8 x  16  0.002 BFLOPs
+    7 conv    128  3 x 3 / 1    64 x   8 x  16   ->    64 x   8 x 128  0.019 BFLOPs
+    8 max          2 x 2 / 2    64 x   8 x 128   ->    32 x   4 x 128
+    9 conv     32  1 x 1 / 1    32 x   4 x 128   ->    32 x   4 x  32  0.001 BFLOPs
+   10 conv    256  3 x 3 / 1    32 x   4 x  32   ->    32 x   4 x 256  0.019 BFLOPs
+   11 conv     32  1 x 1 / 1    32 x   4 x 256   ->    32 x   4 x  32  0.002 BFLOPs
+   12 conv    256  3 x 3 / 1    32 x   4 x  32   ->    32 x   4 x 256  0.019 BFLOPs
+   13 max          2 x 2 / 2    32 x   4 x 256   ->    16 x   2 x 256
+   14 conv     64  1 x 1 / 1    16 x   2 x 256   ->    16 x   2 x  64  0.001 BFLOPs
+   15 conv    512  3 x 3 / 1    16 x   2 x  64   ->    16 x   2 x 512  0.019 BFLOPs
+   16 conv     64  1 x 1 / 1    16 x   2 x 512   ->    16 x   2 x  64  0.002 BFLOPs
+   17 conv    512  3 x 3 / 1    16 x   2 x  64   ->    16 x   2 x 512  0.019 BFLOPs
+   18 conv    128  1 x 1 / 1    16 x   2 x 512   ->    16 x   2 x 128  0.004 BFLOPs
+   19 conv   1024  1 x 1 / 1    16 x   2 x 128   ->    16 x   2 x1024  0.008 BFLOPs
+   20 deconv2  128  1 x 1 / ( 1  1)    16 x   2 x1024   ->    16 x   2 x 128  0.008 BFLOPs
+
+   21 route  20 18  16 x 2 x 128 -> 16 x 2 x 256
+   22 deconv2  512  1 x 1 / ( 1  1)    16 x   2 x 256   ->    16 x   2 x 512  0.008 BFLOPs
+
+   23 route  22 17  16 x 2 x 512 -> 16 x 2 x 1024
+   24 deconv2   64  3 x 3 / ( 1  1)    16 x   2 x1024   ->    16 x   2 x  64  0.038 BFLOPs
+
+   25 route  24 16  16 x 2 x 64 -> 16 x 2 x 128
+   26 deconv2  512  1 x 1 / ( 1  1)    16 x   2 x 128   ->    16 x   2 x 512  0.004 BFLOPs
+
+   27 route  26 15  16 x 2 x 512 -> 16 x 2 x 1024
+   28 deconv2   64  3 x 3 / ( 1  1)    16 x   2 x1024   ->    16 x   2 x  64  0.038 BFLOPs
+
+   29 route  28 14  16 x 2 x 64 -> 16 x 2 x 128
+   30 deconv2  256  1 x 1 / ( 1  1)    16 x   2 x 128   ->    16 x   2 x 256  0.002 BFLOPs
+
+   31 route  30 13  16 x 2 x 256 -> 16 x 2 x 512
+   32 upsample            2x    16 x   2 x 512   ->    32 x   4 x 512
+   33 deconv2   32  3 x 3 / ( 1  1)    32 x   4 x 512   ->    32 x   4 x  32  0.038 BFLOPs
+
+   34 route  33 11  32 x 4 x 32 -> 32 x 4 x 64
+   35 deconv2  256  1 x 1 / ( 1  1)    32 x   4 x  64   ->    32 x   4 x 256  0.004 BFLOPs
+
+   36 route  35 10  32 x 4 x 256 -> 32 x 4 x 512
+   37 deconv2   32  3 x 3 / ( 1  1)    32 x   4 x 512   ->    32 x   4 x  32  0.038 BFLOPs
+
+   38 route  37 9  32 x 4 x 32 -> 32 x 4 x 64
+   39 deconv2  128  1 x 1 / ( 1  1)    32 x   4 x  64   ->    32 x   4 x 128  0.002 BFLOPs
+
+   40 route  39 8  32 x 4 x 128 -> 32 x 4 x 256
+   41 upsample            2x    32 x   4 x 256   ->    64 x   8 x 256
+   42 deconv2   16  3 x 3 / ( 1  1)    64 x   8 x 256   ->    64 x   8 x  16  0.038 BFLOPs
+
+   43 route  42 6  64 x 8 x 16 -> 64 x 8 x 32
+   44 deconv2  128  1 x 1 / ( 1  1)    64 x   8 x  32   ->    64 x   8 x 128  0.004 BFLOPs
+
+   45 route  44 5  64 x 8 x 128 -> 64 x 8 x 256
+   46 deconv2   16  3 x 3 / ( 1  1)    64 x   8 x 256   ->    64 x   8 x  16  0.038 BFLOPs
+
+   47 route  46 4  64 x 8 x 16 -> 64 x 8 x 32
+   48 deconv2   32  1 x 1 / ( 1  1)    64 x   8 x  32   ->    64 x   8 x  32  0.001 BFLOPs
+
+   49 route  48 3  64 x 8 x 32 -> 64 x 8 x 64
+   50 upsample            2x    64 x   8 x  64   ->   128 x  16 x  64
+   51 deconv2   16  3 x 3 / ( 1  1)   128 x  16 x  64   ->   128 x  16 x  16  0.038 BFLOPs
+
+   52 route  51 1  128 x 16 x 16 -> 128 x 16 x 32
+   53 upsample            2x   128 x  16 x  32   ->   256 x  32 x  32
+   54 deconv2    4  3 x 3 / ( 1  1)   256 x  32 x  32   ->   256 x  32 x   4  0.019 BFLOPs
+
+   55 logistic x entropy                             32768
+Loading weights from /home/niko/.vst/BL-Rebalance.vst2/resources//rebalance.weights...Done!

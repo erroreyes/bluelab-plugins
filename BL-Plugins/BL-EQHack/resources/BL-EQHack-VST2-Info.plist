@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>BL-EQHack</string>
+	<key>CFBundleGetInfoString</key>
+	<string>BL-EQHack v6.2.4 Copyright 2021 BlueLab | Audio Plugins</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.BlueLab.vst.BL-EQHack</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>BL-EQHack</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>6.2.4</string>
+	<key>CFBundleSignature</key>
+	<string>tqz9</string>
+	<key>CFBundleVersion</key>
+	<string>6.2.4</string>
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.11.0</string>
+</dict>
+</plist>

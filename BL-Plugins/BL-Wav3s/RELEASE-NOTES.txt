@@ -1,0 +1,184 @@
+v5.0.0
+- initial version, from StereoViz-v5.3.7
+- WIP: density management
+
+v5.1.0
+- FIX density
+
+v5.2.0
+- fixed many things
+- saved camera angles in preferences + automations
+
+v5.3.0
+- implemented different interface size
+- FIX: memory corruption when clicking a resize button
+- FIX: when starting with small size, the graph is not displayed (detached)
+- FIX: crashes when clicking resize buttons (with memory check mode in Xcode)
+- Set graph num curves to 0 instead of 1 before
+- Set kGraph parameter to meta => for logic validation to pass
+- Tested with a real mouse
+- Written the manual
+- FIX: (VST3, Reaper, Mac) rotation only in one direction when dragging on Y
+(angle1 parameter was not normalized correctly)
+- FIX: (Protools Mac) choose big size interface. Quit Protools and relaunch => crashed
+(AAX_viewContainer was NULL)
+- FIX: (Reaper, VST3, Mac): choose big size interface. Quit Reaper and relaunch 
+=> crashed
+- Tested with Mixcraft8 Windows 7 (+ save GUI size + save camera): ok
+- Tested with FLStudio12 on Windpws 7 (unregistered => not able to save project)
+
+v5.4.0
+- IMPROV: implemented the grid display mode
+- IMPROV: implemented two different scroll directions (front to back and back to front)
+- IMPROV: implemented 3D axis for frequencies (the axis values are corresponding well !)
+- FIX: fixed last row of grid in x that was not displayed (was very visible with low res)
+- FIX: the axis labels were drifting (due to bad interpolation domain)
+- FIX: the axis labels were not centered around the frequency
+- IMPROV: implemented and amplitude axis (in dB), that follows the scale of the view
+- FIX: on Protools (Mac), the two cam angles + the gov did’t apply when using automation
+
+v5.4.1
+- CLEAN: code clean
+
+NEXT VERSION:
+- FIX: fixed color alpha for LinesRender (should not change actual BL-Wav3s)
+(inversion of alpha and blue components)
+
+v5.4.2
+- FIX: for high framerates, the frequency axis label values was not correct
+e.g: 500Hz instead of 1KHz for 88200Hz
+- TYPO: “AXIS” => “AXES” (+ updated manual)
+- OPTIM: now uses LinesRender2 (so benefit from straight lines optima)
+- FIX: the border of the grid doesn't move anymore when changing the density 
+(Fixed in LinesRender2)
+- FIX: when resizing the gui, the grid was centered as before, until we move the view
+
+v5.4.3
+- animated logo
+- Fft15
+- allZero => isPlaying
+- radiobuttons-diffuse.png, amsller to try to avoid flicker (sometimes on Windows)
+- fixed crash in Logic when moving automation points by hand for angles or fog
+(degree symbol, utf8)
+- FIX: Reaper Mac: when changing the sample rate in real time, the frequency axis was not updated
+- FIX: Reaper, Mac: instantiate 2 plugins, change the size of the first > we loose the display of the second
+- FIX: double click on gui resize button => inconsistent hilight + graph disappeared
+- FIX: Alt + click on guy resize button => graph disappeared
+- Port to Fft16
+- FIX: fixed sound crackles. touched GraphControl10 mutexes + done mutexes in LineRender2
+That was due to graphic thread which lock the audio thread too long
+GraphControl10 Destroy mutex just before nvgEndFrame() to optimize all GL plugs
+- FIX: Ableton 10 and FLStudio 20, Sierra, VST format: Chroma and Wav3s for example crashed randomly. Fixed in IGraphics NIKO_FIX_RESIZE_VST_CRASH
+- FIX: crash at startup on StudioOne4 (Sierra, AU)
+=> was due to degree symbol for a parameter
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.4.4
+- changed the name from Waves to Wav3s (with "E" reversed)
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+- OPTIM: disable computing ifft (OPTIM_SKIP_IFFT)
+- IMPROV: Set option for dB scale for amplitudes (USE_DB_SCALE)
+- FIX: Utils::AmpToDBNorm(double sampleVal, double eps, double minDB)
+=> fixed EPS / eps AMP_DB_CRITICAL_FIX
+- FIX: hack: changed slightly the scale of the lines render display, when in db mode,
+so it matches better the amp axis. But it is not perfect (HACK_DB_SCALE)
+
+v5.4.5
+- IMPROV: toggle buttons with small title size (implemented CreateRadioButtonsEx)
+- IMPROV: restructured the gui a bit, to have small titles (to make room for color option)
+- IMPROV: option to choose color of the lines => good over saturation neon effect!
+- IMPROV: moved all the guy elements y => -10 (to center in height)
+- IMPROV: updated the manual
+- TEST: checked memory corruption with valgrind (all options, remove plugin)
+=> everything is ok!
+- REFACT: fixed compilation issue in Axis3D (when built by build-system-mac
+
+v6.0.0
+- IMPROV: port to iPlug2: ok, there remains some few bugs
+- FIX: close ui, open ui => the parameters were not applied
+- FIX: the axes labels were not displayed (was bad font)
+- FIX: the axed labels y were not reversed correctly (labels “everywhere in the screen)
+- IMPROV: display additional frequenciy axis labels, of we increase the sample rate
+(e.g display 40KHz if we play at 88200Hz)
+- TEST: checked that fequecy axis is good (with sine wave test): ok
+- TEST: also tested amp axis (good too, not ultra-accurate)
+- FIX: after close/open windows, or resize, the data was reset (flat grid)
+- IMPROV: added a monitor option
+- FIX: When density was minimum, while playing, the frequencies lines jittered a lot
+(FIX_JITTER_LOW_DENSITY)
+- NOTE: since iPlug2, when speed is minimum, the scroll animation looks a bit more hacked
+- TEST: checked that max density gives the same display as version 5
+- FIX: fixed key down fo “yoko” cheatcode, for iPlug2
+- REFACT: refactored ProjectSlices3() => more clear, but still buggy (WIP)
+- OPTIM: GraphControl12 / FBO: really avoid drawing when nothing has changed
+- FIX: adapted to new GUI resize mechanism (from GhostViewer)
+=> Fixes when we have two plugins, resize one => OpenGL error that makes display bugs
+- IMPROV: imported init() and mutexes from Ghost
+- FIX: fixed crash after previous commit
+- FIX: fixed a mutex dead lock
+- TEST: passed thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+- FIX: when resizing GUI, the view transform were reset
+- OPTIM: memory optim (1GB -> 20MB) also optimizes CPU (debug: 11% -> 9%)
+- IMPROV: implemented Lock free for Waves/LinesRender2
+- TEST: checked that lazy refresh worked: ok!
+- TEST: testd that we take mono in (and not only left channel): ok!
+- REFACT: code clean, LinesRender2: removed old ProjectSlices() methods
+- OPTIM: avoid unnecessary computation if the slice is finally given away
+(not tested perfs gain)
+- FIX: Fixed jitter of the freq lines with low density
+(just higher than the minimum density)  (FIX_JITTER_LOW_DENSITY)
+- OPTIM: optimizations (prev: 7%, new: 6% CPU)
+- FIX: since jitter fix, mode lines time is broken and grid was buggy 
+- FIX: mode, lines freq switch front/back => first line moved
+- FIX: mode lines freq: the lines were too short on the right,
+compared to other modes
+- TEST: passed valgrind for mem: ok!
+- TEST: passed heaptrack; ok!
+
+v6.2.0
+- IMPROV: integration of the new design
+- FIX: drop down menu bug: border not filled
+(tested with color drop down menu)
+- IMPROV: added tooltips
+- FIX: there was white spots in the corners, far
+Steps: play in line modes, (stop playing), switch to points, switch to lines
+(and choose a particular camera angle...)
+=> this was due to FIX_JITTER_LOW_DENSITY, the first line was not projected
+(but we displayed it! unprojected)
+- FIX: when increasing sample rate, speed increased
+(at maximum speed, this is really too much)
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+- FIX: fixed graphics bug in drop down menu
+(long titles are a bit cut by the arrow)
+- FIX: gfx bug fix: render mode menu was not centered
+- FIX: in point mode, close GUI, re-open GUI => points were not displayed anymore
+No problem in point mode when resizing GUI.
+=> this was because of nvg image mWhitePixelImage, that was not re-generated
+=> now, use GraphCustomDrawer::OnUIClose(), to delete image and re-initialize it
+=> checked (on linux) that at OnUIClose() is called when GL context is really bound
+
+v6.2.4
+- FIX: fixed windows compilation
+- FIX: grid mode, slow speed and density => grid popping
+
+- TODO: can optimize LinesRender2 for points mode (optim same color)
+
+- PROBLEM: at high sample rates, there is a few, or no differrence bewteen speeds
+(this is because the slowest speed is already faster)
+
+- TODO: check if it optimize by using newest glm library (for projections)
+for the moment, we are using glm-master, the other glm can use simd...

@@ -1,0 +1,65 @@
+01/08/2017 - v1.0
+Initial version
+
+v1.1
+- improved smoothing of the gain parameter
+
+v2.0
+- 2.0 interface
+- 2.5 : biggger interface for protools
+ 
+v2.5.1:
+interface borders
+
+v3.0
+- new interface
+- made “genericity” to easily duplicate to Gain24 and Gain60
+
+v3.1
+- removed useless references to OpenGL and so on
+- category: dynamics
+
+- adjusted knob position
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+v5.0
+- fixed a problem of bundle name (made crash at init with VST)
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+
+v5.0.3
+- animated logo
+- removed allZero()
+
+v5.0.4
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v6.0.0
+- IMPROV: port to iPlug2
+- IMPROV: imported init() and mutexes from Ghost
+- TEST: not passed thread sanitizer (already passed on gain12)
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation 

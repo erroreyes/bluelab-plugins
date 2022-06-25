@@ -1,0 +1,364 @@
+4.0
+original version (WIP)
+
+v4.1
+
+v4.2
+WIP…
+- debug graph with distances smoothing
+
+4.3
+- tests, WIP
+- debug graph with circles
+- atan for azimuth
+
+4.3.1
+- WIP
+- identity transform works ! (with distance and angle)
+
+4.3.2
+- clean
+- tests
+- => Got it !
+- debug source viz
+- code refactoring
+
+4.3.3
+- display: Got it !
+- scanner mode in debug
+- 2nd mode in debug: ok
+- thanks to the use of float time delays
+
+4.3.5
+- the 3 display mode are well integrated
+
+v5.0
+- fixed several crashes in mono
+
+v5.0.1
+- double-click: reset knob value + edit knob text value 
+
+v5.1.0
+- FIX: center the points (because if they were big, they were not centered)
+- GraphFader2 / TEST_FX_FADER => display “smoke/clouds/fire” instead of points
+
+v5.2.0
+- test vol render => good !
+- TEST: see why the center is empty when we threshold => this is because radius is magn !
+- DONE: colormap for frequencies
+- IMPROV: second order equation for dist/azim => magns/phase
+- FIX: fixed indentity transform for width = +0%
+
+v5.2.1
+- CLEAN: code cleanup
+- TEST: implementation of HRTF
+- FIX: fixed a crash with GraphFader2 (start playback, stop playback, re-start => crash)
+- IMPROV: implemented volume display
+- FIX: fixed “wobble” => implemented the simple method “mid-side”
+- TEST: HRTF
+
+5.2.2
+- CLEAN: code clean
+- optimizations
+- increased the point size a little, so they are more visible without being too blurry
+- IMPROV: the graph points were redrawn each time, even if not modified
+=> new dirty flag (mMyDirty), so the graph elements re redrawn only if they have changed
+
+- FIX: increased the coefficient for simple algo for compatibility (to get a similar width as previously)
+
+v5.2.3
+- port to pugl
+- fixed a problem of background image which was incorrectly sized (why ?)
+- restored flag for simple processing in StereoWidthProcessObj3 (otherwise it wobbled)
+(The flag was accidentally set to 0, but this mistake was not in the 5.2.2 installer)
+- IMPROV: optimized display (nvgQuad instead of nvgRect)
+
+v5.2.4
+- animated logo
+- Fft15
+- port to Fft16
+- FIX: added code for fix latency (FftProcessObj16::computeLatency())
+- TEST: tested perts and checked that was aleeady well optimized 
+(stereoize uses oversampling 16 !)
+- FIX: on Protools, when width was reset to 0, by using alt + click, 
+the gain was increased compared to bypass
+- TEST: tested GraphControl10/END_FRAME_NO_MUTEX => this improves the performances !
+- FIX: Cubase 10, mac Sierra, VST3: click on the mono->stereo checkbox 
+=> it freezed everything
+- FIX: changed VST category: Sound field => Spatial
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.2.5
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+- OPTIM: do not compute ifft, no need (OPTIM_SKIP_IFFT)
+- IMPROV: Use StereoWidthProcessDisp (display only)
+- IMPROV: integrated new stereo widen and mono to stereo from Panogram
+- OPTIM: use complex multiplication for computing stereo widening 
+(STEREO_WIDEN_COMPLEX_OPTIM)
+- NOTE: 30% optim after all (and more for mono to stereo)
+- IMPROV: manage to have some display with mono signal and source and scanner modes
+So we have at least a vertical line instead of nothing (StereoWidthProcessDisp, FIX_MONO)
+- FIX: set PLUG_LATENCY to 0
+- FIX: fixed abnormal latency
+- TEST: tested latency with 88200Hz sample rate
+- NOTE: with “midnight” test, the volume is a bit higher when width is set to maximum
+(this looks normal, checked with the Panogram plugin to be sure)
+- TEST: checked the stereo widen complex optimization: ok !
+- NOTES (commercial): better sound, performances improved (30% less of CPU)
+ 
+v5.3.0
+- new version: “StereoWidth2”
+	- new plugin id, new ilok sign key
+	- correlation meter
+	- width meter
+	- 5 vectorscope modes
+	- bass focus
+	- pan
+	- out gain
+	- mono out
+- IMPROV: created the GUI
+- NOTE: not sure we optimize a lot with overlay display instead of the previous one
+- FIX: Points display not showing in some cases
+(FIX_GRAPH_RECREATE_WHITE_IMAGE_HACK)
+- FIX: fine tuned circle drawer (FIX_CIRCLE_DRAWER_BOTTOM_LINE)
+
+v5.3.1
+- REFACT: big code clean
+- FIX: fixed bass focus with pan => when bass focus at 0, we now can have mono signal,
+that stays mono when extreme pan
+- TEST: more optimization compared to just previous version: 15%
+- IMPROV: aligned correlation meter and width meter centers
+- DOC: new manual for “StereoWidth2”
+- FIX: Keep the same plugin id, otherwise with Logic this will not be good when 
+installing “version 2” over “version 1” 
+(version 2 would overwrite version 1, and projects with version 1 won't work anymore)
+- TEST: installed and launched version 1, install version 2 over, relaunch: ok !
+(tested with Reaper VST, VST3, and Logic)
+- FIX: fix Protools crash at plugin insert (FIX_PROTOOLS_CRASH_AT_INSERT)
+- TEST: tested latency on Protools (and others) with new mono2stero with RTConvolver
+- FIX: Upmix alt+drag did not work well on Protools (had to click, then press alt)
+(FIX_PT_ALT_DRAG_UPMIX)
+- FIX: FLStudio, Mac, AU, launch Impulses, choose Apply, play => crash
+- TEST: checked bass focus code => it looks ok, for setting bass to mono !
+
+v5.3.2
+- New version just for recompilation
+
+Next version: will benefit from RT_CONVOLVE_USE_WDL_FFT after recompilation
+
+Changes not integrated:
+- FIX: the bass focus knob / value were not well refreshed
+
+v6.0.0
+- IMPR0V: port to iPlug2
+- NOTE: modifications done, it does not compile yet
+- NOTE: now it compiles
+- FIX: fixed circles display
+- FIX: fixed vectorscope curves assignement (there were not correctly displayed)
+- FIX: fixed upmix pan mouse drag
+- FIX: fixed the size of the width knob
+- REFACT: big code clean
+
+v6.1.0
+- IMPROV: port to linux
+- FIX: fixed startup (missing resource in CMakeList)
+- OPTIM: optimized memory: 1.5GB -> 20MB
+- IMPROV: added the new design elements to the plugin
+- IMPROV: changed circle graph drawer to choose the style from GUIHelper
+- IMPROV: change the graph font to roboto bold (instead of simple roboto)
+(did it hardly, globally for everything in graph)
+- IMPROV: set style for all the evectorscope modes
+- IMPROV: managed the spacing for vectorscope mode 0
+- IMPROV: replaced buttons for vectoscope modes
+- IMPROV: managed the spacings for all modes
+- IMPROV: re-designed correlation meter and width meter
+- FIX: fixed knobs aligment (now they exactly fit the background)
+- FIX: fixed help button
+- FIX: fixed exactly the bounds of the vectorscope data, so it doesn't go outside of the circle (and for lissajous and other mode so)
+
+v6.1.1
+- IMPROV: small design changes (after Mickael review)
+  - renamed "pseudo stereo " -> "mono to stereo"
+  - better knobs graduations
+  - changed knob fill color
+  - better checkbox colors
+  - mono out aligment
+  - title and values colors
+
+v6.2.0
+- REFACT: refactored vectorscope graphs
+- IMPROV: added LockFree mechanism
+- FIX: select upmix view mode, select another, re-select upmix => view not refreshed
+- FIX: crash at startup (mode not initialized)
+- IMPROV: moved back mono checkbox label
+- IMPROV: removed the last view mode (the weird old stereo position)
+- IMPROV: bass focus limit: a lot higher, to stereoize only air if we want
+=> set to 6KHz, limit between "presence" and "brillance"
+- FIX: fixed a crash when quitting
+(since only 4 vectorscope modes)
+- IMPROV: ctrl + click on vectorscope => reset
+- IMPROV: created classes BLWidthAdjuster and BLCorrelationComputer2
+- IMPROV: added class BLStereoWidener
+(now it compiles)
+- REFACT: cleaned code for new BL class for width adjust
+- IMPROV: added with meter feature
+- IMPROV: added width boost feature, with width limit adaptation
+- TEST: passed valgring for memory (quickly): ok!
+- REFACT: small refact
+- TEST: passed valgrind for thread data race: looks ok!
+- FIX: the display blinked (goes to black briefly)
+That was because LockFree mechanism was not implemented at all for curve points
+- FIX: click on an already active vectorscope button => the button was disabled
+- IMPROV: now use bl_queue in CorrelationComputer2
+(this fixed memory consumption)
+- TEST: memory consumption: ok!
+- TEST: lazy gui refresh: ok!
+(it refreshes everytimes in the 3 first modes, but this is normal)
+- FIX: when turning the width knob quickly, it crackleed
+If bass focus is at 0Hz, it doesnt crackle (mayba)
+With version without width limit, it doesn't crackles
+=> added a width smoother to the new width limited processing
+- OPTIM: optimized vectorscope (12/15% -> 12/14%)
+- OPTIM: re-enabled quads "optim sampe color"
+(that was disabled by mistake)
+Very good optim: 12/14% -> 7/9%
+- TEST: tested well mono->st, width limit, width boost with headphones
+- TEST: checed perfs again to try to optimize more: nothing more to do!
+- REFACT: switched to band splitter 4 (instead of 3) for bass focus
+- FIX: vectorscope "number" buttons refresh was bad
+=> now, set dirty all the 4 buttons in OnIdle() => seems to fix
+
+v6.3.0
+- IMPROV: integration of the new design
+- IMPROV: disable (gray) width limit when width boost is enabled
+- FIX: at startup no rollover button number was selected
+- IMPROV: disabled BLWidthAdjuster::FIX_WIDTH_BOOST
+(that made clicks?)
+- FIX: rollover number buttons were blinking
+=> fixed it once and for all by attaching buttons over graphs
+(MANAGE_CONTROLS_OVER_GRAPH)
+- FIX: passed valgrind and fixed mismatch new[]/delete
+- TEST: passed valgrind for data race => looks ok
+- OPTIM: LF mechanisme: avoid pushing many points or curves
+We need only the last one! (OPTIM_LOCK_FREE)
+Implemented in GraphCurve5: now we only have 0 or 1 command
+(before we got around 100 commands (with bs=32)
+- TEST: tested if we could benefit for the LF optim somewhere else: no!
+- REFACT: removed old unused code
+- OPTIM: with small block size (e.g 32), the vectorscope display consumed a lot
+=> this was because the 4096 points were sent to display at each ProcesssBlock()
+=> now it is independent of block size!
+(OPTIM_SMALL_BLOCK_SIZE)
+- PROBLEM: perfs drop down (moderately) with small buffer size
+(and this is not due to vectorscope display anymore)
+=> this is from mono->stereo, bacause WDL_ConvolutionEngine_DivAvail
+computes many small Fft to provide samples frequencly
+=> nothing to do against it...
+- FIX: set block size to 2048 => crash
+- NOTE: with big block size e.g 4096, the animation is not smooth anymore
+- NOTE: for the click, this is Reaper that clicks, not StereoWidth!
+Just launch Reaper with Thumb Piano, then play (no plug)
+=> it often makes a big crackle after 1 second, then some crackles after 2s
+(need to just launch Reaper, otherwise after some time, no crackles anymore) 
+- NOTE: there is an error when passing hellgrind
+(Bug in pthread / IPlug Timer)
+=> impossible to fix, maybe this is not important...
+- TEST: test GUI freeze linux with only 1 StereoWidth plugin => no freeze
+- TEST: test GUI freeze linux with 2 StereoWidth plugin => no freeze
+- TEST: test GUI freeze linux with 1 StereoWidth + 1 GhostViewer => no freeze
+- TEST: test GUI freeze linux with 1 StereoWidth + 1 Ghost => it freezes!
+- TEST: test GUI freeze linux with 2 Ghost plugins => it freezes!
+- FIX: re-click on selected button number => it toggled off
+- FIX: double click on a button => it toggled off
+- IMPROV: added tooltips
+- IMPROV: bass focus anti-click (from Air)
+=> still some few clicks, but it is far better
+- IMPROV: avoid automation on width meter and corr meter
+- FIX: set bass focus to max => correlation is max, but width limter moves a lot
+=> now, compute correlation on widen signal only (hi only, see bass focus)
+=> so correlation meter and limited width meter are consistent
+- FIX: stereo width meter behaviour changes with block size
+=> now adapt width smooth time depending on block size
+- TEST: passed valgrind => no problem
+- FIX: when bass focus is disabled, correlation meter didn't move
+- TEST: checked new bass focus smooth depending on block size: ok
+- REFACT: indentation, comments etc.
+- IMPROV: reduced a little jitter of correlation meter with small block size
+- BUG: with bs=32 or bs=512, width limit triggers differently
+- TEST: bounced stereo widened sound, and re-imported it
+=> on this stereo width limit is independant from buffer size!
+=> so the difference should be due to PseudoStereoObj !
+- TEST: bounced pseudo stereo, w/o width limiter, and viewed only left channel
+=> there are some subtle differences
+- IMPROV: secure restarter: limt the fade size to 32 samples
+This is sufficient, and avoid big fade for big block size
+- FIX: the plugin is not transparent with block size 512 and small loop
+(with block size 32, and bass focus off, it is transparent)
+(fixed by previous)
+- BUG(not a bug): with bs=32, width limit triggers differently
+=> that was because the loop in reaper was not exactly on the clip, it goes
+a bit later, and then the sudent stop of the sound made with limit to activate
+(this was the case only with block size 512, not 32...)
+=> finally there was in fact no problem with the width limiter behaviour, for block size 512 compared to block size 32 :)
+
+v6.3.1
+- IMPROV: port to windows
+
+v6.3.2
+- FIX: windows fixes
+
+v6.3.3
+- IMPROV: mac compilation
+- FIX: pass in upmix mode, reduce the circle, try to drag => problems
+The visible circle is not aligned to the draggable circle, very hard to catch it
+=> now fixed the picking of the circle, this now works prefectly
+- IMPROV: bass focus: now it leaves the low freqs untouched
+instead of forcing them to mono
+=> this is really more useful, and makes awesome result on nk-bells
+(when widening only the high frequencies) (as suggested by a user by mail)
+(BASS_FOCUS_FORCE_MONO)
+- IMPROV: Design: "WIDTH LIMIT" -> "WIDTH LIMITER"
+- DOC: updated the manual with the 2 prev improves
+(bass focus and with limitER)
+- IMPROV: added an option "Bass to mono", to force low freqs mono
+Useful e.g when using mono->stereo, to really force bass to mono.
+With this, we also keep also the current option "untouched under bass focus",
+used e.g to stereoize air only.
+- IMPROV: when "bass to mono" is off, pan everything
+When "bass to mono" is on, pan only high freqs 
+=> this avoids panning bass freqs when required (e.g when mono to stereo),
+and make possible to pan everything if we are stereoizing air only.
+- DOC: updated the manual
+- IMPROV: fixed tooltip for bass focus
+
+v6.3.4
+- FIX: fixed windows compilation
+- IMPROV: removed unused parameters that were displayd empty on host gui
+- IMPROV: removed parameters for width meter and correlation meter
+=> it looks ok
+- IMPROV: renamed limit speed parameter
+
+- NOTE: when increasing sample rate, the vectorscope display looks more "quick", less smooth (but this is not important for the moment) 
+
+
+- IDEA: maybe add depth option (reverb, like in UST)
+
+- PROBLEM: linux: upmix mode(and other modes)
+=> keyboard shortcut for growing the circle is Alt
+=> so we must click, then press Alt after
+(otherwise the alt key will be used to mov the window)
+
+- TODO: check the color of the upmix circle (design...)
+
+- BUG: for mode 4, the circle top is a bit different (and we sould align the left and right labels with the other modes)
+
+- BUG: dead lock between SetParameterValue/OnParamChange and ProcessBlock (lock graph)
+
+- TODO: depth (+ drag and drop circle)
+- TODO: add depth and brillance, and a checkbox = either depth, or force mono to stereo (or nothing)
+- TODO: on Linux, use Cmd + draw instead of Alt+drag (alt + drag is used for moving windows by the system)
+
+- TODO: for site images: make beaituful patterns using sine + precedence
+(structured patters, vectorscope mode)

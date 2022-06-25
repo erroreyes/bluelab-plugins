@@ -1,0 +1,138 @@
+v4.0
+initial version (named TransientShaper
+
+v4.1
+- renamed Shaper
+
+v4.2
+- FIXes: Fft14: the order and names of ProcessSamplesBuffer(Win) was not correct
+and there were duplicate calls
+
+v4.3
+- knob for FREQ/AMP detect instead of radio buttons
+- hide the precision knob
+- well balanced amp/freq weights in transient lib
+
+v4.4
+- interface: 3 big knobs
+- changed procession from 25 to 15
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+
+v5.0.2
+- port to pugl
+
+v5.0.3
+- animated logo
+- Fft15 + latency
+- shifted vertical offset (for readability with no graph border)
+- shifted curve description
+- shifted axis (why offset 7 before ?)
+- added graph separator
+- FIX: now, can detect correctly “s” only (modified in TransientLib)
+(and global volume is similar to bypass)
+- FIX: fixed worse results with 88200Hz (“s” and “p” were not well separated, 
+result was inaccurate)
+	- Made some tests:
+		- Resample to 44100, process, re-upsamples 
+		(good, but we loose 88100Hz accuracy
+		- Resample to 44100 for detecting transients, 
+		  then apply them to original signal
+		(start working, but was not aligned 
+		and not sure it works without crackles)
+	- Use new Pyramid smooth, to have smoothed transients well aligned to the signal
+	(that was the reason of worse results at 88200Hz)
+	- adjusted coefficients, to have same samples amplitude whatever the sample rate
+
+v5.0.4
+- Use FftProcessObj16, with variable buffer size depending on sample rate
+- FIX: fixed latency (FftProcessObj16::ComputeLatency())
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.0.5
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+
+v5.0.6
+- recompile: benefit from DENOISER_OPTIM, TransientShaper/PostTransient
+=> perf gain: 2%/3%
+- TEST: tested that the sound didn’t change: ok!
+- TEST: tested with Logic in mono: ok!
+
+v6.0.0
+- IMPROV: poort to iPlug2
+- NOTE: now it compiles!
+- FIX: fixed curves that were not displayed, and other things
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: memory optimization: 348MB -> 80MB
+
+v6.2.0
+- FIX: fixes for recompilation
+- NOTE: the basic display has changed since recompilation
+(not is is more weird, less curve values on the graph)
+- IMPROV: swapped knobs: "soft/hard" in the middle, s/p on the left (little)
+- IMPROV: renamed the knobs (more explicit now!)
+- IMPROV: aligned left knob
+- IMPROV: increased curve line width
+- FIX: fixed the standard display, that had become wrong
+- IMPROV: incorporated BLScanDisplay roughly (with clipper features)
+- IMPROV: kept the clipper features in the new class BLClipperDisplay
+- IMPROV: added monitor button and adapted everything for monitor
+- REFACT: cleaned old code in BLScanDisplay
+- REFACT: remove clipping bars an othe clip values in in BLScanDisplay
+- WIP: integrating BLScanDisplay
+- FIX: with small block sizes, the scan sweeped very fast
+e.g block size 64 => it scrolled very fast
+- FIX: scroll speed independent of the block size: ok!
+Made some hacks to do so, but it now seems contants whatever the daw block size.
+- FIX: fixed curev description for input curve
+(and for any curve that is filled without line stroke over fill)
+- FIX: fixed correctly BLScanDisplay::AddSamples
+- FIX: fixed speed was too slow since last fixes)
+- FIX: output curve pixels proble (was too thin)
+=> for thin curves, put line width to 1.5 at the minimum.
+Line width of 1.0 is too thin and makes pixel/aliasing problems
+- FIX: knob at center => green curve was flat
+=> this was because we didn't compute transientness if knob in the middle
+- FIX: sweep bar curve was blinking a little
+=> that was because its line width was to thin. passed it from 1.0 to 1.5
+- IMPROV: implemented zoom (wheel or drag) => very nice!
+- IMPROV: recorded zoom in parameters
+- NOTE: the current color scheme looks goood!
+(no need to change!)
+- TEST: re-checked lazy gui refresh (monitor / playing): ok!
+- FIX: small graphics bug in curve fill for both x extremities
+(first and last rows were not filled)
+- FIX: fixed crash at startup
+- TEST: passed valgrind for memory check: ok!
+- TEST: checked mem consumption: ok!
+- OPTIM: optimized TransientLib5::ComputeTransientness6
+12% CPU -> 11% CPU
+- OPTIM: other optims (same perfs)
+- NOTE: optimized a bit CPU perfs
+- TEST: tested on voice (noise and attach transientness): very good!
+
+v6.3.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+
+v6.3.1
+- IMPROV: port to windows
+
+v6.3.2
+- FIX: windows fixes
+
+v6.3.3
+- IMPROV: mac compilation
+- FIX: carsh sometimes (when zooming !) (Waveform11/linux/vst2)
+Steps: push transientness to max, zoom and unzoom on the waveform => crash
+=> this was due to a thread problems on curves (concurrency problem)
+
+v6.3.4
+- FIX: fixed windows compilation
+- IMPROV: removed unused parameter that appeared in host UI
+- IMPROV: reset the graph with alt-click on windows (and also prev ctrl-click)

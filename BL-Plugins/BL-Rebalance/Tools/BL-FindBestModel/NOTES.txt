@@ -1,0 +1,6 @@
+done: A-bin
+done: C-softbin
+done: B-soft
+
+
+

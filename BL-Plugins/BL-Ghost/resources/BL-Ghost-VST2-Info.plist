@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>BL-Ghost</string>
+	<key>CFBundleGetInfoString</key>
+	<string>BL-Ghost v6.3.5 Copyright 2021 BlueLab | Audio Plugins</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.BlueLab.vst.BL-Ghost</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>BL-Ghost</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>6.3.5</string>
+	<key>CFBundleSignature</key>
+	<string>9nto</string>
+	<key>CFBundleVersion</key>
+	<string>6.3.5</string>
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.11.0</string>
+</dict>
+</plist>

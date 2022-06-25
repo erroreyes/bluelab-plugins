@@ -1,0 +1,60 @@
+01/07/2017 - v1.0
+Initial version
+
+v1.1
+- improved smoothing of the two parameters
+- added AAX support
+
+v2.0
+- interface 2.0
+
+v2.5
+- bigger interface for protools
+
+v2.5.1
+- interface borders
+
+v3.0
+- new interface
+- better computation of mixing (+3dB at the center)
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+v5.0.1
+- double-click: reset knob value + edit knob text value 
+
+v5.0.3
+- animated logo
+
+v5.0.4
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it computes and executes well
+
+v6.1.0
+- IMPROV: port to linux
+- TEST: tested memory: ok! no need optimization!
+- REFACT: some small code clean
+- TEST: recompild and tested quickly
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- FIX: insert the plugin: no sound until we turn the knobs
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation 

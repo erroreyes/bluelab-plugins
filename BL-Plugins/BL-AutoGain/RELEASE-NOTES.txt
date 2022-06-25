@@ -1,0 +1,294 @@
+19/01/2018 - v3.0
+Initial version
+
+
+v3.1
+- fixed Protools doesn’t write automation
+- don’t add target gain if we are under the threshold
+- corrected a problem of automation scale in Protools
+- improved the dot putting (more regular in time spacing)
+- fixed a bug with READ mode
+
+v3.2
+- suppression of the knob “target gain”
+
+v3.3
+- correction based on frequencies (what is “in the mix”)
+- A-weighting
+
+v3.4
+- graph
+- good computation of gain, in frequency domain
+
+v3.5
+- vumeter 12dB
+- code clean
+
+v3.6
+- profile
+- fft11
+
+- graph/GL => new
+- fixed gui issue: title of gain bar
+- adjusted the gui elements position
+
+- disable a-weighting
+
+v3.7
+- silence threshold: -120dB by default
+- added a side chain input gain knob, to adjust roughly the two curves 
+- bounded the side chain curve (to avoid it disappears if SC. GAIN is high)
+- suppressed knob for dot precion (made big stair steps)
+- added a knob for gain smooth (necessary, because automation had too many details)
+- reorganised the 3 small knobs
+- no more clics with new version (suppressed precision and write dots every time)
+- apply the smooth before the curve, so the curve will be smoothed, then the vu-meter
+
+- added help button (and configured for managing manual)
+- updated logo and installer icons
+
+- cleared the curves when going to READ mode
+
+- fixed buggy management of nFrames != 1024 (tested wit Reaper, nFrames = 512)
+
+v3.8
+- port to fft14, trialMode3 etc. 
+- std::vector for inputs/outputs
+
+v3.8.1
+- fixed a crash (protools, stereo, mono side chain)
+
+v5.0.1
+- FIX in Fft14 for stereo side chain (may not affect this plugin)
+
+* Windows Port (no version increment)
+- FIX jittering vu-meter
+
+v5.0.2
+- text edit knob values, reset knob double-click
+- implemented functioning without side chain, with a constant value
+- HACK for sidechain VST (“allZeros”)
+- knob text edit design: white text on black background + white bar when editing
+- modified the manual => for "no side chain" + “automationon”
+
+v5.0.3
+- FIX: Waveform (Trakction): instantiate the plugin, press spacebar directly to start playback => it freezes the host
+- this fix also FIX: Mixcraft: insert then remove LoFi (when AutoGain in inserted on another track) => crashes the host
+- FIX: curves are not displayed in Mixcraft: this is because the buffer size is 440 => set it to 512 and it is solved
+- FIX: after the Tracktion fix, Reason couldn't read Gain automation anymore
+
+v5.0.4
+- restructured the OpenGL management on Windows => more fiable when creating/deleting several plugins using OpenGL
+(need to re-test Ableton windows and Mac)
+
+v5.0.5
+- port to pugl
+
+- FIX: fixed garbage in curve points when no display
+- FIX: manage non power of to buffers (Cubase 9, Win10 => buffer size not settable)
+- FIX: Logic, High Sierra: crashed at startup when start playing
+
+v5.0.6
+- FIX: fixed type for sc flag (for FL Studio Windows graphic freeze)
+- FIX: fixed Hanning window size (for FL Studio Windows graphic freeze)
+- FIX: final fix for FLStudio Windows graphic fix: in FFTObj, to not make WDL fft if all the data sample are null
+(WDL FFT on all zero samples seems to behave strangely)
+
+v5.0.7
+- FIX: for high framerates, the frequency axis label values was not correct
+e.g: 500Hz instead of 1KHz for 88200Hz
+- FIX: fixed axis label: “200KHz” => 200Hz
+- FIX: suppressed space between “0 dB” and “50 Hz”
+- FIX: shift in low freqs on the freq axis
+
+v5.0.8
+- FIX: crashed auval when rescanned: freq axis compute got -1 index when samplerate 22050
+
+v5.0.9
+- Fft15
+- animated logo
+- added graph separator
+- shifted vertical axis in x (offset)
+- y offset for curve descriptions
+- fixed the vumeter that jittered (when bypass write + an existing automation)
+- FIX from EQHack: side chain was not working on Orion (Windows) (fixed in IPlugVST2)
+- REFACT: port to FftProcessObj16 (but do not use variable buffer size)
+
+v5.1.0
+- IMPROV: Use FftPocessObj16 for all (instead of custom fft operations)
+Fixes a problem: when nFrames was 64 for example, we computed the fft on 64
+=> graph was very inaccurate
+=> maybe sound inaccurate
+- IMPROV: display in and out curves even in READ mode
+
+v5.1.1
+- Big code clean
+- FIX: Flat curve at the end of the graph with high sample rates
+- FIX: the plugin amplified much more with higher sample rates
+- FIX: when sweeping a pure sine, it decreased in amp when freq increased
+i.e the dB values in the graph were wrong
+(this was due to decimation and negative db values)
+- IMPROV: new algo for silence threshold and out gain computation
+- FIX: fixed the jump to +12dB when starting playback (detected on Protools)
+- FIX: crash StudioOne VST3 side chain (ANDI_FIX)
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+- FIX (and for all fft plugs): check is all zero for iffy too 
+(made crash StudioOne4 Windows under ApplicationVerifier)
+- FIX (and for all GL plugs): restrict the wglMakeCurrent(NULL) to Ableton win
+(because it made freeze StudioOne 4 Windows)
+- FIX: StudioOne4, Windows 4: instantiate the plug, remove it => the host crashes
+=> Fixed for all GL plugins
+
+v5.1.2
+- recompile: benefit from FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+
+v6.0.0
+- port to iPlug2
+- IMPROV: created BLVumeter2SidesControl (vumeter centered on zero, with a half negative part)
+- IMPROV: added a mechanism in GraphCurve5, to notify the graph when something changed
+- IMPROV: Air/AutoGain: avoid risking to have undefined values in curves (and then curve blinking ?)
+- IMPROV: re-integrated side chain (did not rename busses)
+- FIX: fixed thread errors using thread sanitizer (also fixed in iPlug2), and adapted init/threads modifs from Air/Ghost
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: optimized memory (not tested yet)
+- IMPROV: in app mode, force "2-2" channels (no side chain), so we can debug
+(otherwise, with 2.2-2, the audio didn't start)
+- OPTIM: optimized memory at the maximum!
+- FIX: fixes for compilation
+- FIX: integrated missing fonts
+- FIX: the curves stoped at 10KHz
+- FIX: sc signal was not taken into account
+- FIX: fixed the sc curve when sc is not connected (put it centered on -60dB)
+- FIX: when sc was not connected, and the plugin started, the sc gain was not correct
+- FIX: limit the sc gain knob to -12/+12 dB
+(since its effect is limited to [-12,12] internally)
+- FIX: reversed the effect of the "speed" knob (it was a "smooth" knob before)
+- FIX: side chain not connected => update correctly the vumeter when sc gain changes
+- FIX: Out gain coputation fixes
+- FIX: fixed vumeter that didn't update when sc connected
+- TEST: if silence threshold is too low or too high, the effect of the plugin
+goes in contrary as it should do
+- IMPROV: set silence threshold to -80dB by default (better results)
+- IMPROV: use better solution than silence threshold
+Now, compute a ponderate avg between in and sc => works very well
+(deactivated silene threshold and knob: USE_LEGACY_SILENCE_THRESHOLD)
+- IMPROV: renamed the parameter "smooth" -> "speed"
+- FIX: fixed the automation, and update vumeter in read mode
+- OPTIM: checked with perf and optimized (19G instr -> 17G instr)
+- IMPROV: added LockFree mechanism
+- TEST: tested for dat race with valgrind: ok!
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- IMPROV: use fill curve for signal curve
+(to match other plugins)
+- IMPROV: choose same style+color for side chain signal
+(compared to othe plugins)
+- IMPROV: applied curve smoothness improv from Air
+- FIX: if we set an automation on "mode", the curves blink when playing
+- FIX: (linux ?): when automatizing a parameter, the control does not move back
+This was the case for all plugins!
+- FIX: when closing and re-opening the GUI, the gain gets quite high, or quite low
+(the gain vumeter grows more than if we only keep the gui open,
+and also the sound changes)
+This was because the same mode was set again, and setting mode resets the smoothers
+=> now take care or no setting the same mode again
+- FIX: when there was automation already written, in bypass/write vumeter jittered
+=> this was because the automation is read and applied to the control
+(from the previous fix in iPlug: "automation does not move the control")
+- FIX: when changing mode, the gain got too high or too low
+(as if the speed was at the maximum) => this was a smoother reset problem
+- FIX: automation vumeter gain was the inverse of sound gain
+- IMPROV: grayed out sc gain when in read mode
+- FIX: when passing to read mode, the prev gain value stays
+(when there are no automation)
+- FIX: very messy tooltips pos and size, for AutoGain only
+=> that was due to the vumeter that refreshed very often
+=> fixed in iPlug2: must compute tooltip dirty region before computing
+the global dirty region (otherwise dirty region update problem)
+- FIX: no tooltip on vumeter is in read mode
+That was because tooltips were associated to the underlying bitmap, and this bitmap recieved mouse events only when the vumeter get mDisabled.
+=> fixed: bitmap: "mouse over whn disabled", vumeter: "ignore mouse"
+- FIX: when a knob control was disabled, its values stayed enabled
+- REFACT: use AutoGainObj2 (exact copy of AutoGainObj for the moment)
+- IMPROV: adapted AutoGainObj2 to ParamSmoother2
+- FIX: when changing gain smooth speed, vumeter jittered
+- TEST: re-checked if gain jump when changing mode; ok!
+- IMPROV: fixed the coefficients from ParamSmoother to ParamSmoother2
+=> now, when rendering at fast smooth speed, this gives the same results as previous
+- IMPROV: the progression of smooth/speed was not good anymore
+(removed SHAPE_EXPE)
+- TEST: re-tested medium smooth/speed compared to prev: ok!
+(it is almost the same as before)
+- IMPROV: new SmoothAvgHistogram2 (with coeff depending on the sampling rate)
+- TEST: compared SmoothAvgHistogram2 to prev, at 44100Hz => same result!
+- REFACT: cleaned code AutoGainObj2 and SmoothAvvHistogram2
+- FIX: smooth curve scale was not updated after sample rate changed
+Steps: play a sine at 500Hz with 44100Hz, switch to 88200Hz => curve show bad value
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+- FIX: gfx bug fix: the vumeter, when at max, was drawn over the border
+- REFACT: put RefreshGainForAutomation() is a separate method
+- FIX: Reaper/vst3: vumter jittered when in write mode
+=> automation set value, and also AutoGain.cpp set value
+(tested on Reaper, VST2 and VST3: ok!)
+- FIX: Bitwig/linux/vst2: now automations are written
+- REFACT: do not call SetDisabled() when not necessary
+- FIX: improved a little gui refresh problem vst3/bitwig/linux
+(now it freezes rarely instalead of every 5 seconds)
+- TEST: tested valgrind VST3/Reaper: no problem
+- FIX: when switching to read mode, with no automation, vumeter is not zero
+(and mGain value is not zero either)
+- FIX: fixed freeze when inserting the plugin (Waveform11/linux)
+(FIX_WAVEFORM11_FREEZE)
+- FIX: since prev fix, the vumeter jittered when moving sc gain knob
+(FIX_JITTER_SC_GAIN)
+
+v6.2.4
+- FIX: fixed windows compilation
+- FIX: Ableton11/win: automation was disabled in read mode everytime playing started
+(FIX_ABLETON11_DISABLE_PARAM_AUTOMATION)
+- FIX: Ableton/win: load project in "read mode" and automations already written
+=> vumeter did not move
+(switch to "write", then "read", "re-enable automation" => vumeter moved again)
+It was becaue vumeter control was disabled
+(FIX_ABLETON11_VUMETER_READ_MODE)
+- IMPROV: gray out speed know when in read mode
+(because the speed parameter does nothing when in read mode)
+
+- BUG: Bitwig3.3.1/vst3/linux: automations are not written
+- BUG: Bitwig3.3.1/vst2/linux: automation are not re-read
+(after automation write, VST::SetParameter is never called anymore)
+
+- PROBLEM: Ableton11/Win: after switching from "write" to "read" mode,
+need to right click on ableton plug param then "re-enable automation"
+(the automation curve then turns from white to orange)
+
+- PROBLEM(-): when switching to 88200Hz, the result is not exactly the same
+(when bouncing waveform and inspecting it in Ghost-X)
+=> maybe this can be due to Ghost-X resampling from 44100 to 88200 before display
+
+- PROBLEM(-): with new version, the start of the waveform is not diminished enough
+(the first 160ms). When comparing ParamSmoother and ParamSmoother2 versions
+
+- NOTE: there can be a small data race in ProcessBlock()/SetParameterValue()
+
+- PROBLEM: we must carefully setup the silence threshold (to -80dB) ("Case0")
+=> try to find a better method to substract spectrograms
+
+- TODO: check curves dB (this is not the same values as Reaper spectrum meter)
+  -> test with other spectrum plugins (also for Air and SpectrumView etC.)
+- TODO(Doc): say in the doc that when sidechain is not connected, the horizontal bar does not match with frequency axis, but is positioned to be centered on the graph.

@@ -1,0 +1,109 @@
+01/08/2017 - v1.0
+Initial version
+
+v1.1
+- improved smoothing of the gain parameter
+
+v2.0
+- 2.0 interface
+- 2.5 : biggger interface for protools
+ 
+v2.5.1:
+interface borders
+
+v3.0
+- new interface
+- made “genericity” to easily duplicate to Gain24 and Gain60
+
+v3.1
+- removed useless references to OpenGL and so on
+- category -> Dynamics
+
+- adjusted knob position
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+
+v5.0.3
+- animated logo
+- removed allZero()
+
+v5.0.4
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v6.0.0
+- IMPROV: port to iPlug2
+- IMPROV: imported init() and mutexes from Ghost
+- TEST: passed thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to Linux
+- IMPROV: linux compilation: put all the cmake libs in a function in a single file
+- NOTE: now it compiles on linux!
+- NOTE: we must create symbolic links under linux, to be able to compile with cmake with out of source plugins (plug out of iPlug2 dir). Link for each BL-Plugin set to iPlug2/Examples, and link of Libs in IPlug2/BL-Dependencies
+- NOTE: need creating a symbolic link fakes Cmake root error (out of source...)
+- IMPROV: re-enabled PARAMS_MUTEX in cmake files
+- FIX: texts reversed on linux
+- NOTE: re-enabling mutexes does not fix reaper crash when double-clicking on plug
+- NOTE: the problem of window size at startup is also here with original iPlug2
+- NOTE: tested an old version of the Linux branch: the problem of windows resize is already there.
+- TEST: bug window size => tried valgrind => nothing detected
+- TEST: bug window size: tried to remove timer => no success
+- FIX: vst2, Linux: open in Reaper, display the plugin GUI,
+close the plug window then re-open it => Reaper crashes
+(BL_FIX_CRASH_REOPEN)
+- FIX: with VST3, Linux, close the plug ui, re-open it => crash
+And also when launching under gdb, it detecs an error when setting the timer
+- NOTE: tested with Gain12, OnIdle() is not called if we define it
+(BL_FIX_CRASH_REOPEN_VST3)
+- FIX: On Linux, with App, sometimes the window is resized too small in height
+(the bottom is cropped)
+This is while adding the menu, we request to grow the height by 17 pixels
+and if the window is already shown at this moment, sometimes the system
+does not resize it (BL_FIX_LINUX_APP_WIN_SIZE)
+- FIX: text entry is now white background, black text! (BL_FIX_HILIGHT_TEXT_ENTRY)
+- IMPROV: Linux, added key events, in xcbt and IGraphicsLinux
+(WIP. still needs to convert key codes and manage key modifiers)
+- IMPROV: Linux, added keyboard handling in xcbt and IGraphicsLinux
+- FIX: fixed text edit ctrl-a, ctrl-v etc.
+- FIX: fixed text edit digits that were not accepted whent typing
+- FIX: fixed text edit to accept comma for digit separator
+- FIX: fixed arrow + shift that didn't return keysym
+=> now text edit shift + arrow makes selection
+- FIX: Linux - alt-click does nothing on my xubuntu system
+=> so use ctrl-click instead
+- FIX: Linux - fixed help button and manual display
+- TEST: tested Linux vst2 with the latest improvements: ok!
+- IMPROV: Added flag -Wno-write-strings to gcc
+- TEST: Linux - tested sound of VST2: ok!
+- REFACT: suppress (almost) all compilation warning in linux
+- TEST: compiled in Release mode
+- FIX: on Linux, open 2 Gain12, then close one => the other Gain12 window is freezed
+- IMPROV: Linux - Optimized memory allocations (use and re-use temp buffers)
+=> before: 10s, 360Mb allocated and deallocated. after: no additional memory allocations after some time.
+- TEST: test memory with heaptrack => totally ok!
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation 
+- IMPROV: compiled for M1 chip
+- IMPROV: added configurable "enable hardened runtime"
+- IMPROV: Mac: removed coping RELEASE-NOTES.txt to plugin directory

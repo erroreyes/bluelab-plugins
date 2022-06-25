@@ -1,0 +1,405 @@
+07/12/2017 - v1.0
+Initial version
+=> limited impulse in time 
+- fixes for side chain in Protools
+
+08/12/2017 - v1.1
+- resample loaded responses 
+- vertical bar for limit
+- fade out / limit
+- optimised graph display (used for long responses)
+- made “configurations” (from 50ms to 15s)
+
+13/12/2017 - v1.2
+- decimation of input samples
+To optimise the graph and the processing during capture
+- some bug fixes
+
+19/12/2017 - V1.3
+- port to a new convolver (not using windowing)
+
+v3.0
+- new interface (WIP)
+
+v3.1
+- re-structuration of the interface
+
+v3.2:
+- improved interface: graph shadows and radio buttons glow
+
+v3.3:
+- removed side chain use (too complicated to explain, and only mono response on Protools)
+- code clean
+- added time option (change impulse duration in real time)
+- renamed actions
+
+v3.4
+- Fixed problems when changing action and response length
+(curves reset, some things not correctly updated)
+- fixed a bug in displaying with decimation 
+(the lower part of the response was partially not displayed)
+- made constant offset on the left of the impulse (constant in time)
+- Fixed bug: beginning of response was not correctly displayed at the beginning 
+(with 1s setup)
+- fixed many bugs
+- manage the long responses
+
+v3.5
+- improve the reset button
+
+v3.6
+- profile
+- fft11
+- half fft
+
+v3.7
+* bug fixes
+- bad capture of long responses (all zero)
+- problem when bouncing responses (reset / sample count)
+- added option 5s
+
+v3.8
+- securities after a freeze after bounce when using with Protools
+- fixed focus crash on Protools: due to niko problems using big fft size
+
+v3.8.1
+- checks and bug fixes
+	- disabled reset option widget trigger
+	- re-enabled default preset
+	- at startup, the response was not displayed
+
+v3.8.2
+- checks and bug fixes
+	- added normalisation of impulse response (as for image filtering kernels)
+	- set back PAD_FACTOR (to add the queue)
+	- compute correctly normalisation coefficient for applying response
+		this avoids level increase when increasing response length
+
+v3.8.3
+- check and bug fixes
+	- normalise the response, to get the same level independently 
+	  of the response length, and no saturation
+	- code clean
+	- fully made Example1
+	- fix: sometimes we got only one side for output
+
+3.8.4
+- bug fixes
+	- fixed reset option crash
+	- fixed process option that created an empty response (graphic bug)
+	- fixed volume increase when applying, after 5s, with reap 10s
+
+v3.8.5
+- tests FftConvolver6 (deactivated)
+- denoise response tail (remove hiss). That made a bad long ghost echo 
+
+- added help button (and configured for managing manual)
+
+- updated logo and installer icons
+
+- fixed FftConvolver6 for buffers of 512 (VST / Reaper)
+
+- used the Utils (fixed) method to add samples (manages positive and negative maxima)
+(WIP)
+
+v3.8.6
+- used the Utils (fixed) method to add samples (manages all positive and negative maxima)
+
+v3.8.8
+- BUG FIX: when processing and saving impulse, we got only mono impulses !
+
+v5.0
+- fixed a crash when processing in mono
+- FIX: when the inpulse was mono, with stereo input, we got only one channel on the result
+
+v5.0.1
+- double-click: reset knob value + edit knob text value
+
+v5.1.0
+- IMPROV: added gain knob (GUI only)
+- IMPROV: added image file buttons (GUI only)
+- IMPROV: display loaded image (Good !)
+- IMPROV: reset bg image
+- IMPROV: save image in the proser (seems to work, tested for VST)
+- IMPROV: display the input signal after gain in the graph
+- IMPROV: output the sound of the current impulses while processing
+
+- IMPROV: adjusted GUI size and position
+- FIX: file selector freezed Protools
+- FIX: re-enabled rollover and fixed rollover file selector + click
+- BUG(not reproducible): in mono, the vertical axis is not displayed 
+(when set on a mono track, on Protools)
+- FIX: re-displayed the IMAGE label that had been hidden
+
+- FIX: added missing resource on Windows
+- FIX: crash on Windows when trying to load a jpeg (fix in lice)
+
+v5.1.1
+- Using GLContext3 with pugl (for fix Ableton 10 win 10)
+
+- FIX: FftConvolver6: fixed crackles when host buffer was small (447)
+- IMPROV: Buttons for saving and opening IRs from disk
+- FIX: Logic, mono impulse series, process and save 
+=> the result had 2 channels, with right channel at 0
+
+v5.1.2
+- animated logo
+- graph without border (with hack on plugin guy width)
+- HACK: cropped the last 2 pixels of the graph on the right (to compensate fill curve pb)
+(and shifted the last text label on the left)
+- adjusted the vertical axis (offset x)
+- FIX: fixed variable latency when changing the host buffer size
+- IMPROV: resample inputs responses before applying to match the sample rate
+- FIX: (Reaper, Mac): set SR to 88200, load an IR at 44100Hz
+=> The result is flat curve and no response
+- FIX: choose SR 88, load prefs from an IR at 44 => the response was not correctly resampled
+- FIX: set SR to 44100, process response, switch directly to 88200 and save directly
+=> the file length was not correct
+- FIX: detected small clicks with block size 2111, width=100%
+(this was due to FORCE_IMPULSE_UPDATE)
+- FIX: saving impulse at 44100Hz or 88200Hz gave amplitude difference of a factor of 2
+(and on the graph, the impulse was 2 times smaller in amplitude)
+=> use a gain factor instead of applying the gain directly to the impulse
+- FIX: (switch to 88200, load a 88200 impulse, switch to 44100 load a 44100 impulse)
+The response is is half the size it should be, and the sound is bad 
+(until loading a new impulse)
+- FIX: when bouncing sound two times, the second time there was residual data at the 
+beginning of the second sound
+- FIX (should be fixed…): project 88200Hz, load IR, save project, 
+then load project at 44100Hz, load IR, switch several times between projects,
+save prefs, play 
+=> at the end, the IR was not resampled correctly (problem in IR sample rate)
+(with “Empty” plug preference field)
+- FIX: after opening IR file, the host didn’t propose to save the project when quitting
+- Try to fix gain change during auto-tests (due to resampling IR in serialize/unserialize)
+
+5.1.3
+- IMPROV: keep the original (native) IR for serializing, and resample from it
+(lot of code modification)
+=> FIXes gain change in auto tests
+- REFACT: clean code a lot
+- FIX: sometimes when loading an IR and quitting, the host didn’t propose to save
+- FIX (e.g Protools): bypass a plug that does mono->stereo
+=> the right channel sounds garbage by repeating the last sample indefinitely
+- FIX: fixed crash when everything is in mono (Protools)
+- FIX: Fixed IR normalization that was not done for mono IRs after process
+- FIX: fixed gain coeff (depending on sample rate) (and use square)
+- IMPROV: attenuate less during impulse normalization in convolved,
+so the result gain after applying IR will be almost the gain of the original file
+- TESTS: Protools Mac: 44100Hz/88200Hz: 
+	- tested all capture combinations (mono, stereo, SR …) 
+	- tested all combinations of preferences load, and IR file load + render
+	=> success !
+IMPROV/FIX: when capturing, the IR size seems good (near 1), 
+but when switching to Apply, it decreases on the graph
+FIX: process, switch to apply, then save config => the IR decreases in the graph
+(that was due to denosing an already denoised IR)
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.1.4
+- recompile: benefit from FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+- flac support for loading and saving IRs
+- FIX: Since GHOST_OPTIM_GL, the colors were swapped in the background image
+(FIX_BG_IMAGE_COLOR_SWAP)
+- EXPE: try FastRTConvolver => convolution with 10s IR works in real time !!
+(USE_FAST_RT_CONVOLVER)
+- TEST: SKIP_LOAD_IR_PROCESS
+
+v5.1.5
+- activate USE_FAST_RT_CONVOLVER
+- FIX the gain that is 30x too high when using USE_FAST_RT_CONVOLVER (OUTPUT_GAIN_COEFF)
+- FIX/IMPROV: do not shift by 1s when using IR of 10s (and same for other IRS
+(PROCESS_NATIVE_IR_NO_ALIGN)
+- IMPROV: begin the time axis before 0, to have the IR peak not stuck to left 
+(AXIS_SHIFT_ZERO)
+- FIX(?): align well IRs
+- FIX: with IR size >= 5s, the IR was not displayed in real time
+- FIX: the current impulse was not displayed in the graph during processing
+if IR size was >= 5s (increased MAX_SAMPLES_DECIMATED)
+- IMPROV: manage buffers not power of two, and compensate latency (FastRTConvolver2)
+- FIX: choose apply, choose 1 second, load IR, change to 10s => crash
+(Ableton, AU only, Mac)
+=> There was a missing mutex for DoReset(), that could be called from the GUI
+(FIX_CRASH_ABLETON_AU_MAC) 
+also needed to update IPlugAU.cpp, where there were a missing mutex 
+(FIX_CRASH_ABLETON_AU_MAC too)
+- FIX: FLStudio, Mac, AU, launch Impulses, choose Apply, play => crash
+- FIX: benefit of FIX_HAXIS_COLOR_SWAP
+- FIX: benefit from FIX_INIT_COLORS
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles! (need to manage bg image correctly)
+- FIX: fixed crashes => now it launches
+- FIX: re-centered titles “IR” and “IMAGE”
+- FIX: different fixes
+- FIX: fixed GraphTimeAxis6 (the labels were not displaying)
+(is was previously wrongly fixed for division by zero)
+- REFACT: removed obsolete method from GraphContro12
+- FIX: fixed problems with time axis
+- FIX: fixed minimum time axis value
+- IMPROV: added a cool graph notification mechanism to GraphAxis2
+(previously, it was only for curves)
+- FIX: finally, use the original “hard coded” time axis (not GraphTimeAxis6)
+(it is well aligned, more easy than aligning GraphTimeAxis6 for the moment)
+- FIX: fixed vertical axes label that were not displayed
+- FIX: passed quickly undefined sanitizer and fixed
+- FIX: when playing in “PROCESS” mode, mutextes made a lock
+=> fixed missing mutex releases
+- FIX: the curves were not displayed
+(there were not added to the graph…)
+- IMPROV: added BLBitmap (to load bitmap from jpg/png), 
+and IGraphicsNanoVG::CreateBitmap(), to create bitmap from pixels
+- IMPROV: added ScaledBlit() (modified code from lice) 
+To be able to position and scale the loaded background correctly.
+- IMPROV: finished to manage background image
+(choose a better brightness, more bright, for ditherd image)
+- FIX: fixed some crashes (and added mutexes for file open etc.)
+
+v6.1.0
+- IMPROV: port to linux
+- TEST: tested memory (in gen impulses mode) => no problem
+- FIX: fixed compilation problems after modifs of other plugs
+- REFACT: fixed too long lines
+- OPTIM: process IR (in debug) => transport slowed down a lot
+=> optimized a bit, this is now better
+- IMPROV: added the LockFree mechanism for curves
+- FIX: load 'ApplyImpulses" project, load a preference, quit => dead lock
+- FIX: fixed file open (images and ir, file type was not recognize)
+=> adapted from Ghost (keep previous path etc.)
+- FIX: open image file and ir file, change preferences => crash
+=> fixed in still drafty code
+- FIX: load an image, load another setting where there is no image
+=> the image was still displayed
+- FIX: load image, set prefs where no image, return to prev pref
+=> prev image blinked brielfly
+=> Now, when setting a new background, the previous one is correctly released
+(nvgDeleteImage)
+- IMPROV: SetOverlayImage(): release the previous image
+- IMPROV: added BLBitmap::Save() "png", "jpg" etc.
+- WIP: fix serialize/unserialize + bg image save and load 
+- FIX: fixed image serial/unserial (graph size when graph is null)
+- FIX: set PLUG_DOES_STATE_CHUNKS to 1 as it sould be
+(it should be to 1 when saving other things than parameters)
+(it was already to 1 for EQHack and Denoiser)
+=> fixed image reload correctly after reloading project
+- NOTE: now image in preset works!
+(warning: take care of the preset "Empty", it does nothing
+- REFACT: code clean in Impulses.cpp
+- FIX: choose different prefs several times => prefs did not restored well
+(fixed by the previous fixes)
+- TEST: tried to implemente some factory presets
+(using the host preset management)
+=> it looks impossible! Many bugs and strange things.
+- TODO: either wait that iPlug2 dev gets more advanced,
+or later implement custom factory preset system
+- NOTE: when saving a user preset, it saves all presets (bank)
+- NOTE: previusly added added OnCreated() to IPlug,
+called after the plugin has been created, to get the right Empty preset values
+(used to bypass VST2 reset of preset names to "Empty")
+See: EnsureDefaultPreset()
+- NOTE: at each param change (including "Open Image" button),
+there is a call to case effGetChunk: / isBank=true / SerializePresets(chunk);
+- FIX: save IR, without file extension => crash
+=> now, save in wave format by default
+- FIX: save an IR, save a second IR => bad file name in the file browser
+=> the current file name string was not initialized
+- FIX: apply avg response, start play: the IR curve disappears briefly
+=> totally disabled the push/pull mechanism
+- IMPROV: apply IR even when not playing => act like a reverb plugin
+(for this, remove the test "allZero")
+- IMPROV: removed "bounce response" (obscure option, not used anymore)
+- REFACT: very big code clean
+- IMPROV: added out gain kbob
+- IMPROV: grayed out the in and out gain knobs depending on action type
+- FIX: fixed a bad arg inversion in when resetting convolver
+- BUG: after reset, the previous used IR was still processing when applied
+Steps: process, stop play, apply, don't stop play, reset, apply => IR still applies
+- IMPROV: generate the first impulse just at starting
+(before, when generating impulses e.g 10s, we had to wait for 10s before
+the first impulse)
+- FIX: generate a 0 just before the first impulse
+(so it a a real impulse at th beginning)
+- FIX: Using WDLConvolver: there awas a memory problem
+(Steps: load a project containing Impulses, load another similar project => crash)
+- TESTS: tested before and after WDL convolver
+=> WDL convolver looks to take twice less CPU resources! (strangely)
+FastRTConvolver    / WDLConvolver
+24%CPU             / 10%CPU
+latency: 0         / 0
+bs 555: latency: 0 / 0
+- NOTE: when bouncing apply response, there is a click at the end
+=> this is normal, the sound should stop a long time after the end of the loop
+- NOTE: WDL convolver if better, keep it!
+- TEST: memory check for GenImpulses: ok!
+- IMPROV: tested and improved memory consumption for ProcessIR
+(when possible, some points were not possible to optimize)
+=> now memory is roughtly constant when processing IRs
+- TEST: tested memory for ApplyIR => ok! (memory is constant)
+- TEST: tesd perfs for apply IR => ok!
+(the most time consuming is WDLConvolver, total CPU: 9%
+- OPTIM: sometimes the number of curve points was very high
+This fixes:: when there is not yet an IR detected, it consumes a lots
+After the first IR, it consumes less, and consumes more and more CPU
+until the next IR (tested with 10s process)
+- NOTE: ProcessIR() optimizer with perf!
+- TEST: tested for data race (all modes) : ok!
+- IMPROV: created and added examples
+- IMPROV: set out gain to 24db instead of 12dB
+(12 is not sifficient to adjust some applied IRs, to the dry sound volume) 
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- IMPROV: when saving IR, now save IR of length currently selected
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+- IMPROV: package examples in installer zip (to be tested)
+- FIX: linux:vst3 when opening IR or IMAGE, zenity opened twice
+(BL_FIX_VST3_PARAM_CHANGE)
+- FIX: linux:vst3: zenity re-opens when cancel
+Steps: open IR, open file selector for another IR, point to another file but cancel
+=> zenity re-opens sometimes
+(FIX_FILE_SELECTOR_REOPEN)
+- FIX: Bitwig/vst2/linux: Open buttons stayed highighted
+Step: open IR, close GUI, re-open GUI => Open button is hilighted
+(Same with Reaper)
+- FIX: import image => the left border is repeated (gfx glitch)
+- FIX: VST3: open file selector, choose file, validate => file selector re-opens
+
+v6.2.4
+- FIX: fixed windows compilation
+- FIX: since last parameter reset fix, there was an infinite loop
+- FIX: freeze when opening file selector
+VST2/VST3/Win10: load plugin, play, choose "apply IR", choose "5s", open IR file
+=> freeze
+(FIX_FILE_SELECTOR_FREEZE_WINDOWS)
+- FIX: after having clicked on a rollover button, the parameter was not reset
+(if close/re-open GUI, the button is highlighted) VST3 only/Win10
+- FIX: after having clicked on IR open button, close/re-open UI => button hilighted
+(but host parameter was correctly updated)
+
+
+- BUG: Ableton11/Win10/VST2: enable open image file from host UI => freeze
+(no such problem with VST3)
+Known bug, unsolvable
+
+- NOTE: don't forget to check that the 3 examples are well pacakged in the installer
+(checked on Linux: ok)
+
+- TODO: check well for dead locks
+- TODO: test well save IR/reload/Images, VST3 presets etc.
+
+- TODO: manual: shorten the manual. Describe 3 use cases:
+      - real world: balloon, cinema clap, piece of wood => reverb of a room
+      - device: generate impulse, make it pass through a hardware device, get IR
+      - plugin: insert BLImpulses before and after a plugin, and get the result IR

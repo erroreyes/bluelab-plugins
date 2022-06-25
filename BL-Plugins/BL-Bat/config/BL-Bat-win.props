@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <IPLUG2_ROOT>$(ProjectDir)..\..\..\iPlug2</IPLUG2_ROOT>
+    <BINARY_NAME>BL-Bat</BINARY_NAME>
+    <EXTRA_ALL_DEFS>IGRAPHICS_NANOVG;IGRAPHICS_GL2;IGRAPHICS_DISABLE_VSYNC;PARAMS_MUTEX</EXTRA_ALL_DEFS>
+    <EXTRA_DEBUG_DEFS />
+    <EXTRA_RELEASE_DEFS />
+    <EXTRA_TRACER_DEFS />
+    <PDB_FILE>$(SolutionDir)build-win\pdbs\$(TargetName)_$(Platform).pdb</PDB_FILE>
+    <BUILD_DIR>$(SolutionDir)build-win</BUILD_DIR>
+    <CREATE_BUNDLE_SCRIPT>$(IPLUG2_ROOT)\Scripts\create_bundle.bat</CREATE_BUNDLE_SCRIPT>
+    <BLUELABLIB_INC_PATH>$(IPLUG2_ROOT)\..\Libs\bluelab-lib</BLUELABLIB_INC_PATH>
+    <LIBSNDFILE_INC_PATH>$(IPLUG2_ROOT)\..\Libs\libsndfile\src</LIBSNDFILE_INC_PATH>
+<KALMAN_FILTER_INC_PATH>$(IPLUG2_ROOT)\..\Libs\KalmanFilter\src</KALMAN_FILTER_INC_PATH>
+<LIBSNDFILTER_INC_PATH>$(IPLUG2_ROOT)\..\Libs\sndfilter\src</LIBSNDFILTER_INC_PATH>
+<CROSSOVERFILTER_INC_PATH>$(IPLUG2_ROOT)\..\Libs\CrossoverFilter</CROSSOVERFILTER_INC_PATH>
+<DSPFILTERS_INC_PATH>$(IPLUG2_ROOT)\..\Libs\DSP-Cpp-filters\src</DSPFILTERS_INC_PATH>
+<DARKNET_INC_PATH>$(IPLUG2_ROOT)\..\Libs\darknet\include</DARKNET_INC_PATH>
+<FMEM_INC_PATH>$(IPLUG2_ROOT)\..\Libs\fmem\include</FMEM_INC_PATH>
+<RTCONVOLVE_INC_PATH>$(IPLUG2_ROOT)\..\Libs\RTConvolve\Source</RTCONVOLVE_INC_PATH>
+<GLM_INC_PATH>$(IPLUG2_ROOT)\..\Libs\glm</GLM_INC_PATH>
+<EBUR128_INC_PATH>$(IPLUG2_ROOT)\..\Libs\libebur128\ebur128</EBUR128_INC_PATH>
+<R8BRAIN_INC_PATH>$(IPLUG2_ROOT)\..\Libs\r8brain</R8BRAIN_INC_PATH>
+<DECIMATOR_INC_PATH>$(IPLUG2_ROOT)\..\Libs\Decimator</DECIMATOR_INC_PATH>
+<RANDOM_SEQUENCE_INC_PATH>$(IPLUG2_ROOT)\..\Libs\RandomSequence</RANDOM_SEQUENCE_INC_PATH>
+<LIBSAMLERATE_INC_PATH>$(IPLUG2_ROOT)\..\Libs\libsamplerate\src</LIBSAMLERATE_INC_PATH>
+<LIBFREEVERB_INC_PATH>$(IPLUG2_ROOT)\..\Libs\freeverb</LIBFREEVERB_INC_PATH>
+<LIBOPENBLAS_INC_PATH>$(IPLUG2_ROOT)\..\Libs\OpenBLAS</LIBOPENBLAS_INC_PATH>
+<LIBFLAC_INC_PATH>$(IPLUG2_ROOT)\..\Libs\flac\include</LIBFLAC_INC_PATH>
+<LIBMFCC_INC_PATH>$(IPLUG2_ROOT)\..\Libs\libmfcc</LIBMFCC_INC_PATH>
+<LIBDCT_INC_PATH>$(IPLUG2_ROOT)\..\Libs\libdct</LIBDCT_INC_PATH>
+<FASTAPPROX_INC_PATH>$(IPLUG2_ROOT)\..\Libs\fastapprox\src</FASTAPPROX_INC_PATH>
+<INI_PARSER_INC_PATH>$(IPLUG2_ROOT)\..\Libs\ini_parser</INI_PARSER_INC_PATH>
+<LIBSNDFILE_LNK_PATH>$(IPLUG2_ROOT)\..\Libs\libsndfile\build-win\$(Platform)\$(Configuration)</LIBSNDFILE_LNK_PATH>
+<LIBSNDFILE_LNK_LIB>libsndfile_msvc.v142.lib</LIBSNDFILE_LNK_LIB>
+<LIBFLAC_LNK_PATH>$(IPLUG2_ROOT)\..\Libs\flac\lib\win\$(Platform)\$(Configuration)</LIBFLAC_LNK_PATH>
+<LIBFLAC_LNK_LIB>FLAC.lib</LIBFLAC_LNK_LIB>
+<EXTRA_LNK_PATHS>$(LIBSNDFILE_LNK_PATH);$(LIBFLAC_LNK_PATH)</EXTRA_LNK_PATHS>
+<EXTRA_LNK_LIBS>$(LIBSNDFILE_LNK_LIB);$(LIBFLAC_LNK_LIB)</EXTRA_LNK_LIBS>
+  </PropertyGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(IPLUG2_ROOT)\common-win.props" />
+  </ImportGroup>
+  <PropertyGroup>
+    <TargetName>$(BINARY_NAME)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(EXTRA_INC_PATHS);$(IPLUG_INC_PATHS);$(IGRAPHICS_INC_PATHS);$(GLAD_GL2_PATHS);$(BLUELABLIB_INC_PATH);$(LIBSNDFILE_INC_PATH);$(KALMAN_FILTER_INC_PATH);$(LIBSNDFILTER_INC_PATH);$(CROSSOVERFILTER_INC_PATH);$(DSPFILTERS_INC_PATH);$(DARKNET_INC_PATH);$(FMEM_INC_PATH);$(RTCONVOLVE_INC_PATH);$(GLM_INC_PATH);$(EBUR128_INC_PATH);$(R8BRAIN_INC_PATH);$(DECIMATOR_INC_PATH);$(RANDOM_SEQUENCE_INC_PATH);$(LIBSAMLERATE_INC_PATH);$(LIBFREEVERB_INC_PATH);$(LIBOPENBLAS_INC_PATH);$(LIBFLAC_INC_PATH);$(LIBMFCC_INC_PATH);$(LIBDCT_INC_PATH);$(INI_PARSER_INC_PATH);$(FASTAPPROX_INC_PATH);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>$(EXTRA_ALL_DEFS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(EXTRA_LNK_PATHS);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wininet.lib;comctl32.lib;Shlwapi.lib;Ws2_32.lib;$(EXTRA_LNK_LIBS);%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(PDB_FILE)</ProgramDatabaseFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>CALL "$(SolutionDir)scripts\postbuild-win.bat" "$(TargetExt)" "$(BINARY_NAME)" "$(Platform)" "$(COPY_VST2)" "$(TargetPath)" "$(VST2_32_PATH)" "$(VST2_64_PATH)" "$(VST3_32_PATH)" "$(VST3_64_PATH)" "$(AAX_32_PATH)" "$(AAX_64_PATH)" "$(BUILD_DIR)" "$(VST_ICON)" "$(AAX_ICON)" "$(CREATE_BUNDLE_SCRIPT)"</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>CALL "$(SolutionDir)scripts\prebuild-win.bat" "$(TargetExt)" "$(BINARY_NAME)" "$(Platform)" "$(TargetPath)" "$(OutDir)"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="BINARY_NAME">
+      <Value>$(BINARY_NAME)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EXTRA_ALL_DEFS">
+      <Value>$(EXTRA_ALL_DEFS)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="EXTRA_DEBUG_DEFS">
+      <Value>$(EXTRA_DEBUG_DEFS)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EXTRA_RELEASE_DEFS">
+      <Value>$(EXTRA_RELEASE_DEFS)</Value>
+    </BuildMacro>
+    <BuildMacro Include="EXTRA_TRACER_DEFS">
+      <Value>$(EXTRA_TRACER_DEFS)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PDB_FILE">
+      <Value>$(PDB_FILE)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BUILD_DIR">
+      <Value>$(BUILD_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CREATE_BUNDLE_SCRIPT">
+      <Value>$(CREATE_BUNDLE_SCRIPT)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1075 @@
+v5.0.0
+- FIX/IMPROV: in FftProcessObj14: automatically outputs zeros when the data is not yet ready
+- FIX(can modify other plugins): fixed undefined value after calling FillSecondFftHalf()
+- FIX: VST3 did not compile with C+++11 / OSX7 => created a VST3 sdk config xcodeproj
+- FIX: AAX compilation with C++11
+- IMPROV: implemented the plug for 4 models
+- IMPROV: manager buffer of 256 / cut 4 (for perfs reasons)
+- OPTIM: set PT_LOOP_UNROLLING_ENABLE to 1
+- IMPROV: cheged from Oversampler3 to Utils::ResizeLinear 
+=> avoid “latency” on fft values (with Oversampler3, the peaks were shifted on the right)
+- IMPROV: implemented scale to mel spectrogram (tricky)
+- IMPROV: debug mode for outputting exactly what is sent to the dnn
+- TEST: tested with 4x128 (more resource consumption, phasing effect)
+
+v5.1.0
+- code clean
+- code optimization
+- code refactoring
+- implemented hard and soft methods
+- PROFILE: predict takes 60%, UpsamplePredictedMask takes ~20%
+mFftObj->Process(): 270ms
+ 
+v5.2.0
+- optimization: compute 1 mask for both channels (and not 1 mask by channel)
+mFftObj->Process(): 160ms
+
+v5.3.0
+- re-organized the interface (suppressed confidence, added soft/hard, resize)
+
+v5.4.0
+- added knobs for precision => so we can extract the full voice correctly for example
+
+v5.5.0
+- generate an learn “normalized” models (the masks are not binary but % of the total)
+- test with model 4x256 => 1x256
+- test: 256x4, but only 256 as output (the network has the same size in MB)
+
+v5.5.1
+- debug spectrograms + fixes
+- memory optimization for dumping big dataset with data overlap 4
+
+- quick implementation of model from memory resource (coded on mac, not compiled)
+- knobs in db, with the zero centered
+
+v5.5.2
+- code clean
+- set a knob for soft/hard instead of radio buttons
+
+v5.5.3
+- changed channels 1-2 2-2 to 1-1 2-2 (that was false)
+
+v5.5.4
+- animated logo
+- Fft15
+- fixed latency
+- new algo: for sample rates > 44100, downsample input, and re-upsample result
+	- Fix: set resampled to input-driven to avoid invalid/corrupted values in result
+	- Fixed click with 88200Hz and buffer size 447 (fixed in downsample)
+	- Fixed click/blank zone with 48000Hz and buffer size 447 (fixed in upsample)
+	- Accurate latency fix with new algo
+- port to Fft16
+- FIX: fix latency FftProcessObj16::ComputeLatency()
+- FIX: correctly fixed latency
+- FIX: fixed out resampled problem, (outputed on sample less), leading to fft buffer lack
+=> fixes 88200Hz, buffer size 999
+- FIX: with 192000Hz, buffer size 64 (or low), the spectrogram was scaled horizontally
+(due to resampling problems)
+- FIX: BL-Rebalance test 04, block size 447 or 999
+ => there was a missing buffer making a click
+
+v5.5.5
+- recompile with FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+
+v5.5.6
+- IMPROV: implemented Wiener soft masking => the sound is greatly improved,
+but it consumes too much resource
+- FIX: fixed soft masking => now the perfs are ok!
+(but the sound seems worse)
+- REFACT: extracted BL-RebalanceMaskPredictor and BL-RebalanceProcessFftObj
+(before, they were all in BL-Rebalance.cpp)
+- TEST: tested the new refract code => it looks similar, accept maybe the early beginning
+of the sound (which changes a bit randomly)
+- IMPROV: implemented Soft Mask with complex numbers => the sound is better !
+- TEST: tested with neutral settings => the sound is strictly exactly as when bypassed !
+
+v5.5.7
+- REFACT: code clean
+- FIX: set back the min clipping to 0 for masks as it was done before (just in case)
+- TEST: tested with complex with no mask => the result is exactly the same as with real
+(initial version) => ok!
+- IMPROV: trained more the network (1000 epochs instead of 100, 24h for each mask)
+tested with mask 0 => a bit better (less pumping with mask soft)
+and other masks: a bit better too
+
+v5.5.8
+- FIX: fixed crash for plugin with more than 4 channels in total (2 inputs, and 2 sc). 
+(FIX_NUMEROUS_SC_CHANNELS)
+- TEST: created BL-RebalanceTestMultiObj class, just for testing what we dump
+=> it is better to use soft masks for DNN than binary masks!!
+- IMPROV: use soft masks instead of binary masks BINARY_MASKS set to 0
+- OPTIM: optimized time to dump .dat files (OPTIM_DUMP)
+=> optima drastically, takes 20mn instead of 6h (gain ~20x !)
+- FIX: clean the data before opening a new mix or stem file (FIX_OPEN_SOURCE_FILE)
+- TEST: many tests for training the DNN
+- TEST: finally, UNet WIP…
+
+v5.5.9
+- IMPROV: created DNNModel and DNNModelKF to encapsulate the model from python
+- TEST: tested with frugally-deep => impossible to compile Funtional Plus with C++11…
+- IMPROV: compiled with CompiledNN
+=> it was necessary to patch the std file “functional” in order to compiles without error
+- TEST: tested many things
+- TEST: BL-RebalanceTestPredictObj2: dump very correctly all data
+(mix, stem, mask, and applied mask)
+- FIX: FftProcessObj16: If we provided in input more input channels than the number declared when creating the FftProcessObj and use side chain => the side chain was not correct (the analysis window was never applied, or was several times, on the side chain channel) (FIX_TOO_MANY_INPUT_CHANNELS)
+- FIX: the DNN didn’t learn anymore… => That was the change from NormalizeSourceSlices() to NormalizeSourceSlices2()
+- IMPROV: python: implemented correct custom loss (and dumped sources instead of masks in c++)
+- IMPROV: python script for testing model results
+- NOTE: finally found how to have good masks (that was the case before, but I lost the parameters) => use kerns batch normalization !!!
+- IMPROV: tested python with custom loss + L1 norm => seems better than L2
+(but needs more train at the beginning)
+- TEST: test dump dataset in python => the overlap of 50% doesn’t seem to work
+(the overlap is 2 pixels, not 16…)
+- TEST: tested with kernel 5 instead of kernel 3 => converges 4x better, but is 2x slower to compute. Result: the mask looks interesting, maybe more detailed.
+- FIX: fixed standalone data dump => the dump objects were “added several times” to the FftObj16 (that made redundant dump data)
+- FIX: definitely fixed DONT_DUMP_EVERY_STEP (overlap 50% finally ok)
+(this makes same .dat size on disk)
+- TEST: checked dumped .dat overlap 50% in Python (BL-Rebalance-check-dataset.py) => Ok!
+- TEST: with fixed overlap .dat, the accuracy now increases smoothly (before it increased briefly, and got stock on a step). But loss diminishes very slowly now)
+=> with L2, predicted mask is totally white
+=> with L1, loss looks ok, acc looks a bit better (40 steps seem not sufficient)
+- TEST: .py: tested L1 + kernel 5 => doesn’t converge, even after 350 steps
+(learning was interrupted and restarted, did it break the learn ?)
+- IMPROV: avoid dumping source when it is totally silent
+(and dump 1 mix file per source, to stay synchronized)
+=> when learning, this fixes a sudden loss drop, that gave a totally flat mask
+(kind of overfitting with only silent source parts)
+- TEST: Skip Silence, L1, Kernel5, 350 steps => good mask (1 mistake)
+- TEST: Skip Silence, L2, Kernel5, 30 steps => makes a mistake in bass frees
+- TEST: Skip Silence, L2, Kernel3: kernel 3 looks very more accurate than kernel 5
+kernel 5 blurs a lot (considering the size we use, of 32x256)
+- TEST: Skip Silence, L1, Kernel3, 30 steps: blurry
+- IMPROV: .py: dump current predicted mask after each epoch
+(very fast compared to BL-Rebalance-predict.py, launched by hand)
+- TEST: tested with 20 epochs instead of 10 => exactly the same result!
+- TEST: tested batch size 128 instead of 64: it converges a bit less quickly. Result mask is almost the same.
+- TEST: start_conv (unet) 4 -> 32: => eta: 6mn instead of 30s (test not done)
+- TEST: start_conv (unet) 4 -> 8: => eta: 1mn instead of 30s (image looks more neat maybe)
+- TEST: start_conv (unet) 4 -> 2: => eta 15s instead of 30s. (very) longer to converge.
+the mask is very smooth, too smooth…
+- TEST: L2, kernel3, 350 steps (eta 30s) => not so bad!! a bit closer to the solution
+- TEST: 1 data sample only (to overfit the model) - L2, kernel3: about 400 iteration to converge well. The result mask matches well the ideal mask.
+- TEST: 1 data sample only (to overfit the model) - L1, kernel3. Converge very quickly (20 steps) The result mask matches very well the ideal mask (better than with L2). (eta 2s)
+- NOTE: the mask has an offset of about 0.45, so it is necessary to substract, to have a good black background, and not a medium gray
+- NOTE: with 1 data sample only (to overfit the model), the batch size was set to 1, and epoch to 1
+- IMPROV: set batch size to 1, as explained in the paper.
+“1 data sample only” works well with batch size 1 (not for bigger batch sizes)
+- NOTE: L1 + 1 sample only + batch size=1 (eta 2s) => very good !
+- IMPROV: created unet_model3 (from another inspiration sour on github) => looks better!
+- IMPROV: implemented a correct score computation (now we have a significative score
+- NOTE: unet_model3: eta: 60s, score: 0.88
+- NOTE: unet_model3 + start_conv=1: eta:10s
+- TEST: tested learning with mask=abs(mask) in loss => doesn’t change the learning
+- TEST: start_conv 1->2 => eta;10s->15s.=>the learning curve is far better! 
+model size: 0.5MB 
+- TEST: start conv 4: eta 40s => better learning curve. Model size: 2.5MB
+- TEST: float32 in theanorc => doesn’t clearly optimize…
+- TEST: theanorc: cxxflags=-mavx -O3 (compilation is very longer) execution is not faster…
+- TEST: theanorc: tested other flags to speed-up => no speed up…
+- TEST: start_conv 8: eta:175s/200s. After 10 epochs it increases better than start_conv 4
+model size: 9MB
+- NOTE: increasing start_conv: very good learning, slower step computation, increase mode l size on disk. Max tested: start_conv=8
+- TEST: tested loss=mean/mean(mix) => no change
+- TEST: re-tested L2 (now with good metrics): converges less
+- NOTES:
+	- tried to enable openmp with theano
+	- created file .theanorc and lines for openmp / compiler
+	- installed a version of clang with openmp in Documents/Apps
+	- I broke python 2 installation
+	- Now use python3
+	- totally uninstalled homebrew (was not compatible at all with mavericks)
+	- instead, installed macport and successfully installed libjpeg
+	=> now, we must use Python3, and macport by default!
+	- pip3 install scikit-image==0.14.2 (not the latest one)
+- IMPROV: BL-Rebalance3.0: for python3
+- NOTES:
+	- pip3 install Pillow==5.0.0
+	- pip3 install Pillow==5.2.0
+- NOTE: exported all the python3 installed packages to python-environment.txt
+- TEST: tested OMP speedup settings with elemwise_openmp_speedup.py
+	- better to set OMP_NUM_THREADS=4
+	- openmp_elemwise_minsize is good at default value 200000, or at 300000 (speed x2)
+- IMPROV: unet3_rect() => take advantage of the rectangular shape of the image
+	- same perfs as previous (eta:40s model size: 2.5MB), tested with start_conv=4
+	- the first mask after 10 steps looks great! (same mask as unet3() after 500 step) 
+	(not sure…)
+	- this is the version with rectangular strides for the biggest sizes (beginning)
+	- checked that the rescale was like expected: ok!
+- TEST: unet3_rect() => rectangle stride for small images instead of big images
+	“unet3_rest() invert”
+	=> eta:34s (prev: ~48s)
+	=> result: converge less quickly
+- TEST: “unet3_rest() invert” + start_conv 8 (instead of 4)
+	- eta: 2.5mn, model size: 10MB
+	=> unet3_rect() not inverted is better
+- IMPROV= remove the “shuffle() calls, which made the data bad => GOOD !!!
+(mix and soured were not associated anymore) => this works very very good with this !!!
+- REFACT: code clean (original code saved to DeepLearning/00_Attic
+- REFACT: big code clean in DeepLearning
+- NOTE: with the fix of “shuffle”, the learning is very very good, even with start_conv=2
+- TEST: tested different parameters to find the best configuration
+- FIX: .py: made unet3_2(), without Conv2DTranspose which is not supported by CompiledNN
+- NOTE: tested the correct unet model from keras with CompiledNN in C++
+=> we don’t have the correct result
+- WIP: installation of Caffe + mmconvert, to convert kerns model to Caffe
+(Caffe look very efficient)
+	- NOTE: for safety, Caffe was set “cpu only” (but maybe can use gnu without cuds)
+- IMPROV: Built Caffe, converted from keras to kaffe with mmdnn
+	- mmdnn (official release version got from pip, not the latest one)
+ 	- protobuf-python-3.5.1.tar.gz
+	- OpenBLAS-0.3.9
+	- glog-0.3.3
+	- boost_1_61_0
+	- gflags-2.2.2
+	- zlib-1.2.11
+- NOTES: many difficulties to import correctly the libcaffe.a
+	=> finally imported all the caffe .o files in the project directly
+- NOTE: re-did many compilation of third parties, to compile in real universal binary (“-arch i386 -arch x86_64” instead on only “-arch x86_64”
+- NOTE: finally, compiled caffe with makefiles for python/converter
+and added all the caffe sources into the Xcode project (including caffe.cc/proto from Makefile build)
+- PROBLEM: link error only in release (bolas and boost thread. Does not link with universal bin (32 + 64 bit). only link in release for 64 bit
+- NOTE: with caffe code included in project, it seems to be the same problem as when linking with the static lib
+- NOTE: finally, used mmdnn-0.3.0 downloaded on my disc, and installed with setup.py
+	- modified protobuf version requirement in setup.py
+- NOTE: tested some other keras2caffe converters => no one work…
+- NOTE: compiled darknet-1.2 (https://github.com/sowson/darknet/releases)
+- NOTE: deep learning converters: https://github.com/ysh329/deep-learning-model-convertor
+
+v5.6.1
+- Use DarkNet, to train models and link directly dark net to the BL-Rebalance plugin
+- IMPROV(DarkNet: added out padding to deconvolution) (NIKO_OUT_PADDING)
+(crop layer did not work for this)
+- FIX(DarkNet): fixed floating point exception when loading weights for deconv
+(NIKO_FIX_ZERO_DIV)
+- FIX(DarkNet): Fix function imbrications that made crash (NIKO_FIX_PRINTF)
+- FIX(DarkNet): fixed array out of bound from (backward/forward)_convolutional_layer
+(took (NIKO_FIX_ARRAY_EOB)
+- TEST(DarkNet): checked that the dropout layer does nothing in predict mode
+- IMPROV(Darknet): improved cost mean computation (NIKO_COST_MEAN)
+prev was NIKO_COST_L1_MEAN
+- IMPROV: tweaked Adam parameters better in .cfg file
+- IMPROV(DarkNet): implemented alpha coeff for leaky relu)
+- FIX(DarkNet): applying modifications from master (official), to 1.2
+(NIKO_APPLY_MASTER)
+- IMPROV(Darknet): now use darknet-master (instead of darknet-1.2)
+=> applied all niko modifications from darknet-1.2 to darknet-master
+- IMPROV(bl-darknet): avoid srand(time()), ale fixed seed instead
+=> fixed random seed, so results are reproductible
+- TEST(DarkNet): tested convolutional weights load and save size: ok!
+- IMPROV(DarkNet): implemented loss and metrics with mask multi => far better!
+- TEST(DarkNet): L1 doesn’t work. L1 smooth works
+- TEST(DarkNet): tested custom L1 => bad
+- TEST(DarkNet): tested learning rate 1e-5 instead of 1e-4 => bad
+- TEST(DarkNet): tested start_conv 4 instead of 1 => better than 1! (predict in 100ms)
+- IMPROV(DarkNet): improved the display of current processing infos (terminal)
+- TEST(DarkNet): re-checker leaky relu coefficient in code: ok!
+- FIX(DarkNet): fixed batch norm layer crash (NIKO_FIX_BATCHNORM_CRASH)
+- TEST(DarkNet): use [batchnorm] layer instead of batch_norm flag inside convolution
+This avoids squeezing the bias. 
+better ! => the result mask is smooth (no checkerboard pattern).
+- TEST(DarkNet): tested with 10x10000 => the mask gets better and better, 
+the loss continues to diminish => very good!
+- FIX: fixed metric "acc" 
+=> in keras, dumped the data in compute_metrics(), and compared with bl-darknet
+- NOTE(DarkNet): the acc increases a lot at the beginning, then decreases after 10 images
+- IMPROV(DarkNet): written epoch 1/x + elapsed epoch time 
+(and compared with keras epoch time) kerns: 11s/epoch. dark net: 12s/epoch
+- TEST(DarkNet): deconvolutional_layer, activated bilinear_init(l) 
+=> the result is not good
+- IMPROV(DarkNet): deconvolutional_layer: tried to fix scale (NIKO_FIX_SCALE)
+=> the mask looks more smooth
+(not tested very well)
+- IMPROV(DarkNet): compile with -O3 (instead of -Os): 13/15s => 12s (/epoch)
+- TEST(DarkNet): compiled the openmp version
+=> bad: 4 x slower with omp
+- TEST(DarkNet): tested gemm optima (NIKO_OPTIM) => does not optimize (a bit worse)
+- TEST(DarkNet): no print => does not optimize
+- NOTE: dark net learns less than kerns (maybe)
+- TEST(DarkNt): NIKO_FIX_SCALE: Better when set to 0! => after 30 epochs, the loss decrease when set to 0 (when set to 1, the loss stay constant)
+And the result mask is better when set to 0.
+- TEST(dark net): without additional batch norm node. loss decreases better. result looks better.
+- IMPROV: some refactoring of debug code. implemented debug tests: 
+(BL-RebalanceTestPredictObj3)
+- IMPROV: in BL-RebalanceTestPredictObj3, make the average of the predicted spectrograms
+=> better result, more smooth
+- IMPROV: normalize input data (as done during training) (NORMALIZE_INPUT)
+- TEST: tested dark net with real data from rebalance
+=> same result in BL-Rebalance and in bl-darknet
+=> we get 0.86 accuracy
+- TEST: test to normalize correctly the result stem after prediction
+=> the result spectrogram is the same, but blurry (phases sound bad)
+- NOTE: not sure if we must use BL-RebalanceMaskStack (or use somewhere else)
+
+- IMPROV: tested quickly the multichannel models, trained on Ovg/GPU
+
+v5.6.2
+- REFACT: very big simplification of code (removed much unused code, re-written things)
+- TEST: ResizeLinear + reverse ResizeLinear gives exactly the same result!
+- IMPROV: FreqsToMelNorm2 and MelToFreqsNorm2 => better interpolation
+- TEST: test improv mel scale: (DEBUG_MEL_SCALE)
+- TEST: checked that we took the right line of mask and mix spectrogram (line 16) => ok!
+- TEST: tested that at the end, we multiply the correct data: ok!
+
+v5.6.3
+- REFACT: removed debug codes and debug methods
+- IMPROV: compete soft masks at the end (and not at the beginning) => a bit better
+- TEST: tested the scrolling of DONT_PREDICT_EVERY_MASK
+=> the algorithm looks good, but the result looks worse
+- FIX: when soft masks checkbox was unchecked, the sound was very low (almost silence)
+(needed to compute mask = estim/mix)
+- IMPROV: apply soft mask in each fft objs (not in mask predictor anymore)
+=> so we compute 1 soft mask for each channel
+=> more logical because soft masks are with complex numbers
+=> the difference is almost not noticeable
+- IMPROV: implemented gamma contrast between masks
+- FIX: fixed mask scroll (when using DONT_PREDICT_EVERY_MASK)
+- FIX: fixed division by zero in BL-RebalanceMaskPredictorComp4::ApplyMasksContrast()
+(before, when playing with soft mask off, there was no sound)
+- TEST: now, separate correctly! model=3, soft masking, soft/hard to 100% 
+(also works not so bad with soft hard at 0%)
+
+v5.6.4
+- REFACT: code clean
+- IMPORV: re added masks stack (mask stack 2) => GOOD!
+- TEST: tested MaskStacks::GetMaskVariance2: not so bad, but simple avg is better
+- TEST MAskStack use GetMaskWeightedAvg instead of simple avg 
+=> seems to separate a bit better
+=> with gamma=1, just a bit better
+=> with gamma=10, when keeping the vocal, the guitar is removed better
+(almost no guitar remaining)
+- IMPROV: implemented debug checkboxes for choosing model number and predict modulo
+- IMPROV: hidden soft mask option, and set soft mask by default
+- TEST: with all set to low, it consumes too much for real time
+- OPTIM: mask stack compute weighted avg => optim deque
+- OPTIM: mask stack: MASK_STACK_DEPTH=32 => MASK_STACK_DEPTH=16
+- OPTIM: get single line, before upsampling mask (OPTIM_UPSAMPLE)
+=> so we upsample less data (MelToFreq is costly)
+=> Very good!
+- OPTIM: compute only the necessary mask stack lines (half than previous)
+(OPTIM_STACK_WEIGHTED_AVG) 32% => 16%
+- OPTIM: compute only the necessary mask stack lines (only one line)
+(OPTIM_STACK_WEIGHTED_AVG) 16% => 4%
+- TEST: after optima, the sound is still the same (no change due to optims)
+- TEST: test that loses quality passes well in Logic: ok!!
+=> even (1, 3) passes, sometimes interrupt, passes most of the time
+- IMPROV: compute correctly latency compensation (around 10000 samples)
+- IMPROV: made another plugin id 
+=> so just in case, users can use both versions by renaming the plugin file
+- FIX: when bouncing two times, the beginning of the second time was different
+=> fixed well Reset() of all objects
+=> now during successive renderings, the result is exactly the same
+- FIX: keep only vocal, increase vocal mix to the maximum => the spectrogram did not have
+the same shape as when the mix was set to 1 (middle)
+=> this was because mix was applied before soft masks, and soft masks didn’t manage well
+is the mad was > 1
+- IMPROV: implemented quality knob
+- IMPROV: re-position the soft hard knob + the quality option to keep the same GUI height
+- TEST: checked that all quality option gives the right result => ok!
+- IMPROV: at the end, normalize masks again => so when all knobs are at 0,
+the result is transparent (POST_NORMALIZE)
+
+v5.6.5
+- REFACT: code clean
+- TEST: passed valgrind: ok!
+- IMPROV: modified dark net, so we can pass directly files instead of filenames
+- IMPROV: implemented dark net net creation from windows resource files
+(used fmem library, to have something smiler to fmemopen)
+- TEST: tested fmem on Mac => ok! same sound result!
+- TEST: tested fmem on Mac + valgrind: there is a problem with the funopen implementation, but it is ok with the tmpfile implementation. Ok: this means the BL-Rebalance code is ok.
+- TEST: compared perfs of previous Rebalane version with current
+=> almost same perfs, a bit better (~4% less)
+- TEST: compared separation with previous version => a lot better with the new version!
+- TEST: test perf on a full track bounce (track of 3mn long): q0: 1mn, q3: 20mn, q4: 1h
+- TEST: checked for memory leaks: ok!
+- FIX: set back deployment target from OSX10.7 to OSX10.5
+- IMPROV: added 1 quality option: Bounce, fast
+- IMPROV: GUI: reversed soft/hard and quality => looks better!
+- TEST: tested model 16 with only 200 epochs train 
+(during training, it looked like it became overfitting after 200)
+=> the result has less guitar, but some voice breath is removed (more gated)
+=> so reversed back to full train
+- IMPROV: added another Render quality => before the first one, 3 times faster to bounce
+first, choose quality3=(2,1), but it was worse than quality2 (more guitar) => canceled
+then choose quality3=(1,3), and it was consisted with the other qualities,
+and 3 times faster than quality4
+- TEST: render the full track from Action (track of 3mn),full quality: rendering time: ~1h
+- DOC: updated manual
+- FIX: fixed latency for higher sample rates (FIX_LATENCY_HIGH_SAMPLE_RATE)
+- TEST: tested with all sample rates (bypass, quality 0, quality2)
+=> no latency problem, the sound is correct
+- TEST: made auto tests (base with prev version, and new version)
+=> everything is ok! no latency problem, better separation results
+
+WIP: when using the model in BL-Rebalance, on data that was not train data, the result is very weak (less good than prev version with only dense networks)
+This was trained with learning rate 1e-4 (then the test score is very low compared to the train score). TODO: find a model or current model parameters that makes good result with training set
+
+
+TODO: give up this version for the moment, and restart from BL-Rebalance w/ keras models + soft masking. (next, implement the ideas from Henrik)
+TODO: try to retrain, with simple Dense + binary masks (like keras), but with darknet
+and try Unet with binary masks. Try it with the new version of BL-Rebalance
+
+v5.6.6
+- re-do the model and everything, with the method of Leonardo Pepino
+- TEST: checked that mixture.wav is exactly the sum of all the 4 .wav parts
+- FIX: fixed normalization in BL-Rebalance
+
+v6.0.0
+- port to IPlug2
+- IMPROV: Re-implemented animated logo => ok!
+- IMPROV: implemented BLUtils::GetFullPlugResourcesPath()
+Get the full resource path without IGraphics object
+- REFACT: removed “diffuse” and “shadow” resources
+- GUI: removed “diffuse.png” and “shadow.png”
+- GUI: tried to export the big knob with only 90 frames (otherwise it didn’t pass with NanoVG). JKnobMan doesn’t have the right version of Java => it makes black dots when enabling anti-aliasing. Finally, switched to Cairo.
+- IMPROV: ported to Cairo. For this made #ifdef IGRAPHICS_NANOVG for all the bl classes that use nanovg.
+- IMPROV: re-integrated the help button
+- FIX: fixed the copy of the resources, that were not copied correctly. The DNN models were not copied (made the plugin try to allocate 500GB). The dummy.txt file was not copied. 
+- TEST: tested soft/hard => it seems to work!
+- TEST: tested with traininng 1 song (and choose well eights #6, just before the networks
+started training bad.
+- OPTIM: in Rebalance.cpp, RebalanceMaskPREdictor::SetPredictModuloNum(3) (x16)
+=> this improves the spedd a lot, for debugging, and the quality looks similar
+- REFACT: SA_API macro is now APP_API in IPlug2 (changed it!)
+- TEST: tested model trained on 20 songs. Not so bad!!
+- FIX: fixed darknet output mask, that was not normalized at all (FIX_OUTPUT_NORM)
+=> this also fixes hard sensitivity, that let pass values > 1, even at the minimum
+- IMPROV: added soft sensitivity (before, it was hard elbow) (SOFT_SENSITIVITY)
+=> the result seems good!
+- TEST: generate Mel spectorgrams (256)
+(FIX_MEL_DOWNSAMPLING=1, FIX_MEL_UPSAMPLING=1, USE_MEL=1)
+- TEST: tested unet model, 20 songs, 200 epochs 
+=> the plugin is faster, it is far better than before (but still not perfect)
+- TEST: tested unet 100 songs, training 1 night => better results, this starts to become good!
+
+v6.0.1
+- IMPROV: resample to 11050, process, then resample to the native sample rate
+- REFACT: removed all REBALANCE_TEST codes, and cleaned a lot
+- FIX: “resample to 11050”: now we have sound, and we need Mel
+- IMPROV: implemented blualb-libs::MelScale class:  HzToMel and MelToHz using filters. Use trapezoids to manage well filters, e.g when we have 256 magns and 256 filter. Implemented conversion from and to MFCC. Use cached filter banks to optimize.
+=> this even seem to optimize compared to the origin non filter version (because we don’t compute logs).
+- IMPROV: debugged the integration of the new mel scale => now the detection roughtly works
+- OPTIM: several optimizations of MelScale (one of which also seems to fix a bug)
+- TEST: tested prediction with new mel scale, by dumping images: ok
+- TEST: tested App dumping RNN data, by sumping images: ok
+- REFACT: very big code clean in Rebalance = removed all unused macros, and inactive code
+- IMPROV: re-enabled SKIP_SOURCE_SILENCE (because otherwise we had a series of black images at the beginning.
+- FIX: fixed latency
+- TEST: test model starting num filter=16 instead of 4 => the result is better than previously!
+- REFACT: disabled au file format in libsndfile (that conflicted with iPlug2)
+(BL_DISABLE_AU_FILE_FORMAT)
+- IMPROV: created target All-BL (removed auv3App, which needs MacOS10.13 to compile)
+- BUG: during building for profiling, the mac os app plist had been truncated
+- IMPROV: installed “utils” python 2 package (sudo pip install utils)
+- IMPROV: installed python3 (iPlug2 should use python3)
+- FIX: changed some scripts (python version, paths)
+- FIX: fixed arror in makedist-mac.py (pip3.9 install utils)
+- IMPROV: installed python3.7.9 and changed the script accordingly
+- FIX: these python changes made the makedist-mac script succeed (for python)
+- IMPROV: downloaded the new version of “Package.app” (for installer)
+- IMPROV: Opened and re-saved the pkgproj file
+- FIX: the installer failed because of all the previous SDKs copied in XCode.app
+- FIX: improved the build scripts
+- IMPROV: removes Application from the installer 
+- FIX: for the build/installer, use /Library instead of $(HOME)/Library
+(because the Package software doesn’t work otherwise)
+- IMPROV: added licenses of third party libs
+- REFACT: cleaned the build script
+- REFACT: removed unused resources (big models, and images) 
+(origin: .dmg 128MB, new: 60MB)
+- IMPROV: added and improved script for checking aax sign on mac
+- TEST: tested strip unused code in xcode link => we gain just a few
+- IMPROV: added clean script on mac
+- FIX: fixed the effect of the “demo” flag, for the mac build script
+- IMPROV: created a certificate to also sign the installer: ok
+
+TODO: mac notarization, test make-clean script
+- IMPROV: Windows compilation: changed config/BL-Reblance-win.props
+- IMPROV: compilation for Windows:
+  	- removed duplicate resources (no allowed on windows to have several times the same png for example)
+  	- fix: fixed crash in darknet when loading .cfg (due to '/r' on Windows)
+  	- fix: fixed all texts that was reversed upside down (only on windows)
+  	(FONS_ZERO_TOPLEFT)
+ 	- TEST: tested an alternate win/fmemopen, to try to avoidwriting the temporary file to disk => no way... So for the moment: THE TEMP FILE IS WRITTEN TO DISK (potential security/blocking future issues)
+  	- IMPROV: compiled AAXLibrry for windows (needed to launch vc2013 project, for the win32 build)
+- FIX: fixed installer on Mac (zip final dmg file, dmg file name w/ version etc.)
+- IMPROV: fixed and checked the script make-clean-mac.sh
+- FIX: there was no sound before touching any knob
+(i.e the knobs params we not set to the ProcessObj at startup)
+- FIX: fixed help button/manual (the manual was not copied by the copy resources script)
+- REFACT: use demo message in GuiHelper11 instead of TrialMode7
+- FIX: fixed some compilations issues (after having integrated 15 other plugins)
+- IMPROV: used the new model (global=1, soft activation)
+- TEST: made some tests (suppressing “other” etc.)
+- NOTE: with correct dB computation, Karma Police gives good result!
+(need to tweak Other sensitivity)
+- NOTE: globally, using dB gives better results
+- NOTE: other contains many sounds (is it due to a normalization / a floor?) 
+- IMPROV: convert input to dB (for models traind in dB)
+- IMPROV: added a debug threshold to threshold the masks 
+=> very convincing results, to fine tune “other” when not well predicted (always…)
+- FIX: fixed Scale::ApplyScaleInv(Scale::DB)
+- IMPROV: managed dBs correctly in the rest of the chain
+- TEST: SENSIVITY_IS_SCALE: use sensitivity as mask scale just after prediction
+(for testing)
+- FIX: since PROCESS_SIGNAL_DB, (part 2), there was a background noise
+(this was normal) => added a noise floor at -59dB
+- IMPROV: imported init() and mutex changed from Ghost
+- REFACT: removed printf(create controls)
+- TEST: tested thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+- FIX: the UI creation callbacks were not set (they had been deleted?)
+- TEST; tested with model unet darknet from the web, trained 2 weeks
+=> not really convincing (maybe the model is too much trained…)
+- IMPROV: in App mode, now dump “STEREO WIDTH” “spectrogram”
+- FIX: fixed path with \\$ (necessary sinec sierra maybe…)
+- FIX: App: set “app sandbox” to (YES->NO), otherwise no access to external HDD anymore (for dumping)
+- IMPROV: optimized FftProcessObj16: consume left (OPTIM_CONSUME_LEFT)
+- FIX: FftProcessObj16: when output was null, the internal buffer grown more and more 
+(FIX_NULL_OUT_MEMLEAK)
+- IMPROV: optim FftProcessObj16: avoid some not necessary buffer resizing
+(use member tmp buffers and memcpy)
+- FIX: load the 2 channels of the mix file (instead of only the left as before)
+- TEST: increased WDL_TypedBuf granularity (BL_GRANUL) (test finally disabled)
+
+v6.1.0
+- IMPROV: port to linux
+
+v6.2.0
+- IMPROV: use custom unet (from small darknet model), binary masks, trained 2 months
+- OPTIM: origin app/release (2s): 55.7 G instr
+- OPTIM: tested in release, 256x32 -> that plays in real time!! (just near the limit)
+- OPTIM: tested resize_network (128x16) -> this consumes less!
+But the result is strange. To be done: tested accurately the result (with .bin image)
+- TEST: tested scale down x then rescale up x (image blur)
+=> the result looks good too
+- NOTE: tested resize network => the weights are not rescaled!
+(for it to work, it would be necessary to implement weights bilinear scale)
+- REFACT: code clean after resize experimentations
+
+v6.3.0
+- WIP: addition of spectrogram view
+- IMPROV: integrated graph in  Rebalance.cpp (drafty code)
+- REFACT: incremented the versions of the different objects
+- IMPROV: basic spectrogram is working (it simply displays output)
+- IMPROV: use OpenBLAS (just for testing)
+=> doesn't fix crackles when displaying spectrogram
+=> crackles may come from mutexes
+- IMPROV: use new mel scale without stairs effect (Scale)
+(USE_MEL_METHOD_SCALE)
+TEST: re-test soft masking => it looks to have an effect, will need more tests
+- FIX: both masking and soft masking were applied (made masking 2 times)
+- NOTE: now spectrogram view is basically done (+ refact)
+=> but it takes a lot of resources
+- IMPROV: compute only when isPlaying
+- REFACT: big code clean
+- IMPROV: implemented whole spectrogram change when a param changes
+=> this works, but this is very slow (keep it for debugging only)
+=> and there is a small bug on the left of spectro,
+and also if setting spectro num cols to 64 instead of 2048
+- IMPROV: added new mel scale to dump obj + refact
+- IMPROV: changed app dump paths for Linux
+- IMPROV: script to dump dataset, calling Rebalance app for each track
+(to avoid memory swap overflow)
+- FIX: fixed previous script
+- TEST: tested with a model that uses downscale 2x2 internally
+=> that may be ok for performances with spectrogram... !
+- IMPROV: fixed spectrogram height/numCols, and reduced height
+- FIX: set min db to -120 instead of -60 in processing (PROCESS_SIGNAL_MIN_DB)
+=> that fixes spectrogram that had small bloack holes
+=> that fixes missing air in spectro high frequencies
+- TEST: tested that the plugin is transparent when all is at 0 => ok!
+- FIX: fixed latency compensation
+=> now the plugin is fully transparent
+- IMPROV: implemented out gain knob
+- IMPROV: impelmented solo and mute buttons
+(with solo in priority over mute, like in Reaper)
+- OPTIM: memory optimization (start, 1 loop: 2.6GB)
+  	 - tmp buffers, first step: 1.6GB
+	 - use bl_queue in MaskStack2: 1.6GB
+	 - use tmp buffers in MaskStack2: 708MB
+	 - use tmp buffers in RebalanceMaskProcessor: 465MB
+	 - test: just start and close: 444MB
+	 - test: 5 loop: 1.9GB
+	 - bl_queue in RebalanceProcessFftObjComp4 (5 loops): 1.5GB
+	 - some memory fixes: 731MB (caller/callee)
+	 - run during 3mn: 1.9GB
+	 - bl_queue in RebalanceMaskPredictor8 (5mn): 1.5GB
+	 - some additional fixes (5mn): 1.5GB
+	 - note stb_image_resize alloc and dealloc mem (for darknet [resize])
+	 - note: now memory is fixed when playing (except std_image_resize)
+- OPTIM: mem optim : start: 1 scroll, 10x solo/unsolo => 2GB
+  	 - fix => 589MB
+- NOTE: now memory is ok!
+- OPTIM: tried to optimize 
+- TEST: with graph: 83% CPU
+- NOTE: when using DARKNET_USE_BLAS_GEMM in Rebalance plugin,
+this takes the 4 cores, almost always (pref reveals that __sched_yield takes 45%CPU)
+- IMPROV: set DARKNET_USE_BLAS_GEMM to 0 again (globally, it saves perfs!)
+Not a solution... It uses only 1 core, but it saturates it too much = this is hacked!
+- IMPROV: re-enabled OpenBLAS, but compild single threaded as recommmended in the doc:
+https://fossies.org/linux/OpenBLAS/USAGE.md
+"If your application is already multi-threaded, it will conflict with OpenBLAS multi-threading."
+- NOTES: with OpenBLAS single thread, this passes!
+  - no crackles
+  - Reaper takes 25%CPU
+  - only a single core is used
+- IMPROV: possibility to dump with overlap (to make bigger dataset)
+(FULL_OVERLAP_DUMP)
+And included back silent parts in the dataset too.
+- OPTIM: BLSpectrogram4, use filter banks to decimate at the same time!
+=> the optimization is clearly visible e.g when using solo/mute buttons which make
+recomuting the whole spectrogram (this looks at minimum 2 times faster to recompute the sepctrogram)
+=> and we will avoid stairs effect if any 
+- FIX: fixed memory leak: model was never deleted
+- FIX: fixed small mem leak in darknet
+(but while training, as we load the network many times for testing,
+this could explain why the training became slower and slower)
+- IMPROV: before dumping, convert to mono (before we took left chan only)
+(DUMP_REAL_MONO)
+- FIX: there was a bug when dumping with ovrlapping
+(it seems fixed... don't know how)
+- FIX: fixed compilation after TimeAxis6/Transport changes
+- WIP: re-try with the tiny darknet without downsample
+(after OpenBLAS without threads, maybe that could pass?)
+=> it looks to have better perfs, maybe it could be acceptable without downsamples
+- NOTE: force UseLegacyLock(true), otherwise, after some solo/mute, it is hacked
+- IMPROV: activated DENORMAL_FLUSH_TO_ZERO for darknet prediction
+=> when simply playing, the perfs look the same
+=> but when toggling "mute" (all spectrogram recomputation),
+it is really quicker to recompute the whole spectrogram.
+- TEST: tried to set PROCESS_SIGNAL_MIN_DB to -60
+(like in darknet, but then we get not beautiful spectrograms, no solution...)
+(a spectrogram with min db -60 seems to be not so beautiful, dark and too contrasted)
+Tested to adjust brightness and contrast, no way...
+- NOTE: with model "training 2 months", the voice sound seems better if -120dB) 
+- TEST: tested again downsampled model => sounds better with -60dB
+(instead of -120dB)
+- IMPROV: added debug brightness contrast knobs
+- IMPROV: port to SpectroDisplayScroll4
+- FIX: the time axis didn't scroll anymore
+- TEST: let train -120db 1 night, set back to -120db here, and tested: no so obad!
+- NOTE: training with -120db amptodb thrs make a very good training curve!
+(far better than before) And we can have beautiful spectrogram without tricking
+- NOTE: why do we have same number of weights with down/origin?
+=> this should be because we save conv kernels, not imag pixels
+=> in both models, we have the same number of kernels!
+- TEST: displayed the network, and note the number of Gflops in both cases!
+We do have 4x less flops in downsampled model, as expected
+- IMPROV: new model (no normalization) => very good!
+  	  - separates better than ever! 
+	  - disabled normalization in DNNModelDarknet (to match the model)
+	  - no normalization
+	  - training: 4/5 days
+	  - binary images, downscaling
+	  
+v6.3.1
+- REFACT: in darknet, replaced "my_" by "_bl"
+- TEST: tested experimentally the influence of normalization in DNNModelDarknet
+=> it should change many things!
+=> log + normalization changes the floor of the data
+- REFACT: very big code clean in bl-darknet
+- TEST: took the same model, but trained a bit more => better results!
+- IMPROV: hide the debug brightness and contrast debug buttons (no need anymore)
+- NOTE: bug: mix doesn't work as expected
+(mix -12dB => ok, suppress, mix +12dB: decrease the part, smoothly)
+=> this is due to soft masking!
+=> soft masking mask must be in [0, 1], if values are greater than 1,
+it doesn't work
+- NOTE: for the moment, if we increas the input gain, we don't have the same result
+(not normalized at all!...)
+- FIX: fixed mix increase very simply (after many tries)
+(put the mask from [0, 2] to [0, 1], and adjust volume after soft masking)
+- IMPROV: set mix parameters to % (instead of dB)
+=> this is really more intuitive and logical)
+- IMPROV: tweaked very well mix params sensivity
+=> now the result is very suitable
+(also tested apply mix params on db->amp mask values => failed)
+- NOTE: set every mix param to 5% (or less, but not 0%),
+and only vocal (or one another) to 100%
+=> the result is very good!
+=> the sound is almost not pumping compared to solo button
+- IMPROV: added "hard solo" option
+(so we can use soft solo/mute, to have less agressive separation,
+and then better sound)
+- IMPROV: update the whole spectrogram only when not playing
+=> so when playing, the processing doesn't slow down, by recomputing
+the whole spectrogram at each change
+- FIX: the above fix also improve the speed of spectro recompute
+(before, the spectrogram was recomputed several times at each change,
+instad of only one time)
+=> now, when not playing, and checking solo/mute, spectro recomputation
+is very quick (instantly!)
+- IMPROV: recompute whole spectro only after a delay
+=> so now, we can turn the knobs, and it updates quite quickly,
+but without taking huge resources
+=> result is very good!
+- TEST: tested spectro scroll when we mute track: ok!
+(GhostViewer, Chroma, Ghost, Rebalance)
+- IMPROV: re-enabled smoothness for spectro display scroll
+(SMOOTH_SPECTRO_DISPLAY)
+=> it is about the same jitter level than without smooth scroll
+- FIX: fixed an hugly bug in bl_queue
+- OPTIM: RebalanceProcessFftObjComp4: optimized db scale a little
+- IMPROV: Set PROCESS_SIGNAL_DB to 0 => the result looks damn better!
+(... and it will consume less CPU! => gained 2%CPU)
+=> far better with hard solo (vocal is better defined)
+=> but it ill need adjustment of sensitivities
+=> it doesn't crackle anymore!
+- IMPROV: adjusted the mix threshold and coeffs for PROCESS_SIGNAL_DB=0
+- PROBLEM: 1 - set vocal to solo, increase mix => we hear other instruments a bit
+2 - set vocal to solo, increase the gain => we don't hear other instruments so much
+=> maybe add a "mask contrast" parameter (sigmoid), to be put in place of sensitivity?
+=> better solution for the moment: re-enabled the soft/hard parameter
+- IMPROV: re-enabld the soft-hard parameter
+- NOTE: can not increase mix more than 2.0, due to soft mask
+=> so when increasing just vocal, set it to max to avoid
+increasing some of the other parts
+- NOTE: gain increase is limited to factor 2.0 (due to soft masking contraints)
+=> set in the manual: "if you want to increase a lot one part,
+increase it to the maximum, decrease the other parts,
+and increase the output gain"
+- FIX: fixed smooth scrolling!
+=> now scrolling is very smooth, even with the CPU consumption of mask prediction
+(it slows down or accelerate smoothly, and this is really acceptable)
+- IMPROV: found a good solution for increasing well gain when mix > 100%
+- TEST: tested this new soft masking hack
+=> when removing all the vocal, it pumps a little more (e.g on cymbals)
+(but we can fix it by setting the vocal mix to 20% instead of 0%)
+- TEST: tested the plugin on the whold Karma Police song => very good!
+- OPTIM: Disabled maks contrast (not used and cumsumed much)
+(perfs: 18% -> 17%)
+- IMPROV: imported and tested model with normalization
+(binary, downsampled, normalization(new) )
+	 - the result of voice solo is a bit worse
+	 (certainly because drums are better detected, and overwrite vocal)
+	 - normalization works very well!
+- TEST: tested new normalization: very good!
+Put input gain -12dB, and output gain +12dB => exactly the same result!
+(and same with +12dB then -12dB)
+- IMPROV: integrated gui refresh only when required, from Ghost and GhostViewer
+- TEST: tested the new mode: trained with stemps at -60dB, and mix at -120dB
+non binary, downscaled
+- TEST: tested that the new model gave similar pred images: ok
+- IMPROV: renamed "soft/hard" -> hardness
+- NOTE: problem with this training: the "other" part contains too much voice
+- IMPROV: re-enabled RebalanceMaskProcessor::ApplyMasksContrast()
+=> it gives the expected result on those non binary masks
+=> to be improved with sigmoid!
+- TEST: tested with currently training model
+(downsample, binary, tiny darknet training parameters (momentum etc.)
+=> looks better than before: the vocal is not cut by drum strikes!
+- TEST: tested normalization: very good
+(whatever the gain, we get the same result)
+- TEST: tested with new model (down, using tinydarknet train params)
+
+v6.4.0
+- IMPROV: integration of the new design
+- IMPROV: initialized correctly with simplified params
+- TEST: tested that we still had the same sound: ok!
+- TEST: tested the new model (no downscale, binary, tiny unet train params)
+=> very good results, real improvement compared to the downscaled mode
+=> this model is not finished traing (this is a WIP)
+- IMPROV: possibility to choose the model number
+(0: downscaled, 1: no downscaled)
+- IMPROV: recompute the whole spectrogram if we change the model number
+- BUG(not repro): solo vocal, then both mute it => it should output nothing
+- IMPROV: use spectro scroll 4 state (like in GhostViewer)
+- PROBLEM(not repro with prev improv): play with solo, toggle solo off/on
+=> the spectrogram slides a bit
+- BUG: reset play, change model, the prev raw input was not cleared
+- BUG: play but keep a black margin on the left, change model
+=> the black margin is filled
+- FIX: play sortly, stop, replay sortly => spectrogram got garbage on the left
+- REFACT: cleaned commented code of RebalanceProcessFftObjComp4
+- FIX: vertical line on the left (when switch solo...)
+=> this was due to soft masking that was not reset before recopting the spectro
+- IMPROV: added tooltips
+- TEST: with predict modulo = 0, we got better results than with mod=4 (32)
+- TEST: with predict modulo = 1 (4), there are bugs, result is bad
+- IMPROV: added "offline" model for best rendering
+(and renamed "best" => "better"
+- FIX: fixed jerky spectrogram with "offline" model
+=> disable scroll smoothing, so there are not scrolling artifacts
+- IMPROV: avoid re-computing the model many times at startup
+or chen closing/re-opening the plug window
+- FIX: passed valgrind for memory => fixed problem in FilterBank 
+- FIX: play to get a spectrogram, hide and show window in reaper => black spectro
+(double-click on "windows float selected FX)
+- FIX: with offline mode, the time axis labeljittered a lot
+- FIX: sometimes the time axis was not scrolling anymore
+play, close plugin, re-open it -> time axis was frozen
+- BUG: offline mode, play, switch to faster => spectro adjusts very badly
+- FIX: Avoid offect of buffered scrolling on spectrogram
+(and a bit on time axis)
+- FIX: the spectrogram was not filled if the GUI was hidden
+(not exactly, steps: play just a little, close gui, re-open gui
+=> first the displayd spectro is the same one as when gui was close,
+then after a short time, it fully updated)
+- FIX: fixed black border and buffered scrolling better
+- FIX: play, hide gui, show gui => small effect of buffered scrolling on time axis
+(that was fixed automatically by previous fix)
+- FIX: offline mode, play, switch to faster => sometimes black border
+(that was fixed automatically by previous fix)
+- TEST: re-tested "Sabrina" with offline model => very convincing
+(put the vocal to 30% to avoid a bit pumping effect)
+- TEST: compare to Melodyne(Spleeter), Karma Police: Melodyne is a bit better
+(the darknet model tested is not the final one...) 
+- TEST: tested with new full model, trained ~2196 (instead of 1000)
+=> this is different, hard to say if it is 100% better (maybe a little)
+- TEST: tested new full model, offline, karaoke KarmaPolice (30% vocal): good!
+=> vocal fry not always well removed, some few sibilance and vowels stay,
+the end is good, removing the high volume vocal, some pumping effects
+=> globally it should be acceptable
+- NOTE: melodyne online service: https://melody.ml/
+- TEST: test with full model trained 2200 (took care of "train all peak")
+- NOTE: strangely old model (1210) have better results than new models (> 2000)
+on vocal at the minimum
+- TEST: try to find how to find the best model in the backups
+=> models with result images on Mac2, with many red lines are better
+=> model #2203 is not so bad (similar to old model)
+- TEST: re-tried to dump all data, but measure only the vocal score
+=> is this coherent with tests on BL-Rebalance?: no
+- IMPROV: applied LF mechanism for spectro scroll (from Chroma, to avoid crash)
+- NOTE: playing/spectro scroll etc. code is not exactly the same as the other plugs
+- TEST: checked that we don't need a bypass detector: ok!
+- FIX: automate Bass for example => the knob got to zero
+(but the text value stays good)
+- FIX: write bass automation, then read it => bass knob stays to zero
+(but text value changes)
+- NOTE: same problem with another prev plugin => find which one
+- FIX: fixed is in IGrphicsEditorDelegate::OnParamChangeUI()
+=> there was a hugly bug when retriveing value, for applying it to the control
+(wonder how it could have worked for other plugins...)
+- TEST: spectro scroll doesn't jitter at 88200 (but it is too fast)
+- TEST: checked how if applied mask stack (is it coefficients depending on the age ?)
+=> test with brute force coefficients and compare: same result
+- TEST: tested masks stask in depth: everything is ok!
+And test a new mask stack average mothod: "stdev": does not improve singinficantly
+- IDEA(no need): try offline without masks stack, and keep only the center line
+(compare with current version which uses masks stack)
+- TEST: Trying sigmoid to make a semi-binarization (very high contrast, but not 100% binarization, so when drums + vocal are high, vocal won't be cut by drums).
+- TEST: compared processing on HD flac copmared to mp3 (converted to flac)
+=> the results are quite similar!
+- IMPROV: added a tool to batch render a series of models
+- IMPROV: improved the script to dump spectral diff and find the best weights
+- NOTE: script find-best-model: looks better to diff in amp, not in db
+- TEST: made a new test, from real stems, for script: "Bitter"
+(because Melodyne cuts at 11050Hz and then can't use KarmaPolice for script)
+- IMPROV: managed sr=88200Hz, by downsampling then upsampling after
+=> fixes detection that was bad, and fixed scrolling speed that was buggy
+- FIX: at sr=48000Hz, there were many clicks
+=> now, don't resample if we are at 48000Hz, result is still ok, without clicks
+- FIX: at multiples of 48000Hz (e.g 96000Hz), that made clicks
+- DOC: updated the manual ("best sr=44100Hz")
+- NOTE: "smooth binary" current training looks good
+But we will have to select a good model weights at the end, from the last models
+(sometimes models weight are very bad, and just after very good)
+- TEST: compared models bin/soft/softbin => the best is softbin!
+Trained time: bin(2332)/soft(tr->1455)/softbin(tr->1000)
+Selected the best model using bl-find-best-model.sh
+(compared on Karma: vocal/novocal/drums)
+=> softbin is better than soft, for vocal, novocal and drums!
+(and it has been trained less for the moment!)
+=> bin is worse than softbin
+bin makes artifcats like phasing effects on novocal and drums, vocal separation looks better visually, but when listening to the sound, it is better with softbin.
+bin/novocal we hear no vocal at all anymore, but there is a big phasing effect
+softbin/novocal: we guess a bit of vocal, but the remaining sound is still good.
+bin, drums are worse than with softbin and soft
+- TEST: tried to train on linux, while working on Mac2 => very slow
+batch=128 is very limit with Mac1 4GB RAM (Mac2 has 8GB)
+And the processing is 5 times slower
+
+v6.4.1
+- IMPROV: port to windows
+- FIX: now load model windows resources even if we have no GUI
+- REFACT: win: removed unused IGraphics argument for load resources
+- IMPROV: compilation with OpenBLAS for win64 (perf gain x2)
+Use OpenBLAS on x64 only (win32 was not possible due to link error)
+Use OpenBLAS "dynamic", so the arch is dynamically chosen on the target machine
+Don't use dynamic_older (for old processors), because anyway, they will be too slow. And it increases the size of executable by 5MB.
+Note: BL-Rebalance_x64.dll: 28MB,
+BL-Rebalance_x64_haswell.dll: 28MB
+BL-Rebalance_x64_dynamic.dll: 35MB (still reasonable...)
+BL-Rebalance_x64_dynamic_older.dll: 40MB
+- BUG: Win32 rebalance makes no sound and no spectrogram display
+=> impossible to fix (due to stack/heap size of host)
+- NOTE: Rebalance won't work on 32 bit!
+=> the stack/heap size can't be defined in a dll, only in exe 
+The default stack/heap size is 1MB.
+darknet convolutional layer wants to allaocate 1.6MB for weights,
+and then calloc fails with a null pointer
+=> if the 32 bit host has not cinreased the stack size, Rebalance won't work
+- IMPROV: improved fmem to flush file better (disabled)
+FMEM_FORCE_FLUSH_HACK_WIN32
+- FIX: Disabled native windows tooltips (for all plugins)
+(otherwise we would have both tooltips displayed at the same time)
+(BL_DISABLE_WIN_TOOLTIPS)
+- FIX: recompiles OpenBLAS with /MT option
+(to avoid /NODEFAULTLIB warning, and symbols like malloc or printf
+imported from openblas.lib)
+- FIX: for app version (with DBG_PERF_APP), fixed the time axis scroll
+DBG_PERF_APP is used to fake a plugin behaviour
+(otherwise, the behaviour would be to dump dataset for training)
+- FIX: win: on Windows (Mac1), the plugin crashed, and sometimes made black screen
+This was certainly because of a big memory peak during drknet model loading.
+Added an option on darknet, to save memory if we only predict, not train.
+- FIX: since DBG_PERF_APP, plugins version behaves like is continuous monitor
+- NOTE: set fmem flush hack to 1 (just in case)
+- NOTE: set denormal to 0 in DNNModelDarknet
+- TEST: disabling flush to zero doesn't seem to affect plugins perfs
+- TEST: tested on Mac1 Windows 7: good!
+(sound is good, perfs are good, there is just a bug: black spectrogram)
+- TEST: Mac2:win10 compiled for 32bit => no sound (as expected)
+- TEST: tested loading model 1 before model 0, to decrease memory => no success
+- NOTE: Memory Peak: ~222MB
+- IMPROV: compiled and used OpenBLAS generic for Linux
+
+v6.4.2
+- FIX: windows fixes
+- FIX: When not playing, the spectrogram was not updated anymore when solo/mute/turning knobs
+(Mac1 Win10, Mac2 Win7, but also linux probably)
+  
+v6.4.3
+- IMPROV: mac compilation
+- IMPROV: compiles OpenBlas "st" + "dynamic" on all platforms
+- TEST: tested mode D-1e-7, 294 epochs => this is starting well
+- IMPROV: use new model rebalance0.weights (2000 epochs)
+(trained 2000 epochs, found best model using script)
+(softbin, down, lr=1e-5)
+- IMPROV: changed find best model script, to take model0
+- DOC: fixed a typo in the manual
+- DOC: fixed to avoid over-selling the plugin
+- TRAIN: continuing training nodown, softbin, lr=1e-5
+(was 1000 epochs, it is now 2185epochs)
+- IMPROV: use new trained model rebalance1.weights (2185epochs)
+training nodown softbin lr=1e-5
+used the model "1043" (cont + 1194)
+=> far better quality results! (compared to 1194epochs)
+
+v6.4.4
+- FIX: fixed windows compilation
+- FIX: knob went too far considering the graduations
+- FIX: editing knob value => we didn't see the cursor on black bg
+=> now use iPlug2 text entry instead of native one
+- IMPROV: use iPlug2 text entry for text edit instead of the native one
+- FIX: some big knobs were not well centered
+- IMPROV: renamed the parameters so they look nice in host UI
+- FIX: fixed Mac M1 compilation (new fat OpenBLAS binary)
+- IMPROV: changed the parameter name: "range" -> "brightness"
+
+- TODO: find a way to pass valgrind on linux, to check well darknet
+(for the moment, it takes too much ram, maybe try to load only 1 model)
+
+- TODO: currently it is traind ~2100 epochs) => try to train ~10000 epochs!
+=> the result could even be far better!
+
+
+=== OpenBLAS ===
+Bench Windows (on mac 2)
+- without OpenBLAS:
+  - fast mode: ok (22% CPU)
+  - better mode: crackles (44% CPU)
+
+- with OpenBLAS:
+  - fast mode: ok (16% CPU)
+  - better mode: ok (24%)
+
+BUG: black spectrogram on Windows7
+
+NOTE: it seems that there is a external lib that is compiled with /MD insteaod of /MT (warning during Rebalance compilation) => need to fix it to avoid instlling vcredist (make a test on windows 7 with a simple Gain12 plugin, that has no dependencies) (it should be libsndfile or flac...)
+========
+
+- NOTE: Strategy to find a good model from trained models:
+- take the last 100 weights for example
+- pass bl-find-best-mode.sh script
+- choose a weight file with low % error result (script test is made on vocal only)
+- test it a bit (e.g check "vocal" in "other", test mute "vocal" etc.
+(sometimes the best score comes from a shortly trained model, but it may b good for vocal, but not for other parts => need to take the last 100 models, globally, the longer the model is trained, the best results we have.
+
+
+- PROBLEM: play, stop, change model => there is a shift of the spectrogram
+
+
+- PROBLEM: at a moment, Reaper took a lot of memory (near system crash)
+That was in offline mode, just after a bounce was done.
+
+- TODO: find the best model, and find how to find the best model
+
+- PROBLEM(probably): with binary, when vocal and drums are superimposed,
+we detect well either one or the other, but not both.
+- PROBLEM: with soft (no binary), some vocal partials are cut in the middle
+when muting vocal => there remains vocal, and there is too much vocal in "other"
+
+
+- TODO: if we find something interesting, the low model will have to be re-trained
+to select the best result
+
+- TODO: if we get very good result, obfuscate the .cfg file (gzip + encrypt)
+
+- BUG: sometimes reaper takes a lot of memory and the system kills it
+e.g. load KarmaPoliceExtract2, bounce with offline quality,
+load (save the project) Karma karaoke
+=> while reloading Rebalance, Reaper takes a lot of mem and the system kills it
+(after having system freezed for some minutes)
+
+- TODO: at the end of trainig of full model, dump result images and
+choose the best one (the last one may not be the best one)
+
+- MANUAL: if we want "karaoke", better to keep 30% vocal, do not remove 100% vocal
+(otherwise pumping effect)
+- MANUAL: play a bit, stop, choose model and solo/mute/mix until ok (real time update)
+then choose offline and bounce all track
+
+- TODO: Rebalance: higher sample rates (extend mask?)
+
+IDEA: if training with -120dB without normalization fails,
+then process stems with -60dB for training, but keep input at -120dB
+=> we will have more contrast for truth during training!
+
+- TODO: perfs: optimize soft masking (compute signam2 with moving average)
+
+- TODO: later, check for normalization
+(increasing input gain should give the same result)
+
+- NOTE: without soft masking, there is a junction problem between spectro slices
+	  
+- NOTE: since denormal flush to zero, maybe we will gain in performances when eval?
+=> would need to re-try training without downsampling to see
+(or use 2 months trained model, and use it with denormal)
+
+- IDEA: crackles: in 2 steps: pre-compute masks by bouncing 1 time/then apply masks
+
+- NOTE: with spectrogram, this is slower (a bit ?)
+
+- IDEA: remember that X image blur gives good results too!
+
+- IDEA: try to optimize by using fastapprox library (directly in darknet)
+
+- TODO: code sign Mac, code sign in xcode options also, mac notarization, 
+manage demo flag, make-clean script
+
+- TODO: compute at 11050 Hz, then duplicate the mask top value, to reach all the high frequencies.
+- TODO: manage well 48000Hz multiples
+
+- TODO: set in the manual: "if you want to increase a lot one part,
+increase it to the maximum, decrease the other parts,
+and increase the output gain"
+
+- TODO: set in the manual: "to remove one part, increase all other to the maximum, and decrease the one part progressively (to keep the sound quality)
+(maybe this is like this because the current model has been trained without normalization...)
+
+- IDEA: provide also a version compiled without Intel optimizations
+(for Mac, to try M1 chips)
+
+- TODO: site: make a blog post with examples of sound spectrograms: several spectro of vocals (single vocal, male, female, sibilances, plosives, choirs), bass (bass guitar, bass synth), drums (snare, kick etc...), piano, guitar
+=> to "teach" how to recognize globaly an instrument from a spectrogram
+=> and add this link to the Rebalance plugin page.
+
+===
+Support
+Plug not loading with Magix Music Maker (Windows)
+2 users in this case.
+
+Jean Garcia - Max Catalina (AAX ?) => mutes the sound of the track when inserted

@@ -1,0 +1,2416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "453"
+            endingLineNumber = "453"
+            landmarkName = "Rebalance::~Rebalance()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "455"
+            endingLineNumber = "455"
+            landmarkName = "Rebalance::~Rebalance()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "398"
+            endingLineNumber = "398"
+            landmarkName = "enum ELayout { kWidth = PLUG_WIDTH, kHeight = PLUG_HEIGHT, kKnobSmallWidth = 36, kKnobSmallHeight = 36, kKnobWidth = 72, kKnobHeight = 72, kGraphX = 0, kGraphY = 0, kVocalX = 39, kVocalY = 344, kBassX = 153, //152, kBassY = 344, kDrumsX = 261, kDrumsY = 344, kOtherX = 370, //369, kOtherY = 344, #if !USE_SIMPLIFIED_GUI // Global precision // (soft/hard) kPrecisionX = 470, kPrecisionY = 80, kKnobPrecisionFrames = 180, // Precisions kVocalSensitivityX = 52, kVocalSensitivityY = 200, kKnobVocalSensitivityFrames = 180, kBassSensitivityX = 152, kBassSensitivityY = 200, kKnobBassSensitivityFrames = 180, kDrumsSensitivityX = 252, kDrumsSensitivityY = 200, kKnobDrumsSensitivityFrames = 180, kOtherSensitivityX = 352, kOtherSensitivityY = 200, kKnobOtherSensitivityFrames = 180, #endif kOutGainX = 486, kOutGainY = 415, kKnobOutGainFrames = 180, // kSolo0X = 52, kSolo0Y = 476, kSolo1X = 165, kSolo1Y = 476, kSolo2X = 274, kSolo2Y = 476, kSolo3X = 383, kSolo3Y = 476, // kMute0X = 80, kMute0Y = 476, kMute1X = 193, kMute1Y = 476, kMute2X = 302, kMute2Y = 476, kMute3X = 411, kMute3Y = 476, #if !USE_SIMPLIFIED_GUI #if SHOW_QUALITY_BUTTON kRadioButtonsQualityX = 455, kRadioButtonsQualityY = 46, kRadioButtonQualityVSize = 96, kRadioButtonQualityNumButtons = 6, kRadioButtonsQualityFrames = 2, #endif #endif #if !USE_SIMPLIFIED_GUI // For debugging kRangeX = 415, kRangeY = 80, kRangeFrames = 180, kContrastX = 415, kContrastY = 160, kContrastFrames = 180, kHardSoloX = 20, kHardSoloY = 590 #endif kModelX = 462, kModelY = 362, kModelWidth = 80 }"
+            landmarkType = "13">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../iPlug2/IPlug/IPlugPaths.mm"
+            timestampString = "623597806.973702"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "GetResourcePathFromBundle(const char* fileName, const char* searchExt, WDL_String&amp; fullPath, const char* bundleID)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp5.cpp"
+            timestampString = "624445636.442732"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "RebalanceMaskPredictorComp5::RebalanceMaskPredictorComp5(int bufferSize, BL_FLOAT overlapping, BL_FLOAT oversampling, BL_FLOAT sampleRate, const IPluginBase &amp;plug)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/BLUtils.cpp"
+            timestampString = "624619540.179738"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "11638"
+            endingLineNumber = "11638"
+            landmarkName = "BLUtils::Convolve(const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;a, const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;b, WDL_TypedBuf&lt;BL_FLOAT&gt; *result, int convoMode)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "730"
+            endingLineNumber = "730"
+            landmarkName = "Rebalance::InitParams()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "737"
+            endingLineNumber = "737"
+            landmarkName = "Rebalance::InitParams()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp2.cpp"
+            timestampString = "623675465.006078"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
+            landmarkName = "RebalanceProcessFftObjComp2::ProcessFftBuffer(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *ioBuffer, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *scBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp2.cpp"
+            timestampString = "623675465.006078"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
+            landmarkName = "RebalanceProcessFftObjComp2::ProcessFftBuffer(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *ioBuffer, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *scBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "63"
+            endingLineNumber = "63">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/darknet/src/network.c"
+            timestampString = "623690608.194816"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "550"
+            endingLineNumber = "550"
+            landmarkName = "resize_network()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/darknet/src/network.c"
+            timestampString = "623690142.924938"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "470"
+            endingLineNumber = "470"
+            landmarkName = "resize_network()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/darknet/src/network.c"
+            timestampString = "623690591.480477"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "514"
+            endingLineNumber = "514"
+            landmarkName = "resize_network()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/darknet/src/network.c"
+            timestampString = "623690983.788983"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "512"
+            endingLineNumber = "512"
+            landmarkName = "resize_network()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/darknet/src/parser.c"
+            timestampString = "624184067.259532"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1382"
+            endingLineNumber = "1382"
+            landmarkName = "parse_network_cfg_aux()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/darknet/src/deconvolutional_layer2.c"
+            timestampString = "623691199.219054"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "get_workspace_size()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/darknet/src/deconvolutional_layer2.c"
+            timestampString = "623691341.067269"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "make_deconvolutional_layer2()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp5.cpp"
+            timestampString = "624445636.442732"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "768"
+            endingLineNumber = "768"
+            landmarkName = "RebalanceMaskPredictorComp5::InitResamplers()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp5.cpp"
+            timestampString = "624445636.442732"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "846"
+            endingLineNumber = "846"
+            landmarkName = "RebalanceMaskPredictorComp5::ApplySensitivity(WDL_TypedBuf&lt;BL_FLOAT&gt; masks[4])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp5.cpp"
+            timestampString = "624445636.442732"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "575"
+            endingLineNumber = "575"
+            landmarkName = "RebalanceMaskPredictorComp5::UpsamplePredictedMask(WDL_TypedBuf&lt;BL_FLOAT&gt; *ioBuf, BL_FLOAT sampleRate, int numCols)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631995681.016302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1124"
+            endingLineNumber = "1124"
+            landmarkName = "Rebalance::ProcessBlock(iplug::sample **inputs, iplug::sample **outputs, int nFrames)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp5.cpp"
+            timestampString = "624445636.442732"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "820"
+            endingLineNumber = "820"
+            landmarkName = "RebalanceMaskPredictorComp5::UpdateCurrentMasksScroll()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp5.cpp"
+            timestampString = "624445636.442732"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "831"
+            endingLineNumber = "831"
+            landmarkName = "RebalanceMaskPredictorComp5::ApplySensitivity(WDL_TypedBuf&lt;BL_FLOAT&gt; masks[4])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
+            landmarkName = "DNNModelDarknetMc::Predict(const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;input, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *masks)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::Predict(WDL_TypedBuf&lt;double&gt; const&amp;, std::__1::vector&lt;WDL_TypedBuf&lt;double&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;double&gt; &gt; &gt;*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "631926743.551118"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "200"
+                  endingLineNumber = "200"
+                  offsetFromSymbolStart = "125">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::Predict(WDL_TypedBuf&lt;float&gt; const&amp;, std::__1::vector&lt;WDL_TypedBuf&lt;float&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;float&gt; &gt; &gt;*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "631926743.556636"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "201"
+                  endingLineNumber = "201"
+                  offsetFromSymbolStart = "184">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
+            landmarkName = "RebalanceProcessFftObjComp3::ComputeMix(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *dataResult, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &amp;dataMix)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "180"
+            endingLineNumber = "180"
+            landmarkName = "RebalanceProcessFftObjComp3::ComputeMix(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *dataResult, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &amp;dataMix)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629567970.107883"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
+            landmarkName = "RebalanceMaskPredictorComp6::ProcessInputFft(vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; * &gt; *ioFftSamples, const vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; *scBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629568166.2205729"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
+            landmarkName = "RebalanceMaskPredictorComp6::ProcessInputFft(vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; * &gt; *ioFftSamples, const vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; *scBuffer)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceMaskPredictorComp6::ProcessInputFft(std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*&gt; &gt;*, std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; &gt; const*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+                  timestampString = "629568195.516589"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "1362">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceMaskPredictorComp6::ProcessInputFft(std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*&gt; &gt;*, std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; &gt; const*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+                  timestampString = "629568195.525885"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "186"
+                  endingLineNumber = "186"
+                  offsetFromSymbolStart = "1406">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629568166.2205729"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "RebalanceMaskPredictorComp6::SetPredictModuloNum(int moduloNum)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/ResampProcessObj.cpp"
+            timestampString = "624447927.147405"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
+            landmarkName = "ResampProcessObj::Process(vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioBuffers)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/ResampProcessObj.cpp"
+            timestampString = "624619088.005109"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "ResampProcessObj::Process(vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioBuffers)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessor.cpp"
+            timestampString = "624618945.630476"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "264"
+            endingLineNumber = "264"
+            landmarkName = "RebalanceProcessor::GetSpectroData(WDL_TypedBuf&lt;BL_FLOAT&gt; data[REBALANCE_NUM_SPECTRO_COLS])"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessor.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "305"
+            endingLineNumber = "305"
+            landmarkName = "RebalanceProcessor::ProcessSamplesBuffers(vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioBuffers, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioResampBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessor.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "303"
+            endingLineNumber = "303"
+            landmarkName = "RebalanceProcessor::ProcessSamplesBuffers(vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioBuffers, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioResampBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessor.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "303"
+            endingLineNumber = "303"
+            landmarkName = "RebalanceProcessor::ProcessSamplesBuffers(vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioBuffers, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioResampBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessor.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "303"
+            endingLineNumber = "303"
+            landmarkName = "RebalanceProcessor::ProcessSamplesBuffers(vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioBuffers, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioResampBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessor.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "301"
+            endingLineNumber = "301"
+            landmarkName = "RebalanceProcessor::ProcessSamplesBuffers(vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioBuffers, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *ioResampBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
+            landmarkName = "RebalanceProcessFftObjComp3::ComputeMix(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *dataResult, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &amp;dataMix)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629567970.107883"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "RebalanceMaskPredictorComp6::ProcessInputFft(vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; * &gt; *ioFftSamples, const vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; *scBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "402"
+            endingLineNumber = "402"
+            landmarkName = "RebalanceMaskPredictorComp6::ComputeMasks(WDL_TypedBuf&lt;BL_FLOAT&gt; masks[NUM_STEM_SOURCES], const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;mixBufHisto)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450335.723729"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
+            landmarkName = "RebalanceMaskStack2::GetMaskWeightedAvg(deque&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *mask, int index)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450373.795433"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "306"
+            endingLineNumber = "306"
+            landmarkName = "RebalanceMaskStack2::GetMaskWeightedAvg(deque&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *mask, int index)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450390.918983"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
+            landmarkName = "RebalanceMaskStack2::GetMaskWeightedAvg(deque&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *mask, int index)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450413.04821"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "269"
+            endingLineNumber = "269"
+            landmarkName = "RebalanceMaskStack2::GetMaskWeightedAvg(deque&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *mask, int index)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450452.676814"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "RebalanceMaskStack2::AddMask(const deque&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; &amp;mask)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450492.342259"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "RebalanceMaskStack2::RebalanceMaskStack2(int width, int stackDepth)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450523.208182"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "RebalanceMaskStack2::AddMask(const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;mask)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "404"
+            endingLineNumber = "404"
+            landmarkName = "RebalanceMaskPredictorComp6::ComputeMasks(WDL_TypedBuf&lt;BL_FLOAT&gt; masks[NUM_STEM_SOURCES], const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;mixBufHisto)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskStack2.cpp"
+            timestampString = "624450677.9765069"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "RebalanceMaskStack2::RebalanceMaskStack2(int width, int stackDepth)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "668"
+            endingLineNumber = "668"
+            landmarkName = "RebalanceMaskPredictorComp6::DownsampleHzToMel(WDL_TypedBuf&lt;BL_FLOAT&gt; *ioMagns)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624467311.6563261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624467311.6563261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624467311.6563261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624458504.876527"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624467311.6563261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624467311.6563261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624466976.329898"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624467311.6563261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "GetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624478910.533842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "BLGetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624478910.533842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "BLGetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624478910.533842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "BLGetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624478910.533842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "BLGetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624478910.533842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "BLGetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624478910.533842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "BLGetCoefficient()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/libmfcc/libmfcc.c"
+            timestampString = "624478910.533842"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "GetFilterParameter()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "690"
+            endingLineNumber = "690"
+            landmarkName = "RebalanceMaskPredictorComp6::DownsampleHzToMel(WDL_TypedBuf&lt;BL_FLOAT&gt; *ioMagns)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
+            landmarkName = "MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "256"
+            endingLineNumber = "256"
+            landmarkName = "MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "269"
+            endingLineNumber = "269"
+            landmarkName = "MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "268"
+            endingLineNumber = "268"
+            landmarkName = "MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "262"
+            endingLineNumber = "262"
+            landmarkName = "MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
+            landmarkName = "MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x0, BL_FLOAT x1)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x0, BL_FLOAT x1)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
+            landmarkName = "MelScale::ComputeTriangleY(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x0, BL_FLOAT x1)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
+            landmarkName = "MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x0, BL_FLOAT x1)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x0, BL_FLOAT x1)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624614644.230093"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
+            landmarkName = "MelScale::ComputeTriangleAreaBetween(BL_FLOAT txmin, BL_FLOAT txmid, BL_FLOAT txmax, BL_FLOAT x0, BL_FLOAT x1)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624612411.997653"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "MelScale::HzToMelFilter(WDL_TypedBuf&lt;BL_FLOAT&gt; *result, const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;magns, BL_FLOAT sampleRate, int numFilters)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/MelScale.cpp"
+            timestampString = "624651764.930308"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "473"
+            endingLineNumber = "473"
+            landmarkName = "MelScale::ApplyFilterBank(WDL_TypedBuf&lt;BL_FLOAT&gt; *result, const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;magns, const FilterBank &amp;filterBank)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629567970.107883"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "RebalanceMaskPredictorComp6::ProcessInputFft(vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; * &gt; *ioFftSamples, const vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; *scBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "705"
+            endingLineNumber = "705"
+            landmarkName = "Rebalance::InitParams()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631995681.016302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1381"
+            endingLineNumber = "1381"
+            landmarkName = "Rebalance::CreateControls(IGraphics *pGraphics)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631995681.016302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1384"
+            endingLineNumber = "1384"
+            landmarkName = "Rebalance::CreateControls(IGraphics *pGraphics)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FastRTConvolver3.cpp"
+            timestampString = "624881187.8179131"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "FastRTConvolver3::Reset(BL_FLOAT sampleRate, int blockSize)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631995681.016302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1386"
+            endingLineNumber = "1386"
+            landmarkName = "Rebalance::CreateControls(IGraphics *pGraphics)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "799"
+            endingLineNumber = "799"
+            landmarkName = "Rebalance::InitParams()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessor.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
+            landmarkName = "RebalanceProcessor::SetDbgThreshold(BL_FLOAT thrs)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "564"
+            endingLineNumber = "564"
+            landmarkName = "Rebalance::InitNull()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "RebalanceProcessFftObjComp3::ProcessFftBuffer(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *ioBuffer, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *scBuffer)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
+            landmarkName = "RebalanceProcessFftObjComp3::ComputeMix(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *dataResult, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &amp;dataMix)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "851"
+            endingLineNumber = "851"
+            landmarkName = "Rebalance::InitSoloMuteButtonsParams()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/GUIHelper11.cpp"
+            timestampString = "625671726.8297859"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "467"
+            endingLineNumber = "467"
+            landmarkName = "GUIHelper11::CreateHelpButton(Plugin *plug, IGraphics *graphics, const char *bmpFname, const char *manualFileName, Position pos)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
+            landmarkName = "DNNModelDarknetMc::Predict(const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;input, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *masks)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::Predict(WDL_TypedBuf&lt;double&gt; const&amp;, std::__1::vector&lt;WDL_TypedBuf&lt;double&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;double&gt; &gt; &gt;*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "629565133.906014"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "196"
+                  endingLineNumber = "196"
+                  offsetFromSymbolStart = "608">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::Predict(WDL_TypedBuf&lt;float&gt; const&amp;, std::__1::vector&lt;WDL_TypedBuf&lt;float&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;float&gt; &gt; &gt;*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "629565133.924688"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "203"
+                  endingLineNumber = "203"
+                  offsetFromSymbolStart = "486">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "308"
+            endingLineNumber = "308"
+            landmarkName = "DNNModelDarknetMc::Predict(const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;input, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *masks)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::Predict(WDL_TypedBuf&lt;double&gt; const&amp;, std::__1::vector&lt;WDL_TypedBuf&lt;double&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;double&gt; &gt; &gt;*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "629567976.085197"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "262"
+                  endingLineNumber = "262"
+                  offsetFromSymbolStart = "2715">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::LoadWinTest(char const*, char const*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "629567980.74525"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "262"
+                  endingLineNumber = "262"
+                  offsetFromSymbolStart = "140">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629642304.575635"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "373"
+            endingLineNumber = "373"
+            landmarkName = "RebalanceMaskPredictorComp6::ColumnsToBuffer(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *buf, const deque&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; &amp;cols)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceMaskPredictorComp6::ComputeMasks(WDL_TypedBuf&lt;double&gt;*, WDL_TypedBuf&lt;double&gt; const&amp;)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+                  timestampString = "629568173.8639621"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "367"
+                  endingLineNumber = "367"
+                  offsetFromSymbolStart = "57">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceMaskPredictorComp6::ComputeMasks(WDL_TypedBuf&lt;float&gt;*, WDL_TypedBuf&lt;float&gt; const&amp;)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+                  timestampString = "629568177.706937"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "370"
+                  endingLineNumber = "370"
+                  offsetFromSymbolStart = "364">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+            timestampString = "629568249.107583"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "RebalanceMaskPredictorComp6::ProcessInputFft(vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; * &gt; *ioFftSamples, const vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; *scBuffer)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceMaskPredictorComp6::ProcessInputFft(std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*&gt; &gt;*, std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; &gt; const*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+                  timestampString = "629568400.653951"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "1362">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceMaskPredictorComp6::ProcessInputFft(std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*&gt; &gt;*, std::__1::vector&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &gt; &gt; const*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceMaskPredictorComp6.cpp"
+                  timestampString = "629568402.970969"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "188"
+                  endingLineNumber = "188"
+                  offsetFromSymbolStart = "1935">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
+            landmarkName = "DNNModelDarknetMc::Predict(const WDL_TypedBuf&lt;BL_FLOAT&gt; &amp;input, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *masks)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::Predict(WDL_TypedBuf&lt;double&gt; const&amp;, std::__1::vector&lt;WDL_TypedBuf&lt;double&gt;, std::__1::allocator&lt;WDL_TypedBuf&lt;double&gt; &gt; &gt;*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "629641288.117469"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "288"
+                  endingLineNumber = "288"
+                  offsetFromSymbolStart = "1314">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DNNModelDarknetMc::LoadWinTest(char const*, char const*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/DNNModelDarknetMc.cpp"
+                  timestampString = "629641288.129408"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "288"
+                  endingLineNumber = "288"
+                  offsetFromSymbolStart = "353">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../iPlug2/IGraphics/Drawing/IGraphicsCairo.cpp"
+            timestampString = "629660857.5467989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "594"
+            endingLineNumber = "594"
+            landmarkName = "IGraphicsCairo::UpdateCairoContext()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+            timestampString = "629660882.988658"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "358"
+            endingLineNumber = "358"
+            landmarkName = "RebalanceProcessFftObjComp3::ApplyMask(const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &amp;inData, WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *outData, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; masks[NUM_STEM_SOURCES])"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceProcessFftObjComp3::ApplyMask(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; const&amp;, WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*, WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; const*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+                  timestampString = "629661293.365052"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "358"
+                  endingLineNumber = "358"
+                  offsetFromSymbolStart = "474">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceProcessFftObjComp3::NormalizeMasks(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+                  timestampString = "629661296.251575"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "360"
+                  endingLineNumber = "360"
+                  offsetFromSymbolStart = "67">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+            timestampString = "629661099.954446"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "354"
+            endingLineNumber = "354"
+            landmarkName = "RebalanceProcessFftObjComp3::ApplyMask(const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; &amp;inData, WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; *outData, const WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; masks[NUM_STEM_SOURCES])"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceProcessFftObjComp3::ApplyMask(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; const&amp;, WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*, WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt; const*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+                  timestampString = "629661293.372961"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "354"
+                  endingLineNumber = "354"
+                  offsetFromSymbolStart = "416">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RebalanceProcessFftObjComp3::NormalizeMasks(WDL_TypedBuf&lt;WDL_FFT_COMPLEX&gt;*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/Libs/bluelab-lib/RebalanceProcessFftObjComp3.cpp"
+                  timestampString = "629661296.257733"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "356"
+                  endingLineNumber = "356"
+                  offsetFromSymbolStart = "22">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../iPlug2/IGraphics/IGraphics.cpp"
+            timestampString = "631924707.20894"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "676"
+            endingLineNumber = "676"
+            landmarkName = "IGraphics::DrawBitmap(const IBitmap&amp; bitmap, const IRECT&amp; bounds, int bmpState, const IBlend* pBlend)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::DrawBitmap(iplug::igraphics::IBitmap const&amp;, iplug::igraphics::IRECT const&amp;, int, iplug::igraphics::IBlend const*)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924708.8905751"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "676"
+                  endingLineNumber = "676"
+                  offsetFromSymbolStart = "45">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::DrawBitmap(iplug::igraphics::IBitmap const&amp;, iplug::igraphics::IRECT const&amp;, int, iplug::igraphics::IBlend const*)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924708.89676"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "678"
+                  endingLineNumber = "678"
+                  offsetFromSymbolStart = "34">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::DrawBitmapedText(iplug::igraphics::IBitmap const&amp;, iplug::igraphics::IRECT const&amp;, iplug::igraphics::IText&amp;, iplug::igraphics::IBlend*, char const*, bool, bool, int, int, int)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924708.9023041"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "678"
+                  endingLineNumber = "678"
+                  offsetFromSymbolStart = "591">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../iPlug2/IGraphics/IGraphics.cpp"
+            timestampString = "631924716.7173181"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "933"
+            endingLineNumber = "933"
+            landmarkName = "IGraphics::Draw(const IRECT&amp; bounds, float scale)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECT const&amp;, float)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924716.744833"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "933"
+                  endingLineNumber = "933"
+                  offsetFromSymbolStart = "42">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECT const&amp;, float)::$_4::operator()(iplug::igraphics::IControl&amp;) const"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924716.750497"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "933"
+                  endingLineNumber = "933"
+                  offsetFromSymbolStart = "23">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECT const&amp;, float)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924716.756247"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "933"
+                  endingLineNumber = "933"
+                  offsetFromSymbolStart = "89">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECTList&amp;)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924716.761878"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "933"
+                  endingLineNumber = "933"
+                  offsetFromSymbolStart = "715">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECTList&amp;)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924716.767485"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "933"
+                  endingLineNumber = "933"
+                  offsetFromSymbolStart = "1252">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "std::__1::__function::__func&lt;iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECT const&amp;, float)::$_4, std::__1::allocator&lt;iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECT const&amp;, float)::$_4&gt;, void (iplug::igraphics::IControl&amp;)&gt;::operator()(iplug::igraphics::IControl&amp;)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924716.772908"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "933"
+                  endingLineNumber = "933"
+                  offsetFromSymbolStart = "8">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../iPlug2/IGraphics/IGraphics.cpp"
+            timestampString = "631924730.703673"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "960"
+            endingLineNumber = "960"
+            landmarkName = "IGraphics::Draw(IRECTList&amp; rects)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECTList&amp;)"
+                  moduleName = "BL-Rebalance"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924730.719133"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "960"
+                  endingLineNumber = "960"
+                  offsetFromSymbolStart = "20">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iplug::igraphics::IGraphics::Draw(iplug::igraphics::IRECTList&amp;)"
+                  moduleName = "BL-GhostViewer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/applematuer/Documents/Dev/plugin-development/bluelab/iPlug2/IGraphics/IGraphics.cpp"
+                  timestampString = "631924730.725106"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "960"
+                  endingLineNumber = "960"
+                  offsetFromSymbolStart = "96">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "602"
+            endingLineNumber = "602"
+            landmarkName = "Rebalance::InitNull()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980829.171423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "299"
+            endingLineNumber = "299"
+            landmarkName = "enum EParams { kVocal = 0, kBass, kDrums, kOther, #if !USE_SIMPLIFIED_GUI kVocalSensitivity, kBassSensitivity, kDrumsSensitivity, kOtherSensitivity, #endif #if !USE_SIMPLIFIED_GUI // Global precision kPrecision, #endif #if !USE_SIMPLIFIED_GUI #if SHOW_QUALITY_BUTTON kQuality, #endif #endif #if !USE_SIMPLIFIED_GUI #if USE_DBG_PREDICT_MASK_THRESHOLD kDbgThreshold, #endif #endif kSolo0, kSolo1, kSolo2, kSolo3, kMute0, kMute1, kMute2, kMute3, #if !USE_SIMPLIFIED_GUI // For debugging kRange, kContrast, kHardSolo, #endif kModel, kOutGain, #if 0 kGraph, #endif kNumParams }"
+            landmarkType = "13">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631995681.016302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "995"
+            endingLineNumber = "995"
+            landmarkName = "Rebalance::ProcessBlock(iplug::sample **inputs, iplug::sample **outputs, int nFrames)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631980879.668852"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
+            landmarkName = "enum EParams { kVocal = 0, kBass, kDrums, kOther, #if !USE_SIMPLIFIED_GUI kVocalSensitivity, kBassSensitivity, kDrumsSensitivity, kOtherSensitivity, #endif #if !USE_SIMPLIFIED_GUI // Global precision kPrecision, #endif #if !USE_SIMPLIFIED_GUI #if SHOW_QUALITY_BUTTON kQuality, #endif #endif #if !USE_SIMPLIFIED_GUI #if USE_DBG_PREDICT_MASK_THRESHOLD kDbgThreshold, #endif #endif kSolo0, kSolo1, kSolo2, kSolo3, kMute0, kMute1, kMute2, kMute3, #if !USE_SIMPLIFIED_GUI // For debugging kRange, kContrast, kHardSolo, #endif kModel, kOutGain, #if 0 kGraph, #endif kNumParams }"
+            landmarkType = "13">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631995681.016302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1122"
+            endingLineNumber = "1122"
+            landmarkName = "Rebalance::ProcessBlock(iplug::sample **inputs, iplug::sample **outputs, int nFrames)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Rebalance.cpp"
+            timestampString = "631995681.016302"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1110"
+            endingLineNumber = "1110"
+            landmarkName = "Rebalance::ProcessBlock(iplug::sample **inputs, iplug::sample **outputs, int nFrames)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1290"
+            endingLineNumber = "1290"
+            landmarkName = "ProcessObjChannel::GetResultOutBuffer(WDL_TypedBuf&lt;BL_FLOAT&gt; *output, int numRequested)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1233"
+            endingLineNumber = "1233"
+            landmarkName = "ProcessObjChannel::NextOutBuffer()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "654"
+            endingLineNumber = "654"
+            landmarkName = "ProcessObjChannel::GetResult(WDL_TypedBuf&lt;BL_FLOAT&gt; *output, int numRequested)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "790"
+            endingLineNumber = "790"
+            landmarkName = "ProcessObjChannel::GetResult(WDL_TypedBuf&lt;BL_FLOAT&gt; *output, int numRequested)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "765"
+            endingLineNumber = "765"
+            landmarkName = "ProcessObjChannel::GetResult(WDL_TypedBuf&lt;BL_FLOAT&gt; *output, int numRequested)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2305"
+            endingLineNumber = "2305"
+            landmarkName = "FftProcessObj16::Process(const vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; &amp;inputs, const vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; &amp;scInputs, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *outputs)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2288"
+            endingLineNumber = "2288"
+            landmarkName = "FftProcessObj16::Process(const vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; &amp;inputs, const vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; &amp;scInputs, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *outputs)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "850"
+            endingLineNumber = "850"
+            landmarkName = "ProcessObjChannel::GetResult(WDL_TypedBuf&lt;BL_FLOAT&gt; *output, int numRequested)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "841"
+            endingLineNumber = "841"
+            landmarkName = "ProcessObjChannel::GetResult(WDL_TypedBuf&lt;BL_FLOAT&gt; *output, int numRequested)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "768"
+            endingLineNumber = "768"
+            landmarkName = "ProcessObjChannel::GetResult(WDL_TypedBuf&lt;BL_FLOAT&gt; *output, int numRequested)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Libs/bluelab-lib/FftProcessObj16.cpp"
+            timestampString = "631999949.807651"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2307"
+            endingLineNumber = "2307"
+            landmarkName = "FftProcessObj16::Process(const vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; &amp;inputs, const vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; &amp;scInputs, vector&lt;WDL_TypedBuf&lt;BL_FLOAT&gt; &gt; *outputs)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

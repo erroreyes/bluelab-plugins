@@ -1,0 +1,51 @@
+down model:
+"trainig june down" (Mac 2)
+2253 epochs
+"NewModelDown" (Mac1)
+2246 epochs
+
+(TODO: re-check it is exactly this model)
+
+full model:
+"New Model" (Mac 1)
+2196 epochs
+
+
+old model(best for the moment): 1210
+(A-training-nodown-bin-norm on Mac 2)
+
+nobin-148: current training
+ 
+952 is better than others nobins
+
+NewModel-softbin: use sigmoid to increase contrast a lot
+
+===TEST MODELS===
+softbin:
+- tested on Karma police/Melodyne => best is 592 (for now)
+- tested on Bitter (amp scale) => best is 367
+- TODO: test on Bitter with dB scale
+
+---
+- C-softbin: from NewModel-softbin
+full size model (no down)
+soft bin, using contrast
+lr=1e-5
+trainied around 1000epochs for now
+
+- D-softbin-1e-7
+full size model
+soft bin, using contrast
+use learning rate 1e-7
+
+E-softbin-1e-6
+restarted training C-softbin, with lr=1e-6, from backup-96.weights
+
+===
+
+currently training: C-softtbin-down lr1e-5
+epoch 239: bad for the moment (will need to wait until 2000 epochs ?)
+
+currently used in rebalanec for "best": rebalance_960-GOOD.weights
+=> gives the best results (precise epoch was chosen after tests)
+

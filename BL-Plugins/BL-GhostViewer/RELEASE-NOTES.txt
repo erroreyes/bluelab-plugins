@@ -1,0 +1,416 @@
+v5.0.0
+- from Chroma 5.0.0
+(after noticing that making a lite version made perts almost x2 !)
+- set back y log scale
+- set back adaptive frequency axis
+
+v5.0.1
+- selected 5 of the best colormaps
+
+v5.0.2
+- FIX: fixed gui size that was not well restored after reopening the project
+- Added GUI graph separator
+- Added “speed” coeff for making possible to use OVERSAMPLING=1
+- SpectrogramDisplay optim: avoid rendering twice (and computing pixels twice)
+
+v5.0.3
+- smooth scroll
+- FIX: play data, stop, change colormap
+=> there is sometimes a small jumps of the data to the left
+- FIX: play data, stop, change colormap range or contrast
+=> there is sometimes a small jumps of the data to the left
+- FIX: Adjusted to the sample rate to avoid scrolling 2 times faster when 
+we went from 44100 to 88200
+- FIX: fixed slide to the right when spacebar kepts pressed +
+scroll at startup with 88200
+- FIX: fixed jumps in the scrolling when restarting the playback
+- FIX: fixed black line of 1 pixel on the right
+
+- IMPROV: animated logo
+- FIX: fixed “brightness” label which flickered each time the playback was restarted
+
+v5.0.4
+- Fft15
+- FIX Logic: that was not scrolling (due to IsPlaying() called from the render thread
+- FIX: Reaper, Mac: instantiate 2 plugins, change the size of the first > we loose the display of the second
+- FIX: double click on gui resize button => inconsistent hilight + graph disappeared
+- FIX: Alt + click on guy resize button => graph disappeared
+- port to Fft16
+- FIX: suppress “Application” from the installer
+- TEST: tested GraphControl10/END_FRAME_NO_MUTEX => this improves the performances !
+- FIX: Ableton 10 and FLStudio 20, Sierra, VST format: Chroma and Waves for example crashed randomly. Fixed in IGraphics NIKO_FIX_RESIZE_VST_CRASH
+
+- FIX(win): Fixed graph text that was not displayed on Windows
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.0.5
+- recompile: benefit from FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_HIDE_PLUG_MEM_LEAK
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- OPTIM: skip iffy computation (OPTIM_SKIP_IFFT)
+- GHOST_OPTIM_GL
+
+v5.0.6
+- REFACT: use GUIHelper9::GUIResize… instead of original code
+- TEST: passed valgrind => all is ok!
+- IMPROV: colormap title => small (now use CreateRadioButtonsEx)
+- IMPROV: put the buttons a bit upward, to compact the guy
+- NOTE: non sense to make portrait/landscape for all the actual guy size
+=> this will go to easily outside the screen.
+=> Choose to just add one guy size: portrait
+
+
+v5.0.7
+- REFACT: big code clean 
+(suppressed all the test used to “rotate” from portrait/landscape)
+- REFACT: improved a bit the code writing for multiple size buttons
+- IMPROV: portrait button (small guy, in portrait ratio)
+- IMPROV: implemented scroll speed
+GhostViewerFftObj::SetSpeedMod() and SpectrogramDisplayScroll: USE_VARIABLE_SPEED
+- TEST: checked mem leaks: ok!
+
+v6.0.0
+- port to iPlug2
+- FIX: fixed crashes when quitting
+- FIX: fixed custom nanovg for spectrogram and colormap display
+- FIX: fixed spectrogram that was reversed upside down
+- FIX: fixed the frequency axis that was not displayed (the font name was incorrect)
+- FIX: fixed graph that was scalled strangely after resize (was due to the FBO)
+- FIX: the gui resize buttons where not hilighted in white, and after resizing gui,
+all the controls got their default value (visually). 
+=> added GUIHelper11::RefreshAllParameters()
+- FIX: fix when gui size was not defaut at initialization
+=> create directly the GUI with the correct size, instead of creating it with the default size, then resize it.
+- TEST: tested presets => no need to call MakeDefaultPreset() !
+- FIX: fixed gui resize when loading preset: ok
+- REFACT: some code cleaning
+- REFACT: moved a lot of gui resize code from GUIHelpers11 to ResizeGUIPluginInterface
+- FIX: re-added mutexes in GraphControl11 (was crashing when trying to add time axis)
+- IMPROV: added time axis
+- IMPROV: suppressed the jittering of the time axis when scrolling. Now the time axis is exactly synchronized with the spectrogram scroll. Also take in account that the SpectrogramDisplayScroll has a little scale in width, to hide border columns. (there is a very few jittering, but it is now acceptable). To do this, updated in ProcessBlock() according to the transport, then updated more finely in Draw();
+- REFACT: cleaned code of GraphTimeAxis4 and other
+- FIX: avoid that the last time axis label pops inside a large empty space
+(SQUEEZE_LAST_CROPPED_LABEL to 0)
+- IMPROV: implemented GraphFreqAxis. Refact freq axis in a single class + manage well sample rate changes -> display higher freqs labels: 40KHz and 80KHz)
+- TEST: tested VST kVstTransportRecording, for checking is record is armed + monitoring (fail, not possible)
+- IMPROV: improved the time axis display (the labels are not jittering anymore)
+(there was a bug in GraphTimeAxis4, and GraphTimeAxis4::Update() was never called)
+- IMPROV: implemented a “MON”/monitor option, and adapted the GraphTimeAxis so the time axis is well adapter when monitoring.
+- IMPROV: gray out the monitor button when the transport is playing (to avoid user confusion)
+- FIX: fixed a crash when resizing (mMonitorControl was destroyed, and used after)
+- IMPROV: improved GuiHelper11 (default values depending on style)
+=> good: now the GUI is almost the same as the iPlug1 version!
+- IMPROV: create BLSpectrogram4 (now use ColorMapFactory), and adapted all the classes.
+- IMPROV: use ColorMapFactory everywhere!
+- FIX: better fixed crash when resizing (crash due to mMonitorControl
+- IMPROV: ColorMap4: disabled USE_SQRT_HACK => avoid tricking on colormap T parameter
+=> now the colors are well spread when dumping colormap to ppm!
+- FIX: fixed a small problem: play, stop, change the speed
+=> the time axis changes, whereas the spectrogram data is not chaging at all
+- IMPROV: Managed well modifiers in bluelab-lib, manage reset by Alt+click in IPlug2, fixed speed of double click in iPlug2
+- OPTIM: BLSpectrogram4: OPTIM_SPECTROGRAM: avoid recompute colormap at each frame for nothing. OPTIM_SPECTROGRAM2: avoid recomputing colormap and spectrogram texture at every frame for nothing.
+=> 20%CPU -> 15%CPU (at 60fps)
+=> 6% CPU at 25fps
+=> And improve big gui perfs. before: big GUI took more resoures. Now, big GUI takes same resources as small GUI.
+
+v6.0.1
+- FIX: fixed a crash when closing an re-opening the plug window
+STEPS: Reaper, start with GhostViewer inside the plugins list window, 
+double-click to detach th windows => crash
+=> Cleaned very well graph/nanovg/opengl stuff when closing windows, and refreshd correctly when re-opening the window.
+
+v6.0.2
+- IMPROV: use GUIHelper12 + GraphControl12 => graph is deleted each time we resize 
+or close window (more logical with iPlug2)
+- IMPROV: manage more safely gui resize and gui open/close (drafty code for the moment)
+(no need for many mutexes, less risks with nanovg context…)
+- REFACT: big code clean after new resize gui
+
+- FIX: open the UI, don’t play anything, close the UI => crashed!
+- REFACT: adapter the code after modifs of BL-Air
+- FIX: adapted after axes changes in Air
+- FIX/IMPROV: adapted the frequency scale and the specotrgram scale to the Scale class
+=> good!
+- IMPROV: implemented mel scale correctly, and set it by default everywhere
+- FIX: when monitor was enabled, the time axis didn’t scroll
+- FIX: fixed time axis reset when stop playing
+- FIX: added a mechanism for CustomDrawers to notify the graph that is must redraw every time, even if the data has not changed
+- FIX: play, then while playing, bypass plug using the host 
+=> the time axis continued to scroll
+- BUG/NOTE: launch Reaper when plugin is bypassed 
+=> the time axis is not displayed at startup 
+=> not possible to fix it, Init() (for time axis) is called in ProcessBlock(), and when plugin is bypassed, Reset() is called first, then MakeLayout() after.
+- FIX: start with the plug not bypassed => the time axis dislays bad values
+=> disabled FIX_ZERO_SECONDS_MILLIS, added SS_COEFF
+- FIX: when resizing GUI, with several GhostViewer plugins opened, the GUI display became very buggy (graphs, but also all the buttons) (GUI buggy for all the GL plugins opened at a time). This was because DrawResize() was called without an OpenGL context bound, and DrawResize() uses FBO etc.
+- REFACT: avoid having mGraphics member in GraphControl12
+- IMPROV: ResizeGUIPluginInterface: make sure we don’t try to resize the GUI why a previous GUI resizing is in progress + refact.
+- FIX: set layout on resize, so the controls are delete only in Draw(), with a GL context
+=> not more GL errors when resizing
+- FIX: the GUI resize buttons were not well hilighted, and sometimes get inactive
+- REFACT: big refact of GUI resizing (simplification)
+- REFACT: use new spectrogram scale (MEL)
+- REFACT: use new GraphTimeAxis6 (created in Ghost)
+- FIX: fixed problems with freq axis and with time axis
+- TEST: tested time axis with hours, minutes, seconds, and millis: ok!
+- IMPROV: imported init() and mutexes from Ghost (and other tricks from Chroma)
+- TEST: passed thread sanitizer: ok!
+- IMPROV: benefit from awtk nanovg optimization + passed to 25fps
+
+v6.1.0
+- IMPROV: port to linux
+- OPTIM: optimized memory (gained around 15MB)
+
+v6.1.1
+- FIX: fixes for compilation BL_FLOAT=float
+- IMPROV: take mono input instead of only left channel
+- IMPROV: use bl_queue instead of queue
+- IMPROV: added the purple colormap
+- NOTE: SpectrogramDisplayScroll3: not 100% memory optimized (seems hard to do)
+(start= 326MB, 5mn: 5GB)
+- TEST: tested memory: globally, it is ok
+- OPTIM: fixed number of axis labels displayed (limited  # of nvgText())
+(there was almos 300 displayed labels, and we needed only ~20 labels)
+- NOTE: now: GhostViewer seems to take only 1 or 2% CPU !!!
+Reaper without GhostViewer at all: 4% CPU, and with (while playing): 6%
+- NOTE: checked perfs => there seems to be nothing problatic anymore
+- TEST: re-tested at 60fps: takes 1 or 2% CPU more
+- REFACT: modified SpectrograpDisplayScroll3 (not sure it still works...)
+- IMPROV: created SpectrogramDisplayScroll4 (very basic for now)
+- IMPROV: SpectrogramDisplayScroll4 works (with bugs)
+=> it will work very well, better than before, very smooth
+- NOTE: scrolling is more smooth than before!
+- REFACT: code clean
+- FIX: when not playing, the spectrogram continued to scroll
+- TEST: tried to fix bypassed plugin cleanly (not possible in VST2/ some daws)
+- FIX: play, bypass => that continued to scroll
+=> fixed with a delay to detect when ProcessBlock() is not called anymore
+(this was the only solution)
+- TEST: tested smooth scroll in debug => this is quite good!
+- TEST: tested smooth scroll with different block sizes: ok!
+- FIX: fixed left and right borders of the spectrogram that blink sometimes
+(fixed most of the time, except when the plugins slows down a lot)
+- TEST: checked smooth scroll latency: ok!
+=> it is better than spectro scroll 3! Very few latency!
+- TEST: tested at 25fps => it is not so smooth
+- NOTE: 30 fps is really better than 25fps
+25fps is hacked. 30fs is fluid (but not as oily as 60fps)
+- IMPROV: created a hidden config file for choosing the fps
+- TEST: tested that it still works without the hidden fps config file: ok!
+=> the fps is then set to default
+- IMPROV: for time axis scroll, do not round x in GraphControl12
+- IMPROV: added debug dump in graph time axis
+- FIX: fixed plug bypass detector
+- WIP: try to synch time axis to spectro scroll (spectro scroll is ok)
+- WIP: synch time axis (code cleaned)
+- FIX: fixed time axis that disappeared after some time
+- REFACT: big refact after many tests for synch time axis
+(still not exactly well synched)
+- IMPROV: improved a lot the jittering of TimeAxis labels
+The daw transport is very jittering, we can not follow it strictly
+(or even with a delay) => that doesn't work all the time
+Solution: only detect transport start and transport loop restart,
+and use delays to get smooth estimated transport pos.
+- NOTE: time axis anti-jittering is not yet 100% smooth
+It vibrates just a little, but regularly.
+NOTE: time axis labels seems to "vibrate" a little
+=> but this is just because the font is small
+=> but if we set a hughe font size (50), it doesn't look to vibrate anymore
+- REFACT: Removed much unused code for synchro spectro/time axis
+- FIX: monitor, wait a little, then play => the spectro didn't appear
+- FIX: change scroll speed => spectro scroll underfited a lot
+- FIX: play, stop, change speed => small spectro jump
+- DEBUG: added and modieid stuff for debugging
+- NOTE: if we put spectro scroll delay percent to 0 => no label drift
+=> this fixes the labels drift
+- FIX: finally got spectro/time axis synchro working!!
+       - no time axis label drift
+       - clean margins % on left and right of spectro
+       - labels are exactly aligned to the right part of spectro (e.g begin)
+       - does not make a big jump when stop playing or restart playing
+       - no obscure code
+- NOTE: sometimes scroll fails on the right (in debug at least)
+- REFACT: big code clean, removed much unused code
+
+v6.1.2
+- WIP: Use BLTransport objects, to centralize synchro of spectro display and time axis
+- IMPROV: use BLTransport for SpectrogramDisplayScroll4
+- IMPROV: use BLTransport for TimeAxis6
+- NOTE: BLTransport now is fully integrated!
+- IMPROV: BLTransport, refact and debug code
+- IMPROV: implemented BLTransport hard resynch
+- IMPROV: implemented BLTransport soft synch
+- FIX: fixed loop detection that was messy
+- FIX: fixed spectro jump at each loop restart
+=> implemented correctly transport time offset for total time (smooth) 
+- FIX: time axis, leftermost label disappeared
+- IMPROV: GraphTimeAxis6: avoid sending many dummy labels (without text)
+=> send exactly the right number of labels to display.
+- FIX: time axis, when left label disappeared, new left label juped a bit
+(now, set a flag for label border alignment in graph and graph axis)
+- REFACT: improved the code of BLTransport
+- FIX: when stop play, there was a small shift of the spectrogram
+- FIX: play some data, close plugin, re-open => the spectro image was shifted
+(after playing a little, the image didn't get black anymore)
+- NOTE: tested GUI resize and spectrogram display: ok!
+- IMPROV: fixed the use of plug bypass obj
+(increased the delay, and adapted BLTransport to support bypass)
+- NOTE: bypasse is not 100% perfect. Since we use a long delay to avoid false positive, there is a delay when the spectrogram is not fed anymore, and bypasse is not yet
+detected. This makes the spectrogram scrolls slowly to the left, and makes appear
+a black band on th eright (at the maximum speed). This can be acceptable:
+not data = black band.
+- NOTE: if we reduce the bypass detector delay from 500ms to 100ms, we don't have the proble above anymore (but we have false positives)
+- TEST: (debug) measured the time the audio thread is locked by the GUI thread
+=> 4ms max - (often 2ms, often 0ms) (1 pass at 18ms at startup)
+1ms = 44 samples | 4ms = 176 samples | 18ms: ~ 1024 samp
+- TEST: test in release
+max 3.5ms - often 2ms
+- TEST: release: 6/7% CPU | Reaper alone: 4%CPU
+
+v6.2.0
+- IMPROV: implemented generic LockFree system
+- IMPROV: implemented LockFree for SpectrogramDisplayScroll4
+- NOTE: it seems to work well!
+- NOTE: sharing of the spectrogram image indicates bad thread exclusion
+- NOTE: audio thread lock: avg: 0.02ms, max: 0.1ms (prev: ~2.5ms)
+=> it improves a lot audio thread lock!!
+- NOTE: not tested well for thread bad access yet
+- REFACT: code clean
+- TEST: implemented trylock => not better
+- IMPROV: improved a bit LockFreeQueue (removed pop)
+- IMPROV: improved a bit LockFreeQueue (use vector instead of queue)
+- OPTIM: fixes for memory management => this looks ok!
+- TEST: if GUI is closed, we are safe for lock buffer overflow
+(because spectrogram display gets NULL, and then we don't add lines anymore)
+- NOTE: BLTransport looks thread safe, and it is only polled in the gui thread
+=> looks ok.
+- NOTE: OnIdle() is called from the GUI thread
+- IMPROV: UpdateTimeAxis() called in the GUI thread by OnIdle
+(as it should be!)
+- FIX: play a little, close and re-open the gui -> time axis labels were reset
+- IMPROV: when changing scroll speed, update time axis even when no play
+(RESET_TIME_AXIS_WHEN_NO_PLAY)
+- IMPROV: in OnIdle(), restricted ENTER_PARAMS_MUTEX to the minimum
+- TEST: tested without any iPlug2 mutexes!
+=> scrolling is also slowing down at the beginning! (this doesn't fix)
+=> and it crashes when changing some params
+=> so re-enabled iPlug2 mutexes (compilation flag)
+- TEST: tested many param changes to see if it crashes => it is ok!
+- FIX: avoid to call ApplyGUIResize() 2 times
+- FIX: while playing, change the GUI size => the time axis speed went wrong
+- FIX: play, stop, monitor, stop monitor, resize gui, monitor
+=> the time axis speed went wrong
+- FIX: after some few seconds playing, black line on the left
+=> fix: we took the result offset for analyzing
+- FIX: after a long time (5mn), albakc line on the left
+=> this was because of float imprecision => passed to double
+- IMPROV: implemented automatic hard resynch
+=> not good: jitters at the beginning, because when we start play, there is a delay
+- BUG(fixed): small loop for a very long time loop (10mn) => black line on the right
+     - spectro display offset increases slowly, then decreases fastly after 15K iters
+     - test: re-compiled everything with BL_FLOAT=double: this fixes!
+      (constant offset even after 20k iters, and not too much black line on the right)
+     - recompiled with BL_FLOAT=>float: we have less offset deviation (but still)
+- IMPROV: decreased the smooth coeff => better
+-> offset is more focused, very very fe blacks lines
+- FIX: passed some variables from float to double in spectro scroll
+=> this fixes the offset drift over the time
+- FIX: with the above fixes, the offset drift is finally now fixed!
+(tested a very long time ~20k iters => ok!)
+- NOTE: at each loop, there is a scroll slow down
+- TEST: tested on a long file, and check that if there is still slow down: yes...
+- TEST: reduced more the smooth coeff (it is hacked). 0.5ms looks good
+- TEST: check with different buffer size (from 32 to 2048): ok!
+- TEST: tested GhostViewer all options, in case of bugs => everything ok! :)
+- TEST: passed valgrind (simle memory), to test LockFree: no problem!
+- TEST: passed valgrind + gdb (with --tool=helgrind), since LockFree
+=> too many not related errors, gdb breaks too much
+- TEST: passed valgrind witout gdb, (with --tool=helgrind), cince LockFree
+=> data race for BLTransport (in Draw() and in ProcessBlock)())
+- IMPROV: add TransportListener mechanism
+(in prevision of LockFree, because methode returned bool flag)
+- REFACT: code clean
+- IMPROV: implemented BLTransport LockFree
+=> black line on the right when start playing
+=> no data race anymore in BLTransport.cpp/ProcessBlock() ! :)
+- FIX: fixed strongly black line on the right
+(since BLTransport LockFree, black line on the right was bigger)
+=> added delay on the right, depending on speed mod
+=> it seems to fix very well
+- FIX: monitor, bypass the plugin => it still scrolled
+- FIX: monitor, bypass => black margin the the right
+
+v6.2.1
+- IMPROV: now redisplay the graph only when needed (like in Ghost)
+=> implemented it for SpectrogramDisplayScroll4
+=> better perfs
+- IMPROV: basic SpectroMeter (with bug for the moment)
+- IMPROV: now display SpectroMeter values on mouse over too
+- FIX: drag outside the view => huge SpectroMeter values
+- FIX: negative time values problem (there was no minus sign)
+- IMPROV: SpectroMeter time values now change when scrolling
+- TEST: tested that we didn't break anything in Ghost: ok!
+- FIX: fixed resize GUI problems, with SpectroMeter
+- FIX: SpectroMeter, time values were not aligned with labels of time axis
+=> fixed by taking carz of spectro display scroll offset and scale
+- FIX: while playing, sometimes the spectro stopped
+(changing the contrast makes it restart)
+=> This was because of the lock free mechanism.
+Graph IsDirty() didn't detected pulled data, because we pulled in draw
+=> Fixed it using simply
+- TEST: checked bin value for spectro meter: ok!
+- TEST: checked the two fixes "monitor, bypass" from Panogram: looks ok
+- FIX: fixed a crash just at launching
+(OnReset() was called by the VST host just at the beginning,
+before controls were created)
+
+v6.3.0
+- IMPROV: integration of the new design
+- FIX: after gui resize, spectro meter gave wrong values
+- FIX: after gui resize, the time axis labels were shifted
+- FIX: monitor + play, stop all, resize GUI -> shift
+- FIX: at startup, if we had scroll speed x1, scrolling bugged
+- FIX: play, stop, change scroll speed, resize => time axis shifted
+- REFACT: cleaned the scroll speed code
+- IMPROV: added tooltips
+- TEST: tested different block size and sample rates: ok!
+- FIX: while playing , close UI, re-open UI => effect of bufferred scrolling
+- FIX: fixed position of gui resize buttons
+- FIX: Fixed effect of buffered scrolling on time axis
+- FIX: the spectrogram was not filled if the GUI was hidden
+(this also looks to fix buffered scrolling on time axis labels)
+- FIX: play, max speed, resize gui while playing => black border
+- FIX: fixed black border better
+Steps: play, resize gui several times => black border apperaed on the right
+- FIX: time spectro meter changed every time while scrolling even when mouse out
+(even if the mouse is not on the graph)
+- IMPROV: applied LF mechanism for spectro scroll (from Chroma, to avoid crash)
+- FIX: activate monitor, automatize it => time axis frozen
+- TEST: checked for scroll bug at 88200Hz => no bug!
+- FIX: scroll speed x4, mon enabled, play, resize gui => the time axis scrolls a lot
+(time axis scrolls a lot to adjust) (same bug in Chroma)
+No problem if monitor is toggled off.
+
+v6.3.1
+- IMPROV: port to windows
+
+v6.3.2
+- FIX: windows fixes
+
+v6.3.3
+- IMPROV: mac compilation
+
+v6.3.4
+- FIX: fixed windows compilation
+- FIX: SpectroMeter display: workaround for meaured text different on windows
+- FIX: re-open project (speed = 1), play, then open GUI => time axis scolls too fast
+- FIX: host UI, change scroll speed => not applied
+- IMPROV: changed the parameter name: "range" -> "brightness"
+
+- PROBLEM: at fast speed, 0s of the time axis is not always aligned to begin of sound
+- IDEA(maybe): add the low freq zoom from Ghost, to zoom on low fequencies
+
+TEST: (for black border and buffered scrolling): passed for all plugs!
+- resize gui several times => no black border on the right
+- close gui / open gui => no buffered scrolling (spectro and time axis)
+- play just a little, hide gui, wait, show gui => spectro must have scrolled

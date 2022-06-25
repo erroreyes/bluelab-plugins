@@ -1,0 +1,146 @@
+27/01/2017 - v3.0
+Initial version
+
+v3.1
+- profiling
+- port to fft11
+- half fft
+
+- increased the overlap
+- testing
+- display the curves and bypass the plugin: the sound of the diff is not interesting
+- added a bar for zero
+
+- moved back to GLContext, w.o glow
+- curve damping increased (better !) => reversed to less damp
+- fixed reversed diff curve
+- fixed diff curve that jumped up when no sound (clipped db to -120)
+
+- added help button (and configured for managing manual)
+- updated logo and installer icons
+
+v3.2
+- improved code (fix) for side chain stereo
+- fixed problem with side chain, when nFrames was not 1024 (e.g in Reaper)
+
+- fix for all the OpenGL plugs: 
+=> made many big white rectangles in AbletonLive when destroying the plugin
+
+v3.3
+- Fft14: fixed some crashes with side chain (2 inputs, 1 sidechain)
+
+v5.0
+- if we have 1 side chain and stereo input, take only the left stereo channel for comparing
+
+v5.0.1
+- BUG FIX: fixed FFt14 for stereo sidechain
+
+v5.0.2
+- double-click: reset knob value + edit knob text value (but there are no knobs ;)
+
+v5.0.3
+- port to pugl
+- FIX: Logic, High Sierra: crashed at startup when start playing
+
+v5.0.4
+- FIX: for high framerates, the frequency axis label values was not correct
+e.g: 500Hz instead of 1KHz for 88200Hz
+- FIX: fixed axis label: “200KHz” => 200Hz
+- FIX: “50 Hz” => “50Hz”
+- MODIF: changed buffer size from 1024 to 2048 and changed num curves points from 512 to 1024 (for good display of frequency labels…)
+=> increased the precision !
+- FIX: fixed low frequencies scale taxis that was not accurate at all (and false)
+
+v5.0.5
+- FIX: crashed auval when rescanned: freq axis compute got -1 index when samplerate 22050
+
+v5.0.6
+- animated logo
+- FFt15
+- graph with no border
+- graph separator
+- offset x vertical axis
+- FIX: (From EQHack) side chain was not working on Orion (Windows) (fixed in IPlugVST2)
+- Port to Fft16 + High res log curves
+- FIX: fixed db scale for amplitudes 
+(decimation made the high frequencies be lower than expected)
+- FIX: crash StudioOne VST3 side chain (ANDI_FIX)
+- FIX: fixed freeze Ableton 10 Windows 7 (gl context was not reset after drawing plugin)
+
+v5.0.7
+- recompile: FIX_CUBASE_STARTUP_CRASH
+- recompile: benefit from FIX_RADIOBUTTON_CHECKBOX_BAD_REFRESH ?
+- GHOST_OPTIM_GL
+- Gui resize buttons
+- REFACT: big refractor of all the resize gui code => set it in GUIHelper9 
+(only for this plugin for the moment)
+- FIX: fixed when vertical axis set on the left, if resize gui, the axis was offseted right (fixed the general case)
+- IMPROV: added 3 guy resize buttons (as requested by Jon Amsler <jeamsler@gmail.com>)
+- NOTE: on Logic, the GUI size buttons can freeze => to solve, remove the plugin
+from the track and re-insert it
+
+v6.0.0
+- IMPROV: port to iPlug2
+- NOTE: now it compiles!
+- FIX: fixed diff curve (dB computation / display)
+- FIX: fixed a thread sanitizer problem: after resizing, we wrongly kept the previous controls
+- FIX: fixed resize gui bug, when resizing to big gui size, the graph were not displayed
+well at all (because in fact, the plugin window was not resized to the required size)
+=> used SetSizeConstraints()
+- FIX: fixed amp axis (labels, ane lines alignment)
+(changed GraphControl::GRAPH_CONTROL_FLIP_Y for vertical axis (horizontal lines)
+- FIX: fixed x scale for curves (log factor -> mel)
+- FIX: fixed SpectralDiffObj class (that was buggy with the new curves system)
+(this class was done a very long tima ago, and was not more adapted as it is)
+
+v6.1.0
+- IMPROV: port to linux
+- FIX: fixed the displayed values when sidechain is not connected
+- OPTIM: memory optimization (gained 29MB)
+- FIX: fixed compilation
+- IMPROV: added lock free mechanism
+- IMPROV: use better scale for freq axes and curves
+- TEST: tested that we take mono in (and not only left channel): ok
+- TEST: check that graph displays beautiful log lines for axis
+and that freq axis scale is good): ok!
+- NOTE: with new improvements from other plugs, this is really better
+- REFACT: cleaned commented code
+- NOTE: monitor button: no need!
+=> now, we process anytime, not only when playing
+- TEST: tested lazy gui refresh => it refreshes every time!
+(but this is normal)
+- TEST: passed valgrind: ok!
+- TEST: testes mem consumption: this looks ok!
+- TEST: tested perfs (nothing to optimize...): ok!
+- NOTE: old bug (not repro): depending on the gui size, some vertical lines of the
+graph axis were not displayed
+
+v6.2.0
+- IMPROV: integration of the new design
+- IMPROV: added tooltips
+- IMPROV: choose same style+color for side chain signal
+(compared to othe plugins)
+- IMPROV: applied curve smoothness improv from Air
+- FIX: automatize gui resize params, click on gui resize buttons => problems
+=> set the gui resize parameters flag to IParam::kFlagCannotAutomate,
+so it is definitely fixed!
+- OPTIM: with bs=32, this took too much additional resources
+bs=32: 26% => 17%
+- IMPROV: impelmented the App version, to compute spectral diff between 2 files
+- IMPROV: improved app version, for outputing only the result
+- IMPROV: app version: now compute diff in dB
+- FIX: after changing sample rate, the curve value was not good anymore
+
+v6.2.1
+- IMPROV: port to windows
+
+v6.2.2
+- FIX: windows fixes
+
+v6.2.3
+- IMPROV: mac compilation
+
+v6.2.4
+- FIX: fixed windows compilation
+
+- IDEA(?): make a scale on diff curve (to see the change better)
