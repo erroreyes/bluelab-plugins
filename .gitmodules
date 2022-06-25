@@ -22,12 +22,6 @@
 [submodule "Libs/sndfilter"]
 	path = Libs/sndfilter
 	url = https://github.com/deadlab-plugins/Libs:sndfilter.git
-[submodule "BuildSystem"]
-	path = BuildSystem
-	url = https://github.com/deadlab-plugins:BuildSystem.git
-[submodule "TestSystem-mac"]
-	path = TestSystem-mac
-	url = https://github.com/deadlab-plugins:TestSystem-mac.git
 [submodule "bl-darknet"]
 	path = bl-darknet
 	url = https://github.com/deadlab-plugins:bl-darknet.git
