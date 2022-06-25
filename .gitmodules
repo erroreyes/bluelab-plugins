@@ -1,6 +1,6 @@
 [submodule "BL-Plugins"]
 	path = BL-Plugins
-	url = ./BL-Plugins
+	url = https://github.com/deadlab-plugins/BL-Plugins.git
 [submodule "Libs/RandomSequence"]
 	path = Libs/RandomSequence
 	url = https://github.com/deadlab-plugins/Libs:RandomSequence.git
