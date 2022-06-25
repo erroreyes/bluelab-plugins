@@ -1,0 +1,181 @@
+
+<html>
+   <head>
+      <style type="text/css">
+         .sikuli-code {
+            font-size: 20px;
+            font-family: "Osaka-mono", Monospace;
+            line-height: 1.5em;
+            display:table-cell;
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            width: 99%;   /* remove horizontal scroll-bar when viewing in IE7 */
+         }
+         .sikuli-code img {
+            vertical-align: middle;
+            margin: 2px;
+            border: 1px solid #ccc;
+            padding: 2px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-box-shadow: 1px 1px 1px gray;
+            -webkit-box-shadow: 1px 1px 2px gray;
+         }
+         .kw {
+            color: blue;
+         }
+         .skw {
+            color: rgb(63, 127, 127);
+         }
+
+         .str {
+            color: rgb(128, 0, 0);
+         }
+
+         .dig {
+            color: rgb(128, 64, 0);
+         }
+
+         .cmt {
+            color: rgb(200, 0, 200);
+         }
+
+         h2 {
+            display: inline;
+            font-weight: normal;
+         }
+
+         .info {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            display: none;
+         }
+
+         a {
+            color: #9D2900;
+         }
+
+         body {
+            font-family: "Trebuchet MS", Arial, Sans-Serif;
+         }
+
+      </style>
+   </head>
+<body>
+<div class="info">
+<h2>BL-Gain12-TEST-00.sikuli</h2> <a href="BL-Gain12-TEST-00.zip">(Download this script)</a>
+</div>
+<pre class="sikuli-code">
+<span class="cmt">#openApp("/Applications/REAPER64.app/Contents/MacOS/REAPER")
+</span><span class="cmt">#app = App("/Applications/REAPER64.app/Contents/MacOS/REAPER")
+</span><span class="cmt">#app = App("/Applications/REAPER64.app)
+</span><span class="cmt">#app.open()
+</span><span class="cmt">#app.focus()
+</span><span class="cmt">#app.close()
+</span>
+<span class="cmt">#openApp("/Applications/REAPER64.app")
+</span>
+<span class="cmt">#App.open("/Applications/REAPER64.app/Contents/MacOS/REAPER")
+</span>
+<span class="cmt"># screenshot using mac os
+</span><span class="cmt">#type("4", KeyModifier.CMD + KeyModifier.SHIFT)
+</span><span class="cmt">#type(" ")
+</span><span class="cmt">#click("1557876150424.png")
+</span><span class="cmt">#wait(1)
+</span>
+
+
+<span class="cmt"># NOTE: keep the plugin in windows in the center of the screen
+</span><span class="cmt"># NOTE: set initial buffer size to 447
+</span><span class="cmt"># NOTE: delete screenshots on the desktop before launching tests
+</span><span class="cmt"># NOTE: set the preferences options to the page where is the buffer size
+</span><span class="cmt"># NOTE: Reaper Preferences =&gt; cmd+shift+p
+</span>
+<span class="kw">import</span> sys.argv
+<span class="kw">import</span> shutil;
+
+<span class="cmt"># parameters
+</span>bufferSize = <span class="dig">1024</span>
+
+plugName = <span class="str">"BL-Gain12"</span>
+testNumber = <span class="str">"00"</span>
+
+<span class="cmt">#bufferSize = sys.argv[1]
+</span>
+<span class="cmt"># app
+</span>appName = <span class="str">"/Applications/REAPER64.app"</span>
+projectsPath = <span class="str">"/Users/applematuer/Documents/Dev/plugin-development/TestSystem-mac"</span>
+projectDir = <span class="str">"Projects/Reaper/"</span> + plugName
+projectName = plugName + <span class="str">"-TEST-"</span> + testNumber + <span class="str">".RPP"</span>
+
+appOpenTime = <span class="dig">6</span>
+screenshotDelay = <span class="dig">5</span>
+bounceTime = <span class="dig">10</span>
+
+<span class="cmt"># open app with project
+</span>app = App(appName)
+appArgs = projectsPath + <span class="str">"/"</span> + projectDir + <span class="str">"/"</span> + <span class="str">"Project/"</span> + projectName
+app.setUsing(appArgs)
+app.open()
+
+<span class="skw">wait</span>(appOpenTime)
+<span class="cmt">#app.focus()
+</span>
+<span class="cmt"># set buffer size
+</span><span class="cmt">#type(",", KeyModifier.CMD) # not working
+</span><span class="skw">type</span>(<span class="str">"p"</span>, KeyModifier.CMD + KeyModifier.SHIFT)
+
+<span class="skw">wait</span>(<span class="dig">2</span>)
+
+<span class="skw">doubleClick</span>(Pattern(<img src="1557874407744.png" />).targetOffset(-<span class="dig">21</span>,-<span class="dig">9</span>))
+<span class="skw">wait</span>(<span class="dig">1</span>)
+<span class="skw">type</span>(Key.BACKSPACE)
+
+keyDown(Key.SHIFT)
+<span class="skw">type</span>(str(bufferSize))
+keyUp(Key.SHIFT)
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="skw">type</span>(Key.ENTER)
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt"># start play
+</span><span class="skw">type</span>(<span class="str">" "</span>)
+
+<span class="skw">wait</span>(screenshotDelay)
+
+<span class="cmt"># take a screenshot
+</span>
+<span class="skw">click</span>(<img src="1557916365000.png" />)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+plugWin = App.focusedWindow()
+regionImg = <span class="skw">capture</span>(plugWin)
+screenshotPath = projectsPath + <span class="str">"/"</span> + projectDir + <span class="str">"/"</span> + <span class="str">"Result/Screenshots/"</span>
+screenshotName = <span class="str">"screenshot-"</span> + projectName + <span class="str">"-"</span> + str(bufferSize) + <img src=".png" />
+
+<span class="kw">print</span>(regionImg)
+<span class="kw">print</span>(screenshotPath)
+<span class="kw">print</span>(screenshotName)
+
+shutil.move(regionImg, os.path.join(screenshotPath, screenshotName))
+
+<span class="cmt"># bounce selection
+</span><span class="skw">type</span>(<span class="str">"r"</span>, KeyModifier.ALT + KeyModifier.CMD)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+<span class="skw">click</span>(<img src="1557875162389.png" />)
+<span class="skw">wait</span>(bounceTime)
+<span class="cmt">#type("Key.ENTER")
+</span><span class="skw">click</span>(Pattern(<img src="1557875353493.png" />).targetOffset(-<span class="dig">47</span>,<span class="dig">2</span>))
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+app.close()
+</pre>
+</body>
+</html>

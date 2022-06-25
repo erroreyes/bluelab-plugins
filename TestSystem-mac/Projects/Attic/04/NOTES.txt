@@ -1,0 +1,8 @@
+00 - bypass
+01 - no change
+02 - modif
+03 - 48000Hz
+04 - 88200Hz
+05 - 192000Hz
+06 - stereo bypass
+07 - stereo

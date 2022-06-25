@@ -1,0 +1,20 @@
+00 - bypass
+01 - no change
+02 - modif
+03 - 48000Hz
+04 - 88200Hz
+05 - 192000Hz
+06 - stereo bypass
+07 - stereo
+
+- OLD: For 1 buffer size: 4H
+
+- Every plugins, 1 test, 1 buffer size: 30mn
+- Max: 7 tests, 6 buffer size => 42 tests => 24h
+- 7 tests, 1 buffer size: 3h30
+- 1 test, 6 buffer size: 3h
+
+- Ghost-X: this is normal to have shifts in spectrograms depending on buffer size
+(trigger of automation triggering render depend on buffer size)
+- Precedence: this is normal to have some sorts of light clicks
+- PitchShift: this is normal to have not exactly the same patterns in spectrograms depending on buffer size (automation on reaper seem to depend on buffer size)

@@ -1,0 +1,273 @@
+
+<html>
+   <head>
+      <style type="text/css">
+         .sikuli-code {
+            font-size: 20px;
+            font-family: "Osaka-mono", Monospace;
+            line-height: 1.5em;
+            display:table-cell;
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            width: 99%;   /* remove horizontal scroll-bar when viewing in IE7 */
+         }
+         .sikuli-code img {
+            vertical-align: middle;
+            margin: 2px;
+            border: 1px solid #ccc;
+            padding: 2px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-box-shadow: 1px 1px 1px gray;
+            -webkit-box-shadow: 1px 1px 2px gray;
+         }
+         .kw {
+            color: blue;
+         }
+         .skw {
+            color: rgb(63, 127, 127);
+         }
+
+         .str {
+            color: rgb(128, 0, 0);
+         }
+
+         .dig {
+            color: rgb(128, 64, 0);
+         }
+
+         .cmt {
+            color: rgb(200, 0, 200);
+         }
+
+         h2 {
+            display: inline;
+            font-weight: normal;
+         }
+
+         .info {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            display: none;
+         }
+
+         a {
+            color: #9D2900;
+         }
+
+         body {
+            font-family: "Trebuchet MS", Arial, Sans-Serif;
+         }
+
+      </style>
+   </head>
+<body>
+<div class="info">
+<h2>Reaper-TEST.sikuli</h2> <a href="Reaper-TEST.zip">(Download this script)</a>
+</div>
+<pre class="sikuli-code">
+<span class="cmt"># NOTE: Reaper set the preferences options to the page where is the buffer size
+</span><span class="cmt"># NOTE: Reaper Preferences =&gt; new shortcut cmd+shift+p
+</span><span class="cmt">#
+</span><span class="cmt"># NOTE: RX6 =&gt; export screenshot shortcut added shift+alt+cmd+e
+</span><span class="cmt"># NOTE: RX6 =&gt; screenshot res set to 1024x600
+</span><span class="cmt"># NOTE: RX6 =&gt; set tmp dir by hand for opening wave file, and saving screenshot
+</span><span class="cmt"># NOTE: RX6 =&gt; take care to close all tabs at the beginning
+</span><span class="kw">import</span> sys.argv
+<span class="kw">import</span> shutil
+<span class="kw">import</span> os
+
+<span class="cmt">#
+</span><span class="cmt"># parameters
+</span><span class="cmt">#
+</span><span class="cmt">#plugName = "BL-Gain12"
+</span>plugName = <span class="str">"BL-Chroma"</span>
+testNumber = <span class="str">"01"</span>
+bufferSize = <span class="dig">1024</span>
+
+<span class="cmt"># delays
+</span>appOpenDelay = <span class="dig">7</span> <span class="cmt">#6</span>
+playDelay = <span class="dig">10</span>
+screenshotDelay = <span class="dig">1</span> <span class="cmt">#2</span>
+bounceDelay = <span class="dig">6</span> <span class="cmt">#4</span>
+
+appSpectroOpenDelay = <span class="dig">10</span> <span class="cmt">#8 #6</span>
+saveSpectroDelay = <span class="dig">20</span>
+
+<span class="cmt"># get the args from command line
+</span><span class="kw">if</span> (len(sys.argv) &gt; <span class="dig">1</span>):
+    plugName = sys.argv[<span class="dig">1</span>]
+    testNumber = sys.argv[<span class="dig">2</span>]
+    bufferSize = sys.argv[<span class="dig">3</span>]
+    <span class="cmt">#if (len(sys.argv) &gt; 4):
+</span>    <span class="cmt">#    bounceDelay = sys.argv[4]
+</span>
+<span class="cmt">#
+</span><span class="cmt"># config
+</span><span class="cmt">#
+</span><span class="cmt">#appName = "/Applications/REAPER64.app"
+</span>procAppName = <span class="str">"/Applications/REAPER64.app//Contents/MacOS/REAPER"</span>
+
+projectsPath = <span class="str">"/Users/applematuer/Documents/Dev/plugin-development/TestSystem-mac"</span>
+projectDir = <span class="str">"Projects/Reaper/Projects/"</span> + plugName
+projectName = plugName + <span class="str">"-TEST-"</span> + testNumber + <span class="str">".RPP"</span>
+tmpDir = projectsPath + <span class="str">"/"</span> + <span class="str">"Tmp"</span>
+
+appSpectroName = <span class="str">"/Applications/iZotope RX 6 Audio Editor.app"</span>
+
+playDelay = playDelay - screenshotDelay
+
+<span class="cmt">#
+</span><span class="cmt"># open app with project
+</span><span class="cmt">#
+</span>appArgs = projectsPath + <span class="str">"/"</span> + projectDir + <span class="str">"/"</span> + <span class="str">"Project/"</span> + projectName
+<span class="cmt">#app = App(appName)
+</span><span class="cmt">#app.setUsing(appArgs) # not working
+</span><span class="cmt">#app.open()
+</span>
+process = os.popen(procAppName + <span class="str">" "</span> + appArgs)
+
+<span class="skw">wait</span>(appOpenDelay)
+
+<span class="cmt"># preferences
+</span><span class="skw">type</span>(<span class="str">"p"</span>, KeyModifier.CMD + KeyModifier.SHIFT)
+
+<span class="skw">wait</span>(<span class="dig">2</span>)
+
+<span class="skw">doubleClick</span>(Pattern(<img src="1557874407744.png" />).targetOffset(-<span class="dig">21</span>,-<span class="dig">9</span>))
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt"># set buffer size
+</span><span class="skw">type</span>(Key.BACKSPACE)
+keyDown(Key.SHIFT)
+<span class="skw">type</span>(str(bufferSize))
+keyUp(Key.SHIFT)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+<span class="skw">type</span>(Key.ENTER)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt">#
+</span><span class="cmt"># start play
+</span><span class="cmt">#
+</span><span class="skw">type</span>(<span class="str">" "</span>)
+
+<span class="skw">wait</span>(screenshotDelay)
+
+<span class="cmt">#
+</span><span class="cmt"># take a screenshot
+</span><span class="cmt">#
+</span><span class="skw">click</span>(Pattern(<img src="1558042805025.png" />).targetOffset(-<span class="dig">13</span>,<span class="dig">1</span>))
+<span class="skw">wait</span>(<span class="dig">1</span>)
+plugWin = App.focusedWindow()
+regionImg = <span class="skw">capture</span>(plugWin)
+screenshotPath = projectsPath + <span class="str">"/"</span> + projectDir + <span class="str">"/"</span> + <span class="str">"Result/Screenshots/"</span>
+screenshotName = projectName + <span class="str">"-"</span> + str(bufferSize) + <span class="str">"-snap"</span> + <img src=".png" />
+screenshotFullPath = screenshotPath + <span class="str">"/"</span> + screenshotName
+<span class="cmt">#shutil.move(regionImg, os.path.join(screenshotPath, screenshotName))
+</span>shutil.move(regionImg, screenshotFullPath)
+
+<span class="cmt"># finish play
+</span><span class="skw">wait</span>(playDelay)
+
+<span class="cmt"># click somewhere in Reaper (for Chroma and GhostViewer
+</span><span class="cmt"># (because this two plugs grab and catch keyboard shortcuts)
+</span><span class="skw">click</span>(<img src="1558072120691.png" />)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt">#
+</span><span class="cmt"># bounce selection
+</span><span class="cmt">#
+</span><span class="skw">type</span>(<span class="str">"r"</span>, KeyModifier.ALT + KeyModifier.CMD)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+
+<span class="skw">click</span>(<img src="1557875162389.png" />)
+
+<span class="skw">wait</span>(bounceDelay)
+
+<span class="skw">click</span>(Pattern(<img src="1557875353493.png" />).targetOffset(-<span class="dig">47</span>,<span class="dig">2</span>))
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt">#close Reaper
+</span><span class="cmt">#app.close()
+</span><span class="cmt">#process.close()
+</span><span class="skw">type</span>(<span class="str">"a"</span>, KeyModifier.CMD) <span class="cmt"># cmd+q</span>
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+<span class="skw">click</span>(Pattern(<img src="1558044125487.png" />).targetOffset(<span class="dig">13</span>,<span class="dig">6</span>))
+
+<span class="cmt">#
+</span><span class="cmt"># generate the spectrogram image
+</span><span class="cmt">#
+</span>
+<span class="cmt"># move the bounce
+</span>bounceSrcPath = projectsPath + <span class="str">"/"</span> + projectDir + <span class="str">"/"</span> + <span class="str">"Project/Bounces/bounce.wav"</span>
+shutil.move(bounceSrcPath, tmpDir)
+
+<span class="cmt"># launch app
+</span>appSpectro = App(appSpectroName)
+appSpectro.open()
+<span class="skw">wait</span>(appSpectroOpenDelay)
+
+<span class="cmt">#
+</span><span class="cmt"># open bounce
+</span><span class="cmt">#
+</span><span class="skw">type</span>(<span class="str">"o"</span>, KeyModifier.CMD)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="skw">type</span>(Key.ENTER)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="skw">click</span>(Pattern(<img src="1557929969974.png" />).targetOffset(-<span class="dig">1</span>,-<span class="dig">14</span>))
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="skw">type</span>(Key.ENTER)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt">#
+</span><span class="cmt"># export screenshot
+</span><span class="cmt">#
+</span><span class="skw">type</span>(<span class="str">"e"</span>, KeyModifier.SHIFT + KeyModifier.ALT + KeyModifier.CMD)
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="skw">click</span>(Pattern(<img src="1557931098113.png" />).targetOffset(-<span class="dig">9</span>,<span class="dig">0</span>))
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="skw">type</span>(Key.ENTER)
+<span class="skw">wait</span>(saveSpectroDelay)
+
+<span class="cmt"># close tab
+</span><span class="skw">click</span>(Pattern(<img src="1557934006031.png" />).targetOffset(-<span class="dig">39</span>,<span class="dig">1</span>))
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+spectrogramsSrcFullPath = tmpDir + <span class="str">"/"</span> + <img src="bounce.png" />
+spectrogramsPath = projectsPath + <span class="str">"/"</span> + projectDir + <span class="str">"/"</span> + <span class="str">"Result/Spectrograms/"</span>
+spectrogramDstName = projectName + <span class="str">"-"</span> + str(bufferSize) + <span class="str">"-spectro"</span> + <img src=".png" />
+spectrogramDstFullPath = spectrogramsPath + <span class="str">"/"</span> + spectrogramDstName
+shutil.move(spectrogramsSrcFullPath, spectrogramDstFullPath)
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt">#
+</span><span class="cmt"># move and rename the bounce
+</span><span class="cmt">#
+</span>bounceDstPath = projectsPath + <span class="str">"/"</span> + projectDir + <span class="str">"/"</span> + <span class="str">"Result/Bounces"</span>
+bounceName = projectName + <span class="str">"-"</span> + str(bufferSize) + <span class="str">"-bounce"</span> + <span class="str">".wav"</span>
+bounceFullPath = bounceDstPath + <span class="str">"/"</span> + bounceName
+bounceTmpPath = tmpDir + <span class="str">"/"</span> + <span class="str">"bounce.wav"</span>
+shutil.move(bounceTmpPath, bounceFullPath)
+
+<span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="cmt">#appSpectro.close() # failes to restart cleanly after
+</span><span class="skw">type</span>(<span class="str">"a"</span>, KeyModifier.CMD) <span class="cmt"># cmd+q</span>
+</pre>
+</body>
+</html>

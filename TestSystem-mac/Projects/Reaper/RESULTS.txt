@@ -1,0 +1,12 @@
+- AutoGain + Denoiser, flat curve on the right: FIXED and checked
+- AutoGain: very different gains with different sample rates: FIXED and checked
+- FIX: problem EPS in AmpToDB: checked
+- FIX: Air latency, tested for all buffer sizes: ok, checked
+- Ghost: the test is not reproducible (chaging latency on the fly) => was tested by hand
+- Rebalance: passed all tests with all buffer sizes
+- Impulses: FIX resample problem when switched projects: passed tests (all buffer size)
+- Impulses: latency fix: passed tests (all buffer size)
+- Spatializer: passed all tests with all but size (just a little rumble at 192KHz)
+- Impulses: FIX gain change during autotests: passed ! (all buffer size)
+- Tested long files for clicks: Rebalance, Denoiser, Impulses, Spatializer
+Tests 08, 09, 10, all buffer size => all passed !
