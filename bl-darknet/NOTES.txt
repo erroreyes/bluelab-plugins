@@ -1,0 +1,20 @@
+acc = fscanfMat("train-0_acc.txt")
+plot(acc)
+train = fscanfMat("train-0_score_train.txt")
+plot(train, 'g')
+test = fscanfMat("train-0_score_test.txt")
+plot(test, 'm')
+eval = fscanfMat("train-0_score_eval.txt")
+plot(eval, 'r')
+
+acc = fscanfMat("train-0_acc.txt") ; plot(acc) ; train = fscanfMat("train-0_score_train.txt") ; plot(train, 'g') ; test = fscanfMat("train-0_score_test.txt") ; plot(test, 'm') ; eval = fscanfMat("train-0_score_eval.txt") ; plot(eval, 'r')
+
+acc = fscanfMat("train-0_acc.txt") ; plot(acc) ; train = fscanfMat("train-0_score.txt") ; plot(train, 'g') ; test = fscanfMat("test-0_score.txt") ; plot(test, 'm')
+
+acc = fscanfMat("train_acc.txt") ; plot(acc) ; train = fscanfMat("train-score_train.txt") ; plot(train, 'g') ; test = fscanfMat("train-score_test.txt") ; plot(test, 'm')
+
+Spleeter RT
+https://github.com/james34602/SpleeterRT
+
+WIP: when using the model in Rebalance, on data that was not train data, the result is very weak (less good than prev version with only dense networks)
+This was trained with learning rate 1e-4 (then the test score is very low compared to the train score). TODO: find a model or current model parameters that makes good result with training set

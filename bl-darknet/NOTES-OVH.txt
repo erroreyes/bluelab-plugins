@@ -1,0 +1,120 @@
+09/07/2020
+
+NOTE==
+ssh key: generated on mac, copied in ovh web interface
+Gravelines (GRA7)
+Ubuntu 20.04
+t1-45-gra4
+offer: T1-45 (45Gb RAM, Titan GPU)
+IP: 51.210.125.147
+ssh ubuntu@51.210.125.147
+
+CPU applematuer(4x): 50s/epoch
+CPU ovh (4x): 17s/epoch)
+GPU ovh (4x): 3s/epoch)
+GPU ovh: (8x): 5s/epoch)
+======
+
+https://docs.ovh.com/fr/public-cloud/
+https://www.ovh.com/manager/public-cloud/#/pci/projects/c120833f3e7c42919295ed868e4a827c
+https://docs.ovh.com/fr/public-cloud/deployer-une-instance-gpu/
+
+ssh key: /Users/applematuer/.ssh/id_rs
+
+== user
+sudo adduser bluelab
+(pass niko)
+
+for “ubuntu” user: 
+sudo passwd
+(pass niko)
+
+=== emacs, ftp
+https://ubuntu.com/server/docs/service-ftp
+
+sudo apt install vsftpd
+
+sudo add-apt-repository ppa:kelleyk/emacs
+sudo apt update
+sudo apt install emacs
+sudo emacs /etc/vsftpd.conf => write_enable=YES
+sudo systemctl restart vsftpd.service
+
+== cuda
+== https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
+
+lspci | grep -i nvidia
+=> 00:06.0 3D controller: NVIDIA Corporation GV100GL [Tesla V100 PCIe 16GB] (rev a1)
+uname -m && cat /etc/*release
+
+sudo apt-install gcc
+gcc --version (info)
+uname -r (info)
+
+sudo apt install gdb
+
+sudo apt-get install linux-headers-$(uname -r)
+
+== https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=debnetwork
+
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+sudo apt-get update
+sudo apt-get -y install cuda
+
+export PATH=/usr/local/cuda-11.0/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-11.0/lib\
+                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+sudo reboot
+
+nvidia-smi
+
+=== transfer sources ftp
+TODO: remove the original darknet data directory
+
+https://bluelab-plugs.com/wp-content/uploads/diverse/Tmp-DeepLearning/
+
+wget https://bluelab-plugs.com/wp-content/uploads/diverse/Tmp-DeepLearning/mix.dat &&
+wget https://bluelab-plugs.com/wp-content/uploads/diverse/Tmp-DeepLearning/source0.dat &&
+wget https://bluelab-plugs.com/wp-content/uploads/diverse/Tmp-DeepLearning/source1.dat &&
+wget https://bluelab-plugs.com/wp-content/uploads/diverse/Tmp-DeepLearning/source2.dat &&
+wget https://bluelab-plugs.com/wp-content/uploads/diverse/Tmp-DeepLearning/source3.dat
+
+== compile darknet-master (CPU)
+== change Makefile paths in bl-darknet
+/home/bluelab/darknet-master
+== compite bl-darknet (CPU)
+
+chmod +x bl-darknet-train.sh
+
+bl-darknet-train.sh => /bin/sh => /usr/bin/sh (failed…)
+
+./bl-darknet rebalance train cfg/sources-mc.cfg cfg/rebalance.cfg
+
+===
+link to darknet.so !!
+export LD_LIBRARY_PATH=/home/bluelab/darknet-master:$LD_LIBRARY_PATH
+
+sudo apt install valgrind
+
+== add the user blue lab to sudo 
+sudo usermod -aG sudo bluelab
+
+test: sudo env LD_LIBRARY_PATH=/home/bluelab/darknet-master:$LD_LIBRARY_PATH ./bl-darknet rebalance train cfg/sources-mc.cfg cfg/rebalance.cfg
+
+Error msg:
+CUDA Error: no kernel image is available for execution on the device
+bl-darknet: ./src/cuda.c:36: check_error: Assertion `0' failed.
+
+idea: -gencode arch=compute_75,code=[sm_75,compute_75]
+CUDA_VISIBLE_DEVICES='7'
+
+== cudnn (failure)
+sudo cp include/* /usr/local/cuda-11.0/include
+sudo cp lib64/* /usr/local/cuda-11.0/lib
+
+== gfx card:
+GV100GL Tesla V100

@@ -1,0 +1,104 @@
+PREV: long training, filters=4
+PREV: long training with filters=16
+PREV: try filters=32 aborted. Gave bad results
+PREV: long training with filters=16 + data augmentation => fail, very bd results
+PREV: long training with filters=8
+WIP: long training with filters=2
+IDEA: use result with very few training (filters=2, 10 epochs, looks "blurry", but very correct)
+PREV: filters=2, clipmin=0.1 => fail
+WIP: filters=2, clip=1.0 (global clip)
+
+TODO: test clipnorm
+
+PREV: long training (10 days, filters=4, data augmentation)
+CURRENT: no data augmentation
+
+training-UNET-orig: unet_darknet, bl metrics, fixed route
+
+WIP: lr 1e-7 => 1e-4
+PREV: unet darknet from github, as it is (some slight modifs), trained during 2 weeks
+
+REF-deconv: ref with deconv
+WIP: same as origin but use maxpool and upsample (looks better, but it's slower)
+
+DONE: training during 2 months with custom unet (based on tiny darknet)
+=> gives good results (binary images)
+
+WIP: resample down input data and upsample it back at end of pipeline
+(tried with 4x oversampling => data set 4 x bigger)
+PROBLEM: seems to have float denormal issues
+(some numbers like 1e-40 for inputs, data, and weights, after ~100 epocs)
+(the training starts to slow down a lots after some epochs,
+and maybe training result starts to be a bit weird after 15 days)
+TEST: denorm flush to zero
+
+TEST: tests to avoid very small weights (e.g in layer 21)
+-> used batch norm at the end => seems good but it doesn't fix
+-> replaces [conv] by [conv2] (for later, and to better dump weights during training
+-> tested to add weight_constraint parameter => result doesn't look convincing
+
+PREV: continuing training of training-NEW-flushzero-TBC
+
+NOTE: maybe trainig 2months is bad, because we didn't blend stems correctly while training (should have directly been used the real mix) 
+
+NOTES: 2 months => gave spected result (binary)
+- new: dataset 4x bigger
+- new: downsample
+- new: use -120dB
+
+WIP: set min db to -120 (to synch well with BL-Rebalance),
+and retrain from start
+
+NOTE: when testing, we did 2 normalizations, that were not done when training
+Suppressed these 2 normalizations => test results now get very good!
+(from 0.50 before, to 0.80 now, and the result image is now very good)
+TODO: do we have to add these normalizations when training? Do we have to remove these normalizations in Rebalance?
+TODO: look are third party networks for normalization and db
+
+-120dB + no normalization + binary + downscale
+=> very good results in BL-Rebalance!!
+
+now need to try: normalization then no binary
+
+- binary + normalization: done! 1400 epochs
+
+- no binary: trained it (it certainly won't work in Rebalance)
+=> it has problem to learn vocal, due to the lack of contrast
+(vocal details are very very blurry compared to previous trainings)
+=> at the end, it won't probably work in BL-Rebalance,
+because e.g when decomposing colors of "truth" mask, the bass covered
+almost all the vocal part, and was bigger then vocal
+(training curve is better than previous, it goes until 0.9, in "red")
+
+WIP: try to train by using -60db normalization, on stems only
+(keeping -120db normalization on mix)
+(training curve is better than previous! it starts at more than 0.91, in "green")
+
+WIP: same training, no donscaling
+=> "other" takes too much vocal also
+
+WIP: down, bin, nonorm (+ 60/120dB)
+
+WIP: down, bin, norm, 120/120, tiny darknet training parameters
+=> wip but it sounds better in BL-Rebalance: vocal not cut by drums strike
+
+NEW: down + exct tinydarknet training prams => better than previous
+
+A-training-nodown-bin-long: same as prev, but nodown
+=> gave the best result for the moment, found a model near 1200 that was the best (other models, around 2000, were worse)
+
+WIP-4jul
+binary -> no binary
+because of problem: "either detect vocal, or drums", "if we detect well drums, there will be holes in the vocal partials".
+added TRUTH_IS_MASK (does not change a lot, but we never know...)
+
+#define USE_BINARIZATION 0 // Orig: 1
+#define USE_AMP2DB60 1 // Orig 0
+#define USE_JANSON_EX 0 // Orig: 1
+#define TRUTH_IS_MASK 1 // Orig: 0
+
+NOTE: in test_rebalance, re-enabled "#if USE_BINARIZATION"
+should be the right way to compute the correct score...
+TODO: reompute score for "A-training-nodown-bin-long" results, and see if the score is different, or at least more explicit (for the moment, the score does not show the good models, we don't know how to detect the good models)
+
+Made some tests with binarization with sigmoid... maybe will use it later...

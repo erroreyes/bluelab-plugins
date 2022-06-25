@@ -1,0 +1,117 @@
+GPU=1
+CUDNN=0
+OPENCV=0
+OPENMP=0
+DEBUG=0
+
+#ARCH= -gencode arch=compute_30,code=sm_30 \
+#      -gencode arch=compute_35,code=sm_35 \
+#      -gencode arch=compute_50,code=[sm_50,compute_50] \
+#      -gencode arch=compute_52,code=[sm_52,compute_52]
+#      -gencode arch=compute_20,code=[sm_20,sm_21] \ This one is deprecated?
+
+#ARCH= -gencode arch=compute_35,code=sm_35 \
+#      -gencode arch=compute_50,code=[sm_50,compute_50] \
+#      -gencode arch=compute_52,code=[sm_52,compute_52]
+##-gencode arch=compute_30,code=sm_30 \
+##      -gencode arch=compute_20,code=[sm_20,sm_21] \ This one is deprecated?
+
+# Niko
+ARCH= -gencode arch=compute_70,code=sm_70
+#ARCH= -gencode arch=compute_75,code=[sm_75,compute_75]
+
+# This is what I use, uncomment if you know your arch and want to specify
+# ARCH= -gencode arch=compute_52,code=compute_52
+
+VPATH=./src/:./examples
+EXEC=darknet
+OBJDIR=./obj/
+
+CC=gcc
+CPP=g++
+
+NVCC=nvcc 
+AR=ar
+ARFLAGS=rcs
+#OPTS=-Ofast
+OPTS=-O3
+
+LDFLAGS= -lm -pthread
+COMMON=
+#CFLAGS=-Wall -Wno-unused-result -Wno-unknown-pragmas -Wfatal-errors -fPIC
+CFLAGS=-Wall -Wno-unknown-pragmas -Wfatal-errors -fPIC
+
+CFLAGS+= -I/Users/applematuer/Documents/Dev/plugin-development/Libs/darknet-master/include -I/Users/applematuer/Documents/Dev/plugin-development/Libs/darknet-master/src
+
+#CFLAGS+= -I/home/bluelab/darknet-master/include -I/home/bluelab/darknet-master/src
+
+ifeq ($(OPENMP), 1) 
+CFLAGS+= -fopenmp
+endif
+
+ifeq ($(DEBUG), 1) 
+OPTS=-O0 -g
+endif
+
+CFLAGS+=$(OPTS)
+
+ifeq ($(OPENCV), 1) 
+COMMON+= -DOPENCV
+CFLAGS+= -DOPENCV
+LDFLAGS+= `pkg-config --libs opencv` -lstdc++
+COMMON+= `pkg-config --cflags opencv` 
+endif
+
+ifeq ($(GPU), 1) 
+COMMON+= -DGPU -I/usr/local/cuda/include/
+CFLAGS+= -DGPU -I/usr/local/cuda/include/
+#LDFLAGS+= -L/usr/local/cuda/lib64 -lcuda -lcudart -lcublas -lcurand
+LDFLAGS+= -L/usr/local/cuda/lib64 -lcudart -lcublas -lcurand -lcuda
+endif
+
+ifeq ($(CUDNN), 1) 
+COMMON+= -DCUDNN 
+CFLAGS+= -DCUDNN
+LDFLAGS+= -lcudnn
+endif
+
+OBJ=main.o rebalance-mc.o
+EXEC=bl-darknet
+
+ifeq ($(GPU), 1) 
+LDFLAGS+= -lstdc++
+#OBJ+=
+endif
+
+#LDFLAGS+= /home/bluelab/darknet-master/libdarknet.a
+LDFLAGS+= -L/home/bluelab/darknet-master -ldarknet
+
+OBJS = $(addprefix $(OBJDIR), $(OBJ))
+DEPS = $(wildcard src/*.h) Makefile include/darknet.h
+
+all: obj backup results $(EXEC)
+
+$(EXEC): $(OBJ)
+	$(CC) $(COMMON) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+$(OBJDIR)%.o: %.cpp $(DEPS)
+	$(CPP) $(COMMON) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)%.o: %.c $(DEPS)
+	$(CC) $(COMMON) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)%.o: %.cu $(DEPS)
+	$(NVCC) $(ARCH) $(COMMON) --compiler-options "$(CFLAGS)" -c $< -o $@
+
+obj:
+	mkdir -p obj
+backup:
+	mkdir -p backup
+results:
+	mkdir -p results
+
+.PHONY: clean
+
+clean:
+	rm -rf $(OBJS) $(EXEC) $(OBJDIR)/*
+

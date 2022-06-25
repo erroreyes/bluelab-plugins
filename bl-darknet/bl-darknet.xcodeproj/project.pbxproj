@@ -1,0 +1,694 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		480CEE8E250FFE5F00AF7ABF /* split_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 480CEE8C250FFE5C00AF7ABF /* split_layer.c */; };
+		480CEE91251008EA00AF7ABF /* input_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 480CEE8F251008E600AF7ABF /* input_layer.c */; };
+		480CEEBC2510E04100AF7ABF /* convolutional_layer2.c in Sources */ = {isa = PBXBuildFile; fileRef = 480CEEBA2510E03600AF7ABF /* convolutional_layer2.c */; };
+		480E0B78251783BA004DAA02 /* boxmuller.c in Sources */ = {isa = PBXBuildFile; fileRef = 480E0B77251783BA004DAA02 /* boxmuller.c */; };
+		480E0B8225179672004DAA02 /* kernel_initializers.c in Sources */ = {isa = PBXBuildFile; fileRef = 480E0B8125179672004DAA02 /* kernel_initializers.c */; };
+		482447E0252DCE0000070420 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 482447D6252DCE0000070420 /* main.c */; };
+		482447E1252DCE0000070420 /* rebalance.c in Sources */ = {isa = PBXBuildFile; fileRef = 482447D7252DCE0000070420 /* rebalance.c */; };
+		482447E2252DCE0000070420 /* unit_tests.c in Sources */ = {isa = PBXBuildFile; fileRef = 482447D8252DCE0000070420 /* unit_tests.c */; };
+		482447E3252DCE0000070420 /* utest_col2im.c in Sources */ = {isa = PBXBuildFile; fileRef = 482447DA252DCE0000070420 /* utest_col2im.c */; };
+		482447E4252DCE0000070420 /* utest_conv_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 482447DC252DCE0000070420 /* utest_conv_layer.c */; };
+		482447E5252DCE0000070420 /* utest_rand_normal.c in Sources */ = {isa = PBXBuildFile; fileRef = 482447DE252DCE0000070420 /* utest_rand_normal.c */; };
+		482447E8252FAD5A00070420 /* utest_conv_layer_nbatch.c in Sources */ = {isa = PBXBuildFile; fileRef = 482447E6252FAD5A00070420 /* utest_conv_layer_nbatch.c */; };
+		4875415B2511076900E5F305 /* deconvolutional_layer2.c in Sources */ = {isa = PBXBuildFile; fileRef = 487541592511076900E5F305 /* deconvolutional_layer2.c */; };
+		48B6E53E2490D01600B5568D /* activation_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4D62490D01500B5568D /* activation_layer.c */; };
+		48B6E53F2490D01600B5568D /* activations.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4D82490D01500B5568D /* activations.c */; };
+		48B6E5402490D01600B5568D /* avgpool_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4DB2490D01500B5568D /* avgpool_layer.c */; };
+		48B6E5412490D01600B5568D /* batchnorm_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4DD2490D01500B5568D /* batchnorm_layer.c */; };
+		48B6E5422490D01600B5568D /* blas.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4E02490D01500B5568D /* blas.c */; };
+		48B6E5432490D01600B5568D /* box.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4E22490D01500B5568D /* box.c */; };
+		48B6E5442490D01600B5568D /* col2im.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4E62490D01500B5568D /* col2im.c */; };
+		48B6E5452490D01600B5568D /* compare.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4E82490D01500B5568D /* compare.c */; };
+		48B6E5462490D01600B5568D /* connected_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4E92490D01500B5568D /* connected_layer.c */; };
+		48B6E5472490D01600B5568D /* convolutional_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4EC2490D01500B5568D /* convolutional_layer.c */; };
+		48B6E5482490D01600B5568D /* cost_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4EE2490D01500B5568D /* cost_layer.c */; };
+		48B6E5492490D01600B5568D /* crnn_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4F02490D01500B5568D /* crnn_layer.c */; };
+		48B6E54A2490D01600B5568D /* crop_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4F32490D01500B5568D /* crop_layer.c */; };
+		48B6E54B2490D01600B5568D /* cuda.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4F52490D01500B5568D /* cuda.c */; };
+		48B6E54C2490D01600B5568D /* data.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4F72490D01500B5568D /* data.c */; };
+		48B6E54D2490D01600B5568D /* deconvolutional_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4FA2490D01500B5568D /* deconvolutional_layer.c */; };
+		48B6E54E2490D01600B5568D /* demo.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4FC2490D01500B5568D /* demo.c */; };
+		48B6E54F2490D01600B5568D /* detection_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E4FE2490D01500B5568D /* detection_layer.c */; };
+		48B6E5502490D01600B5568D /* dropout_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5012490D01500B5568D /* dropout_layer.c */; };
+		48B6E5512490D01600B5568D /* gemm.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5032490D01500B5568D /* gemm.c */; };
+		48B6E5522490D01600B5568D /* gru_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5052490D01500B5568D /* gru_layer.c */; };
+		48B6E5532490D01600B5568D /* im2col.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5082490D01500B5568D /* im2col.c */; };
+		48B6E5542490D01600B5568D /* image_opencv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E50A2490D01500B5568D /* image_opencv.cpp */; };
+		48B6E5552490D01600B5568D /* image.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E50B2490D01500B5568D /* image.c */; };
+		48B6E5562490D01600B5568D /* iseg_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E50D2490D01500B5568D /* iseg_layer.c */; };
+		48B6E5572490D01600B5568D /* l2norm_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E50F2490D01500B5568D /* l2norm_layer.c */; };
+		48B6E5582490D01600B5568D /* layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5112490D01500B5568D /* layer.c */; };
+		48B6E5592490D01600B5568D /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5132490D01500B5568D /* list.c */; };
+		48B6E55A2490D01600B5568D /* local_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5152490D01500B5568D /* local_layer.c */; };
+		48B6E55B2490D01600B5568D /* logistic_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5172490D01500B5568D /* logistic_layer.c */; };
+		48B6E55C2490D01600B5568D /* lstm_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5192490D01500B5568D /* lstm_layer.c */; };
+		48B6E55D2490D01600B5568D /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E51B2490D01500B5568D /* matrix.c */; };
+		48B6E55E2490D01600B5568D /* maxpool_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E51E2490D01500B5568D /* maxpool_layer.c */; };
+		48B6E55F2490D01600B5568D /* network.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5202490D01600B5568D /* network.c */; };
+		48B6E5602490D01600B5568D /* normalization_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5222490D01600B5568D /* normalization_layer.c */; };
+		48B6E5612490D01600B5568D /* option_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5242490D01600B5568D /* option_list.c */; };
+		48B6E5622490D01600B5568D /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5262490D01600B5568D /* parser.c */; };
+		48B6E5632490D01600B5568D /* region_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5282490D01600B5568D /* region_layer.c */; };
+		48B6E5642490D01600B5568D /* reorg_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E52A2490D01600B5568D /* reorg_layer.c */; };
+		48B6E5652490D01600B5568D /* rnn_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E52C2490D01600B5568D /* rnn_layer.c */; };
+		48B6E5662490D01600B5568D /* route_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E52E2490D01600B5568D /* route_layer.c */; };
+		48B6E5672490D01600B5568D /* shortcut_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5302490D01600B5568D /* shortcut_layer.c */; };
+		48B6E5682490D01600B5568D /* softmax_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5322490D01600B5568D /* softmax_layer.c */; };
+		48B6E5692490D01600B5568D /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5362490D01600B5568D /* tree.c */; };
+		48B6E56A2490D01600B5568D /* upsample_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5382490D01600B5568D /* upsample_layer.c */; };
+		48B6E56B2490D01600B5568D /* dk_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E53A2490D01600B5568D /* dk_utils.c */; };
+		48B6E56C2490D01600B5568D /* yolo_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E53C2490D01600B5568D /* yolo_layer.c */; };
+		48B6E56F2490D0D400B5568D /* bl_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E56D2490D0D400B5568D /* bl_utils.c */; };
+		48B6E5732490E18700B5568D /* metrics_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48B6E5712490E18700B5568D /* metrics_layer.c */; };
+		48BA50B42586922900BBCCCF /* bl-darknet in CopyFiles */ = {isa = PBXBuildFile; fileRef = 48BA50B32586922900BBCCCF /* bl-darknet */; };
+		48BA50B825AF3D0900BBCCCF /* resample_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48BA50B625AF3D0900BBCCCF /* resample_layer.c */; };
+		48BA50BB262B780B00BBCCCF /* denormal.c in Sources */ = {isa = PBXBuildFile; fileRef = 48BA50BA262B780B00BBCCCF /* denormal.c */; };
+		48BA50C42635986A00BBCCCF /* libopenblas_haswellp-r0.3.9_mac_mt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48BA50C1263597C400BBCCCF /* libopenblas_haswellp-r0.3.9_mac_mt.a */; };
+		48C6DF132511B946009362A9 /* reorg_layer2.c in Sources */ = {isa = PBXBuildFile; fileRef = 48C6DF112511B946009362A9 /* reorg_layer2.c */; };
+		48C6DF522513A940009362A9 /* gemm-blas.c in Sources */ = {isa = PBXBuildFile; fileRef = 48C6DF512513A93F009362A9 /* gemm-blas.c */; };
+		48C8AE69249A9448005C65B1 /* instancenorm_layer.c in Sources */ = {isa = PBXBuildFile; fileRef = 48C8AE67249A9448005C65B1 /* instancenorm_layer.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		48180086252C96F700E56192 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "$(PROJECT_DIR)/dk-build";
+			dstSubfolderSpec = 0;
+			files = (
+				48BA50B42586922900BBCCCF /* bl-darknet in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		480CEE8C250FFE5C00AF7ABF /* split_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = split_layer.c; path = ../Libs/darknet/src/split_layer.c; sourceTree = "<group>"; };
+		480CEE8D250FFE5D00AF7ABF /* split_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = split_layer.h; path = ../Libs/darknet/src/split_layer.h; sourceTree = "<group>"; };
+		480CEE8F251008E600AF7ABF /* input_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = input_layer.c; path = ../Libs/darknet/src/input_layer.c; sourceTree = "<group>"; };
+		480CEE90251008E700AF7ABF /* input_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = input_layer.h; path = ../Libs/darknet/src/input_layer.h; sourceTree = "<group>"; };
+		480CEEBA2510E03600AF7ABF /* convolutional_layer2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = convolutional_layer2.c; path = ../Libs/darknet/src/convolutional_layer2.c; sourceTree = "<group>"; };
+		480CEEBB2510E03A00AF7ABF /* convolutional_layer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = convolutional_layer2.h; path = ../Libs/darknet/src/convolutional_layer2.h; sourceTree = "<group>"; };
+		480E0B77251783BA004DAA02 /* boxmuller.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = boxmuller.c; path = ../Libs/darknet/src/boxmuller.c; sourceTree = "<group>"; };
+		480E0B7A25178473004DAA02 /* boxmuller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = boxmuller.h; path = ../Libs/darknet/src/boxmuller.h; sourceTree = "<group>"; };
+		480E0B8025179634004DAA02 /* kernel_initializers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kernel_initializers.h; path = ../Libs/darknet/src/kernel_initializers.h; sourceTree = "<group>"; };
+		480E0B8125179672004DAA02 /* kernel_initializers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kernel_initializers.c; path = ../Libs/darknet/src/kernel_initializers.c; sourceTree = "<group>"; };
+		482447D6252DCE0000070420 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = src/main.c; sourceTree = "<group>"; };
+		482447D7252DCE0000070420 /* rebalance.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rebalance.c; path = src/rebalance.c; sourceTree = "<group>"; };
+		482447D8252DCE0000070420 /* unit_tests.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unit_tests.c; path = src/unit_tests.c; sourceTree = "<group>"; };
+		482447D9252DCE0000070420 /* unit_tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unit_tests.h; path = src/unit_tests.h; sourceTree = "<group>"; };
+		482447DA252DCE0000070420 /* utest_col2im.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utest_col2im.c; path = src/utest_col2im.c; sourceTree = "<group>"; };
+		482447DB252DCE0000070420 /* utest_col2im.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utest_col2im.h; path = src/utest_col2im.h; sourceTree = "<group>"; };
+		482447DC252DCE0000070420 /* utest_conv_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utest_conv_layer.c; path = src/utest_conv_layer.c; sourceTree = "<group>"; };
+		482447DD252DCE0000070420 /* utest_conv_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utest_conv_layer.h; path = src/utest_conv_layer.h; sourceTree = "<group>"; };
+		482447DE252DCE0000070420 /* utest_rand_normal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utest_rand_normal.c; path = src/utest_rand_normal.c; sourceTree = "<group>"; };
+		482447DF252DCE0000070420 /* utest_rand_normal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utest_rand_normal.h; path = src/utest_rand_normal.h; sourceTree = "<group>"; };
+		482447E6252FAD5A00070420 /* utest_conv_layer_nbatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utest_conv_layer_nbatch.c; path = src/utest_conv_layer_nbatch.c; sourceTree = "<group>"; };
+		482447E7252FAD5A00070420 /* utest_conv_layer_nbatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utest_conv_layer_nbatch.h; path = src/utest_conv_layer_nbatch.h; sourceTree = "<group>"; };
+		487541592511076900E5F305 /* deconvolutional_layer2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = deconvolutional_layer2.c; path = ../Libs/darknet/src/deconvolutional_layer2.c; sourceTree = "<group>"; };
+		4875415A2511076900E5F305 /* deconvolutional_layer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = deconvolutional_layer2.h; path = ../Libs/darknet/src/deconvolutional_layer2.h; sourceTree = "<group>"; };
+		48B6E4D52490D01500B5568D /* activation_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = activation_kernels.cu; path = ../Libs/darknet/src/activation_kernels.cu; sourceTree = "<group>"; };
+		48B6E4D62490D01500B5568D /* activation_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = activation_layer.c; path = ../Libs/darknet/src/activation_layer.c; sourceTree = "<group>"; };
+		48B6E4D72490D01500B5568D /* activation_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = activation_layer.h; path = ../Libs/darknet/src/activation_layer.h; sourceTree = "<group>"; };
+		48B6E4D82490D01500B5568D /* activations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = activations.c; path = ../Libs/darknet/src/activations.c; sourceTree = "<group>"; };
+		48B6E4D92490D01500B5568D /* activations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = activations.h; path = ../Libs/darknet/src/activations.h; sourceTree = "<group>"; };
+		48B6E4DA2490D01500B5568D /* avgpool_layer_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = avgpool_layer_kernels.cu; path = ../Libs/darknet/src/avgpool_layer_kernels.cu; sourceTree = "<group>"; };
+		48B6E4DB2490D01500B5568D /* avgpool_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = avgpool_layer.c; path = ../Libs/darknet/src/avgpool_layer.c; sourceTree = "<group>"; };
+		48B6E4DC2490D01500B5568D /* avgpool_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = avgpool_layer.h; path = ../Libs/darknet/src/avgpool_layer.h; sourceTree = "<group>"; };
+		48B6E4DD2490D01500B5568D /* batchnorm_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = batchnorm_layer.c; path = ../Libs/darknet/src/batchnorm_layer.c; sourceTree = "<group>"; };
+		48B6E4DE2490D01500B5568D /* batchnorm_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = batchnorm_layer.h; path = ../Libs/darknet/src/batchnorm_layer.h; sourceTree = "<group>"; };
+		48B6E4DF2490D01500B5568D /* blas_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = blas_kernels.cu; path = ../Libs/darknet/src/blas_kernels.cu; sourceTree = "<group>"; };
+		48B6E4E02490D01500B5568D /* blas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blas.c; path = ../Libs/darknet/src/blas.c; sourceTree = "<group>"; };
+		48B6E4E12490D01500B5568D /* blas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = blas.h; path = ../Libs/darknet/src/blas.h; sourceTree = "<group>"; };
+		48B6E4E22490D01500B5568D /* box.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = box.c; path = ../Libs/darknet/src/box.c; sourceTree = "<group>"; };
+		48B6E4E32490D01500B5568D /* box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = box.h; path = ../Libs/darknet/src/box.h; sourceTree = "<group>"; };
+		48B6E4E42490D01500B5568D /* classifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = classifier.h; path = ../Libs/darknet/src/classifier.h; sourceTree = "<group>"; };
+		48B6E4E52490D01500B5568D /* col2im_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = col2im_kernels.cu; path = ../Libs/darknet/src/col2im_kernels.cu; sourceTree = "<group>"; };
+		48B6E4E62490D01500B5568D /* col2im.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = col2im.c; path = ../Libs/darknet/src/col2im.c; sourceTree = "<group>"; };
+		48B6E4E72490D01500B5568D /* col2im.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = col2im.h; path = ../Libs/darknet/src/col2im.h; sourceTree = "<group>"; };
+		48B6E4E82490D01500B5568D /* compare.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compare.c; path = ../Libs/darknet/src/compare.c; sourceTree = "<group>"; };
+		48B6E4E92490D01500B5568D /* connected_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = connected_layer.c; path = ../Libs/darknet/src/connected_layer.c; sourceTree = "<group>"; };
+		48B6E4EA2490D01500B5568D /* connected_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = connected_layer.h; path = ../Libs/darknet/src/connected_layer.h; sourceTree = "<group>"; };
+		48B6E4EB2490D01500B5568D /* convolutional_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = convolutional_kernels.cu; path = ../Libs/darknet/src/convolutional_kernels.cu; sourceTree = "<group>"; };
+		48B6E4EC2490D01500B5568D /* convolutional_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = convolutional_layer.c; path = ../Libs/darknet/src/convolutional_layer.c; sourceTree = "<group>"; };
+		48B6E4ED2490D01500B5568D /* convolutional_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = convolutional_layer.h; path = ../Libs/darknet/src/convolutional_layer.h; sourceTree = "<group>"; };
+		48B6E4EE2490D01500B5568D /* cost_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cost_layer.c; path = ../Libs/darknet/src/cost_layer.c; sourceTree = "<group>"; };
+		48B6E4EF2490D01500B5568D /* cost_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cost_layer.h; path = ../Libs/darknet/src/cost_layer.h; sourceTree = "<group>"; };
+		48B6E4F02490D01500B5568D /* crnn_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crnn_layer.c; path = ../Libs/darknet/src/crnn_layer.c; sourceTree = "<group>"; };
+		48B6E4F12490D01500B5568D /* crnn_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crnn_layer.h; path = ../Libs/darknet/src/crnn_layer.h; sourceTree = "<group>"; };
+		48B6E4F22490D01500B5568D /* crop_layer_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crop_layer_kernels.cu; path = ../Libs/darknet/src/crop_layer_kernels.cu; sourceTree = "<group>"; };
+		48B6E4F32490D01500B5568D /* crop_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crop_layer.c; path = ../Libs/darknet/src/crop_layer.c; sourceTree = "<group>"; };
+		48B6E4F42490D01500B5568D /* crop_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crop_layer.h; path = ../Libs/darknet/src/crop_layer.h; sourceTree = "<group>"; };
+		48B6E4F52490D01500B5568D /* cuda.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cuda.c; path = ../Libs/darknet/src/cuda.c; sourceTree = "<group>"; };
+		48B6E4F62490D01500B5568D /* cuda.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cuda.h; path = ../Libs/darknet/src/cuda.h; sourceTree = "<group>"; };
+		48B6E4F72490D01500B5568D /* data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = data.c; path = ../Libs/darknet/src/data.c; sourceTree = "<group>"; };
+		48B6E4F82490D01500B5568D /* data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = data.h; path = ../Libs/darknet/src/data.h; sourceTree = "<group>"; };
+		48B6E4F92490D01500B5568D /* deconvolutional_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = deconvolutional_kernels.cu; path = ../Libs/darknet/src/deconvolutional_kernels.cu; sourceTree = "<group>"; };
+		48B6E4FA2490D01500B5568D /* deconvolutional_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = deconvolutional_layer.c; path = ../Libs/darknet/src/deconvolutional_layer.c; sourceTree = "<group>"; };
+		48B6E4FB2490D01500B5568D /* deconvolutional_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = deconvolutional_layer.h; path = ../Libs/darknet/src/deconvolutional_layer.h; sourceTree = "<group>"; };
+		48B6E4FC2490D01500B5568D /* demo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = demo.c; path = ../Libs/darknet/src/demo.c; sourceTree = "<group>"; };
+		48B6E4FD2490D01500B5568D /* demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = demo.h; path = ../Libs/darknet/src/demo.h; sourceTree = "<group>"; };
+		48B6E4FE2490D01500B5568D /* detection_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = detection_layer.c; path = ../Libs/darknet/src/detection_layer.c; sourceTree = "<group>"; };
+		48B6E4FF2490D01500B5568D /* detection_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = detection_layer.h; path = ../Libs/darknet/src/detection_layer.h; sourceTree = "<group>"; };
+		48B6E5002490D01500B5568D /* dropout_layer_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dropout_layer_kernels.cu; path = ../Libs/darknet/src/dropout_layer_kernels.cu; sourceTree = "<group>"; };
+		48B6E5012490D01500B5568D /* dropout_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dropout_layer.c; path = ../Libs/darknet/src/dropout_layer.c; sourceTree = "<group>"; };
+		48B6E5022490D01500B5568D /* dropout_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dropout_layer.h; path = ../Libs/darknet/src/dropout_layer.h; sourceTree = "<group>"; };
+		48B6E5032490D01500B5568D /* gemm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gemm.c; path = ../Libs/darknet/src/gemm.c; sourceTree = "<group>"; };
+		48B6E5042490D01500B5568D /* gemm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gemm.h; path = ../Libs/darknet/src/gemm.h; sourceTree = "<group>"; };
+		48B6E5052490D01500B5568D /* gru_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gru_layer.c; path = ../Libs/darknet/src/gru_layer.c; sourceTree = "<group>"; };
+		48B6E5062490D01500B5568D /* gru_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gru_layer.h; path = ../Libs/darknet/src/gru_layer.h; sourceTree = "<group>"; };
+		48B6E5072490D01500B5568D /* im2col_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = im2col_kernels.cu; path = ../Libs/darknet/src/im2col_kernels.cu; sourceTree = "<group>"; };
+		48B6E5082490D01500B5568D /* im2col.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = im2col.c; path = ../Libs/darknet/src/im2col.c; sourceTree = "<group>"; };
+		48B6E5092490D01500B5568D /* im2col.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = im2col.h; path = ../Libs/darknet/src/im2col.h; sourceTree = "<group>"; };
+		48B6E50A2490D01500B5568D /* image_opencv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = image_opencv.cpp; path = ../Libs/darknet/src/image_opencv.cpp; sourceTree = "<group>"; };
+		48B6E50B2490D01500B5568D /* image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = image.c; path = ../Libs/darknet/src/image.c; sourceTree = "<group>"; };
+		48B6E50C2490D01500B5568D /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = image.h; path = ../Libs/darknet/src/image.h; sourceTree = "<group>"; };
+		48B6E50D2490D01500B5568D /* iseg_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = iseg_layer.c; path = ../Libs/darknet/src/iseg_layer.c; sourceTree = "<group>"; };
+		48B6E50E2490D01500B5568D /* iseg_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iseg_layer.h; path = ../Libs/darknet/src/iseg_layer.h; sourceTree = "<group>"; };
+		48B6E50F2490D01500B5568D /* l2norm_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = l2norm_layer.c; path = ../Libs/darknet/src/l2norm_layer.c; sourceTree = "<group>"; };
+		48B6E5102490D01500B5568D /* l2norm_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = l2norm_layer.h; path = ../Libs/darknet/src/l2norm_layer.h; sourceTree = "<group>"; };
+		48B6E5112490D01500B5568D /* layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = layer.c; path = ../Libs/darknet/src/layer.c; sourceTree = "<group>"; };
+		48B6E5122490D01500B5568D /* layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = layer.h; path = ../Libs/darknet/src/layer.h; sourceTree = "<group>"; };
+		48B6E5132490D01500B5568D /* list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = list.c; path = ../Libs/darknet/src/list.c; sourceTree = "<group>"; };
+		48B6E5142490D01500B5568D /* list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = list.h; path = ../Libs/darknet/src/list.h; sourceTree = "<group>"; };
+		48B6E5152490D01500B5568D /* local_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = local_layer.c; path = ../Libs/darknet/src/local_layer.c; sourceTree = "<group>"; };
+		48B6E5162490D01500B5568D /* local_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = local_layer.h; path = ../Libs/darknet/src/local_layer.h; sourceTree = "<group>"; };
+		48B6E5172490D01500B5568D /* logistic_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = logistic_layer.c; path = ../Libs/darknet/src/logistic_layer.c; sourceTree = "<group>"; };
+		48B6E5182490D01500B5568D /* logistic_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logistic_layer.h; path = ../Libs/darknet/src/logistic_layer.h; sourceTree = "<group>"; };
+		48B6E5192490D01500B5568D /* lstm_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lstm_layer.c; path = ../Libs/darknet/src/lstm_layer.c; sourceTree = "<group>"; };
+		48B6E51A2490D01500B5568D /* lstm_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lstm_layer.h; path = ../Libs/darknet/src/lstm_layer.h; sourceTree = "<group>"; };
+		48B6E51B2490D01500B5568D /* matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = matrix.c; path = ../Libs/darknet/src/matrix.c; sourceTree = "<group>"; };
+		48B6E51C2490D01500B5568D /* matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matrix.h; path = ../Libs/darknet/src/matrix.h; sourceTree = "<group>"; };
+		48B6E51D2490D01500B5568D /* maxpool_layer_kernels.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = maxpool_layer_kernels.cu; path = ../Libs/darknet/src/maxpool_layer_kernels.cu; sourceTree = "<group>"; };
+		48B6E51E2490D01500B5568D /* maxpool_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = maxpool_layer.c; path = ../Libs/darknet/src/maxpool_layer.c; sourceTree = "<group>"; };
+		48B6E51F2490D01600B5568D /* maxpool_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = maxpool_layer.h; path = ../Libs/darknet/src/maxpool_layer.h; sourceTree = "<group>"; };
+		48B6E5202490D01600B5568D /* network.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = network.c; path = ../Libs/darknet/src/network.c; sourceTree = "<group>"; };
+		48B6E5212490D01600B5568D /* network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = network.h; path = ../Libs/darknet/src/network.h; sourceTree = "<group>"; };
+		48B6E5222490D01600B5568D /* normalization_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = normalization_layer.c; path = ../Libs/darknet/src/normalization_layer.c; sourceTree = "<group>"; };
+		48B6E5232490D01600B5568D /* normalization_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = normalization_layer.h; path = ../Libs/darknet/src/normalization_layer.h; sourceTree = "<group>"; };
+		48B6E5242490D01600B5568D /* option_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = option_list.c; path = ../Libs/darknet/src/option_list.c; sourceTree = "<group>"; };
+		48B6E5252490D01600B5568D /* option_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = option_list.h; path = ../Libs/darknet/src/option_list.h; sourceTree = "<group>"; };
+		48B6E5262490D01600B5568D /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = ../Libs/darknet/src/parser.c; sourceTree = "<group>"; };
+		48B6E5272490D01600B5568D /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = ../Libs/darknet/src/parser.h; sourceTree = "<group>"; };
+		48B6E5282490D01600B5568D /* region_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = region_layer.c; path = ../Libs/darknet/src/region_layer.c; sourceTree = "<group>"; };
+		48B6E5292490D01600B5568D /* region_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = region_layer.h; path = ../Libs/darknet/src/region_layer.h; sourceTree = "<group>"; };
+		48B6E52A2490D01600B5568D /* reorg_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = reorg_layer.c; path = ../Libs/darknet/src/reorg_layer.c; sourceTree = "<group>"; };
+		48B6E52B2490D01600B5568D /* reorg_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reorg_layer.h; path = ../Libs/darknet/src/reorg_layer.h; sourceTree = "<group>"; };
+		48B6E52C2490D01600B5568D /* rnn_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rnn_layer.c; path = ../Libs/darknet/src/rnn_layer.c; sourceTree = "<group>"; };
+		48B6E52D2490D01600B5568D /* rnn_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rnn_layer.h; path = ../Libs/darknet/src/rnn_layer.h; sourceTree = "<group>"; };
+		48B6E52E2490D01600B5568D /* route_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = route_layer.c; path = ../Libs/darknet/src/route_layer.c; sourceTree = "<group>"; };
+		48B6E52F2490D01600B5568D /* route_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = route_layer.h; path = ../Libs/darknet/src/route_layer.h; sourceTree = "<group>"; };
+		48B6E5302490D01600B5568D /* shortcut_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shortcut_layer.c; path = ../Libs/darknet/src/shortcut_layer.c; sourceTree = "<group>"; };
+		48B6E5312490D01600B5568D /* shortcut_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shortcut_layer.h; path = ../Libs/darknet/src/shortcut_layer.h; sourceTree = "<group>"; };
+		48B6E5322490D01600B5568D /* softmax_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = softmax_layer.c; path = ../Libs/darknet/src/softmax_layer.c; sourceTree = "<group>"; };
+		48B6E5332490D01600B5568D /* softmax_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = softmax_layer.h; path = ../Libs/darknet/src/softmax_layer.h; sourceTree = "<group>"; };
+		48B6E5362490D01600B5568D /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree.c; path = ../Libs/darknet/src/tree.c; sourceTree = "<group>"; };
+		48B6E5372490D01600B5568D /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree.h; path = ../Libs/darknet/src/tree.h; sourceTree = "<group>"; };
+		48B6E5382490D01600B5568D /* upsample_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = upsample_layer.c; path = ../Libs/darknet/src/upsample_layer.c; sourceTree = "<group>"; };
+		48B6E5392490D01600B5568D /* upsample_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = upsample_layer.h; path = ../Libs/darknet/src/upsample_layer.h; sourceTree = "<group>"; };
+		48B6E53A2490D01600B5568D /* dk_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dk_utils.c; path = ../Libs/darknet/src/dk_utils.c; sourceTree = "<group>"; };
+		48B6E53B2490D01600B5568D /* dk_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dk_utils.h; path = ../Libs/darknet/src/dk_utils.h; sourceTree = "<group>"; };
+		48B6E53C2490D01600B5568D /* yolo_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = yolo_layer.c; path = ../Libs/darknet/src/yolo_layer.c; sourceTree = "<group>"; };
+		48B6E53D2490D01600B5568D /* yolo_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = yolo_layer.h; path = ../Libs/darknet/src/yolo_layer.h; sourceTree = "<group>"; };
+		48B6E56D2490D0D400B5568D /* bl_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bl_utils.c; path = ../Libs/darknet/src/bl_utils.c; sourceTree = "<group>"; };
+		48B6E56E2490D0D400B5568D /* bl_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bl_utils.h; path = ../Libs/darknet/src/bl_utils.h; sourceTree = "<group>"; };
+		48B6E5702490D99700B5568D /* darknet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = darknet.h; path = ../Libs/darknet/include/darknet.h; sourceTree = "<group>"; };
+		48B6E5712490E18700B5568D /* metrics_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = metrics_layer.c; path = ../Libs/darknet/src/metrics_layer.c; sourceTree = "<group>"; };
+		48B6E5722490E18700B5568D /* metrics_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = metrics_layer.h; path = ../Libs/darknet/src/metrics_layer.h; sourceTree = "<group>"; };
+		48BA50B32586922900BBCCCF /* bl-darknet */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = "bl-darknet"; path = "build/Release/bl-darknet"; sourceTree = "<group>"; };
+		48BA50B525AF3D0800BBCCCF /* resample_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resample_layer.h; path = ../Libs/darknet/src/resample_layer.h; sourceTree = "<group>"; };
+		48BA50B625AF3D0900BBCCCF /* resample_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = resample_layer.c; path = ../Libs/darknet/src/resample_layer.c; sourceTree = "<group>"; };
+		48BA50B725AF3D0900BBCCCF /* stb_image_resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_image_resize.h; path = ../Libs/darknet/src/stb_image_resize.h; sourceTree = "<group>"; };
+		48BA50B9262B780B00BBCCCF /* denormal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = denormal.h; path = ../Libs/darknet/src/denormal.h; sourceTree = "<group>"; };
+		48BA50BA262B780B00BBCCCF /* denormal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = denormal.c; path = ../Libs/darknet/src/denormal.c; sourceTree = "<group>"; };
+		48BA50BC262B78EE00BBCCCF /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_image.h; path = ../Libs/darknet/src/stb_image.h; sourceTree = "<group>"; };
+		48BA50BD262B78EE00BBCCCF /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_image_write.h; path = ../Libs/darknet/src/stb_image_write.h; sourceTree = "<group>"; };
+		48BA50BF263595DD00BBCCCF /* libopenblas_haswell-r0.3.9_mac_st.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libopenblas_haswell-r0.3.9_mac_st.a"; path = "../Libs/OpenBLAS/libopenblas_haswell-r0.3.9_mac_st.a"; sourceTree = "<group>"; };
+		48BA50C1263597C400BBCCCF /* libopenblas_haswellp-r0.3.9_mac_mt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libopenblas_haswellp-r0.3.9_mac_mt.a"; path = "../Libs/OpenBLAS/libopenblas_haswellp-r0.3.9_mac_mt.a"; sourceTree = "<group>"; };
+		48C6DF112511B946009362A9 /* reorg_layer2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = reorg_layer2.c; path = ../Libs/darknet/src/reorg_layer2.c; sourceTree = "<group>"; };
+		48C6DF122511B946009362A9 /* reorg_layer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reorg_layer2.h; path = ../Libs/darknet/src/reorg_layer2.h; sourceTree = "<group>"; };
+		48C6DF1425123CC7009362A9 /* bl_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bl_defs.h; path = ../Libs/darknet/src/bl_defs.h; sourceTree = "<group>"; };
+		48C6DF512513A93F009362A9 /* gemm-blas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "gemm-blas.c"; path = "../Libs/darknet/src/gemm-blas.c"; sourceTree = "<group>"; };
+		48C8AE67249A9448005C65B1 /* instancenorm_layer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = instancenorm_layer.c; path = ../Libs/darknet/src/instancenorm_layer.c; sourceTree = "<group>"; };
+		48C8AE68249A9448005C65B1 /* instancenorm_layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = instancenorm_layer.h; path = ../Libs/darknet/src/instancenorm_layer.h; sourceTree = "<group>"; };
+		48DB00C6248D58F500527952 /* bl-darknet */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "bl-darknet"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		48DB00C3248D58F500527952 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48BA50C42635986A00BBCCCF /* libopenblas_haswellp-r0.3.9_mac_mt.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		48B6E4D42490CFF200B5568D /* darknet-lib-master */ = {
+			isa = PBXGroup;
+			children = (
+				48BA50BD262B78EE00BBCCCF /* stb_image_write.h */,
+				48BA50BC262B78EE00BBCCCF /* stb_image.h */,
+				48BA50BA262B780B00BBCCCF /* denormal.c */,
+				48BA50B9262B780B00BBCCCF /* denormal.h */,
+				48B6E4D52490D01500B5568D /* activation_kernels.cu */,
+				48B6E4D62490D01500B5568D /* activation_layer.c */,
+				48B6E4D72490D01500B5568D /* activation_layer.h */,
+				48B6E4D82490D01500B5568D /* activations.c */,
+				48B6E4D92490D01500B5568D /* activations.h */,
+				48B6E4DA2490D01500B5568D /* avgpool_layer_kernels.cu */,
+				48B6E4DB2490D01500B5568D /* avgpool_layer.c */,
+				48B6E4DC2490D01500B5568D /* avgpool_layer.h */,
+				48B6E4DD2490D01500B5568D /* batchnorm_layer.c */,
+				48B6E4DE2490D01500B5568D /* batchnorm_layer.h */,
+				48C6DF1425123CC7009362A9 /* bl_defs.h */,
+				48B6E56D2490D0D400B5568D /* bl_utils.c */,
+				48B6E56E2490D0D400B5568D /* bl_utils.h */,
+				48B6E4DF2490D01500B5568D /* blas_kernels.cu */,
+				48B6E4E02490D01500B5568D /* blas.c */,
+				48B6E4E12490D01500B5568D /* blas.h */,
+				48B6E4E22490D01500B5568D /* box.c */,
+				48B6E4E32490D01500B5568D /* box.h */,
+				480E0B77251783BA004DAA02 /* boxmuller.c */,
+				480E0B7A25178473004DAA02 /* boxmuller.h */,
+				48B6E4E42490D01500B5568D /* classifier.h */,
+				48B6E4E52490D01500B5568D /* col2im_kernels.cu */,
+				48B6E4E62490D01500B5568D /* col2im.c */,
+				48B6E4E72490D01500B5568D /* col2im.h */,
+				48B6E4E82490D01500B5568D /* compare.c */,
+				48B6E4E92490D01500B5568D /* connected_layer.c */,
+				48B6E4EA2490D01500B5568D /* connected_layer.h */,
+				48B6E4EB2490D01500B5568D /* convolutional_kernels.cu */,
+				48B6E4EC2490D01500B5568D /* convolutional_layer.c */,
+				48B6E4ED2490D01500B5568D /* convolutional_layer.h */,
+				480CEEBA2510E03600AF7ABF /* convolutional_layer2.c */,
+				480CEEBB2510E03A00AF7ABF /* convolutional_layer2.h */,
+				48B6E4EE2490D01500B5568D /* cost_layer.c */,
+				48B6E4EF2490D01500B5568D /* cost_layer.h */,
+				48B6E4F02490D01500B5568D /* crnn_layer.c */,
+				48B6E4F12490D01500B5568D /* crnn_layer.h */,
+				48B6E4F22490D01500B5568D /* crop_layer_kernels.cu */,
+				48B6E4F32490D01500B5568D /* crop_layer.c */,
+				48B6E4F42490D01500B5568D /* crop_layer.h */,
+				48B6E4F52490D01500B5568D /* cuda.c */,
+				48B6E4F62490D01500B5568D /* cuda.h */,
+				48B6E5702490D99700B5568D /* darknet.h */,
+				48B6E4F72490D01500B5568D /* data.c */,
+				48B6E4F82490D01500B5568D /* data.h */,
+				48B6E4F92490D01500B5568D /* deconvolutional_kernels.cu */,
+				48B6E4FA2490D01500B5568D /* deconvolutional_layer.c */,
+				48B6E4FB2490D01500B5568D /* deconvolutional_layer.h */,
+				487541592511076900E5F305 /* deconvolutional_layer2.c */,
+				4875415A2511076900E5F305 /* deconvolutional_layer2.h */,
+				48B6E4FC2490D01500B5568D /* demo.c */,
+				48B6E4FD2490D01500B5568D /* demo.h */,
+				48B6E4FE2490D01500B5568D /* detection_layer.c */,
+				48B6E4FF2490D01500B5568D /* detection_layer.h */,
+				48B6E53A2490D01600B5568D /* dk_utils.c */,
+				48B6E53B2490D01600B5568D /* dk_utils.h */,
+				48B6E5002490D01500B5568D /* dropout_layer_kernels.cu */,
+				48B6E5012490D01500B5568D /* dropout_layer.c */,
+				48B6E5022490D01500B5568D /* dropout_layer.h */,
+				48C6DF512513A93F009362A9 /* gemm-blas.c */,
+				48B6E5032490D01500B5568D /* gemm.c */,
+				48B6E5042490D01500B5568D /* gemm.h */,
+				48B6E5052490D01500B5568D /* gru_layer.c */,
+				48B6E5062490D01500B5568D /* gru_layer.h */,
+				48B6E5072490D01500B5568D /* im2col_kernels.cu */,
+				48B6E5082490D01500B5568D /* im2col.c */,
+				48B6E5092490D01500B5568D /* im2col.h */,
+				48B6E50A2490D01500B5568D /* image_opencv.cpp */,
+				48B6E50B2490D01500B5568D /* image.c */,
+				48B6E50C2490D01500B5568D /* image.h */,
+				480CEE8F251008E600AF7ABF /* input_layer.c */,
+				480CEE90251008E700AF7ABF /* input_layer.h */,
+				48C8AE67249A9448005C65B1 /* instancenorm_layer.c */,
+				48C8AE68249A9448005C65B1 /* instancenorm_layer.h */,
+				48B6E50D2490D01500B5568D /* iseg_layer.c */,
+				48B6E50E2490D01500B5568D /* iseg_layer.h */,
+				480E0B8125179672004DAA02 /* kernel_initializers.c */,
+				480E0B8025179634004DAA02 /* kernel_initializers.h */,
+				48B6E50F2490D01500B5568D /* l2norm_layer.c */,
+				48B6E5102490D01500B5568D /* l2norm_layer.h */,
+				48B6E5112490D01500B5568D /* layer.c */,
+				48B6E5122490D01500B5568D /* layer.h */,
+				48B6E5132490D01500B5568D /* list.c */,
+				48B6E5142490D01500B5568D /* list.h */,
+				48B6E5152490D01500B5568D /* local_layer.c */,
+				48B6E5162490D01500B5568D /* local_layer.h */,
+				48B6E5172490D01500B5568D /* logistic_layer.c */,
+				48B6E5182490D01500B5568D /* logistic_layer.h */,
+				48B6E5192490D01500B5568D /* lstm_layer.c */,
+				48B6E51A2490D01500B5568D /* lstm_layer.h */,
+				48B6E51B2490D01500B5568D /* matrix.c */,
+				48B6E51C2490D01500B5568D /* matrix.h */,
+				48B6E51D2490D01500B5568D /* maxpool_layer_kernels.cu */,
+				48B6E51E2490D01500B5568D /* maxpool_layer.c */,
+				48B6E51F2490D01600B5568D /* maxpool_layer.h */,
+				48B6E5712490E18700B5568D /* metrics_layer.c */,
+				48B6E5722490E18700B5568D /* metrics_layer.h */,
+				48B6E5202490D01600B5568D /* network.c */,
+				48B6E5212490D01600B5568D /* network.h */,
+				48B6E5222490D01600B5568D /* normalization_layer.c */,
+				48B6E5232490D01600B5568D /* normalization_layer.h */,
+				48B6E5242490D01600B5568D /* option_list.c */,
+				48B6E5252490D01600B5568D /* option_list.h */,
+				48B6E5262490D01600B5568D /* parser.c */,
+				48B6E5272490D01600B5568D /* parser.h */,
+				48B6E5282490D01600B5568D /* region_layer.c */,
+				48B6E5292490D01600B5568D /* region_layer.h */,
+				48B6E52A2490D01600B5568D /* reorg_layer.c */,
+				48B6E52B2490D01600B5568D /* reorg_layer.h */,
+				48C6DF112511B946009362A9 /* reorg_layer2.c */,
+				48C6DF122511B946009362A9 /* reorg_layer2.h */,
+				48BA50B625AF3D0900BBCCCF /* resample_layer.c */,
+				48BA50B525AF3D0800BBCCCF /* resample_layer.h */,
+				48B6E52C2490D01600B5568D /* rnn_layer.c */,
+				48B6E52D2490D01600B5568D /* rnn_layer.h */,
+				48B6E52E2490D01600B5568D /* route_layer.c */,
+				48B6E52F2490D01600B5568D /* route_layer.h */,
+				48B6E5302490D01600B5568D /* shortcut_layer.c */,
+				48B6E5312490D01600B5568D /* shortcut_layer.h */,
+				48B6E5322490D01600B5568D /* softmax_layer.c */,
+				48B6E5332490D01600B5568D /* softmax_layer.h */,
+				480CEE8C250FFE5C00AF7ABF /* split_layer.c */,
+				480CEE8D250FFE5D00AF7ABF /* split_layer.h */,
+				48BA50B725AF3D0900BBCCCF /* stb_image_resize.h */,
+				48B6E5362490D01600B5568D /* tree.c */,
+				48B6E5372490D01600B5568D /* tree.h */,
+				48B6E5382490D01600B5568D /* upsample_layer.c */,
+				48B6E5392490D01600B5568D /* upsample_layer.h */,
+				48B6E53C2490D01600B5568D /* yolo_layer.c */,
+				48B6E53D2490D01600B5568D /* yolo_layer.h */,
+			);
+			name = "darknet-lib-master";
+			sourceTree = "<group>";
+		};
+		48BA50BE263595DD00BBCCCF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				48BA50C1263597C400BBCCCF /* libopenblas_haswellp-r0.3.9_mac_mt.a */,
+				48BA50BF263595DD00BBCCCF /* libopenblas_haswell-r0.3.9_mac_st.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		48DB00BD248D58F500527952 = {
+			isa = PBXGroup;
+			children = (
+				48BA50B32586922900BBCCCF /* bl-darknet */,
+				482447E6252FAD5A00070420 /* utest_conv_layer_nbatch.c */,
+				482447E7252FAD5A00070420 /* utest_conv_layer_nbatch.h */,
+				482447D6252DCE0000070420 /* main.c */,
+				482447D7252DCE0000070420 /* rebalance.c */,
+				482447D8252DCE0000070420 /* unit_tests.c */,
+				482447D9252DCE0000070420 /* unit_tests.h */,
+				482447DA252DCE0000070420 /* utest_col2im.c */,
+				482447DB252DCE0000070420 /* utest_col2im.h */,
+				482447DC252DCE0000070420 /* utest_conv_layer.c */,
+				482447DD252DCE0000070420 /* utest_conv_layer.h */,
+				482447DE252DCE0000070420 /* utest_rand_normal.c */,
+				482447DF252DCE0000070420 /* utest_rand_normal.h */,
+				48B6E4D42490CFF200B5568D /* darknet-lib-master */,
+				48DB00C7248D58F500527952 /* Products */,
+				48BA50BE263595DD00BBCCCF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		48DB00C7248D58F500527952 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				48DB00C6248D58F500527952 /* bl-darknet */,
+			);
+			name = Products;
+			path = build;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		48DB00C5248D58F500527952 /* bl-darknet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48DB00CF248D58F500527952 /* Build configuration list for PBXNativeTarget "bl-darknet" */;
+			buildPhases = (
+				48DB00C2248D58F500527952 /* Sources */,
+				48DB00C3248D58F500527952 /* Frameworks */,
+				48180086252C96F700E56192 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "bl-darknet";
+			productName = "bl-darknet";
+			productReference = 48DB00C6248D58F500527952 /* bl-darknet */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		48DB00BE248D58F500527952 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = applematuer;
+			};
+			buildConfigurationList = 48DB00C1248D58F500527952 /* Build configuration list for PBXProject "bl-darknet" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+			);
+			mainGroup = 48DB00BD248D58F500527952;
+			productRefGroup = 48DB00C7248D58F500527952 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				48DB00C5248D58F500527952 /* bl-darknet */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		48DB00C2248D58F500527952 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48B6E53E2490D01600B5568D /* activation_layer.c in Sources */,
+				482447E1252DCE0000070420 /* rebalance.c in Sources */,
+				48B6E53F2490D01600B5568D /* activations.c in Sources */,
+				48B6E5402490D01600B5568D /* avgpool_layer.c in Sources */,
+				48B6E5412490D01600B5568D /* batchnorm_layer.c in Sources */,
+				48B6E5422490D01600B5568D /* blas.c in Sources */,
+				48B6E5432490D01600B5568D /* box.c in Sources */,
+				48B6E5442490D01600B5568D /* col2im.c in Sources */,
+				48B6E5452490D01600B5568D /* compare.c in Sources */,
+				48B6E5462490D01600B5568D /* connected_layer.c in Sources */,
+				48B6E5472490D01600B5568D /* convolutional_layer.c in Sources */,
+				48B6E5482490D01600B5568D /* cost_layer.c in Sources */,
+				48B6E5492490D01600B5568D /* crnn_layer.c in Sources */,
+				48B6E54A2490D01600B5568D /* crop_layer.c in Sources */,
+				48B6E54B2490D01600B5568D /* cuda.c in Sources */,
+				48B6E54C2490D01600B5568D /* data.c in Sources */,
+				48B6E54D2490D01600B5568D /* deconvolutional_layer.c in Sources */,
+				48B6E54E2490D01600B5568D /* demo.c in Sources */,
+				48B6E54F2490D01600B5568D /* detection_layer.c in Sources */,
+				48B6E5502490D01600B5568D /* dropout_layer.c in Sources */,
+				48B6E5512490D01600B5568D /* gemm.c in Sources */,
+				482447E0252DCE0000070420 /* main.c in Sources */,
+				48B6E5522490D01600B5568D /* gru_layer.c in Sources */,
+				48B6E5532490D01600B5568D /* im2col.c in Sources */,
+				48B6E5542490D01600B5568D /* image_opencv.cpp in Sources */,
+				48B6E5552490D01600B5568D /* image.c in Sources */,
+				48B6E5562490D01600B5568D /* iseg_layer.c in Sources */,
+				482447E2252DCE0000070420 /* unit_tests.c in Sources */,
+				48B6E5572490D01600B5568D /* l2norm_layer.c in Sources */,
+				48B6E5582490D01600B5568D /* layer.c in Sources */,
+				48BA50BB262B780B00BBCCCF /* denormal.c in Sources */,
+				48BA50B825AF3D0900BBCCCF /* resample_layer.c in Sources */,
+				48B6E5592490D01600B5568D /* list.c in Sources */,
+				48B6E55A2490D01600B5568D /* local_layer.c in Sources */,
+				482447E5252DCE0000070420 /* utest_rand_normal.c in Sources */,
+				48B6E55B2490D01600B5568D /* logistic_layer.c in Sources */,
+				48B6E55C2490D01600B5568D /* lstm_layer.c in Sources */,
+				48B6E55D2490D01600B5568D /* matrix.c in Sources */,
+				48B6E55E2490D01600B5568D /* maxpool_layer.c in Sources */,
+				48B6E55F2490D01600B5568D /* network.c in Sources */,
+				48B6E5602490D01600B5568D /* normalization_layer.c in Sources */,
+				48B6E5612490D01600B5568D /* option_list.c in Sources */,
+				48B6E5622490D01600B5568D /* parser.c in Sources */,
+				48B6E5632490D01600B5568D /* region_layer.c in Sources */,
+				482447E4252DCE0000070420 /* utest_conv_layer.c in Sources */,
+				48B6E5642490D01600B5568D /* reorg_layer.c in Sources */,
+				48B6E5652490D01600B5568D /* rnn_layer.c in Sources */,
+				482447E3252DCE0000070420 /* utest_col2im.c in Sources */,
+				48B6E5662490D01600B5568D /* route_layer.c in Sources */,
+				48B6E5672490D01600B5568D /* shortcut_layer.c in Sources */,
+				48B6E5682490D01600B5568D /* softmax_layer.c in Sources */,
+				48B6E5692490D01600B5568D /* tree.c in Sources */,
+				48B6E56A2490D01600B5568D /* upsample_layer.c in Sources */,
+				48B6E56B2490D01600B5568D /* dk_utils.c in Sources */,
+				48B6E56C2490D01600B5568D /* yolo_layer.c in Sources */,
+				48B6E56F2490D0D400B5568D /* bl_utils.c in Sources */,
+				48B6E5732490E18700B5568D /* metrics_layer.c in Sources */,
+				482447E8252FAD5A00070420 /* utest_conv_layer_nbatch.c in Sources */,
+				48C8AE69249A9448005C65B1 /* instancenorm_layer.c in Sources */,
+				480CEE8E250FFE5F00AF7ABF /* split_layer.c in Sources */,
+				480CEE91251008EA00AF7ABF /* input_layer.c in Sources */,
+				480CEEBC2510E04100AF7ABF /* convolutional_layer2.c in Sources */,
+				4875415B2511076900E5F305 /* deconvolutional_layer2.c in Sources */,
+				48C6DF132511B946009362A9 /* reorg_layer2.c in Sources */,
+				48C6DF522513A940009362A9 /* gemm-blas.c in Sources */,
+				480E0B78251783BA004DAA02 /* boxmuller.c in Sources */,
+				480E0B8225179672004DAA02 /* kernel_initializers.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		48DB00CD248D58F500527952 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.7;
+				SYMROOT = $PROJECT_DIR/build;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		48DB00CE248D58F500527952 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = macosx10.7;
+				SYMROOT = $PROJECT_DIR/build;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Release;
+		};
+		48DB00D0248D58F500527952 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					../Libs/OpenBLAS,
+					../Libs/darknet/include,
+					../Libs/darknet/src,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../Libs/OpenBLAS,
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		48DB00D1248D58F500527952 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					../Libs/OpenBLAS,
+					../Libs/darknet/include,
+					../Libs/darknet/src,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../Libs/OpenBLAS,
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		48DB00C1248D58F500527952 /* Build configuration list for PBXProject "bl-darknet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48DB00CD248D58F500527952 /* Debug */,
+				48DB00CE248D58F500527952 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48DB00CF248D58F500527952 /* Build configuration list for PBXNativeTarget "bl-darknet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48DB00D0248D58F500527952 /* Debug */,
+				48DB00D1248D58F500527952 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 48DB00BE248D58F500527952 /* Project object */;
+}

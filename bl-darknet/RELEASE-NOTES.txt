@@ -1,0 +1,419 @@
+bl-darknet
+
+v1.0
+
+v1.1
+- REFACT: clean code
+- IMPROV: improved “progress bar”: implemented eta, reorganized displayed data
+- IMPROV: save data in "training" dir
+- IMPROV: backup weight name: epoch number, not sample number
+- IMPROV: source num => file names
+- IMPROV: sleep sometimes during training (sleep 2mn every 20000 batches)
+- IMPROV: quiet mode => macro DARKNET_QUIET
+- IMPROV: fixed accuracy computation. 
+(the previous cost layer changed the data, then the metrics layer computed with bad input)
+=> improved the metrics layer, so that it computes the cost like [cost], and also
+computes a good metrics.
+- IMPROV: improved and activated NIKO_FIX_SCALE (deconv init scale)
+- TEST: tested Adam (it seems Adam is not implemented in cpu, only in gnu)
+- TEST: tested 1000 epochs: keras is better (darknet is really too long to converge)
+- TEST: 1000 epochs, learning rate 1e-3 => like keras after 100epochs!
+(and result is better than lr 1e-4)
+- REFACT: renamed utils.h dk-utils.h (and .c too) => for compilation Rebalance
+- TEST: tested with data without skip_silcence => converges better, better score, 
+better images in bl-darknet
+- IMPROV: normalize input! => as in the “singing voice separation” paper
+converges better at the beginning, but same after 1000 epochs
+=> normalized both X and y with the coeffs from X
+=> normalize input: is it good with the actual version?
+- IMPROV: load directly from disk, at each step
+=> take 2s more by epoch (16s instead of 14s)
+=> checked that the result is the same: ok!
+- TEST: loading from usb key: 17/20s
+- TEST: 500MB mix, usb: 48s/epoch (origin: 14s)
+=> after 160 epochs, bl-draknet-predict makes good data
+=> predict: train: 0.9 test: 0.86
+- REFACT: big code clean
+- TEST: 500MB mix, usb: => after 300epochs: 0.9, 0.86
+- TEST: checked that training still works after code clean: ok!
+- IMPROV: compute the test score at each epoch
+- IMPROV: smooth test score
+- IMPROV: implemented correct shuffle for train and test sets
+- IMPROV: added force_dropout option in dropout layer (for dropout even in test mode)
+- IMPROV/TEST: use dropout for also for predict (WIP)
+- NOTE: with or without force_dropout, the result looks the same
+- TEST: test with dropout proba=0
+=> current training acc is really better
+=> the 2 other scores are almost the same
+- TEST: tested with the unet example with maxpooling + up sampling
+=> the max score is 0.8, not 0.9 as previously
+=> after 12h, the test score and the train score converge to the same value!
+
+v1.2
+- TEST: batch norm flag in convolution gives almost the same result as separated 
+batchnorm layer
+- IMPROV: use instance normalization method
+NIKO_INSTANCENORM_LAYER/USE_INSTANCE_NORM_METHOD/INST_NORM_NUM_TEST_DATA
+- TEST: instancenorm, 800 epochs
+=> the training curve is the same as the learning curve !
+=> the test curve is not so good and diminishes progressively (overfitting ?)
+- NOTE: lr 1e-3 suppress too much partials. 1e-5 keeps too much
+- TEST: learning rate 1e-4 (as it is in the paper) => this looks better!
+- NOTE: at evaluation step, “predict” is better than “eval”
+- IDEA: keep the best test score when releasing weights for Rebalance!
+(for example, take the one before overfitting)
+- IMPROV: manage well my_normalize(2) for test_rebalance
+- TEST: tested 2000 epochs + full dataset, start conv 4 => the test score diminishes
+- TEST: test start_conv8 + full dataset 
+=> at the beginning, the test score progress smoothly and greatly
+=> but after, it oscillates a bit randomly
+
+v1.3
+- IMPROV: implemented real epochs (and not arbitrary epochs of size 1000)
+- FIX; fixed file size computation, that was false 
+(took 1700 data samples at the maximum, instead of around 100000)
+- FIX: several fixes: eta, index that was always 1
+- FIX: fixed memory leaks
+- TEST: tested after fix, with dataset file limited to 1000
+=> all the curves are very smooth, they don’t oscillate as before
+- IMPROV: implemented multichannel DNN (4 channels, 4 stems at the same time)
+=> the result seem good
+- TEST: tested to dump each of the result 4 stem sounds
+=> good start (need improvement)
+- TEST: Tested OpenCL with LuxMark: my GPU is not supported!
+- TEST: 4 channels: good ! (need improvements)
+- TEST: 4 channels, start_conv16: better (need improvements)
+
+- IMPROV: made GPU code port for instance norm layer
+- IMPROV: modified the makefiles and fixed all for gcc compilation
+
+- IMPROV: compiled and launched on ovh computer, with GPU
+(NIKO_FIX_GPU)
+	- leaky with alpha coeff in GPU
+	- metrics layer: get the data from GPU, compute in CPU, send back data to GPU
+	- some compilation fixes
+	- instance norm: fixes for GPU
+
+- NOTE: the cpu version gives better results thant the gnu version
+There may be a problem in the GPU version, that is still there.
+Then the ovh training may be a bit wrong.
+
+v1.4
+- use the method from Leonardo Pepino (no dark net anymore)
+- FIX: NIKO_FIX_CRASH_ACTIVATION_LAYER: fixed possible crash cause (disabled)
+- FIX: fixed missing check to null delta in some layers, when backward. this made crash if we had such a layer as first layer. (NIKO_FIX_BACKWARD_DELTA)
+- TEST: checked nan cost error => this was due to tang activation on conv2d
+- IMPROV: improved debugging: dump images with alpha=1
+- TEST: tested just 1 conv2d + bathc norm => not so bad (weird)
+- TEST: tested many activation layers, to try to make a Dense => fail
+- NOTE: seem we can make Dense with Conv2D
+- IMPROV: added out_padding to convolutional layer also
+- NOTE: if score is not normalized at all => add a batch norm layer at the end
+- NOTE: if colors saturate blue/cyan => change the activation (not logistic or not logy)
+- NOTE: if we have hans in the score, check the activation (not tanh, avoid (exp(x))
+- IMPROV: save image by normalizing by channel
+- TEST: tested type_cost=MSEMask => bad 
+- TEST: [cost] type=sse: could be interesting, don’t know
+- TEST: type_cost=MSEmask: not bad at all, the sales are separated (but the color undefined)
+- TEST: tested log magna => we loose a lot in contrast of the images (but we gain sound details)
+- IMPROV: created [split] and [input] nodes => they look to work!
+- TEST: tested channel by channel with [split] => this is better than all channels mixed!
+- FIX: Avoid that train score gets negative (FIX_NEGATIVE_METRICS x2)
+- FIX: compute_metrics_MSEmask() computed only the first channel
+- IMPROV: implemented [dense] layer
+- IMPROV: created [conv2], for size_x != size_y
+- IMPROV: created [deconv2], for size_x != size_y
+- IMPROV: implemented [dense] as an alias to [conv2], with appropriate parameters
+- IMPROV: implemented [reorg2], for stride_x != stride_y
+- IMPROV: created the model "Monoaural Audio Source Separation Using Deep Convolutional Neural Networks" - Pritish Chandna. Simplified the model otherwise it was very long to compute (and out of memory)
+- OPTIM: optimized a lot im2col and col2im (now fully incremental)
+(NIKO_LL_OPTIMS2) => optimize a little
+- OPTIM: keep NIKO_LL_OPTIMS1 disabled (genmm) => it decrease the performances…
+- IMPROV: sleep time / sleep every: sleep every “seconds”, and not every “batch”
+- TEST: use some more batchnorm, and dropouts (test not finished)
+- IMPROV: improved the printing of the networks (nodes) at startup
+- FIX: fixed inf/nan values if we put a [batchnorm] just after a [dense] (NIKO_FIX_VARIANCE)
+- FIX: fixed very tricky problem in im2col_cpu2 and col2im_cpu2 (/*ksize_y*/ksize_x)
+- TEST: test that [dropout] does not return nan (and removed the corresponding temp fix
+- TEST: made a unit test system, for im2col and col2im (with w != h)
+- IMPROV: got im2col and col2im (w != h) from Caffe => this looks good
+- TEST: searched for an optimized version of gemm (maybe there is a good one in OpenBlas)
+- TEST: test perfs with and without NIKO_USE_CAFFE_COL2IM => result and perfs look the same
+- FIX: fixed conv2 and deconv2 + im2col_cpu2 and col2im_cpu2: stride, pad etc x and y were reversed. => better score, better weights!
+- IMPROV: improved the dump of the weights (conv2 and deconv2)
+- IMPROV: Avoid sleeping in the middle of an epoch
+- IMPROV: use OpenBlas for gemm => gain perf ~ x2/3 !!
+- FIX: fix debug weight image dump (image size was != than nweights
+- IMPROV: in deconvolutional paths, deconv numfilters was 1 (should be 4, as for conv path
+- FIX: fixed scores train/test computation
+- FIX: when using the last route, this made 16 channels, and [metrics] cared in debug
+=> now, use split layers to have the correct dimension
+- TEST: tested learning rate 1e-5 => this seems not better
+- FIX: integrated commit: c08d808c3dded80c4ab996acb6a5a9bcb6c65953
+- FIX: integrated commit: b7feb7d33ff60b8ced5a09c302b8c11a7b2778aa
+- FIX: fixed save image with 1 single channel (e.g when dumping weights)
+- IMPROV/FIX: attract a single channel of the input image (which is r=g=b=a)
+Otherwise, the first convolution just after gave 4 times the same filter.
+- IMPROV: tweaked well the function my_dbg_save_data(), to save input, output, and weights
+in real-time during training of eval.
+- IMPROV: .cfg: since we have 1 channel input (instead of 4), there must be a factor of 4 between the pairs of dense layers (either 512=>128, or 128x512). Otherwise we get empty weights for deconvolution
+- IMPROV: my_dbg_save_data(): append the layers types to file names
+- REFACT: cleaned trash code (recent, and for a long time)
+- TEST: searched for a solution to see debug image changes in real time
+=> open several images in several Preview.app windows. click somewhere else to loose the focus. Then re-click on Preview.app to refresh the files.
+- TEST: checked if we can increase the debug png compression => not possible easily
+- TEST: test with learning rate 1e-5 (instead of 1e-2) 
+=> the result seems more fine, just not a big blurred band as before
+- IMPROV: switched back to cost=L1mask in .cfg 
+=> now gives consistent train and test score! 
+But must always keep METRICS_MSE_MASK=1 in any case.
+- TEST: tested that last [route] layer seemed to no output correctly. Finally, after some longer training, it is good!
+- IMPROV: created rebalance-predict-all.sh => dump all the results, for all the backup files
+- IMPROV: create rebalance-predict-one.sh => dump from a specific backupweights
+- NOTE: dump weight numbers start at 1, because the first epoch num is 1, not 0
+- IMPROV: dbg_data: for forward, save only the weight 1 time instead of 2 times as before
+- NOTE: the weights are compute in each layer “backward” function
+- IMPROV: dog data: for predict one, append a suffix, so we can compare the weights between two epochs
+- REFACT: improved the debug sump system (avoid the macros inside the .c, use arguments)
+- IMPROV: debug system: also dump .txt
+- TEST: quickly checked for Nan and Inf in the debug dumped txt
+- FIX: sleep time was counted in computation elapsed time
+- WIP: unit tests for convolutional layer, and deconv also
+=> found that setting l.groups = 4 solves a big inconstancy problem!!!!
+- IMPROV: implemented kernel_initialisations.c, to have the choice for tweaking
+(and the original darknet kernel initialization looked a bit weird, with hard coded scales, maybe buggy…)
+- TEST: fine-tuned unit tests for conv and deconv (draw pattern inside src images, many improvements, tested many configurations, w!=h, different kernel sizes…)
+- IMPROV: display correctly the sizes of the route and split layers
+- FIX: [split] did not propagate delta correctly to the previous layers
+=> now, propagate copy of delta for each channels of split input layers
+Problem was: current: layer 8, first training data sample (just 1 data sample) => the output of the layer was black (and the .txt file was full of zeros)
+(not sure it totally fixes everything)
+- REFACT: big code clean (removed commented code on conv2/deconv2 (was during testing col2im and gemm). Removed debug .txt in deconv2
+- IMPROV/FIX: [split], delta, sum deltas instead of replacing
+- IMPROV: changed the [split] positions in the .cfg
+
+v1.5
+- since IPlug2 and git
+- TEST: checked valgrind for test: ok!
+- NOTE: 1 song, the results are good until weights6, after everything goes wrong. Bug ?
+- NOTES: exported 40 tracks, but it crashed at 25 tracks
+- TEST: tested with only 1 data, to see if it can converge
+- NOTE: the cyan appears only after a certain number of iterations
+- NOTE: in batchnorm, the smooth coeffs are hard coded (0.99/0.1)
+- TEST: test learning rate 0.1 => the curve becomes flat too early
+- TEST: learning rate 1e-7 (origin 1e-5)
+- TEST: tested INPUTS_TO_DB (compute db magns at loading) => bad!
+- FIX: fixed deconv2 (with batch > 1)
+- NOTE: tested 1 data sample, long training => the result img looks good
+- NOTE: compare 1 data sample 1 batch / 5 batches => it looks similar, but it is not exactly the same.
+- TEST: NORMALIZE_INPUTS=0
+- IMPROV: added nbach unit test (and it passes!)
+- NOTE: tested num_groups in nbatch unit test => it seems ok!
+- TEST: overfit with 1 single data sample, and a long training => the weights don’t jump!
+- TEST: compared nbatches=1, 2, 5 => the curves now look quite similar (with nw MSE metric computation). There is a delay before the curve starts growing, this looks like 2*nbatches
+- REFACT: removeed drafty comments in conv2 and deconv2
+- TEST: test 1song, batch=2 => it doesn’t seem to fix, the decrease at #6
+- TEST: tested 1 dropout between the 2 dense => not good
+- REFACT= Renamed my_utils => bl_utils
+- IMPROV: implemented data augmentation
+- TEST: test learning rate 1e-2 => this makes the kernel values change. 
+(with 1e-7, they don’t change visibly)
+- TEST: lr1e-2 + db data + 1data samples => this makes a streight increasing line (no more curved), and the kernels are updated, and it updates very progressively.
+=> Fails @epoch=35 => batchnorm problem
+=> commented all batch_normalize=1 inside conv2/deconv2 nodes
+- NOTE: the kernels seemed to evolve very slowly => that was because a too small learning rate.
+- TEST: NORMALIZE_INPUTS => NORMALIZE_INPUTS3: fail
+- TEST: use real [batchnorm] layers where missing, instead of batch_normalize=1 in conv2 and deconv2 => it increases more quicly at the beginning (as it is, it fails)
+- TEST1: test lr 1e-5:  (with db) => fail
+- TEST2: test lr 1e-5, no db (like origin, but real [batchnorm]) => fails at #6
+- IMPROV: added a “global” option for [batchnorm], so we can normalize all the channels globally (not each channel separately).
+- TEST: tested “global” [batchnorm] flag => it fails at #6
+- TEST: test data augmentation + “global” flag (doesn(t seem to work, not tested fully)
+
+WIP: test full dataset (and reset global=0): does it fail at #6, or later ?
+NOTE: with large dataset, after 1 night, the kernels evolve, even with lr1e-7
+
+IDEA: is it normal to have only 26 data for 1 song ?
+IDEA: try with 2 songs, and see if it fails at #6 or at #12
+IDEA: check well why it fails at #6
+
+ORIGIN: METRICS_MSE_MASK
+TEST: METRICS_L1_MASK => fail
+TEST: METRICS_L1_MASK + metrics_layer:BL_FIX_L1 => seems to converge well!
+No more strange jumps like with L2 (maybe L2 sticks too much on data, and jumps a lot depending on the data)
+
+- IMPROV: fixed my_smooth_l1 for metrics (direction was bad when saturation) (BL_FIX_L1)
+- IMPROV: added test dump files for metrics debugging
+- FIX: normalized “truth” correclty: NORMALIZE_INPUTS => NORMALIZE_INPUTS2 (max truth was around 100, not is is 1)
+-> give smoother progression, and better score
+- NOTE: DEBUG_METRICS=1 (dump metrics data)
+- TEST: lr 1e-5 => lr1e-2 (this takes a very long time to start seeing the red shapes)
+- IMPROV: implemented Adam for cpu (it was only implemented for gpu)
+- TEST: tested adam with lr1e-2 => the grows more smoothly, more slowly at the beginning
+(very bright bar at highest frequencies)
+- TEST: tested adam with adam lr1e-3 (like in Keras) => very bright green horizontal line
+
+- TEST: re-test batchnorm global=1 (with L1 and adam) => this seems to avoid very bright lines that appears at ~20 epochs
+
+- TEST: the metrics input had negative numbers, not consistent with “truth” and X (in_data)
+=> NORMALIZE_MASK_INPUT=1 (+ adam + group batch)
+- IMPROV: added DEBUG_FORCE_SAMPLE_NUM_TEST
+
+- TEST: test with 5 songs => this progresses better, closer to the result. In Rebalance, the result is better than previously!
+
+- IMPROV: normalize channel by channel, when nomalizing the mask just before multiplying.
+(NORMALIZE_MASK_GLOBAL) => the result doesn’t seem good
+- TEST: test prev improv + norm global=0 => bad
+
+- TEST: retry with db magns (INPUTS_TO_DB) (progresses slowly…)
+- TEST: db magn + L2 (not great, TODO, maybe try to train longer)
+- TEST: re-tested L2: it looks almost the same as L1… 
+- IMPROV: re-activated mel scale + width=256 => not so bad!
+- TEST: adapted conv2/deconv2 x sizes, for 256 
+=> better start, but after 30 it is worse, and the result at 30 is worse
+- TEST: training pepino for 20 songs => the result is better than previous
+- TEST: tried with spectro 256 instead of 1024 => we can’t have real-time in Rebalance for the moment.
+- IMPROV: tested again unet => it computes far faster than pepino and gives far better results !
+- FIX: when dumping debug images, problems between layer 2 and layer3 [batchnorm]
+(only half image filled in layer3) . And it crasheed in test mode in debug mode.
+(FIX_CRASH_DUMP_LAYER)
+- TEST: deconv2, test re-activated and fixed bilinear_init() (NIKO_USE_FIXED_BILINEAR)
+(maybe fixes deconv stride=2, that interpolate badly). finally de-activated.
+
+- IMPROV: set kernel_initializer=random_uniform for all conv2/deconv2
+=> longer to train (when looking at the image). But the result seems more accurate (not sure after a long training). The score is worse. re-set to origin: “darknet_initializer”
+- TEST: set batch norm global=1 => result is worse
+- IMPROV: added a flag for [metric]: norm_global (was 0 for origin darknet, and was 1 for BL Pepino). Added a flag instead of a macro.
+- TEST: set [metrics] norm_global to 0 => this looks similar, but better in the result image (one more voice partial detected)
+- TEST: set group=4 for first conv => fails, makes a Nan score, then abort
+- TEST: train with 20 songs, 250 epochs, tests in Rebalance
+=> the plugin is fast, it is better than before (but still not perfect)
+- TEST: tested last activation=relu instad of logistic => very quick overtraining
+- TEST: tried to change activation just at evaluation time => logistic->relu => does not work
+- TEST: trained with 100 songs, 1 night, 800 epochs
+=> it gives good score and good image at startup. And keeps growing after 1 night
+=> and after using in Rebalance, this gives better results as previously
+- NOTE: This looks normal to have zeros between dots when striding 
+(checked explanations on internet)
+- TEST: try to implemented “nearest” and “linear” for deconv upscale (write a unit test on col2im, and add an argument “interp”)
+=> not necessary, the deconvolution is correct as it is!
+- BUG(not a bug): do col2im_cpu2 then im2col_cpu2 with ksize_x = 3
+=> the result is not reverted well
+=> this is normal, the transformation is not 100% reversible, see comments/link in the code)
+
+v1.6
+- IMPROV: try with new mel scale (use real mel filters, to try to have less blurry images)
+- TEST: the mel scale #2 is not exactly yhte same as before. And now, the images are less blurred, more neat.
+- TEST: with mel2, the prediction seems less quick to converge (sseing image), but more efficient seeing curves
+- TEST: after a long training on 1 song (around 4000 epochs), the result looks almost perfect!)
+- IMPROV: Added an option to dump the dataset (to check data)
+- TEST: checked data for 1 song: ok!
+- TEST: tested with filters=16 instead of filters=4 at the beginning
+=> best for curves and for sound in Rebalance (but slower)
+- TEST: tested MSEmask + TEST_REAL_MSE (not sure it is better)
+- TEST: test adam learning rate 1e-5 => not convincing
+- TEST: re-tested with additional asym deconv(middle)/32x => the curves are better than 32x only!
+- REFACT: Refact and clean drafty metrics code
+- TESTS: tests some metrics “Custom”
+- TEST: Custom/MINKOWSKI/0.5 => seems a bit better than L1Mask (same score, but different image shape)
+- IMPROV: in metrics, normalize each pixel so that the sum of the colors makes 1- FIX: fixed .cfg loading on Windows ('/r' etc.)
+(NORMALIZE_MASK_INPUT3) => good!
+- IMPROV: improved “dump all” (dump scores, and changed directory)
+- IMPROV: “dump all”: dump with correct numerical sorting
+- TEST: test "source silence" => strange kill -9 of the process after around 1h
+- TEST: dump dataset (to detect black holes instead of red): checked quickly, no problem detected. Test if ever we have full silence in our dataset?
+- IMPROV: added gradient value clipping “clipvalue” to [metrics], 
+to avoid exploding gradients
+- IMPROV: integrated “clip” to convolutional_layer2
+- IMPROV: added gradient norm scaling (to avoid exploding gradients)
+- IMPROV: batchnorm, global=1 + better save_image_mc => avoid big black holes
+- IMPROV: added normalization before mask_mult(), in test-rebalance()
+to be like when [metrics] global=1
+- IMPROV: for dB, now mix is the sum of the stems (strangely it was not, at least when using dbs)
+- IMPROV: made some fixes to behve correctly with dB
+- TEST: no clip
+- TEST: no btchnorm at end: the score starts y growing, but the image is bad
+- TEST: lr=1e-5 (was 1e-3): the scrore starts by growing (with lr=1e-3, it strted by decreasing)
+- TEST: trained with unet darknet from github
+(maxpool + upsample, weights size: 128MB, trained 15days) => result seems good
+- TEST: tested by adding a "stereo separation spectrogram" as green channel
+=> not managed to get it well
+- TEST: started from tiny darknet cfg, and added deconv after (and added [logistic])
+used binary masks => seems to be a good way!
+- FIX: bl-darknet: when using e.g batch_size=20, throw away the rest of samples if we have less than 20 remaining smaples
+- FIX: darknet, deconv2: fixed crash for bl custom tiny darknet with bach_size!=1 
+- TEST: retested tiniy/reverse with not binary (interesting... not dure)
+- IMPROV: added [resample] layer, to have square images
+- TEST: [resample]: process images 256x256 (bin) 
+=> better detection of the shape of the vocal partials
+- TEST: resamples 256x32 -> 128x64: loss is a bit worse, result looks similar
+- TEST: darknet style tiny/rev => the loss diminished better!
+The result get better faster! (trained with only 1 sample)
+- NOTE: used to generate custom unet (from darknet small conv), trainng 2 months)
+- IMPROV: use mel3 dataset (full size), mel without "stairs" effect
+=> better!
+=> the training curve progresses more smoothly
+=> and it starts by growing, not decreasing then growing after like before
+Training stopped, to train downscale 2x2, training to be continued!
+- NOTE: maybe trainig 2months is bad, because we didn't blend stems correctly while training (should have directly been used the real mix) 
+- IMPROV: recompiled Openlas for Mac2 (haswell architecture)
+=> looks a bit faster
+- IMPROV: training without binarization (down, norm)
+=> gives the best score ever (near 90%)
+=> does not give weird 1e-34 output for layers 21/22 after 100 epochs!
+- REFACT: cleaned and refact code after disabled binarization
+- IMPROV: normalize stems at -60dB instead of -120dB
+=> should give more contrast
+(otherwise there was too few contrast when no binary, and vocal trained badly)
+And also don't use "New normalization (see Janson 2017)" => got required goal
+- IMPROV: set back binarization, now normalize 'y' again, use 120dbx2,
+use tiny darknet training parameters (looks better)
+- CLEAN: saved all the old trainings to NIKO$-1TBx and freed 70GB
+Kept only A-bin, B-soft, and C-softbin
+Current (and best) training model: C-softbin
+- TEST: recompiled, and checked that we still have the same result as "C": ok!
+- TEST: testing "C" with lr=1e-6 (must wait 2 weeks)
+(to try to avoid jumps and result direction change during training)
+=> looks better, progress more smoothly!
+And no "data jump" at the beginning, bot some dta jumps after epoch 50
+- TEST: "D": same as "C" with lr=1e-7
+- TEST: "C" with lr=1e-4 => it doesn't manage to learn
+- TEST: "C" with lr=5e-4 => Nan
+- TEST: "C" with 1e-6 (continued)
+=> not sure we could get better results...
+Trained only during 150 epochs
+- TEST: "C", down (lr=1e-5), trained 2000 epochs
+- TRAIN: continued training of "C" nodown (lr=1e-5), restarted at 1094 epochs
+=> C-training-nodown-softbin-cont-2285epochs
+
+- TODO: later, train a very long time, like 10000 epochs
+
+BUG: dump_scores -> set net batch 1 => memory of deconv is incorrect
+=> TODO: set_network_batch() -> also resize convolutional layers (mem alloc etc)
+
+TODO: test to increase filter size by 2
+TODO: check with stride_x != stride_x (to add one step and reduce more)
+
+TODO: maybe retry data augmentation
+
+TODO: test logistic activation for Pepino
+TODO: retry magns db with unet (INPUTS_TO_DB)
+TODO: add a batchnorm at the beginning?
+
+TODO: conv2, groups=4 ?
+
+TODO: try pepino bigger conv sizes
+
+- 
+
+
+IDEA: separate partials an noise, and train on it
+
+TODO: make a script to dump all data, to check that there is no mistake in it
+
+TODO: check that during shuffle of the shuffle_maps, we don’t take test data for training
+TODO: check the mesure used for musdb/msd100 papers, and try to add it to metrics
+
+TODO: for pepino, try to replace [dense] by [connected] 
+(it certainly means “fully connected”)
+TODO: test L1 for loss, and mse for score
