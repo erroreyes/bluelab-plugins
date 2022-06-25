@@ -12,3 +12,5 @@ The plugins can be built on Linux, MacOS and Windows (vst2/vst3/au/aax and app).
 - call bl-replace-nanovg.sh
 - cd buildsystem/linux and call make-dist-linux.sh
 (change plugins-list.sh to select only some plugins to build)
+
+![bluelab plugins](https://github.com/deadlab-plugins/bluelab-plugins/blob/master/Images/blulab-plugins.png)
