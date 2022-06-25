@@ -22,9 +22,6 @@
 [submodule "Libs/sndfilter"]
 	path = Libs/sndfilter
 	url = https://github.com/deadlab-plugins/Libs:sndfilter.git
-[submodule "bl-darknet"]
-	path = bl-darknet
-	url = https://github.com/deadlab-plugins:bl-darknet.git
 [submodule "OpenBLAS"]
 	path = Libs/OpenBLAS
 	url = https://github.com/deadlab-plugins/Libs:OpenBLAS.git
