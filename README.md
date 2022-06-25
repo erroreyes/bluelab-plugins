@@ -7,6 +7,8 @@ There are interesting plugins such as phantom fundamental effect, good quality s
 
 The plugins can be built on Linux, MacOS and Windows (vst2/vst3/au/aax and app).
 
+To see them in action, have a look at [these videos](https://www.youtube.com/channel/UCh1HekQ6Xzih3NRmHRYaWlg).
+
 ## Building on Linux
 - call bl-checkout-submodules.sh
 - call bl-replace-nanovg.sh
