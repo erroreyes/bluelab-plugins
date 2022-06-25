@@ -1,0 +1,42 @@
+#!/bin/bash
+
+PLUGS="BL-Air \
+       BL-AutoGain \
+       BL-Bat \
+       BL-Chroma \
+       BL-Denoiser \
+       BL-DUET \
+       BL-Envelope \
+       BL-EQHack \
+       BL-Gain12 \
+       BL-Gain200 \
+       BL-Gain24 \
+       BL-Gain60 \
+       BL-Ghost \
+       BL-GhostViewer \
+       BL-Impulses \
+       BL-Infra \
+       BL-InfrasonicViewer \
+       BL-InfraSynth \
+       BL-LoFi \
+       BL-OnsetDetect \
+       BL-Panogram \
+       BL-PitchShift \
+       BL-Precedence \
+       BL-Rebalance \
+       BL-Reverb \
+       BL-ReverbDepth \
+       BL-SampleDelay \
+       BL-SASViewer \
+       BL-Saturate \
+       BL-Shaper \
+       BL-Sine \
+       BL-SoundMetaViewer \
+       BL-Spatializer \
+       BL-SpectralDiff \
+       BL-SpectroExpe \
+       BL-SpectrumView \
+       BL-StereoDeReverb \
+       BL-StereoPan \
+       BL-StereoWidth \
+       BL-Wav3s"

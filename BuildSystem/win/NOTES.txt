@@ -1,0 +1,5 @@
+On Windows, launch make-all.sh, from git bash (as admin)
+=> will avoid "line too long" from cmd.exe, each 4 plugs build
+
+
+- don't forget to call verify-sign.bat to check protools signing
