@@ -9,6 +9,9 @@ The plugins can be built on Linux, MacOS and Windows (vst2/vst3/au/aax and app).
 
 To see them in action, have a look at [these videos](https://www.youtube.com/channel/UCh1HekQ6Xzih3NRmHRYaWlg).
 
+## Checking out
+git clone --recursive https://github.com/deadlab-plugins/bluelab-plugins.git
+
 ## Building on Linux
 - call bl-checkout-submodules.sh
 - call bl-replace-nanovg.sh
