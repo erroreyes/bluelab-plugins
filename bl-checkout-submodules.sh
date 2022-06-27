@@ -121,8 +121,8 @@ git pull origin master
 
 cd ..
 cd sndfilter
-git checkout bluelab
 git pull origin bluelab
+git checkout bluelab
 
 cd ..
 cd ..
