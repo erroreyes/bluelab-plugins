@@ -7,7 +7,6 @@
 
 git pull --recurse-submodules
 
-cd ..
 cd iPlug2
 git remote rm origin
 git remote add origin https://github.com/deadlab-plugins/iPlug2.git 
