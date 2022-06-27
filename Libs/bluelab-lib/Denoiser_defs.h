@@ -16,12 +16,31 @@
  * Boston, MA 02111-1307, USA.
  */
  
-// Necessary to move this include from IPlug_include_in_plug_hdr.h to here
-// This is necessary for Windows compilation, because there is another config.h file
-// for externals, and Visual Studio includes the wrong one
-#include "config.h"
+//
+//  Denoiser_defs.h
+//  BL-Denoiser
+//
+//  Created by applematuer on 6/25/20.
+//
+//
 
-// BlueLab
-#define BL_GUI_TYPE_FLOAT 0
-#define BL_TYPE_FLOAT 0
-#define BL_FIX_FLT_DENORMAL_OBJ 0 //1
+#ifndef BL_Denoiser_Denoiser_defs_h
+#define BL_Denoiser_Denoiser_defs_h
+
+// Set to 1, in addition, it seems to fix a bug:
+//
+// Learn at 44100Hz (make a peak at 500Hz with BL-Sine
+// Then switch to 88200 => the peak is no more at 500Hz
+#define USE_VARIABLE_BUFFER_SIZE 1
+
+#define USE_AUTO_RES_NOISE 1
+
+#define USE_RESIDUAL_DENOISE 1
+
+//#define MIN_DB -120.0
+//#define MAX_DB 0.0
+
+#define DENOISER_MIN_DB -119.0 // Take care of the noise/harmo bottom dB
+#define DENOISER_MAX_DB 10.0
+
+#endif
