@@ -44,4 +44,10 @@ ln -s ../../BL-Plugins/BL-SASViewer ./BL-SASViewer
 ln -s ../../BL-Plugins/BL-Infra ./BL-Infra
 ln -s ../../BL-Plugins/BL-Saturate ./BL-Saturate
 
-cd ../..
+ln -s ../../BL-Plugins/BL-Saturate ./BL-Saturate
+
+cd ..
+ln -s ../Libs ./BL-Dependencies
+
+cd ..
+

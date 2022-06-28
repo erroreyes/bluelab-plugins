@@ -15,6 +15,9 @@ git clone --recursive https://github.com/deadlab-plugins/bluelab-plugins.git
 ## Building on Linux
 - call bl-checkout-submodules.sh
 - call bl-replace-nanovg.sh
+- edit plugs-path.sh and set the path for your system
+- launch the script make-links.sh
+- cd iPlug2/Dependencies/IPlug and launch download-iplug-sdks.sh
 - cd BuildSystem/linux and call make-dist-linux.sh
 (change plugins-list.sh to select only some plugins to build)
 
