@@ -7,13 +7,10 @@
 
 git pull --recurse-submodules
 
-#cd iPlug2
-#git remote rm origin
-#git remote add origin https://github.com/deadlab-plugins/iPlug2.git 
-#git pull origin bluelab
-#git checkout bluelab
-#git pull origin bluelab
-#cd ..
+cd iPlug2
+git pull origin master
+git checkout master
+cd ..
 
 cd Libs
 
