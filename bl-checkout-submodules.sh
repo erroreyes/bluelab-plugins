@@ -5,7 +5,7 @@
 # git submodules init
 # git submodules update
 
-#git pull --recurse-submodules
+git pull --recurse-submodules
 
 cd iPlug2
 git remote rm origin
