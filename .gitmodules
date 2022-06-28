@@ -31,7 +31,7 @@
 [submodule "iPlug2"]
 	path = iPlug2
 	url = https://github.com/deadlab-plugins/iPlug2.git
-[submodule "iPlug2"]
-	path = iPlug2/Dependencies/IPlug/WAM_AWP
-	url = https://github.com/iPlug2/audioworklet-polyfill.git
+#[submodule "iPlug2"]
+#	path = iPlug2/Dependencies/IPlug/WAM_AWP
+#	url = https://github.com/iPlug2/audioworklet-polyfill.git
 	
